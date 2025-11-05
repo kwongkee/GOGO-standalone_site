@@ -96,23 +96,23 @@
             <div class="navbar-collapse collapse pc_navbar">
                 <ul class="nav navbar-nav">
                     {if !empty($data['websites']['menu'])}
-                    {volist name="data['websites']['menu']" key="k" id="v"}
+                    {foreach name="data['websites']['menu']" key="k" id="v"}
                     {if !empty($v['children'])}
                     <li class="dropdown dd_parent" onclick="javascript:removeclass(this);">
                         <a href="#" data-toggle="dropdown" class="dropdown-toggle f20">{$v['name']} <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            {volist name="v['children']" id="v2"}
+                            {foreach name="v['children']" id="v2"}
                             {if !empty($v2['children'])}
                             <li class="dropdown">
                                 <a href="#" data-toggle="dropdown" class="dropdown-toggle haschild f18 common_inner_background" style="padding-left:22px;">{$v2['name']} <b class="caret"></b></a>
                                 <ul class="dropdown-menu" style="background:#eee;">
-                                    {volist name="v2['children']" id="v3"}
+                                    {foreach name="v2['children']" id="v3"}
                                     {if $v3['type']==0}
                                     <!--下级卡片-->
                                     <li><a href="javascript:void(0);" class="f18 common_inner_background">&nbsp;&nbsp;{$v3['name']}</a></li>
                                     {elseif($v3['type']==1)}
                                     <!--详情内容-->
-                                    <li><a href="/?s=index/detail&id={$v3['id']}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v3['name']}</a></li>
+                                    <li><a href="/?s=merch/detail&id={$v3['id']}&company_id={$company_id}&company_type={$company_type}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v3['name']}</a></li>
                                     {elseif($v3['type']==2)}
                                     <!--跳转其它-->
                                     {if $v3['go_other']==0}
@@ -123,22 +123,22 @@
                                     <li><a href="{$v3['other_link']}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v3['name']}</a></li>
                                     {elseif($v3['go_other']==2)}
                                     <!--跳转其它菜单-->
-                                    <li><a href="/?s=index/detail&id={$v3['other_navbar']}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v3['name']}</a></li>
+                                    <li><a href="/?s=merch/detail&id={$v3['other_navbar']}&company_id={$company_id}&company_type={$company_type}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v3['name']}</a></li>
                                     {/if}
                                     {/if}
-                                    {/volist}
+                                    {/foreach}
                                 </ul>
                             </li>
                             {else}
-                            {if $v2['type']==0)}
+                            {if $v2['type']==0}
                             <!--下级卡片-->
                             <li><a href="javascript:void(0);" class="f18 common_inner_background">&nbsp;&nbsp;{$v2['name']}</a></li>
                             {elseif($v2['type']==1)}
                             <!--详情内容-->
-                            <li><a href="/?s=index/detail&id={$v2['id']}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v2['name']}</a></li>
+                            <li><a href="/?s=merch/detail&id={$v2['id']}&company_id={$company_id}&company_type={$company_type}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v2['name']}</a></li>
                             {elseif($v2['type']==2)}
                             <!--跳转其它-->
-                            {if $v2['go_other']==0)}
+                            {if $v2['go_other']==0}
                             <!--不选择跳转-->
                             <li><a href="javascript:void(0);" class="f18 common_inner_background">&nbsp;&nbsp;{$v2['name']}</a></li>
                             {elseif($v2['go_other']==1)}
@@ -146,23 +146,23 @@
                             <li><a href="{$v2['other_link']}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v2['name']}</a></li>
                             {elseif($v2['go_other']==2)}
                             <!--跳转其它菜单-->
-                            <li><a href="/?s=index/detail&id={$v2['other_navbar']}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v2['name']}</a></li>
+                            <li><a href="/?s=merch/detail&id={$v2['other_navbar']}&company_id={$company_id}&company_type={$company_type}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v2['name']}</a></li>
                             {/if}
                             {/if}
                             {/if}
-                            {/volist}
+                            {/foreach}
                         </ul>
                     </li>
                     {else}
-                    {if $v['type']==0)
+                    {if $v['type']==0}
                     <!--下级卡片-->
                     <li><a href="javascript:void(0);" class="f20 common_inner_background">&nbsp;&nbsp;{$v['name']}</a></li>
                     {elseif($v['type']==1)}
                     <!--详情内容-->
-                    <li><a href="/?s=index/detail&id={$v['id']}" class="f20 common_inner_background" target="_blank">&nbsp;&nbsp;{$v['name']}</a></li>
+                    <li><a href="/?s=merch/detail&id={$v['id']}&company_id={$company_id}&company_type={$company_type}" class="f20 common_inner_background" target="_blank">&nbsp;&nbsp;{$v['name']}</a></li>
                     {elseif($v['type']==2)}
                     <!--跳转其它-->
-                    {if $v['go_other']==0)}
+                    {if $v['go_other']==0}
                     <!--不选择跳转-->
                     <li><a href="javascript:void(0);" class="f20 common_inner_background">&nbsp;&nbsp;{$v['name']}</a></li>
                     {elseif($v['go_other']==1)}
@@ -170,13 +170,13 @@
                     <li><a href="{$v['other_link']}" class="f20 common_inner_background" target="_blank">&nbsp;&nbsp;{$v['name']}</a></li>
                     {elseif($v['go_other']==2)}
                     <!--跳转其它菜单-->
-                    <li><a href="/?s=index/detail&id={$v['other_navbar']}" class="f20 common_inner_background" target="_blank">&nbsp;&nbsp;{$v['name']}</a></li>
+                    <li><a href="/?s=merch/detail&id={$v['other_navbar']}&company_id={$company_id}&company_type={$company_type}" class="f20 common_inner_background" target="_blank">&nbsp;&nbsp;{$v['name']}</a></li>
                     {/if}
                     {/if}
                     {/if}
-                    {/volist}
+                    {/foreach}
                     {/if}
-                    {if !empty(session('user'))}
+                    {if !empty(session('account'))}
                     <style>
                         .haccount_info{padding: 3px 12px;border-bottom: 1px solid #000;}
                         .haccount_info p{font-size:15px;margin-bottom:5px;}
@@ -184,6 +184,7 @@
                     <li class="dropdown dd_parent" onclick="javascript:removeclass(this);">
                         <a href="#" data-toggle="dropdown" class="dropdown-toggle f20" style="text-transform:unset;">GoFriend <b class="caret"></b></a>
                         <ul class="dropdown-menu" style="min-width: 200px;">
+                            <li><a href="/?s=index/website_manage" class="f15 common_inner_background" target="_blank">&gt;站点管理</a></li>
                             <li><a href="//boss.gogo198.cn/?s=index/member_login&shop_uid=<?php echo base64_encode(session('account.id'));?>" class="f15 common_inner_background" target="_blank">&gt;个人中心</a></li>
                             <li><a href="/?s=index/change_account" class="f15 common_inner_background">&gt;切换账号</a></li>
                         </ul>
@@ -198,26 +199,26 @@
             <div class="navbar-collapses collapse navbar-collapse2 mobile_navbar">
                 <ul class="nav navbar-nav">
                     {if !empty($data['websites']['menu'])}
-                    {volist name="data['websites']['menu']" key="k" id="v"}
+                    {foreach name="data['websites']['menu']" key="k" id="v"}
                     {if !empty($v['children'])}
                     <li class="dropdown dd_parent" onclick="javascript:removeclass(this);">
                         <a href="#" data-toggle="dropdown" class="dropdown-toggle f20">{$v['name']} <b class="caret"></b></a>
                         <ul class="dropdown-menu">
-                            {volist name="v['children']" id="v2"}
+                            {foreach name="v['children']" id="v2"}
                             {if !empty($v2['children'])}
                             <li class="dropdown">
                                 <a href="#" data-toggle="dropdown" class="dropdown-toggle haschild f18 common_inner_background" style="padding-left:22px;">{$v2['name']} <b class="caret"></b></a>
                                 <ul class="dropdown-menu" style="background:#eee;">
-                                    {volist name="v2['children']" id="v3"}
+                                    {foreach name="v2['children']" id="v3"}
                                     {if $v3['type']==0}
                                     <!--下级卡片-->
                                     <li><a href="javascript:void(0);" class="f18 common_inner_background">&nbsp;&nbsp;{$v3['name']}</a></li>
                                     {elseif($v3['type']==1)}
                                     <!--详情内容-->
-                                    <li><a href="/?s=index/detail&id={$v3['id']}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v3['name']}</a></li>
+                                    <li><a href="/?s=merch/detail&id={$v3['id']}&company_id={$company_id}&company_type={$company_type}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v3['name']}</a></li>
                                     {elseif($v3['type']==2)}
                                     <!--跳转其它-->
-                                    {if $v3['go_other']==0)}
+                                    {if $v3['go_other']==0}
                                     <!--不选择跳转-->
                                     <li><a href="javascript:void(0);" class="f18 common_inner_background">&nbsp;&nbsp;{$v3['name']}</a></li>
                                     {elseif($v3['go_other']==1)}
@@ -225,10 +226,10 @@
                                     <li><a href="{$v3['other_link']}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v3['name']}</a></li>
                                     {elseif($v3['go_other']==2)}
                                     <!--跳转其它菜单-->
-                                    <li><a href="/?s=index/detail&id={$v3['other_navbar']}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v3['name']}</a></li>
+                                    <li><a href="/?s=merch/detail&id={$v3['other_navbar']}&company_id={$company_id}&company_type={$company_type}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v3['name']}</a></li>
                                     {/if}
                                     {/if}
-                                    {/volist}
+                                    {/foreach}
                                 </ul>
                             </li>
                             {else}
@@ -237,7 +238,7 @@
                             <li><a href="javascript:void(0);" class="f18 common_inner_background">&nbsp;&nbsp;{$v2['name']}</a></li>
                             {elseif($v2['type']==1)}
                             <!--详情内容-->
-                            <li><a href="/?s=index/detail&id={$v2['id']}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v2['name']}</a></li>
+                            <li><a href="/?s=merch/detail&id={$v2['id']}&company_id={$company_id}&company_type={$company_type}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v2['name']}</a></li>
                             {elseif($v2['type']==2)}
                             <!--跳转其它-->
                             {if $v2['go_other']==0}
@@ -248,11 +249,11 @@
                             <li><a href="{$v2['other_link']}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v2['name']}</a></li>
                             {elseif($v2['go_other']==2)}
                             <!--跳转其它菜单-->
-                            <li><a href="/?s=index/detail&id={$v2['other_navbar']}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v2['name']}</a></li>
+                            <li><a href="/?s=merch/detail&id={$v2['other_navbar']}&company_id={$company_id}&company_type={$company_type}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v2['name']}</a></li>
                             {/if}
                             {/if}
                             {/if}
-                            {/volist}
+                            {/foreach}
                         </ul>
                     </li>
                     {else}
@@ -261,7 +262,7 @@
                     <li><a href="javascript:void(0);" class="f20 common_inner_background">&nbsp;&nbsp;{$v['name']}</a></li>
                     {elseif($v['type']==1)}
                     <!--详情内容-->
-                    <li><a href="/?s=index/detail&id={$v['id']}" class="f20 common_inner_background" target="_blank">&nbsp;&nbsp;{$v['name']}</a></li>
+                    <li><a href="/?s=merch/detail&id={$v['id']}&company_id={$company_id}&company_type={$company_type}" class="f20 common_inner_background" target="_blank">&nbsp;&nbsp;{$v['name']}</a></li>
                     {elseif($v['type']==2)}
                     <!--跳转其它-->
                     {if $v['go_other']==0}
@@ -272,11 +273,11 @@
                     <li><a href="{$v['other_link']}" class="f20 common_inner_background" target="_blank">&nbsp;&nbsp;{$v['name']}</a></li>
                     {elseif($v['go_other']==2)}
                     <!--跳转其它菜单-->
-                    <li><a href="/?s=index/detail&id={$v['other_navbar']}" class="f20 common_inner_background" target="_blank">&nbsp;&nbsp;{$v['name']}</a></li>
+                    <li><a href="/?s=merch/detail&id={$v['other_navbar']}&company_id={$company_id}&company_type={$company_type}" class="f20 common_inner_background" target="_blank">&nbsp;&nbsp;{$v['name']}</a></li>
                     {/if}
                     {/if}
                     {/if}
-                    {/volist}
+                    {/foreach}
                     {/if}
 
                     {if !empty(session('account'))}
@@ -287,6 +288,7 @@
                     <li class="dropdown dd_parent" onclick="javascript:removeclass(this);">
                         <a href="#" data-toggle="dropdown" class="dropdown-toggle f20" style="text-transform:unset;">GoFriend <b class="caret"></b></a>
                         <ul class="dropdown-menu" style="min-width: 200px;">
+                            <li><a href="/?s=index/website_manage" class="f15 common_inner_background" target="_blank">&gt;站点管理</a></li>
                             <li><a href="//boss.gogo198.cn/?s=index/member_login&shop_uid=<?php echo base64_encode(session('account.id'));?>" class="f15 common_inner_background" target="_blank">&gt;个人中心</a></li>
                             <li><a href="/?s=index/change_account" class="f15 common_inner_background">&gt;切换账号</a></li>
                         </ul>

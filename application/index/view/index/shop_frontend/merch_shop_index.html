@@ -4,3 +4,24 @@
     {include file="layouts/rotate_info"}
 {/if}
 
+{if !empty($data['websites']['menu'])}
+    {include file="layouts/header2"}
+{/if}
+
+{if !empty($data['websites']['rotate'])}
+    {include file="layouts/rotate"}
+{/if}
+
+{if !empty($data['websites']['rotate_info']) && $data['websites']['rotate_info']['location']==2}
+    {include file="layouts/rotate_info"}
+{/if}
+
+{if !empty($data['websites']['recommendA']) || !empty($data['websites']['recommendB'])}
+{include file="layouts/recommend"}
+{/if}
+
+{if !empty($data['websites']['guide'])}
+{include file="layouts/guide"}
+{/if}
+
+{include file="layouts/footer"}

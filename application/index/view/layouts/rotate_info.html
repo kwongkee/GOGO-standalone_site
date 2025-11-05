@@ -47,78 +47,78 @@
     #mobileNewsBox-container .scrollable-div-child{height:35px;}
     }
 </style>
-<link rel="stylesheet" href="/assets/d2eace91/js/chosen/chosen.css?v=1.2"/>
+<link rel="stylesheet" href="shop/js/chosen/chosen.css?v=1.2"/>
 <div class="rotateBox">
     <div class="disf" style="height:100%;">
         {if !empty($data['websites']['rotate_info']['content_id'])}
         <div class="pc_news_box">
             <div class="disf" style="justify-content: space-around;">
-                {volist name="data['websites']['rotate_info']['content_id']" key="k" id="v"}
+                {foreach name="data['websites']['rotate_info']['content_id']" key="k" id="v" }
                 {if $v==1}
-                <!--新闻内容-->
-                <div class="newsContainer">
-                    <div class="swiper-container news">
-                        <div class="swiper-wrapper">
-                            {volist name="data['websites']['rotate_info']['content'][$k]" key="k2" id="v2"}
-                            <div class="swiper-slide">
-                                <a href="{$v2['link']}" target="_blank"><p class="f15">{$v2['title']}</p></a>
-                            </div>
-                            {/volist}
-                        </div>
-                    </div>
-                </div>
-                {elseif($v==2)}
-                <!--时间内容-->
-                <div class="time">
-                    <div class="drop-down beijing-time disf">
-                        <select id="selectCity" onchange="selectCity(this)" class="chosen-select city-select">
-                            {volist name="data['websites']['rotate_info']['content'][$k]" key="k2" id="v2")
-                            <optgroup label="{{$k2}}">
-                                {volist name="v2" key="k3" id="v3"}
-                                <option value="{$v3['city_en']}"><?php echo strtoupper($v3['cityEn']);?></option>
-                                {/volist}
-                            </optgroup>
-                            {/volist}
-                        </select>
-                        <span class="beijing_date"><?php echo date('Y/m/d');?></span>&nbsp;<span class="beijing_sec" style="width:60px;"></span>
-                    </div>
-                </div>
-                {elseif($v==3)}
-                <!--汇率内容-->
-                <div class="rate disf">
-                    <div class="leftTxt">实时汇率：</div>
-                    <div class="rightTxt">
-                        <div class="swiper-container rate_swiper">
+                    <!--新闻内容-->
+                    <div class="newsContainer">
+                        <div class="swiper-container news">
                             <div class="swiper-wrapper">
-                                {volist name="data['websites']['rotate_info']['content'][$k]['rate']" key="k2" id="v2"}
+                                {foreach name="data['websites']['rotate_info']['content'][$k]" key="k2" id="v2"}
                                 <div class="swiper-slide">
-                                    <a href="/?s=merch/rate_detail&id={$v2['id']}&company_type={$company_type}&company_id={$company_id}" target="_blank"><p>1CNY&nbsp;≈&nbsp;<?php echo number_format(1*$v2['rate'],3);?>{$v2['symbol']}</p></a>
+                                    <a href="{$v2['link']}" target="_blank"><p class="f15">{$v2['title']}</p></a>
                                 </div>
-                                {/volist}
+                                {/foreach}
                             </div>
                         </div>
                     </div>
-                </div>
+                {elseif($v==2)}
+                    <!--时间内容1-->
+                    <div class="time">
+                        <div class="drop-down beijing-time disf">
+                            <select id="selectCity" onchange="selectCity(this)" class="chosen-select city-select">
+                                {foreach name="data['websites']['rotate_info']['content'][$k]" key="k2" id="v2")
+                                <optgroup label="{$k2}">
+                                    {foreach name="v2" key="k3" id="v3"}
+                                    <option value="{$v3['city_en']}"><?php echo strtoupper($v3['cityEn']);?></option>
+                                    {/foreach}
+                                </optgroup>
+                                {/foreach}
+                            </select>
+                            <span class="beijing_date"><?php echo date('Y/m/d');?></span>&nbsp;<span class="beijing_sec" style="width:60px;"></span>
+                        </div>
+                    </div>
+                {elseif($v==3)}
+                    <!--汇率内容-->
+                    <div class="rate disf">
+                        <div class="leftTxt">实时汇率：</div>
+                        <div class="rightTxt">
+                            <div class="swiper-container rate_swiper">
+                                <div class="swiper-wrapper">
+                                    {foreach name="data['websites']['rotate_info']['content'][$k]['rate']" key="k2" id="v2"}
+                                    <div class="swiper-slide">
+                                        <a href="/?s=merch/rate_detail&id={$v2['id']}&company_type={$company_type}&company_id={$company_id}" target="_blank"><p>1CNY&nbsp;≈&nbsp;<?php echo number_format(1*$v2['rate'],3);?>{$v2['symbol']}</p></a>
+                                    </div>
+                                    {/foreach}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 {/if}
-                {/volist}
+                {/foreach}
             </div>
         </div>
 
         <div class="mobile_news_box">
             <div class="swiper-container" id="mobileNewsBox-container">
                 <div class="swiper-wrapper">
-                    {volist name="data['websites']['rotate_info']['content_id']" key="k" id="v"}
+                    {foreach name="data['websites']['rotate_info']['content_id']" key="k" id="v"}
                     {if $v==1}
                     <!--新闻内容-->
                     <div class="swiper-slide">
                         <div class="newsContainer">
                             <div class="swiper-container news">
                                 <div class="swiper-wrapper">
-                                    {volist name="data['websites']['rotate_info']['content'][$k]" key="k2" id="v2"}
+                                    {foreach name="data['websites']['rotate_info']['content'][$k]" key="k2" id="v2"}
                                     <div class="swiper-slide">
                                         <a href="{$v2['link']}" target="_blank"><p class="f15">{$v2['title']}</p></a>
                                     </div>
-                                    {/volist}
+                                    {/foreach}
                                 </div>
                             </div>
                         </div>
@@ -129,13 +129,13 @@
                         <div class="scrollable-div-child mtime">
                             <div class="drop-down beijing-time disf" style="justify-content: center;">
                                 <select id="selectCity" onchange="selectCity(this)" class="chosen-select city-select">
-                                    {volist name="data['websites']['rotate_info']['content'][$k]" key="k2" id="v2"}
+                                    {foreach name="data['websites']['rotate_info']['content'][$k]" key="k2" id="v2"}
                                     <optgroup label="{$k2}">
-                                        {volist name="v2" key="k3" id="v3"}
+                                        {foreach name="v2" key="k3" id="v3"}
                                         <option value="{$v3['city_en']}"><?php echo strtoupper($v3['cityEn']);?></option>
-                                        {/volist}
+                                        {/foreach}
                                     </optgroup>
-                                    {/volist}
+                                    {/foreach}
                                 </select>
                                 <span class="beijing_date"><?php echo date('Y/m/d');?></span>&nbsp;<span class="beijing_sec" style="width:60px;"></span>
                             </div>
@@ -149,18 +149,18 @@
                             <div class="rightTxt" style="text-align: left;">
                                 <div class="swiper-container mrate_swiper">
                                     <div class="swiper-wrapper">
-                                        {volist name="data['websites']['rotate_info']['content'][$k]['rate']" key="k2" id="v2"}
+                                        {foreach name="data['websites']['rotate_info']['content'][$k]['rate']" key="k2" id="v2"}
                                         <div class="swiper-slide">
                                             <a href="/?=merch/rate_detail&id={$v2['id']}&company_id={$company_id}&company_type={$company_type}" target="_blank"><p>1CNY&nbsp;≈&nbsp;<?php echo number_format(1*$v2['rate'],3);?>{$v2['symbol']}</p></a>
                                         </div>
-                                        {/volist}
+                                        {/foreach}
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     {/if}
-                    {/volist}
+                    {/foreach}
                 </div>
             </div>
         </div>

@@ -383,9 +383,13 @@
                         }else if({$open}==5){
                             window.location.href="/?s=index/save_template&buss_pid={$param[0]}&buss_id={$param[1]}&ordersn={$param[2]}";
                         }else{
-                            if("{$company_id}">0){
-                              window.location.href = "/?s=index/merch_website_index&company_id={$company_id}&company_type={$company_type}"
-                            } else {
+                            if("{$company_id}">0 && "{$company_type}"==1){
+                                window.location.href = "/?s=index/merch_website_index&company_id={$company_id}&company_type={$company_type}"
+                            }
+                            else if("{$company_id}">0 && "{$company_type}"==0){
+                                window.location.href = "/?s=merch/merch_shop_index&company_id={$company_id}&company_type={$company_type}"
+                            }
+                            else {
                                 window.location.href = "/";
                             }
                         }
@@ -483,13 +487,15 @@
                             }else if("{$open}"==5){
                                 window.location.href="/?s=index/save_template&buss_pid={$param[0]}&buss_id={$param[1]}&ordersn={$param[2]}";
                             }else{
-                                //会员中心
-                                // $('.auto_link').attr('href',"https://boss.gogo198.cn/?s=index/member_login&uid="+data2.base64_uid);
-                                // setTimeout(function(){
-                                //     $('.auto_link').click();
-                                // },800);
-
-                                window.location.href="/";
+                                if("{$company_id}">0 && "{$company_type}"==1){
+                                    window.location.href = "/?s=index/merch_website_index&company_id={$company_id}&company_type={$company_type}"
+                                }
+                                else if("{$company_id}">0 && "{$company_type}"==0){
+                                    window.location.href = "/?s=merch/merch_shop_index&company_id={$company_id}&company_type={$company_type}"
+                                }
+                                else {
+                                    window.location.href = "/";
+                                }
                             }
                         }else if(data2.code==-1){
                             //拒绝授权

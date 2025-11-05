@@ -44,7 +44,7 @@
             <div class="swiper-container" id="discovery-container">
                 <!--轮播内容-->
                 <div class="swiper-wrapper">
-                    {volist name="$data['websites']['recommendA']" key="k" id="vo"}
+                    {foreach name="data['websites']['recommendA']" key="k" id="vo"}
                     <div class="swiper-slide">
                         <div class="discoveryDiv">
                             {if $vo['go_other']==0}
@@ -55,16 +55,16 @@
                                 <a href="javascript:common_operation({$vo['go_other']},this);">
                             {elseif($vo['go_other']==2)}
                                 <!--商品链接-->
-                                <a href="/?s=merch/goods&id={$vo['other_goods']}" target="_blank">
+                                <a href="//www.gogo198.cn/goods-{$vo['other_goods']}.html" target="_blank">
                             {elseif($vo['go_other']==3)}
                                 <!--菜单链接-->
-                                <a href="/?s=index/detail&id={$vo['other_navbar']}" target="_blank">
+                                <a href="/?s=merch/detail&id={$vo['other_navbar']}&company_id={$company_id}&company_type={$company_type}" target="_blank">
                             {elseif($vo['go_other']==4)}
                                 <!--第三方链接-->
                                 <a href="{$vo['other_link']}" target="_blank">
                             {elseif($vo['go_other']==5)}
                                 <!--搜索关键字-->
-                                <a href="/?s=merch/goods_list&frame_id=4&hotsearchId={$vo['id']}&searchTitle={$vo['other_keywords']}" target="_blank">
+                                <a href="/?s=merch/goods_list&frame_id=4&hotsearchId={$vo['id']}&searchTitle={$vo['other_keywords']}&company_id={$company_id}&company_type={$company_type}" target="_blank">
                             {/if}
 
                                 <img src="{$data['source_link']}{$vo['thumb']}" srcset="{$data['source_link']}{$vo['thumb']} 1x, {$data['source_link']}{$vo['thumb']} 2x, {$data['source_link']}{$vo['thumb']} 3x" alt="" style="width:100%;height:100%;" class="carousel-image"/>
@@ -74,7 +74,7 @@
                             </a>
                         </div>
                     </div>
-                    {/volist}
+                    {/foreach}
                 </div>
                 <!--左右切换-->
                 <div class="swiper-button-next sn1"></div>
@@ -88,19 +88,19 @@
             {if !empty($data['websites']['recommendB'])}
             <div class="newsDiv">
                 <div class="newsHead disf">
-                    {volist name="data['websites']['recommendB']" key="k" id="v"}
+                    {foreach name="data['websites']['recommendB']" key="k" id="v"}
                     <div class="newsText leftText {if $k==0} newsAct {/if} f20" onclick="change_news({$v['go_other']},{$k},this)">{$v['name']}</div>
-                    {/volist}
+                    {/foreach}
                 </div>
                 <div class="newsCont">
-                    {volist name="data['websites']['recommendB']" key="k" id="v"}
+                    {foreach name="data['websites']['recommendB']" key="k" id="v"}
                     {if $v['go_other']==2}
                     <div class="swiper-container news{$k}" style="display:{if $k!=0} none {/if};">
                         <div class="swiper-wrapper">
-                            {volist name="v['children']" key="k2" id="vo"}
+                            {foreach name="v['children']" key="k2" id="vo"}
                             <div class="swiper-slide">
                                 <div class="goodsDiv">
-                                    <a href="/?merch/goods&id={$vo['goods_id']}" target="_blank">
+                                    <a href="//www.gogo198.cn/goods-{$vo['goods_id']}.html" target="_blank">
                                         <div class="disf">
                                             <div class="goodsImg" style="background: url({$vo['goods_image']}) no-repeat 100% 100%;background-size: cover;"></div>
                                             <div class="goodsInfo">
@@ -114,7 +114,7 @@
                                     </a>
                                 </div>
                             </div>
-                            {/volist}
+                            {/foreach}
                         </div>
                     </div>
                     {/if}
@@ -123,7 +123,7 @@
                         <iframe src="https://boss.gogo198.cn/?s=customer/customer_online&pa=2&who_send=2&id=0&pid=0&company_id={$company_id}&isframe=1&uid=<?php echo session('account.gogo_id');?>" frameborder="0" style="width:100%;height:calc(100% + 3px);"></iframe>
                     </div>
                     {/if}
-                    {/volist}
+                    {/foreach}
                 </div>
             </div>
             {/if}

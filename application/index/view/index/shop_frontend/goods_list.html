@@ -1,0 +1,1190 @@
+{include file="layouts/shop_header"}
+{include file="layouts/header2"}
+
+
+<link rel="stylesheet" href="fonts2/iconfont.css?v=1.1"/>
+<link rel="stylesheet" href="shop/origin/css/common.css?v=1.1"/>
+<link rel="stylesheet" href="layui/css/layui.css?v=23121"/>
+<script type="text/javascript" src="layui/layui.js"></script>
+<!--<link rel="stylesheet" href="/assets/d2eace91/js/layer/theme/default/layer.css?v=3.1.0" id="layuicss-layer">-->
+<!--<script src="/assets/d2eace91/js/layer/layer.js?v=1.2"></script>-->
+<script src="js/jquery.js?v=1.1"></script>
+
+<!--<script src="/assets/d2eace91/js/layer/layer.js?v=1.1"></script>-->
+<!--<script src="/assets/d2eace91/js/jquery.method.js?v=1.1"></script>-->
+<!--<script src="/js/jquery.fly.min.js?v=1.1"></script>-->
+
+<style type="text/css" media="all">
+    *{box-sizing: border-box;line-height: 24px;}
+    .disf{display: flex;align-items: center;}
+    body{background:{$data['websites']['info']['color_inner']} !important;}
+    .w1200{width: 1200px;margin:0 auto;margin-top: 0px;}
+    .w1200 .headTxt .headTxtAct{font-weight: 800;color:#db1d18;}
+    .login-form .login-con{box-sizing: revert;}
+    .login-wrap .form-group .text {border-bottom: 1px solid #ddd !important;}
+
+    #content{padding:20px;box-sizing:border-box;margin-bottom:50px;background:{$data['websites']['info']['color_inner']};}
+    #content .content .conditionDiv{border:1px solid {$data['websites']['info']['color']};padding:10px;box-shadow: 0px 0px 8px 1px #525252;}
+
+    /**统一版式条件**/
+    #content .content .headCon{background:{$data['websites']['info']['color']};}
+    #content .content .headCon2{border:1px solid #525252;}
+    #content .content .headCon:first-child{border-top:1px solid {$data['websites']['info']['color']};}
+    #content .content .headCon .leftVal{font-size:15px;font-weight: 800;color:{$data['websites']['info']['color_word']};text-align: left;width:10%;padding:7px 10px;border-bottom: 1px solid {$data['websites']['info']['color_word']};}
+    #content .content .headCon .rightVal{padding:5px 10px;background:{$data['websites']['info']['color_word']}fff;width: 90%;height:40px;overflow: hidden;position:relative;transition: all 0.3s ease;border-bottom: 1px solid #bebebe;}
+    #content .content .headCon .rightVal .conItem{font-size:13px;width: 78px;display: inline-block;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;cursor:pointer;padding:5px 0;color:{$data['websites']['info']['color_word']};}
+    #content .content .headCon .conItem{cursor:pointer;font-size: 18px;color: {$data['websites']['info']['color_word']};font-weight: 800;margin-right: 10px;}
+    /**搜索条件**/
+    .high_search{background:{$data['websites']['info']['color']};}
+    .high_search:first-child{border-top:1px solid {$data['websites']['info']['color']};}
+    .high_search .leftVal{font-size:15px;font-weight: 800;color:{$data['websites']['info']['color_word']};text-align: left;width:15%;padding:7px 10px;/**border-bottom: 1px solid {$data['websites']['info']['color_word']};**/white-space:nowrap;}
+    .high_search .rightVal{padding:5px 10px;background:{$data['websites']['info']['color_word']}fff;width: 90%;height:40px;max-height:200px;overflow-y: auto;position:relative;transition: all 0.3s ease;border-bottom: 1px solid #bebebe;}
+    .high_search .rightVal .valItem{font-size:13px;width: 63px;display: inline-block;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;cursor:pointer;padding:5px 0;color:{$data['websites']['info']['color_word']};}
+    .high_search .rightVal .valItem_act{color:#e60000;}
+    .high_search .rightVal .valItem:hover{color:#e60000;}
+    .high_search .rightVal .loadmore_search{position: absolute;top: 4px;right: 4px;font-size: 13px;padding: 3px 8px;display: flex;align-items: center;border:1px solid {$data['websites']['info']['color']};cursor:pointer;transition: all 0.3s ease;}
+    .high_search .rightVal .loadmore_search .more_icon{width:7px;height:7px;border-top:1px solid {$data['websites']['info']['color']};border-right:1px solid {$data['websites']['info']['color']};transform: rotate(135deg);margin-left:5px;background:{$data['websites']['info']['color_word']}fff;}
+    .high_search .rightVal .loadmore_search2 {position: absolute;top: 4px;right: 4px;font-size: 13px;padding: 3px 8px;display: flex;align-items: center;border:1px solid {$data['websites']['info']['color']};cursor:pointer;transition: all 0.3s ease;}
+    .high_search .rightVal .loadmore_search2 .more_icon{width:7px;height:7px;border-top:1px solid {$data['websites']['info']['color']};border-right:1px solid {$data['websites']['info']['color']};transform: rotate(315deg);margin-left:5px;background:{$data['websites']['info']['color_word']}fff;}
+
+    /**已选条件**/
+    .selected{margin-top:15px;/**padding:5px 15px;**/padding-right:0px;box-sizing: border-box;border-top: 1px solid #bebebe;border-bottom: 1px solid #bebebe;}
+    .selected .title{font-size: 15px;font-weight: 800;color: #000000;text-align: left;width: 15%;padding: 7px 10px;white-space: nowrap;}
+    .selected .condition_div{width:85%;max-height: 90px;overflow-y: scroll;}
+    .selected .condition_div .condition_cdiv{background: #f7e6e1;color: #e60000;padding: 2px 5px;box-sizing: border-box;font-size:12px;cursor:pointer;margin: 5px 0 5px 10px;display: inline-block;}
+    .selected .condition_div .condition_cdiv span{margin-left:5px;}
+    .selected .close_all{font-size: 13px;padding: 3px 8px;display: flex;align-items: center;border: 1px solid #bebebe;cursor: pointer;margin-left:5px;background:#bebebe;color:#000;white-space:nowrap;}
+    .selected .close_all span{margin-left:2px;}
+
+    /**自定字段**/
+    .fields_div{margin-top:0px;border-bottom: 1px solid #bebebe;padding-bottom: 0px;height:40px;}
+    .fieldsBox{width: 100%;height:100%;}
+    .fieldsBox input[type="number"]{width:80px;font-size: 12px;padding: 2px 5px;box-sizing: border-box;border:1px solid #000;}
+    .fieldsBox select{width:80px;font-size: 12px;padding: 5px 5px;border: 1px solid #000;box-sizing: border-box;}
+    .fieldsBox input[type="checkbox"]{width:fit-content;margin-right:5px;}
+    .fieldsBox .fieldsContent{font-size:12px;transition:all .3s linear;padding-right: 10px;/**border-right: 1px solid #bebebe;**/height: fit-content;padding-top: 5px;width: 100%;display: inline-block;margin-right:10px;}
+    .fieldsBox .fieldsContent .name{font-size:15px;margin-right:5px;}
+    /**价幅样式**/
+    .fieldsBox .fieldsContent .sure{display: ;}
+    .fieldsBox .fieldsContent .btn{border: 1px solid {$data['websites']['info']['color']};color:{$data['websites']['info']['color']};padding: 2px 10px;margin-left: 10px;font-size:15px;cursor:pointer;line-height:26px;}
+    .fieldsBox .fieldsContent .btn:hover{background:{$data['websites']['info']['color']};color:{$data['websites']['info']['color_word']};}
+    /**发货地区样式**/
+    .fieldsBox .fieldsContent .areaBox,.fieldsBox .fieldsContent .areaBox2{font-size: 13px;padding: 2px 20px 2px 5px;position:relative;border: 1px solid #000;cursor: pointer;transition: all 0.3s ease;width:100%;}
+    .fieldsBox .fieldsContent .areaBox .areaTitle,.fieldsBox .fieldsContent .areaBox2 .areaTitle{width:100%;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+    .fieldsBox .fieldsContent .areaBox:after{content:'';position: absolute;top:9px;right:6px;width:7px;height:7px;border-top:1px solid #000;border-right:1px solid #000;transform: rotate(135deg);}
+    .fieldsBox .fieldsContent .areaBox2:after{content:'';position: absolute;top:13px;right:6px;width:7px;height:7px;border-top:1px solid #000;border-right:1px solid #000;transform: rotate(315deg);}
+    .fieldsBox .fieldsContent .areaBox2 .areaContent{position:absolute;top:30px;left:-1px;width:400px;height:fit-content;padding:10px;background:{$data['websites']['info']['color_word']};border: 1px solid #bebebe;box-shadow: 0px 0px 5px 1px #bebebe;z-index: 9;}
+    .fieldsBox .fieldsContent .areaBox2 .areaContent .areaDiv{width:110px;display:inline-block;margin:0 10px 10px 0px;position:relative;}
+    .fieldsBox .fieldsContent .areaBox2 .areaContent .areaDiv:nth-child(3n){margin-right:0;}
+    .fieldsBox .fieldsContent .areaBox2 .areaContent .areaDiv .areaName{font-size:13px;}
+    .fieldsBox .fieldsContent .areaBox2 .areaContent .areaDiv .areaName:hover{color:#e60000;}
+    .fieldsBox .fieldsContent .areaBox2 .areaContent .areaDiv .areaChild{position:absolute;top:0px;left:50px;background:#bebebe;padding:10px;width:280px;height:fit-content;display: none;z-index: 10;}
+    .fieldsBox .fieldsContent .areaBox2 .areaContent .areaDiv .areaChild:after{content:'';position: absolute;top: 5px;left: -15px;width: 0;height: 0;border-left: 10px solid transparent;border-right: 10px solid transparent;border-bottom: 10px solid #bebebe;transform: rotate(270deg);}
+    .fieldsBox .fieldsContent .areaBox2 .areaContent .areaDiv .areaChild .cityName{width: 80px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;margin-right: 10px;margin-bottom: 8px;cursor: pointer;display: inline-block;}
+    .fieldsBox .fieldsContent .areaBox2 .areaContent .areaDiv .areaChild .cityName:nth-child(3n){margin-right:0;}
+    .fieldsBox .fieldsContent .areaBox2 .areaContent .areaDiv .areaChild .cityName:hover{color:#e60000;}
+
+    /**排序**/
+    .sortCon{cursor: pointer;}
+    .sortDiv{margin-left:2px;}
+    .sortDiv .ascBox{width: 0;height: 0;border-left: 5px solid transparent;border-right: 5px solid transparent;border-bottom: 5px solid #bebebe;transform: rotate(0deg);}
+    .sortDiv .descBox{width: 0;height: 0;border-left: 5px solid transparent;border-right: 5px solid transparent;border-bottom: 5px solid #bebebe;transform: rotate(180deg);margin-top: 5px;}
+    .sortDiv .sortAct{border-bottom: 5px solid #e60000;}
+
+    /**商品列表**/
+    .goods_list{position: relative;box-sizing: border-box;}
+    .goods_box{width: 18%;height: 325px;background-color: {$data['websites']['info']['color_word']};display:inline-block;overflow: hidden;margin: 0 2.15% 2.15% 0px;border-radius:8px;cursor:pointer;}
+    .goods_box:hover{border:3px solid #ff9702;box-shadow: 0px 0px 10px 1px #525252;}
+    /*.goods_box:nth-of-type(1){margin-left:0;}  .goods_box:nth-of-type(6){margin-left:0;}  .goods_box:nth-of-type(11){margin-left:0;}  .goods_box:nth-of-type(16){margin-left:0;}*/
+    .goods_box:nth-child(5n){margin-right:0;}
+    .goods_box .goods_image{width:100%;padding:10px;}
+    .goods_box .goods_image img{width:100%;height:205px;/*border:5px solid #dbd9d9;*/}
+    /*.goods_box:hover .goods_image img{box-shadow: 0px 0px 10px 1px #000;}*/
+
+    .goods_box .goods_info{width: 100%;height: 105px;border: none;overflow: hidden;text-align: center;padding-top:2px;}
+    .goods_box .goods_info .gcon{background:{$data['websites']['info']['color_word']};padding:8px;height: 100%;padding-top:0;}
+    .goods_box .goods_info .goods_name{width: 100%;height: 55px;padding-right: 0px;margin-right: 0px;font-size: 13px;text-align: left;line-height: 19px;color: #000;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3;overflow: hidden;text-overflow: ellipsis;/**background:{$data['websites']['info']['color_word']};**/font-weight: 800;}
+    .goods_box .goods_info .operate{width: 100%;line-height: 30px;  margin-top:10px;}
+    .goods_box .goods_info .operate .goods_price{width: 100%;height:100%;line-height: 30px;font-size: 13px;font-weight: bold;text-align: center;margin: 0 auto;color:#000;}
+    .goods_box .goods_info .operate .view_detail{width: 90px;height: 30px;line-height: 30px;color: {$data['websites']['info']['color_word']};font-size:13px;text-align: center;display: inline-block;background:#E31939;cursor:pointer;}
+
+    /**分页**/
+    .layui-laypage a:hover{color:{$data['websites']['info']['color']};}
+    .layui-laypage .layui-laypage-curr .layui-laypage-em{background:{$data['websites']['info']['color']};border-top:1px solid {$data['websites']['info']['color_word']};border-bottom:1px solid {$data['websites']['info']['color_word']};height: 26px;}
+
+    /**更多**/
+    .searchContent{text-align: center;margin-top:15px;}
+    .inputBox{padding: 5px 20px;background: {$data['websites']['info']['color']};color: {$data['websites']['info']['color_word']};width: fit-content;margin: 0 auto;cursor: pointer;font-size: 15px;border: 1px solid {$data['websites']['info']['color_word']};font-weight: 800;}
+
+    .noresult-content{text-align: center;}
+    .noresult-content img{width: 205px;height:205px;margin-top:10px;}
+    .noresult-content .noresult-hd{font-size: 20px;margin-top:10px;color:{$data['websites']['info']['color_word']};}
+
+    footer{display: block !important;}
+    footer ul.social-network li{height:32px !important;max-height:fit-content;}
+    #pagination *{font-weight:800;}
+
+    /**弹窗样式**/
+    .layer_frame .layui-layer-title{background:#bebebe;color:{$data['websites']['info']['color_word']};}
+    .layer_frame .layui-layer-content{overflow:unset !important;}
+    .layer_frame .layui-layer-setwin{top:12px !important;}
+    .layer_frame .layui-layer-title .disf{height:100%;}
+    .layer_frame .exclamation-circle {position: relative;margin-right:8px;}
+    .layer_frame .exclamation-circle span{font-size: 14px;font-weight:900;color: {$data['websites']['info']['color_word']};font-family: PingFang SC, Hiragino Sans GB, Heiti SC, Microsoft YaHei, Helvetica, Tahoma, Arial, SimHei, WenQuanYi Micro Hei !important;}
+    .layer_frame .exclamation-circle::after {content: '';position: absolute;left: 50%;top: 50%;transform: translate(-50%, -50%);width: 14px;height: 14px;background-color: {$data['websites']['info']['color_word']};border-radius: 50%;opacity:0.5;}
+    .layer_frame .page_innerhead{width:100%;border-bottom:1px solid {$data['websites']['info']['color']};}
+    .layer_frame .page_innerhead .pageBack{width:15%;text-align: center;padding:10px 0;font-size:15px;color:#000;font-weight:600;background:#bebebe;cursor:pointer;position:relative;}
+    .layer_frame .page_innerhead .pageSel{width:42.5%;text-align: center;padding:10px 0;font-size:15px;color:#000;font-weight:600;background:{$data['websites']['info']['color_word']};cursor:pointer;position:relative;}
+    .layer_frame .page_innerhead .pageSel:first-child{border-right:1px solid {$data['websites']['info']['color_word']};}
+    .layer_frame .page_innerhead .pageAct{background:{$data['websites']['info']['color']};color:{$data['websites']['info']['color_word']};}
+    .layer_frame .page_innerhead .pageAct:after {content: '';position: absolute;top: 15px;right: 35px;width: 8px;height: 8px;border-top: 2px solid {$data['websites']['info']['color_word']};border-right: 2px solid {$data['websites']['info']['color_word']};transform: rotate(135deg);}
+    .layer_frame .layui-layer-content .rightBox .page_content{height:88%;overflow-y: auto;overflow-x:hidden;}
+    .layer_frame .layui-layer-content .rightBox .page_content .rightContent{height:100%;display: none;}
+
+    @media (max-width: 992px){
+        body{min-width: 100%;}
+        .detail_topimg, .non_topimg {margin-top: 0px;padding:0 !important;}
+        .w1200{width: 100%;}
+        .w1200 .content{width: 100%;}
+        #content .content .conditionDiv{width: 100%;}
+        #content .content .headCon{width: 100%;}
+        #content .content .headCon .leftVal{width: 20%;}
+        #content .content .headCon .rightVal{width: 80%;}
+        #content .content .headCon .rightVal .conItem{width: 24%;}
+        .goods_box {width: 48%;height:fit-content;}
+        .goods_box:nth-of-type(even){margin-right:0;}
+        .goods_box .goods_image img{height:145px;}
+        .layer_frame .page_innerhead .pageAct:after{right:15px;}
+
+    }
+</style>
+
+<section id="content" class="non_topimg">
+    <div class="w1200">
+        <div class="content">
+            <div class="disf headTxt" style="justify-content: space-between;padding: 10px 15px;box-sizing: border-box;">
+                <div class="headTxt_leftTxt" style="color:#000;font-size: 15px;">正在搜索"<span class="headTxtAct">{$searchTitle}</span>"，为你找到以下商品</div>
+                <div class="headTxt_rightTxt" style="color:#000;font-size: 15px;"><a href="javascript:common_operation(7,this);" style="color:#000;">找不到想要的宝贝?尝试咨询<span class="headTxtAct">在线客服</span></a></div>
+            </div>
+            <div class="conditionDiv common_inner_background">
+                <!--顶部统一一行格式-->
+                <div class="disf headCon" style="display:none;">
+                    <div class="leftVal">条件：</div>
+                    <div class="rightVal">
+                        <div class="conItem" onclick="showCondition(1,this)">按类别</div>
+                        <div class="conItem" onclick="showCondition(2,this)">按单价</div>
+                        <div class="conItem" onclick="showCondition(3,this)">换币种</div>
+                        <div class="conItem" onclick="showCondition(4,this)">按推荐</div>
+                    </div>
+                </div>
+                <div class="disf headCon" style="background:unset;justify-content: space-between;">
+                    <div class="disf">
+                        <div class="conItem" onclick="showCondition(1,this)">综合</div>
+                        <div class="conItem" onclick="showCondition(5,this)">销量</div>
+                        <div class="conItem" onclick="showCondition(2,this)" style="margin-right:0;">价格</div>
+                    </div>
+                    <div class="conItem" onclick="showCondition(3,this)" style="margin-right:0;">换币种</div>
+                </div>
+                <!--顶部统一二行格式-->
+                {if !empty($two_fields)}
+                <div class="disf headCon headCon2" style="background: {$data['websites']['info']['color_word']};padding:10px;margin-top:10px;">
+                    {foreach name="two_fields" key="k" id="v"}
+                    <div class="conSelItem" style="font-size:15px;margin-right:10px;color:#000;"><input type="checkbox" style="margin-right:5px;" onclick="showCondition2({$v['id']},this)"                             {if strpos($condition_arr2,$v['id'].'、') !== false} checked {/if}>{$v['name']}</div>
+                    {/foreach}
+                </div>
+                {/if}
+                <!--商品条件-->
+                <div class="selector_box" style="display: none;">
+                    <div class="selector">
+                        {if !empty($condition['category'])}
+                        <div class="disf high_search">
+                            <div class="leftVal">类别：</div>
+                            <div class="rightVal">
+                                {foreach name="condition['category']" key="k2" id="v2"}
+                                <div class="valItem category{$v2['cat_id']}" title="{$v2['cat_name']}" onclick="conSelect(this,{$v2['cat_id']},0,1,'类别')">{$v2['cat_name']}</div>
+                                {/foreach}
+                                <div class="loadmore_search" onclick="loadmore_search(this)">更多<div class="more_icon"></div></div>
+                            </div>
+                        </div>
+                        {/if}
+                        {if $hotsearchId==0}
+                        {if !empty($condition['options'])}
+                        {foreach name="condition['options']" key="k2" id="v2"}
+                        <div class="disf high_search">
+                            <div class="leftVal">{$v2['spec_name']}：</div>
+                            <div class="rightVal">
+                                {foreach name="v2['children']" key="k3" id="v3"}
+                                <div class="valItem option{$v2['spec_ids']}_{$v3['value_id']}" title="{$v3['value_name']}" onclick="conSelect(this,{$v3['value_id']},{$v2['spec_ids']},2,'{$v2['spec_name']}')">{$v3['value_name']}</div>
+                                {/foreach}
+                                <div class="loadmore_search" onclick="loadmore_search(this)">更多<div class="more_icon"></div></div>
+                            </div>
+                        </div>
+                        {/foreach}
+                        {/if}
+
+                        {if !empty($condition['brand'])}
+                        <div class="disf high_search">
+                            <div class="leftVal">品牌：</div>
+                            <div class="rightVal">
+                                {foreach name="condition['brand']" key="k2" id="v2"}
+                                <div class="valItem brand{$v2}" title="{$v2}" onclick="conSelect(this,'{$v2}','brand{$v2}',3,'品牌')">{$v2}</div>
+                                {/foreach}
+                                <div class="loadmore_search" onclick="loadmore_search(this)">更多<div class="more_icon"></div></div>
+                            </div>
+                        </div>
+                        {/if}
+                        {/if}
+                    </div>
+
+                    <!--已选-->
+                    <div class="selected" style="display:{if empty($g_condition)}none{else}block{/if};">
+                        <div class="disf">
+                            <span class="title">已选条件：</span>
+                            <div class="condition_div">
+
+                            </div>
+                            <div class="close_all" onclick="close_all(this)">清空<span>x</span></div>
+                        </div>
+                    </div>
+
+                    <div class="searchContent">
+                        <div class="inputBox" onclick="view_moreInfo(this)">
+                            查看更多分类&gt;&gt;
+                        </div>
+                    </div>
+                </div>
+
+                <!--自定义字段-->
+                <div class="fields_div" style="display: none;">
+                    <div class="fieldsBox">
+                        {if !empty($condition['column_content'])}
+                        {if !empty($field_condition)}
+                        {foreach name="condition['column_content']" key="k" id="v"}
+                        {if $v['stype']==1}
+                        <!--价格幅度-->
+
+                        <!--已选自定条件START-->
+                        <?php $min = '-1';?>
+                        <?php $max = '-1';?>
+                        {foreach name="field_condition" key="k2" id="v2"}
+                        {if $v2['id']==$v['id']}
+                        {if $min=='-1' && $max=='-1'}
+                        <?php $min = intval($v2['val']);?>
+                        {elseif($max=='-1' && $min>=0)}
+                        <?php $max = intval($v2['val']);?>
+                        {/if}
+                        {/if}
+                        {/foreach}
+                        <!--已选自定条件END-->
+
+                        <div class="fieldsContent price_box" style="display:none;">
+                            <div class="disf" style="justify-content: center;margin-top: 15px;">
+                                <div class="name disf sortCon" onclick="sortCon(this,{$v['id']})">
+                                    {$v['name']}
+                                    <div class="sortDiv">
+                                        <div class="ascBox {if $sort==1}sortAct{/if}"></div>
+                                        <div class="descBox {if $sort==2}sortAct{/if}"></div>
+                                    </div>
+                                </div>
+                                <div class="operaBox disf">
+                                    <input type="number" class="minNum field_arr inpNum" id="minNum{$v['id']}" min="{$minprice}" placeholder="{$minprice}" value="{$minprice}" data-id="{$v['id']}" onchange="checkNum(this,{$minprice},1)">
+                                    <span>——</span>
+                                    <input type="number" class="maxNum field_arr inpNum" id="maxNum{$v['id']}" max="{$maxprice}" placeholder="{$maxprice}" value="{$maxprice}" data-id="{$v['id']}" onchange="checkNum(this,{$maxprice},2)">
+                                    <div class="btn sure" onclick="sure_price(this,{$minprice},{$maxprice})">确定</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="searchContent" style="display: none;">
+                            <div class="inputBox" onclick="view_moreInfo(this)">
+                                查看更多价格&gt;&gt;
+                            </div>
+                        </div>
+                        {elseif($v['stype']==2)}
+                        <!--下拉选择-->
+
+                        <!--已选自定条件START-->
+                        <?php $sel = '-1';?>
+                        {foreach name="field_condition" key="k2" id="v2"}
+                        {if $v2['id']==$v['id']}
+                        {if $sel=='-1'}
+                        <?php $sel = $v2['val'];?>
+                        {/if}
+                        {/if}
+                        {/foreach}
+                        <!--已选自定条件END-->
+
+                        <div class="fieldsContent" style="display:none;">
+                            <div class="disf">
+                                <div class="name">{$v['name']}</div>
+                                <div class="operaBox disf">
+                                    <select class="field_arr" id="select{$v['id']}" data-id="{$v['id']}" onchange="sure_number(this)">
+                                        {foreach name="v['content']" key="k2" id="v2"}
+                                        {if $v2!=''}
+                                        <option value="{$v2}" {if $sel==$v2}selected {/if}>{$v2}</option>
+                                        {/if}
+                                        {/foreach}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        {elseif($v['stype']==3)}
+                        <!--单选参数-->
+
+                        <!--已选自定条件START-->
+                        <?php $sel = '0';?>
+                        {foreach name="field_condition" key="k2" id="v2"}
+                        {if $v2['id']==$v['id']}
+                        {if $sel=='0'}
+                        <?php $sel = $v2['val'];?>
+                        {/if}
+                        {/if}
+                        {/foreach}
+                        <!--已选自定条件END-->
+
+                        <div class="fieldsContent" style="display:none;">
+                            <div class="disf">
+                                <input type="checkbox" class="field_arr" id="checkbox{$v['id']}" data-id="{$v['id']}" value="{$sel}" onclick="checkbox_click(this)" {if $sel==1}checked {/if}>
+                                <div class="name">{$v['name']}</div>
+                            </div>
+                        </div>
+                        {elseif($v['stype']==4)}
+                        <!--发货地区-->
+
+                        <!--已选自定条件START-->
+                        <?php $sel = '发货地区';?>
+                        {foreach name="field_condition" key="k2" id="v2"}
+                        {if $v2['id']==$v['id']}
+                        {if $sel=='发货地区'}
+                        <?php $sel = $v2['val'];?>
+                        {/if}
+                        {/if}
+                        {/foreach}
+                        <!--已选自定条件END-->
+
+                        <div class="fieldsContent" style="display:none;">
+                            <div class="disf areaBox" onclick="show_areaDetail(this)">
+                                <div class="areaTitle">{$sel}</div>
+                                <div class="areaContent" style="display:none;">
+                                    <div class="areaDiv">
+                                        <div class="areaName" title="发货地区" onclick="get_city(-1,this)">发货地区</div>
+                                        <div class="areaChild"></div>
+                                    </div>
+                                    {foreach name="condition['province']" key="k2" id="v2"}
+                                    <div class="areaDiv">
+                                        <div class="areaName" title="{$v2['code_name']}" onclick="get_city({$v2['id']},this)">{$v2['code_name']}</div>
+                                        <div class="areaChild"></div>
+                                    </div>
+                                    {/foreach}
+                                </div>
+                            </div>
+                        </div>
+                        {elseif($v['stype']==5)}
+                        <!--销量-->
+                        <div class="fieldsContent sale_num_box" style="display:none;">
+                            <div class="disf" style="justify-content: center;margin-top: 15px;">
+                                <div class="name disf sortCon" onclick="sortCon(this,{$v['id']})">
+                                    {$v['name']}
+                                    <div class="sortDiv">
+                                        <div class="ascBox {if $sort==1}sortAct{/if}"></div>
+                                        <div class="descBox {if $sort==2}sortAct{/if}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/if}
+                        {/foreach}
+                        {else}
+                        {foreach name="condition['column_content']" key="k" id="v"}
+                        {if $v['stype']==1}
+                        <!--价格幅度-->
+                        <div class="fieldsContent price_box" style="display:none;">
+                            <div class="disf" style="justify-content: center;margin-top: 15px;">
+                                <div class="name disf sortCon" onclick="sortCon(this,{$v['id']})">
+                                    {$v['name']}
+                                    <div class="sortDiv">
+                                        <div class="ascBox {if $sort==1}sortAct{/if}"></div>
+                                        <div class="descBox {if $sort==2}sortAct{/if}"></div>
+                                    </div>
+                                </div>
+                                <div class="operaBox disf">
+                                    <input type="number" class="minNum field_arr inpNum" id="minNum{$v['id']}" min="{$minprice}" placeholder="{$minprice}" value="{$minprice}" data-id="{$v['id']}" onchange="checkNum(this,{$minprice},1)">
+                                    <span>——</span>
+                                    <input type="number" class="maxNum field_arr inpNum" id="maxNum{$v['id']}" max="{$maxprice}" placeholder="{$maxprice}" value="{$maxprice}" data-id="{$v['id']}" onchange="checkNum(this,{$maxprice},2)">
+                                    <div class="btn sure" onclick="sure_price(this,{$minprice},{$maxprice})">确定</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="searchContent" style="display: none;">
+                            <div class="inputBox" onclick="view_moreInfo(this)">
+                                查看更多价格&gt;&gt;
+                            </div>
+                        </div>
+                        {elseif($v['stype']==2)}
+                        <!--下拉选择-->
+                        <div class="fieldsContent" style="display:none;">
+                            <div class="disf">
+                                <div class="name">{$v['name']}</div>
+                                <div class="operaBox disf">
+                                    <select class="field_arr" id="select{$v['id']}" data-id="{$v['id']}" onchange="sure_number(this)">
+                                        {foreach name="v['content']" key="k2" id="v2"}
+                                        {if $v2!=''}
+                                        <option value="{$v2}">{$v2}</option>>
+                                        {/if}
+                                        {/foreach}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        {elseif($v['stype']==3)}
+                        <!--单选参数-->
+                        <div class="fieldsContent" style="display:none;">
+                            <div class="disf">
+                                <input type="checkbox" class="field_arr" id="checkbox{$v['id']}" data-id="{$v['id']}" value="0" onclick="checkbox_click(this)">
+                                <div class="name">{$v['name']}</div>
+                            </div>
+                        </div>
+                        {elseif($v['stype']==4)}
+                        <!--发货地区-->
+                        <div class="fieldsContent" style="display:none;">
+                            <div class="disf areaBox" onclick="show_areaDetail(this)">
+                                <div class="areaTitle">发货地区</div>
+                                <div class="areaContent" style="display:none;">
+                                    <div class="areaDiv">
+                                        <div class="areaName" title="发货地区" onclick="get_city(-1,this)">发货地区</div>
+                                        <div class="areaChild"></div>
+                                    </div>
+                                    {foreach name="condition['province']" key="k2" id="v2"}
+                                    <div class="areaDiv">
+                                        <div class="areaName" title="{$v2['code_name']}" onclick="get_city({$v2['id']},this)">{$v2['code_name']}</div>
+                                        <div class="areaChild"></div>
+                                    </div>
+                                    {/foreach}
+                                </div>
+                            </div>
+                        </div>
+                        {elseif($v['stype']==5)}
+                        <!--销量-->
+                        <div class="fieldsContent sale_num_box" style="display:none;">
+                            <div class="disf" style="justify-content: center;margin-top: 15px;">
+                                <div class="name disf sortCon" onclick="sortCon(this,{$v['id']})">
+                                    {$v['name']}
+                                    <div class="sortDiv">
+                                        <div class="ascBox {if $sort==1}sortAct{/if}"></div>
+                                        <div class="descBox {if $sort==2}sortAct{/if}"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/if}
+                        {/foreach}
+                        {/if}
+                        {/if}
+                        <div class="fieldsContent currency_box" style="display:none;">
+                            <div class="disf" style="justify-content: center;margin-top: 15px;">
+                                <div class="name">交易币种</div>
+                                <div class="operaBox disf">
+                                    <select class="chosen-select currency" id="currency" onchange="sure_currency(this)">
+                                        {foreach name="currency" key="k2" id="v2"}
+                                        <option value="{$v2['id']}" {if $currency_sel==$v2['id']} selected {/if}>{$v2['name']}：{$v2['symbol']}</option>
+                                        {/foreach}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <!--商品列表-->
+                <div class="goods_list" style="width: 100%;margin-top:15px;margin-bottom:35px;">
+                    {if !empty($list)}
+                    <div class="goodsDiv">
+                        {foreach name="list" key="k" id="v"}
+                        <div class="goods_box" onclick="view_detail({$v['goods_id']})" title="{$v['goods_name']}">
+                            <div class="goods_image">
+                                <img src="{$v['goods_image']}" class="img">
+                            </div>
+                            <div class="goods_info">
+                                <div class="gcon">
+                                    <div class="goods_name">{$v['goods_name']}</div>
+                                    <div class="operate">
+                                        <div class="goods_price disf" style="justify-content: center;">
+                                            <div style="font-size: 18px;color:#000;margin-right:5px;">{$v['goods_currency']}</div>
+                                            <div style="font-size:18px;font-weight: 800;color:#db1d18;">{$v['goods_price']}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/foreach}
+                    </div>
+
+                    <div id="pagination" style="text-align: center;"></div>
+
+                    <div class="searchContent">
+                        <div class="inputBox" onclick="showWindows(21,2,this)">
+                            更多&gt;&gt;
+                        </div>
+                    </div>
+                    {else}
+                    <div class="noresult-content">
+                        <img src="https://cbu01.alicdn.com/cms/upload/2013/909/997/1799909_1367035968.png" >
+                        <h2 class="noresult-hd">{$result}</h2>
+                    </div>
+                    {/if}
+                </div>
+            </div>
+            <!--高级搜索条件-->
+            <input type="hidden" id="condition_arr" value="{$g_o}">
+            <input type="hidden" class="area_info" value="">
+            <input type="hidden" class="sort_info" value="{$sort_info}">
+            <input type="hidden" class="condition_arr2" value="{$condition_arr2}">
+        </div>
+    </div>
+</section>
+<link rel="stylesheet" href="shop/js/chosen/chosen.css?v=1.2"/>
+<script src="shop/js/chosen/jquery.chosen.js?v=1.3"></script>
+{include file="layouts/footer"}
+<script>
+    var currency_sel = "{$currency_sel}";
+
+    layui.use(['layer', 'form', 'table', 'upload','laypage'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , element = layui.element
+            , upload = layui.upload
+            , laypage = layui.laypage
+            , table = layui.table;
+
+        form.render(null,'component-form-element');
+
+        // 使用分页
+        laypage.render({
+            elem: 'pagination' // 分页容器的id
+            ,count: "{$goods_count}" // 数据总数
+            ,limit: "{$limit}" // 每页显示的数据条数
+            ,jump: function(obj, first){ // 分页跳转的回调
+                // obj包含了分页的所有参数，first为true表示首次进入
+                if(!first){
+                    // 根据obj.curr获取当前页，obj.limit获取每页显示的条数
+                    // console.log(obj);
+                    layer.load();
+                    $.ajax({
+                        url: "/?s=merch/goods_list",
+                        method: 'post',
+                        data: {'company_id': "{$company_id}",'company_type':"{$company_type}", 'pa': 1,'hotsearchId':"{$hotsearchId}",'cate_name':"{$catename}",'frame_id':"{$id}",'sort_info':"{$sort_info}",'g_condition':"{$origin_condition}",'field_condition':"{$origin_field_condition}",'page':obj.curr,'currency_sel':currency_sel},
+                        dataType: 'JSON',
+                        success: function (res) {
+                            layer.closeAll('loading');
+                            if(res.code==0){
+                                let html = '';
+                                for(let i=0;i<res.data.length;i++){
+                                    html += '<div class="goods_box" onclick="view_detail('+res.data[i].goods_id+')" title="'+res.data[i].goods_name+'">\n' +
+                                        '                                <div class="goods_image">\n' +
+                                        '                                    <img src="'+res.data[i].goods_image+'" class="img">\n' +
+                                        '                                </div>\n' +
+                                        '                                <div class="goods_info">\n' +
+                                        '                                    <div class="gcon">\n' +
+                                        '                                        <div class="goods_name">'+res.data[i].goods_name+'</div>\n' +
+                                        '                                        <div class="operate">\n' +
+                                        '                                            <div class="goods_price disf" style="justify-content: center;">\n' +
+                                        '                                                <div style="font-size: 18px;color:#000;margin-right:5px;">'+res.data[i].goods_currency+'</div>\n' +
+                                        '                                                <div style="font-size:18px;font-weight: 800;color:#db1d18;">'+res.data[i].goods_price+'</div>\n' +
+                                        '                                            </div>\n' +
+                                        '                                        </div>\n' +
+                                        '                                    </div>\n' +
+                                        '                                </div>\n' +
+                                        '                            </div>';
+                                }
+                                $('.goods_list').find('.goodsDiv').html(html);
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+        //默认点击事件--商品字段START
+    {if !empty($g_condition)}
+        let html ='';
+    {foreach name="g_condition" key="k" id="v"}
+    <?php $now_val = explode('_',$v);?>
+    {if $now_val[0]=='cate'}
+        <!--分类-->
+    {foreach name="condition['category']" key="k2" id="v2"}
+    {if $v2['cat_id']==$now_val[1]}
+        html = '<div class="conditionCate_{$now_val[1]} condition_cdiv">类别：{$v2['cat_name']}<span onclick="delSelect(this,{$now_val[1]},0,1)">x</span></div>';
+        $('.selected').find('.condition_div').append(html);
+        $('.category{$now_val[1]}').addClass('valItem_act');
+    {/if}
+    {/foreach}
+    {elseif($now_val[0]=='opt')}
+        <!--属性-->
+    <?php $now_val = explode('|',$now_val[1]);?>
+    {foreach name="condition['options']" key="k2" id="v2"}
+    {if $v2['spec_ids']==$now_val[0]}
+    {foreach name="v2['children']" key="k3" id="v3"}
+    {if $v3['value_id']==$now_val[1]}
+        html = '<div class="conditionOpt_{$now_val[1]} condition_cdiv">{$v2['spec_name']}：{$v3['value_name']}<span onclick="delSelect(this,{$now_val[1]},{$now_val[0]},2)">x</span></div>';
+        $('.selected').find('.condition_div').append(html);
+        $('.option{$now_val[0]}_{$now_val[1]}').addClass('valItem_act');
+    {/if}
+    {/foreach}
+    {/if}
+    {/foreach}
+    {elseif($now_val[0]=='brand')}
+    <!--品牌-->
+    {foreach name="condition['brand']" key="k2" id="v2"}
+    {if $v2==$now_val[1]}
+        html = '<div class="conditionBrand_{$now_val[1]} condition_cdiv">品牌：{$v2}<span onclick="delSelect(this,{$now_val[1]},0,3)">x</span></div>';
+        $('.selected').find('.condition_div').append(html);
+        $('.brand{$now_val[1]}').addClass('valItem_act');
+    {/if}
+    {/foreach}
+    {/if}
+    {/foreach}
+    {/if}
+    //默认点击事件--商品字段END
+
+    //默认点击事件--自定字段START
+    {if $field_condition}
+    {if !empty($condition['column_content'])}
+    {foreach name="condition['column_content']" key="k" id="v"}
+    {if $v['stype']==1}
+        <!--价格幅度-->
+
+    {elseif($v['stype']==2)}
+    <!--下拉选择-->
+
+    {elseif($v['stype']==3)}
+    <!--单选参数-->
+
+    {/if}
+    {/foreach}
+    {/if}
+    {/if}
+        //默认点击事件--自定字段END
+
+        //点击空白地方，如不是指定的元素则执行某某事件
+        $(document).click(function(event) {
+            if (!$(event.target).closest('.inpNum').length) {
+                // $('.sure').hide();
+            }
+        });
+    });
+
+    //弹框显示条件
+    var layer_frame_div = '';
+    function showCondition(typ,t){
+        var $ = layui.$,
+            layer = layui.layer;
+
+        layer.load();
+
+        let main_html = '';
+        let name = '';
+        if(typ==1) {
+            main_html = $('.selector_box').html();
+            name='按类别';
+        }
+        else if(typ==2) {
+            main_html = $('.fields_div').html();
+            name='按单价';
+        }
+        else if(typ==3) {
+            main_html = $('.fields_div').html();
+            name='换币种';
+        }
+        else if(typ==5) {
+            main_html = $('.fields_div').html();
+            name='按销量';
+        }
+
+        if(typ==1 || typ==2 || typ==3 || typ==5) {
+            $.post('/?s=merch/getFrame',{'id':3,'type':99,'company_id':'{$company_id}','company_type':'{$company_type}'},function(res) {
+                let html = '<div class="disf" style="align-items: flex-start;width:100%;height:100%;">'+
+                    '       <div class="leftBox" style="width:29%;height:100%;">\n' +
+                    '                 <img src="https://shop.gogo198.cn/'+res.adv['img']+'" class="windowsAdv" alt="" style="cursor:pointer;width:100%;height:100%;">\n' +
+                    '            </div>'+
+                    '            <div class="rightBox" style="width:71%;height:100%;border-left:1px solid {$data['websites']['info']['color_word']};">'+
+                '                 <div class="page_innerhead disf">'+
+                '                      <div class="pageBack" onclick="showPageInfo(3,this)">&lt;返回</div>'+
+                '                      <div class="pageSel pageAct" onclick="showPageInfo(1,this)">'+name+'</div>'+
+                '                      <div class="pageSel" onclick="showPageInfo(2,this)">在线客服</div>'+
+                '                 </div>'+
+                '                 <div class="page_content">'+
+                '                      <div class="leftContent">'+main_html+'</div>'+
+                '                      <div class="rightContent"></div>';
+                '                 </div>';
+                '            </div>'+
+                '       </div>';
+
+                var area = ['300px', '200px'];
+                if(IsPhone()){
+                    area = ['100%', '350px'];
+                }
+                layer_frame_div = layer.open({
+                    skin:'layer_frame',
+                    type: 1,
+                    title: '<div class="disf"><div class="exclamation-circle"><span>!</span></div>系统提示：'+name+'</div>',
+                    area: area,
+                    content: main_html
+                });
+
+                setTimeout(function(){
+                    if(typ==2){
+                        $('.layer_frame').find('.fieldsBox').find('.price_box').show();
+                        $('.layer_frame').find('.fieldsBox').find('.searchContent').show();
+                    }
+                    else if(typ==3){
+                        $('.layer_frame').find('.fieldsBox').find('.searchContent').show();
+                        $('.layer_frame').find('.fieldsBox').find('.currency_box').show();
+                        if($('.chosen-container').length>0){
+                            $('.chosen-container').remove();
+                        }
+                        $('.chosen-select').chosen();
+                    }
+                    else if(typ==5){
+                        $('.layer_frame').find('.fieldsBox').find('.searchContent').show();
+                        $('.layer_frame').find('.fieldsBox').find('.sale_num_box').show();
+                    }
+                },100);
+            },'json');
+        }
+        else if(typ==4){
+            //按推荐
+
+        }
+
+
+        layer.closeAll('loading');
+    }
+
+    function showPageInfo(typ,t){
+        var $ = layui.$,
+            layer = layui.layer;
+        layer.load();
+        if(typ==1){
+            $(t).addClass('pageAct');
+            $(t).siblings().removeClass('pageAct');
+            $('.layer_frame').find('.layui-layer-content').find('.page_content').find('.leftContent').show();
+            $('.layer_frame').find('.layui-layer-content').find('.page_content').find('.rightContent').hide();
+        }
+        else if(typ==2){
+            //客服
+            $(t).addClass('pageAct');
+            $(t).siblings().removeClass('pageAct');
+        }
+        else if(typ==3){
+            layer.close(layer_frame_div);
+        }
+        layer.closeAll('loading');
+    }
+
+    function view_moreInfo(t){
+        var $ = layui.$,
+            layer = layui.layer;
+
+        layer.close(layer_frame_div);
+        showWindows(21,2,t);
+    }
+
+    //二级字段筛选
+    function containsCharacter(str, char) {
+        const regex = new RegExp(char);
+        return regex.test(str);
+    }
+    function showCondition2(id,t){
+        var $ = layui.$,
+            layer = layui.layer;
+
+        var condition_arr2 = $('.condition_arr2').val();
+        if($(t).is(':checked')){
+            if(condition_arr2==''){
+                $('.condition_arr2').val(id+'、');
+            }else{
+                if(!containsCharacter(condition_arr2,id+'、')){
+                    $('.condition_arr2').val(condition_arr2+id+'、');
+                }
+            }
+        }else{
+            condition_arr2 = condition_arr2.split(id+'、').join('');
+            $('.condition_arr2').val(condition_arr2);
+        }
+
+        layer.load();
+
+        setTimeout(function(){
+            searchGoods();
+        },500);
+
+        layer.closeAll('loading');
+    }
+
+    //废弃
+    function changeCondition(typ,t){
+        var $ = layui.$,
+            layer = layui.layer;
+
+        if(typ==1){
+            //按分类
+            $('.windowContent .windowDiv').html($('.selector_box').html());
+            $('.windowContent .windowDiv').find('.selector_box').show();
+        }
+        else if(typ==2){
+            // 按单价
+            $('.windowContent .windowDiv').html($('.fields_div').html());
+            $('.windowContent .windowDiv').find('.fieldsBox').find('.price_box').show();
+            $('.windowContent .windowDiv').find('.fieldsBox').find('.searchContent').show();
+        }
+        else if(typ==3){
+            // 按币种
+            $('.windowContent .windowDiv').html($('.fields_div').html());
+            $('.windowContent .windowDiv').find('.fieldsBox').find('.currency_box').show();
+            $('.chosen-select').chosen();
+        }
+        if(t!=''){
+            $(t).addClass('levelActive');
+            $(t).siblings().removeClass('levelActive');
+        }
+    }
+
+    //最低值/最高值超出判断
+    function checkNum(t,price,typ){
+        var $ = layui.$,
+            layer = layui.layer;
+        let val = $(t).val();
+
+
+        if(typ==1){
+            //最低值
+            for(let i=0;i<$('.price_box').find('.minNum').length;i++){
+                $('.price_box').find('.minNum').eq(i).val(val);
+            }
+            if(val<price){
+                layer.confirm('你输入的价格幅度“高/低”本次搜索商品单价，如需查看你要求的价格幅度商品，请点击以下“搜索”键搜索更多。', {
+                    btn: ['搜索更多','返回查看']
+                }, function(){
+                    layer.closeAll('');
+                    $('.searchContent').find('.inputBox').click();
+                }, function(){
+
+                });
+            }
+        }
+        else if(typ==2){
+            //最高值
+            for(let i=0;i<$('.price_box').find('.maxNum').length;i++){
+                $('.price_box').find('.maxNum').eq(i).val(val);
+            }
+            if(val>price) {
+                layer.confirm('你输入的价格幅度“高/低”本次搜索商品单价，如需查看你要求的价格幅度商品，请点击以下“搜索”键搜索更多。', {
+                    btn: ['搜索更多', '返回查看']
+                }, function () {
+                    layer.closeAll('');
+                    $('.searchContent').find('.inputBox').click();
+                }, function () {
+
+                });
+            }
+        }
+    }
+
+    function sure_price(t,minprice,maxprice){
+        var $ = layui.$,
+            layer = layui.layer;
+
+        let min = $(t).parent().find('.minNum').val();
+        let max = $(t).parent().find('.maxNum').val();
+        if(min==0 && max==0){
+            layer.msg('请输入数值');return false;
+        }
+        if(max==0){
+            layer.msg('请输入数值');return false;
+        }
+
+        if(min<minprice || max>maxprice){
+            layer.confirm('你输入的价格幅度“高/低”本次搜索商品单价，如需查看你要求的价格幅度商品，请点击以下“搜索”键搜索更多。', {
+                btn: ['搜索更多','返回查看']
+            }, function(){
+                layer.closeAll('');
+                $('.searchContent').find('.inputBox').click();
+            }, function(){
+
+            });
+            return false;
+        }
+
+        setTimeout(function(){
+            searchGoods();
+        },500);
+    }
+
+    function sortCon(t,id){
+        var $ = layui.$,
+            layer = layui.layer;
+
+        if($(t).find('.ascBox').hasClass('sortAct')){
+            $(t).find('.ascBox').removeClass('sortAct');
+            $(t).find('.descBox').addClass('sortAct');
+            $('.sort_info').val(id+'_2');
+        }else{
+            $(t).find('.ascBox').addClass('sortAct');
+            $(t).find('.descBox').removeClass('sortAct');
+            $('.sort_info').val(id+'_1');
+        }
+
+        setTimeout(function(){
+            searchGoods();
+        },500);
+    }
+
+    function show_sureBtn(t){
+        var $ = layui.$,
+            layer = layui.layer;
+
+        // $(t).parent().find('.sure').show();
+        return false;
+    }
+
+    function close_all(t){
+        var $ = layui.$,
+            layer = layui.layer;
+
+        $('.valItem_act').removeClass('valItem_act');
+        $('.selected').find('.condition_div').html('');
+        $('#condition_arr').val("");
+
+        setTimeout(function(){
+            searchGoods();
+        },500);
+    }
+
+    function sure_number(t){
+        setTimeout(function(){
+            searchGoods();
+        },500);
+    }
+
+    function show_areaDetail(t){
+        var $ = layui.$,
+            layer = layui.layer;
+
+        if($(t).hasClass('areaBox2')){
+            $(t).removeClass('areaBox2');
+            $(t).addClass('areaBox');
+            $(t).find('.areaContent').hide();
+            $('.areaChild').hide();
+        }else{
+            $(t).addClass('areaBox2');
+            $(t).removeClass('areaBox');
+            $(t).find('.areaContent').show();
+        }
+    }
+
+    function get_city(province_id,t){
+        var $ = layui.$,
+            layer = layui.layer;
+        if(province_id==-1){
+            $('.areaTitle').text($(t).text());
+            $('.area_info').val("");
+
+            setTimeout(function(){
+                searchGoods();
+            },500);
+        }else{
+            if($(t).parent().find('.areaChild').html()==''){
+                $.ajax({
+                    url: "/?s=merch/taozg&company_id={$company_id}&company_type={$company_type}",
+                    method: 'post',
+                    data: {'pa': 2,'province_id':province_id},
+                    dataType: 'JSON',
+                    success: function (res) {
+                        if(res.code==0){
+                            let html = '';
+                            for(let i=0;i<res.data.length;i++){
+                                html += '<div class="cityName" title="'+res.data[i].code_name+'" data-id="'+res.data[i].id+'" onclick="selectCity(\''+res.data[i].code_name+'\','+res.data[i].id+',this)">'+res.data[i].code_name+'</div>';
+                            }
+                            $(t).parent().find('.areaChild').html(html);
+                        }
+                    }
+                });
+            }
+            setTimeout(function(){
+                $(t).parents(':eq(2)').addClass('areaBox2');$(t).parents(':eq(2)').removeClass('areaBox');$('.areaContent').show();
+                $('.areaChild').hide();$(t).parent().find('.areaChild').show();
+                $('.areaTitle').text($(t).text());
+                $('.area_info').val(province_id);
+            },10);
+        }
+    }
+
+    function selectCity(name,id,t){
+        var $ = layui.$,
+            layer = layui.layer;
+
+        $('.areaTitle').text(name);
+        $('.area_info').val(id);
+
+        setTimeout(function(){
+            searchGoods();
+        },500);
+    }
+
+    function loadmore_search(t){
+        var $ = layui.$,
+            layer = layui.layer;
+
+        if($(t).hasClass('loadmore_search')){
+            $(t).removeClass('loadmore_search');
+            $(t).addClass('loadmore_search2');
+            $(t).parent().css('height','fit-content');
+        }else{
+            $(t).removeClass('loadmore_search2');
+            $(t).addClass('loadmore_search');
+            $(t).parent().css('height','40px');
+        }
+
+    }
+
+    function conSelect(t,val,pid,typ,pname){
+        if(!$(t).hasClass('valItem_act')){
+            $(t).addClass('valItem_act');
+            let txt = $(t).text();
+            let search_input = $('#condition_arr').val();
+            let value = '';
+            if(typ==1){
+                //分类
+                let html = '<div class="conditionCate_'+val+' condition_cdiv">'+pname+'：'+txt+'<span onclick="delSelect(this,'+val+','+pid+','+typ+')">x</span></div>';
+                $('.selected').find('.condition_div').append(html);
+                value = search_input+'cate_'+val+'@@@';
+            }
+            else if(typ==2){
+                //规格
+                let html = '<div class="conditionOpt_'+val+' condition_cdiv">'+pname+'：'+txt+'<span onclick="delSelect(this,'+val+','+pid+','+typ+')">x</span></div>';
+                $('.selected').find('.condition_div').append(html);
+                value = search_input+'opt_'+pid+'|'+val+'@@@';
+            }
+            else if(typ==3){
+                //品牌
+                let html = '<div class="conditionBrand_'+val+' condition_cdiv">'+pname+'：'+txt+'<span onclick="delSelect(this,'+val+','+pid+','+typ+')">x</span></div>';
+                $('.selected').find('.condition_div').append(html);
+                value = search_input+'brand_'+val+'@@@';
+            }
+            $('#condition_arr').val(value);
+            $('.selected').show();
+
+            setTimeout(function(){
+                searchGoods();
+            },500);
+        }else{
+            $(t).removeClass('valItem_act');
+            delSelect(t,val,pid,typ);
+        }
+    }
+
+    function delSelect(t,val,pid,typ){
+        let search_input = $('#condition_arr').val();
+        let value = '';
+        if(typ==1){
+            //分类
+            $('.category'+val).removeClass('valItem_act');
+            $('.conditionCate_'+val).remove();
+            value = search_input.replace('cate_'+val+'@@@','');
+        }
+        else if(typ==2) {
+            //规格
+            $('.option'+pid+'_'+val).removeClass('valItem_act');
+            $('.conditionOpt_'+val).remove();
+            value = search_input.replace('opt_'+pid+'|'+val+'@@@','');
+        }
+        else if(typ==3) {
+            //品牌
+            $('.brand'+val).removeClass('valItem_act');
+            $('.conditionBrand_'+val).remove();
+            value = search_input.replace('brand_'+val+'@@@','');
+        }
+        $('#condition_arr').val(value);
+
+        //无搜索条件了
+        let $div = $('.selected').find('.condition_div').html();
+        if($div.trim() == ''){
+            $('.selected').hide();
+        }
+
+        setTimeout(function(){
+            searchGoods();
+        },500);
+    }
+
+    function searchGoods(){
+        var $ = layui.$,
+            layer = layui.layer;
+        layer.load();
+        //获取商品字段数据
+        let condition_arr = $('#condition_arr').val();
+
+        //获取自定字段数据
+        let field_arr = [];
+        for(let i=0;i<$('.fields_div').find('.field_arr').length;i++){
+            //合并自定字段的id和输入/选中值
+            let aval = '0';
+            if($('.fields_div').find('.field_arr').eq(i).val()!=''){
+                aval=$('.fields_div').find('.field_arr').eq(i).val();
+            }
+            let arr = {'id':$('.fields_div').find('.field_arr').eq(i).attr('data-id'),'val':aval};
+            field_arr.push(arr);
+            // console.log(field_arr);
+        }
+
+
+        if($('.area_info').val()!=''){
+            field_arr.push({'id':'4','val':$('.areaTitle').text(),'area_id':$('.area_info').val()});
+        }
+
+        let sort_info = $('.sort_info').val();
+        if($('.sort_info').val()==''){
+            sort_info=0;
+        }
+
+        //二级字段
+        var condition_arr2 = $('.condition_arr2').val();
+
+        // console.log(field_arr);return false;
+        condition_arr = btoa(unescape(encodeURIComponent(condition_arr)));
+        field_arr = btoa(unescape(encodeURIComponent(JSON.stringify((field_arr)))));
+        window.location.href="/?s=merch/goods_list?cate_name={$catename}&frame_id={$id}&g_condition="+condition_arr+"&field_condition="+field_arr+'&sort_info='+sort_info+'&hotsearchId={$hotsearchId}&currency_sel='+currency_sel+'&condition_arr2='+condition_arr2+'&company_id={$company_id}&company_type={$company_type}';
+    }
+
+    function checkbox_click(t){
+        var $ = layui.$,
+            layer = layui.layer;
+
+        if($(t).val()==0){
+            $(t).val(1);
+        }else{
+            $(t).val(0);
+        }
+
+        setTimeout(function(){
+            searchGoods();
+        },500);
+    }
+
+    //更换商品币种
+    function sure_currency(t){
+        var $ = layui.$,
+            layer = layui.layer;
+        currency_sel = $(t).val();
+        setTimeout(function(){
+            searchGoods();
+        },500);
+    }
+
+    function view_detail(id){
+        window.open("//www.gogo198.cn/goods-"+id+".html",'_blank');
+    }
+</script>

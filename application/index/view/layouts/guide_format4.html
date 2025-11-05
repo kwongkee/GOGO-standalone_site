@@ -56,7 +56,7 @@
         <div class="leftBox">
             <div class="swiper-container cont6 cont6-{$k}">
                 <div class="swiper-wrapper">
-                    {volist name="v['big_children']" key="k2" id="v2"}
+                    {foreach name="v['big_children']" key="k2" id="v2"}
                     <div class="swiper-slide">
                         <div class="searviceMask"></div>
                         <div class="serviceContent" style="background-size: 100% 100%;background-image: -webkit-image-set(url({$data['source_link']}{$v2['back_content']}) 1x,url({$data['source_link']}{$v2['back_content']}) 2x,url({$data['source_link']}{$v2['back_content2']}) 3x);background-image: image-set(url({$data['source_link']}{$v2['back_content']}) 1x,url({$data['source_link']}{$v2['back_content']}) 2x,url({$data['source_link']}{$v2['back_content2']}) 3x);">
@@ -66,19 +66,19 @@
                                 <div class="mob_cont6">
                                     <div class="swiper-container cont6_children_content{$v2['id']}" style="width: 100%;height:100%;">
                                         <div class="swiper-wrapper">
-                                            {volist name="v2['sml_children'] as $k3=>$v3)
+                                            {foreach name="v2['sml_children']" key"k3" id="v3"}
                                             <div class="swiper-slide">
                                                 <div style="text-align: center">
-                                                    {volist name="v3 as $k4=>$v4)
+                                                    {foreach name="v3" key="k4" id="v4"}
                                                     <div class="c6Title">
                                                         {if $v4['go_other']==1 || $v4['go_other']==6 || $v4['go_other']==7}
                                                         <a href="javascript:common_operation({$v4['go_other']},this);">{$v4['name']}</a>
                                                         {elseif($v4['go_other']==2)}
                                                         <!--商品链接-->
-                                                        <a href="/?s=merch/goods&id={$v4['other_goods']}">{$v4['name']}</a>
+                                                        <a href="//www.gogo198.cn/goods-{$v4['other_goods']}.html">{$v4['name']}</a>
                                                         {elseif($v4['go_other']==3)}
                                                         <!--菜单链接-->
-                                                        <a href="/?s=index/detail&id={$v4['other_navbar']}">{$v4['name']}</a>
+                                                        <a href="/?s=merch/detail&id={$v4['other_navbar']}&company_id={$company_id}&company_type={$company_type}">{$v4['name']}</a>
                                                         {elseif($v4['go_other']==4)}
                                                         <!--第三方链接-->
                                                         <a href="{$v4['link']}">{$v4['name']}</a>
@@ -88,17 +88,17 @@
                                                         {/if}
 
                                                     </div>
-                                                    {/volist}
+                                                    {/foreach}
                                                 </div>
                                             </div>
-                                            {/volist}
+                                            {/foreach}
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    {/volist}
+                    {/foreach}
                 </div>
                 <!--左右切换-->
                 <div class="swiper-button-next sn-cont6-{$k}"></div>
@@ -107,12 +107,12 @@
         </div>
         <div class="rightBox">
             <div class="serviceContent">
-                {volist name="v['big_children']" key="k2" id="v2"}
+                {foreach name="v['big_children']" key="k2" id="v2"}
                 <div class="swiper-container guide_content{$v2['id']} guide_content_pc"  style="{if $k2==0}display:block;{/if} width: 100%;height:100%;">
                     <div class="swiper-wrapper">
-                        {volist name="v2['sml_children']" key="k3" id="v3"}
+                        {foreach name="v2['sml_children']" key="k3" id="v3"}
                         <div class="swiper-slide">
-                            {volist name="v3" key="k4" id="v4"}
+                            {foreach name="v3" key="k4" id="v4"}
                             <div class="serviceDiv">
                                 <div class="disf">
                                     <div class="serviceImg" style="background:{$v4['rand_background']};">
@@ -125,10 +125,10 @@
                                         <div class="moreBtn"><a href="javascript:common_operation({$v4['go_other']},this);">查看详情&gt;</a></div>
                                         {elseif($v4['go_other']==2)}
                                         <!--商品链接-->
-                                        <div class="moreBtn"><a href="/?s=merch/goods&id={$v4['other_goods']}" target="_blank">查看详情&gt;</a></div>
+                                        <div class="moreBtn"><a href="///www.gogo198.cn/goods-{$v4['other_goods']}.html" target="_blank">查看详情&gt;</a></div>
                                         {elseif($v4['go_other']==3)}
                                         <!--菜单链接-->
-                                        <div class="moreBtn"><a href="/?s=index/detail&id={$v4['other_navbar']}" target="_blank">查看详情&gt;</a></div>
+                                        <div class="moreBtn"><a href="/?s=merch/detail&id={$v4['other_navbar']}&company_id={$company_id}&company_type={$company_type}" target="_blank">查看详情&gt;</a></div>
                                         {elseif($v4['go_other']==4)}
                                         <!--第三方链接-->
                                         <div class="moreBtn"><a href="{$v4['link']}" target="_blank">查看详情&gt;</a></div>
@@ -139,15 +139,15 @@
                                     </div>
                                 </div>
                             </div>
-                            {/volist}
+                            {/foreach}
                         </div>
-                        {/volist}
+                        {/foreach}
                     </div>
                     <!--左右切换-->
                     <div class="swiper-button-next sn-industry{$v2['id']}"></div>
                     <div class="swiper-button-prev sp-industry{$v2['id']}"></div>
                 </div>
-                {/volist}
+                {/foreach}
             </div>
         </div>
     </div>

@@ -1,0 +1,131 @@
+@extends('layouts.base')
+
+<script src="/assets/d2eace91/js/jquery.cookie.js?v=20180528"></script>
+<script src="/assets/d2eace91/js/layer/layer.js?v=20180528"></script>
+<script src="/assets/d2eace91/js/jquery.method.js?v=20180528"></script>
+<script src="/assets/d2eace91/js/jquery.modal.js?v=20180528"></script>
+
+
+
+<!--页面css/js-->
+<script src="/js/index.js?v=20180528"></script>
+<script src="/js/tabs.js?v=20180528"></script>
+<script src="/js/bubbleup.js?v=20180528"></script>
+<script src="/js/jquery.hiSlider.js?v=20180528"></script>
+<script src="/js/index_tab.js?v=20180528"></script>
+<script src="/js/jump.js?v=20180528"></script>
+<script src="/js/nav.js?v=20180528"></script>
+
+
+<link rel="stylesheet" href="/css/goods.css?v=20180428"/>
+
+<link rel="stylesheet" href="/assets/d2eace91/layui/css/layui.css?v=23121"/>
+<link rel="stylesheet" href="/assets/d2eace91/js/layer/theme/default/layer.css?v=3.1.0" id="layuicss-layer">
+<script type="text/javascript" src="/assets/d2eace91/layui/layui.js"></script>
+<script src="/assets/d2eace91/layui/xm-select3.js?v=20180418"></script>
+
+<style>
+    .disf{display:flex;align-items: center;}
+    .logo_search{width:250px;text-align: center;margin:20px 0;}
+    .tao_img{width:200px;border:2px solid #eee;}
+
+    /**商品列表**/
+    .goods_list{position: relative;z-index: 9999;box-sizing: border-box;}
+    .goods_box{width: 230px;height: 305px;background-color: #fff;display:inline-block;overflow: hidden;margin: 0 0 12px 12px;border: 1px #eee solid;}
+    .goods_box:nth-of-type(1){margin-left:0;}  .goods_box:nth-of-type(6){margin-left:0;}  .goods_box:nth-of-type(11){margin-left:0;}  .goods_box:nth-of-type(16){margin-left:0;}
+    .goods_box .goods_image{width:100%;}
+    .goods_box .goods_image img{width:100%;height:235px;}
+    .goods_box .goods_info{width: 230px;height: 75px;border: none;overflow: hidden;text-align: center;}
+    .goods_box .goods_info .goods_name{width: 210px;height: 20px;line-height: 20px;font-size: 14px;margin-top: 10px;text-align: left;display: inline-block;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;}
+    .goods_box .goods_info .operate{width: 210px; height: 30px;  line-height: 30px;  margin: 0 auto;  overflow: hidden;}
+    .goods_box .goods_info .operate .goods_price{width: 120px;height: 30px;line-height: 30px;font-size: 16px;font-weight: bold;text-align: left;margin: 0 auto;color:#E31939;}
+    .goods_box .goods_info .operate .view_detail{width: 90px;height: 30px;line-height: 30px;color: #fff;text-align: center;display: inline-block;background:#E31939;cursor:pointer;}
+</style>
+
+<div class="w1210">
+    <form class="layui-form" action="" method="post" lay-filter="search-element">
+        <div style="width: 100%;text-align: center;">
+            <img src="https://shop.gogo198.cn/attachment/images/3/2017/04/gIjml75Zrz5rKqNm55j7Ym03d0LIRZ.png" alt="" class="logo_search">
+        </div>
+
+        <div class="layui-card">
+            <div class="layui-card-body">
+                <div class="layui-form-item">
+                    <div class="layui-form-label">搜索</div>
+                    <div class="layui-input-block disf">
+                        <input class="layui-input" type="text" name="cate_name" value="{{$cate_name}}" id="cate_name" placeholder="请输入分类名称" lay-verify="required"><button class="layui-btn layui-btn-normal" lay-submit lay-filter="search-element2">搜索</button>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-form-label"></div>
+                    <div class="layui-input-block disf">
+                        <img src="https://shop.gogo198.cn/attachment/images/3/2017/04/gIjml75Zrz5rKqNm55j7Ym03d0LIRZ.png" alt="" class="tao_img">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="goods_list">
+
+    </div>
+</div>
+
+<script type="text/javascript">
+    layui.use(['layer','element','table','form'],function() {
+        var $ = layui.$
+            , layer = layui.layer
+            , element = layui.element
+            , form = layui.form
+            , table = layui.table;
+
+        form.render(null, 'search-element');
+
+
+        form.on('submit(search-element2)', function(data){
+            layer.load();
+            data.field['pa'] = 1;
+            $.ajax({
+                url: "/?s=merch/taozg&company_id={$company_id}&company_type={$company_type}",
+                method: 'post',
+                data: data.field,
+                dataType: 'JSON',
+                success: function (res) {
+                    layer.closeAll('loading');
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if (res.code == 0) {
+                            //商城内有该商品分类下的商品
+                            window.location.href="/list-"+res.id+'.html';
+                        }else if(res.code == -1){
+                            //通过接口/数据表找到的商品
+                            let html = '';
+                            for(let i=0;i<res.data.length;i++){
+                                html += '<div class="goods_box">\n'+
+                                    '    <div class="goods_image">\n'+
+                                    '        <img src="'+res.data[i].picUrl+'" class="img">\n'+
+                                    '    </div>\n'+
+                                    '    <div class="goods_info">\n'+
+                                    '        <div class="goods_name">'+res.data[i].goodsName+'</div>\n'+
+                                    '        <div class="operate disf">\n'+
+                                    '            <span class="goods_price">￥&nbsp;'+res.data[i]['price'].price+'</span>\n'+
+                                    '            <div class="view_detail" onclick="view_detail('+res.data[i].goodsId+')">查看详情</div>\n'+
+                                    '        </div>\n'+
+                                    '    </div>\n'+
+                                    '</div>';
+                            }
+
+                            $('.goods_list').html(html);
+                        }else if(res.code == -2){
+                            //通过接口/数据表没有找到的商品
+
+                        }
+                    });
+                }
+            });
+            return false;
+        });
+    });
+
+    function view_detail(id){
+        window.location.href="/?s=merch/taozg_detail&id="+id+'&company_id={$company_id}&company_type={$company_type}';
+    }
+</script>

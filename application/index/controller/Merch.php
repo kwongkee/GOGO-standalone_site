@@ -9,6 +9,7 @@ use think\Log;
 class Merch
 {
     public $websites;
+    public $source_link;
     public $config = [
         //数据库类型
         'type'     => 'mysql',
@@ -28,6 +29,8 @@ class Merch
 
     public function __construct(Request $request){
         $dat = input();
+        $this->source_link = '//dtc.gogo198.net';
+
         #判断有无企业id
         $cid = isset($dat['company_id'])?intval($dat['company_id']):0;
         $company_type = isset($dat['company_type'])?intval($dat['company_type']):0;
@@ -82,6 +85,19 @@ class Merch
         $this->websites['customer'] = Db::name('merchsite_customer_group')->where(['company_id'=>$cid])->find();
     }
 
+    public function groupByArray($array, $key)
+    {
+        $result = [];
+        foreach ($array as $item) {
+            $groupKey = $item[$key];
+            if (!isset($result[$groupKey])) {
+                $result[$groupKey] = [];
+            }
+            $result[$groupKey][] = $item;
+        }
+        return $result;
+    }
+
     #商家商城首页
     public function merch_shop_index(Request $request){
         $dat = input();
@@ -103,7 +119,8 @@ class Merch
                 }
                 elseif($v==2){
                     #时间内容
-                    $citys = Db::name('website_world_time')->where(['is_show'=>0])->order('displayorder asc')->group('contryCn')->select();
+                    $citys2 = Db::name('website_world_time')->where(['is_show'=>0])->order('displayorder asc')->group('contryCn')->select();
+                    $citys = $this->groupByArray($citys2, 'contryCn');
                     $this->websites['rotate_info']['content'][$k] = $citys;
                 }
                 elseif($v==3){
@@ -244,10 +261,662 @@ class Merch
         }
 
         $data['websites'] = $this->websites;
-
+//        dd($data['websites']['rotate_info']['content'][1]);
         $data['source_link'] = '//dtc.gogo198.net';
         $data['page_type'] = 1;
-//        dd($data);
+
         return view('index/shop_frontend/merch_shop_index',compact('data','company_id','company_type'));
     }
+
+    #税率页
+    public function rate_detail(Request $request){
+
+        $dat = input();
+        $id = isset($dat['id'])?intval($dat['id']):0;
+        $isframe = isset($dat['isframe'])?intval($dat['isframe']):0;
+        $price = isset($dat['price'])?intval($dat['price']):1;
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);
+
+        if($request->isAjax()){
+
+            if($dat['pa']==1){
+                $key = 'feea63fb96c064f252418348bf775fa9';
+                $from = Db::name('website_exchange_rate')->where(['id'=>$dat['from_currency']])->find();
+                $to = Db::name('website_exchange_rate')->where(['id'=>$dat['to_currency']])->find();
+                $url = 'http://api.tanshuapi.com/api/exchange/v1/index?key='.$key.'&from='.$from['symbol'].'&to='.$to['symbol'].'&money='.intval($dat['from_money']);
+                $list = json_decode(file_get_contents($url),true);
+
+                if($list['code']==1){
+                    return json(['code'=>0,'msg'=>'查询成功','data'=>$list['data']]);
+                }else{
+                    return json(['code'=>-1,'msg'=>'查询失败']);
+                }
+            }
+        }else{
+            $rate = Db::name('website_exchange_rate')->where(['id'=>$id])->find();
+
+            #币种
+            $currency = Db::name('website_exchange_rate')->whereRaw('id != 158 ')->select();
+
+            $origin_page = '/?s=merch/merch_shop_index&company_id='.$company_id.'&company_type='.$company_type;
+            $data['websites'] = $this->websites;
+            $data['source_link'] = '//dtc.gogo198.net';
+
+            return view('index/shop_frontend/rate_detail',compact('data','id','rate','currency','isframe','price','origin_page','company_id','company_type'));
+        }
+    }
+
+    #详情页
+    public function detail(){
+        $dat = input();
+        $is_footer = isset($dat['is_footer'])?intval($dat['is_footer']):0;
+        $id = isset($dat['id'])?intval($dat['id']):0;
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);
+
+        $data = [];
+        if($is_footer==1){
+            #页脚菜单
+            $data = Db::name('website_footer')->where(['id'=>$id])->find();
+        }
+        else{
+            #页头菜单
+            $data = Db::name('website_navbar')->where(['id'=>$id])->find();
+        }
+
+        #内页seo优化
+        if($data['seo_type']==2){
+            $data['seo_content'] = json_decode($data['seo_content'],true);
+            $this->websites['info']['name'] = $data['seo_content']['title'];
+            $this->websites['info']['keywords'] = $data['seo_content']['keywords'];
+            $this->websites['info']['desc'] = $data['seo_content']['desc'];
+        }
+
+        $data['content'] = json_decode($data['content'],true);
+        $data['websites'] = $this->websites;
+        $data['source_link'] = $this->source_link;
+
+        $origin_page = '/?s=merch/detail?id='.$id.'&company_id='.$company_id.'&company_type='.$company_type;
+
+        return view('index/shop_frontend/detail',compact('data','origin_page','id','company_id','company_type'));
+    }
+
+    #商品结果页
+    public function goods_list(Request $request){
+        header('Content-Type: text/html; charset=utf-8');
+        $data = input();
+        $company_id = intval($data['company_id']);
+        $company_type = intval($data['company_type']);
+        $hotsearchId = isset($data['hotsearchId'])?intval($data['hotsearchId']):0;#导页id、节日id、轮播id、发现id
+        $searchTitle = isset($data['searchTitle'])?trim($data['searchTitle']):'';#板块名称
+
+        #当前页面的链接
+        $origin_page = '/?s=merch/goods_list&frame_id='.intval($data['frame_id']).'&hotsearchId='.$hotsearchId.'&searchTitle='.$searchTitle.'&company_id='.$company_id.'&company_type='.$company_type;
+
+        if(isset($data['pa2'])){
+
+        }
+        else{
+            $currency_sel = isset($data['currency_sel'])?trim($data['currency_sel']):158;
+            $catename = isset($data['cate_name'])?trim($data['cate_name']):'';#关键字搜索
+            $id = isset($data['frame_id'])?intval($data['frame_id']):0;//1导页数据、2节日、3首页轮播、4发现好货
+            $sort_info = isset($data['sort_info'])?trim($data['sort_info']):0;
+
+            #获取商户配置的展示版式
+            $calc_limit = $this->websites['info']['search_format'][0] * $this->websites['info']['search_format'][1];#N行N个
+
+            #分页数据====================
+            $goods_count = isset($data['goods_count'])?intval($data['goods_count']):0;
+            $limit = $calc_limit;
+            $page = isset($data['page'])?(intval($data['page']) - 1) * $limit:0;#【0*10,10】【1*10,10】【2*10,10】
+            #分页数据====================
+
+            #高级条件====START
+            $origin_condition = isset($data['g_condition'])?trim($data['g_condition']):'';
+            $g_condition = isset($data['g_condition'])?base64_decode($origin_condition):'';
+            $g_o = $g_condition;
+            if(!empty($g_condition)){
+                $g_condition = explode('@@@',rtrim($g_condition,'@@@'));
+            }
+            $origin_field_condition = isset($data['field_condition'])?$data['field_condition']:'';
+            $field_condition = isset($data['field_condition'])?base64_decode(str_replace(' ','',$origin_field_condition)):'';
+            $field_condition = json_decode($field_condition,true);
+
+            //二级字段条件
+            $condition_arr2 = isset($data['condition_arr2'])?trim($data['condition_arr2']):'';
+
+            #高级条件======END
+
+            $result = '没找到相关的商品';
+            $minprice = 0;
+            $maxprice = 0;
+            if($hotsearchId>0){
+                #查找该板块的关键字
+                $keywords = [];
+                if($id==1){
+                    #导页
+                    $get_keywords = Db::connect($this->config)->name('guide_content')->where(['id'=>$hotsearchId,'company_id'=>$this->websites['cid']])->find();
+
+                    #1.1、获取当前导流板块关键字
+                    $datas = Db::connect($this->config)->name('merchsite_guide_body')->where(['id'=>$get_keywords['pid']])->find();
+                    $shelf_keywords = '';
+
+                    #1.2、获取当前导流板块的商户上架关键字
+                    $goods_shelf = Db::connect($this->config)->name('goods_shelf')->where(['type'=>1,'guide_id'=>$get_keywords['pid']])->select();
+
+                    #1.3、对比导流板块关键字是否与商家上架关键字有匹配
+                    foreach($goods_shelf as $k=>$v){
+                        $arr1 = explode('、',$datas['gkeywords']);
+                        $arr2 = explode('、',$v['keywords']);
+                        $intersection = array_intersect($arr1, $arr2);
+                        if(!empty($intersection)){
+                            foreach($intersection as $k2=>$v2){
+                                #1.4、判断关键字表有无此关键字，无则插入并设置为已爬完
+                                $ishave = Db::connect($this->config)->name('goods_keywords')->where(['keywords'=>$v2])->find();
+
+                                $keywordsId = 0;
+                                if(empty($ishave)){
+                                    $keywordsId = Db::connect($this->config)->name('goods_keywords')->insertGetId([
+                                        'keywords'=>trim($v2),
+                                        'get_times'=>0,
+                                        'is_done'=>1,
+                                        'is_merch'=>1
+                                    ]);
+                                }else{
+                                    $keywordsId = $ishave['id'];
+                                }
+                                Db::connect($this->config)->name('goods')->where(['goods_id'=>$v['gid']])->update(['keywords_id'=>$keywordsId]);
+                                $shelf_keywords .= $v2.'、';
+                            }
+                        }
+                    }
+
+                    if(empty($shelf_keywords)){
+                        $keywords = explode('、',$get_keywords['gkeywords']);
+                    }else{
+                        $keywords = explode('、',$get_keywords['gkeywords'].'、'.rtrim($shelf_keywords,'、'));
+                    }
+                }
+                elseif($id==2){
+                    #节日
+                    $get_keywords = Db::name('website_festival')->where(['id'=>$hotsearchId])->find();
+
+                    $keywords = explode('、',$get_keywords['keywords']);
+                }
+                elseif($id==3){
+                    #轮播
+                    $get_keywords = Db::name('website_rotate')->where(['id'=>$hotsearchId,'company_id'=>$this->websites['cid']])->find();
+
+                    $keywords = explode('、',$get_keywords['other_keywords']);
+                }
+                elseif($id==4){
+                    #发现好货
+                    $get_keywords = Db::name('website_discovery_list')->where(['id'=>$hotsearchId,'company_id'=>$this->websites['cid']])->find();
+
+                    $keywords = explode('、',$get_keywords['other_keywords']);
+                }
+
+                $keywords_id = [];
+                foreach($keywords as $k=>$v){
+                    $this_keyword = Db::connect($this->config)->name('goods_keywords')->where(['keywords'=>$v])->find();
+
+                    array_push($keywords_id,$this_keyword['id']);
+                }
+                $cateinfo1 = Db::connect($this->config)->name('goods')->where(['shop_id'=>$this->websites['cid']])->whereIn('keywords_id',$keywords_id)->find();
+
+                $list = [];
+                $condition = [];
+                if($cateinfo1['goods_id']>0){
+                    #获取高级条件
+                    $list_info = $this->getTotalWhere($catename,$g_condition,$field_condition,$condition_arr2,[['goods_status','=',1],['shop_id','=',$this->websites['cid']]],$keywords_id,$sort_info,['page'=>$page,'limit'=>$limit]);
+
+                    $list = $list_info[0];
+                    $goods_count = $list_info[1];
+                    $minprice = $list_info[2];
+                    $maxprice = $list_info[3];
+//                    if($hotsearchId==0) {
+                    #获取原“商品名称/分类名称”的条件
+//                    ,['hotsearch_id', '=', $hotsearchId]
+                    $list2 = Db::connect($this->config)->name('goods')->where(['shop_id'=>$this->websites['cid']])->whereIn('keywords_id',$keywords_id)->select();
+
+                    $condition = $this->get_condition($id, $list2, 1,['value_show'=>0,'brand_show'=>0]);
+//                    }
+                }
+                else{
+                    $result = '暂无商品';
+                }
+
+                #当前页面的链接
+                $origin_page = '/?s=index/customer_login&company_id='.$company_id.'&company_type='.$company_type.'&open=4&param2='.base64_encode('/?s=merch/goods_list&frame_id='.$data['frame_id'].'&hotsearchId='.$hotsearchId.'&searchTitle='.$searchTitle.'&company_id='.$company_id.'&company_type='.$company_type);
+            }
+            else{
+                $searchTitle = $catename;
+                #先查询有无此商品名称
+                #后再查询分类名称
+                $cateinfo1 = Db::connect($this->config)->name('goods')->where(['shop_id'=>$this->websites['cid']])->where('goods_name', 'like', '%'.$catename.'%')->find();
+
+                $list = [];
+                $condition = [];
+                if($cateinfo1['goods_id']>0){
+                    #获取高级条件
+
+                    $list_info = $this->getTotalWhere($catename,$g_condition,$field_condition,$condition_arr2,[['goods_name', 'like', '%'.$catename.'%'],['goods_status','=',1],['shop_id','=',$this->websites['cid']]],[],$sort_info,['page'=>$page,'limit'=>$limit]);
+
+                    $list = $list_info[0];
+                    $goods_count = $list_info[1];
+                    $minprice = $list_info[2];
+                    $maxprice = $list_info[3];
+                    #获取原“商品名称/分类名称”的条件
+                    $list2 = Db::connect($this->config)->name('goods')->where([['goods_name', 'like', '%'.$catename.'%'],['shop_id','=',$this->websites['cid']]])->select();
+
+                    $condition = $this->get_condition($id,$list2,1,['value_show'=>0,'brand_show'=>0]);
+                }
+                else{
+                    $cateinfo1 = Db::connect($this->config)->name('category')->where(['cat_name'=>$catename])->find();
+
+                    #获取高级条件
+                    $list_info = $this->getTotalWhere($catename,$g_condition,$field_condition,$condition_arr2,[['cat_id', '=', $cateinfo1['cat_id']],['goods_status','=',1],['shop_id','=',$this->websites['cid']]],$sort_info,['page'=>$page,'limit'=>$limit]);
+                    $list = $list_info[0];
+                    $goods_count = $list_info[1];
+                    $minprice = $list_info[2];
+                    $maxprice = $list_info[3];
+
+                    #获取原“商品名称/分类名称”的条件
+                    $list2 = Db::connect($this->config)->name('goods')->where(['cat_id'=>$cateinfo1['cat_id'],'shop_id','=',$this->websites['cid']])->select();
+
+                    $condition = $this->get_condition($id,$list2,1,['value_show'=>1,'brand_show'=>1]);
+                }
+
+                #当前页面的链接
+                $origin_page = '/?s=index/customer_login&company_id='.$company_id.'&company_type='.$company_type.'&open=4&param2='.base64_encode('/?s=merch/goods_list&cate_name='.$catename.'&company_id='.$company_id.'&company_type='.$company_type);
+            }
+//            dd($keywords_id);
+
+            #币种转换
+            if(!empty($list)){
+                foreach($list as $k=>$v){
+                    if($currency_sel==158){
+                        $list[$k]['goods_currency'] = Db::name('centralize_currency')->where(['id'=>$v['goods_currency']])->find()['currency_symbol_standard'];
+                    }
+                    else{
+                        $currency_info = Db::name('website_exchange_rate')->where(['id'=>$currency_sel])->find();
+
+                        $list[$k]['goods_currency'] = $currency_info['symbol'];
+                        $list[$k]['goods_price'] = sprintf('%.2f',$currency_info['rate'] * $v['goods_price']);
+                    }
+                }
+            }
+            if(isset($data['pa'])){
+                return json(['code'=>0,'data'=>$list]);
+            }
+
+            #获取配置信息
+            $data = ['websites'=>$this->websites,'source_link'=>$this->source_link];
+
+
+            #币种
+            $currency = Db::name('website_exchange_rate')->select();
+
+            #价格排序参数
+            $sort = 0;
+            if(!empty($sort_info)){
+                $sort = explode('_',$sort_info)[1];
+            }
+
+            #二级字段
+            $two_fields = Db::connect($this->config)->name('merchsite_search_column_two')->where(['company_id'=>$this->websites['cid']])->select();
+
+            return view('index/shop_frontend/goods_list',compact('condition','list','data','origin_field_condition','field_condition','origin_condition','g_condition','catename','id','g_o','sort_info','sort','hotsearchId','goods_count','limit','currency','currency_sel','minprice','maxprice','result','searchTitle','origin_page','two_fields','condition_arr2','company_id','company_type'));
+        }
+    }
+
+    #列表页根据高级条件搜索
+    public function getTotalWhere($catename,$g_condition,$field_condition,$condition_arr2,$where,$whereIn,$sort_info='',$limit=['page'=>0,'limit'=>10]){
+        #条件存在时，打包搜索
+        $opt_arr = [];
+        if(!empty($g_condition)){
+            #商品字段条件
+            foreach($g_condition as $k=>$v){
+                $now_val = explode('_',$v);
+                if($now_val[0]=='cate'){
+                    $where = array_merge($where,[['cat_id','=',$now_val[1],'or']]);
+                }
+                elseif($now_val[0]=='opt'){
+                    $now_val = explode('|',$now_val[1]);
+                    $opt_arr = array_merge($opt_arr,[['attr_id'=>$now_val[0],'attr_vid'=>$now_val[1]]]);
+                }
+                elseif($now_val[0]=='brand'){
+                    $where = array_merge($where,[['brand_id','=',$now_val[1],'or']]);
+                }
+            }
+        }
+
+        if(!empty($field_condition)){
+            #自定字段条件
+            $field_condition2 = [];
+            foreach($field_condition as $k=>$v){
+                if(empty($field_condition2)){
+                    $field_condition2 = array_merge($field_condition2,[$v]);
+                }else{
+                    foreach($field_condition2 as $k2=>$v2){
+                        if($v2['id']==$v['id']){
+                            $field_condition2[$k2]['val'] .=  '_'.$v['val'];
+                            break;
+                        }else{
+                            $field_condition2 = array_merge($field_condition2,[$v]);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            foreach($field_condition2 as $k=>$v){
+                $column_condition = Db::connect($this->config)->name('search_column')->where(['id'=>$v['id']])->find();
+
+                if($column_condition['stype']==1){
+                    #价幅
+                    $num = explode('_',$v['val']);
+                    if($num[1]>0 && !empty($column_condition['field'])){
+                        $where = array_merge($where,[[$column_condition['field'],'>=',$num[0],'and']]);
+                        $where = array_merge($where,[[$column_condition['field'],'<=',$num[1],'and']]);
+                    }
+                }
+                elseif($column_condition['stype']==2){
+                    #下拉选择 todo 下拉选择可能要选表中参数
+                    if(!empty($column_condition['field'])){
+                        $where = array_merge($where,[[$column_condition['field'],'=',$v['val'],'and']]);
+                    }
+                }
+                elseif($column_condition['stype']==3){
+                    #单选参数 todo 有些参数是1/2/3的，请求只会给0/1
+                    if(!empty($column_condition['field'])){
+                        $where = array_merge($where,[[$column_condition['field'],'=',$v['val'],'and']]);
+                    }
+                }
+                elseif($column_condition['stype']==4){
+                    #发货地区
+                    if(!empty($column_condition['field'])){
+                        $area = Db::name('centralize_adminstrative_area')->where(['code_name'=>$v['val']])->find();
+                        $where = array_merge($where,[[$column_condition['field'],'=',$area->id,'and']]);
+                    }
+                }
+            }
+        }
+
+        #二级字段
+        if(!empty($condition_arr2)){
+            $condition_arr2 = explode('、',$condition_arr2);
+            foreach($condition_arr2 as $k=>$v){
+                if(!empty($v)){
+                    $value = Db::connect($this->config)->name('merchsite_search_column_two')->where(['id'=>$v])->find();
+                    $where = array_merge($where,[[$value['field'],'=',1,'and']]);
+                }
+            }
+        }
+
+        if(empty($whereIn)){
+            #总数量
+            $count = Db::connect($this->config)->name('goods')->where($where)->count();
+
+            #价钱——最低值/最高值
+            $minprice = Db::connect($this->config)->name('goods')->where($where)->min('goods_price');
+            $maxprice = Db::connect($this->config)->name('goods')->where($where)->max('goods_price');
+        }else{
+            #总数量
+            $count = Db::connect($this->config)->name('goods')->where($where)->whereIn('keywords_id',$whereIn)->count();
+
+            #价钱——最低值/最高值
+            $minprice = Db::connect($this->config)->name('goods')->where($where)->whereIn('keywords_id',$whereIn)->min('goods_price');
+            $maxprice = Db::connect($this->config)->name('goods')->where($where)->whereIn('keywords_id',$whereIn)->max('goods_price');
+        }
+
+
+        #按“x”字段排序商品
+        if($sort_info!=0 && !empty($sort_info)){
+            $sort_info = explode('_',$sort_info);
+            $sort_field = Db::connect($this->config)->name('search_column')->where(['id'=>$sort_info[0]])->find();
+            if($sort_info[1]==1){
+                #升序
+                if(empty($whereIn)) {
+                    $list = Db::connect($this->config)->name('goods')->where($where)->offset($limit['page'])->limit($limit['limit'])->order($sort_field->field.' asc')->select();
+                }else{
+                    $list = Db::connect($this->config)->name('goods')->where($where)->whereIn('keywords_id', $whereIn)->offset($limit['page'])->limit($limit['limit'])->order($sort_field->field.' asc')->select();
+                }
+            }
+            elseif($sort_info[1]==2){
+                #降序
+                if(empty($whereIn)) {
+                    $list = Db::connect($this->config)->name('goods')->where($where)->offset($limit['page'])->limit($limit['limit'])->order($sort_field->field.' desc')->select();
+                }else{
+                    $list = Db::connect($this->config)->name('goods')->where($where)->whereIn('keywords_id', $whereIn)->offset($limit['page'])->limit($limit['limit'])->order($sort_field->field.' desc')->select();
+                }
+            }
+        }else{
+            #无排序（最新>最旧）
+            if(empty($whereIn)) {
+                $list = Db::connect($this->config)->name('goods')->where($where)->offset($limit['page'])->limit($limit['limit'])->select();
+            }else{
+                $list = Db::connect($this->config)->name('goods')->where($where)->whereIn('keywords_id',$whereIn)->offset($limit['page'])->limit($limit['limit'])->select();
+            }
+        }
+
+        $list2 = [];#出现过任何规格相同的商品id，将要保留在数组
+        if(!empty($opt_arr) && !empty($list)){
+            foreach($list as $k=>$v){
+                foreach($opt_arr as $k2=>$v2){
+                    $ishave = Db::connect($this->config)->name('goods_spec')->where(['attr_id'=>$v2['attr_id'],'attr_vid'=>$v2['attr_vid'],'goods_id'=>$v['goods_id']])->find();
+                    if(!empty($ishave->spec_id)){
+                        if (!in_array($list[$k], $list2)) {
+                            $list2 = array_merge($list2,[$list[$k]]);
+                        }
+                    }
+                }
+            }
+            $list = $list2;
+            $count = count($list);
+        }
+
+        #处理商家商品价格问题
+        foreach($list as $key=>$item){
+            if($item['goods_price']==0){
+                $sku_info = Db::connect($this->config)->name('goods_sku')->where(['sku_id'=>$item['sku_id']])->find();
+
+                $sku_info['sku_prices'] = json_decode($sku_info['sku_prices'],true);
+                $list[$key]['goods_price'] = number_format(end($sku_info['sku_prices']['price']),2);
+            }
+        }
+        return [$list,$count,$minprice,$maxprice];
+    }
+
+    #浮框&列表页获取条件数组
+    #$id//1导页数据、2节日、3首页轮播、4发现好货
+    public function get_condition($id,$list,$type,$show=['value_show'=>0,'brand_show'=>0]){
+        #条件============START
+        $condition = [
+            'category'=>[],
+            'options'=>[],
+            'brand'=>[],
+        ];
+        $cate_id = 0;
+        foreach($list as $k=>$v){
+            #1、获取当前分类的同级分类作为条件
+            if($cate_id==0){
+                if($v['cat_id']>0){
+                    $cate_id = $v['cat_id'];
+                    #1.1、查找同级分类
+                    $last_cat = Db::connect($this->config)->name('category')->where(['cat_id'=>$v['cat_id']])->find();
+                    $category = Db::connect($this->config)->name('category')->where(['parent_id'=>$last_cat->parent_id])->select();
+                }
+            }
+
+            if($show['value_show']==1){
+                #2、获取所有商品的所有规格/属性
+                if($v['have_specs']==1){
+                    $sku = Db::connect($this->config)->name('goods_sku')->where(['goods_id'=>$v['goods_id']])->select();
+
+                    foreach($sku as $k2=>$v2){
+                        if(empty($condition['options'])){
+                            $condition['options'] = array_merge($condition['options'],[[
+                                'spec_ids'=>$v2['spec_ids'],
+                                'children2'=>[$v2['spec_vids']],
+                            ]]);
+                        }else{
+                            foreach($condition['options'] as $k3=>$v3){
+                                if($v3['spec_ids']==$v2['spec_ids']){
+                                    $condition['options'][$k3]['children2'] = array_merge($condition['options'][$k3]['children2'],[$v2['spec_vids']]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if($show['brand_show']==1) {
+                #5、获取品牌
+                if ($v['brand_type'] == 1) {
+                    $brand = Db::name('centralize_diycountry_content')->where(['pid' => 8, 'id' => $v['brand_id']])->find();
+                    $condition['brand'] = array_merge($condition['brand'], [['type' => 1, 'name' => $brand->param1, 'id' => $brand->id]]);
+                }
+            }
+        }
+
+        if($show['value_show']==1){
+            #3、去除重复规格、品牌
+            foreach ($condition['options'] as $k => $v) {
+                $condition['options'][$k]['children2'] = array_values(array_unique($v['children2']));
+                $condition['options'][$k]['spec_name'] = Db::connect($this->config)->name('attribute')->where(['attr_id' => $v['spec_ids']])->find()['attr_name'];
+                foreach ($condition['options'][$k]['children2'] as $k2 => $v2) {
+                    $condition['options'][$k]['children'][$k2]['value_id'] = $v2;
+                    $condition['options'][$k]['children'][$k2]['value_name'] = Db::connect($this->config)->name('attr_value')->where(['attr_vid' => $v2])->find()['attr_vname'];
+                }
+                unset($condition['options'][$k]['children2']);
+            }
+        }
+        if($show['brand_show']==1) {
+            $condition['brand'] = $this->hasDuplicateField($condition['brand'], 'name');
+        }
+
+        #4、查询框架自定条件
+//        $data = Db::table('search_list')->where(['id'=>$id])->first();
+        $data = Db::connect($this->config)->name('search_list')->where(['id'=>1])->find();
+
+        if(!empty($data['content'])){
+            $data['column_content'] = Db::connect($this->config)->name('search_column')->whereRaw('find_in_set(id,?)',[$data['content']])->whereRaw('type <> 1')->select();
+
+            foreach($data['column_content'] as $k=>$v){
+                $data['column_content'][$k]['content'] = json_decode($v['content'],true);
+                if(!empty($data['column_content'][$k]['content'])){
+                    $data['column_content'][$k]['content'] = explode('、',$data['column_content'][$k]['content']);
+                }
+
+                if($v['stype']==4){
+                    #获取国家的省
+                    if(!empty(session('province_list'))){
+                        $condition['province'] = session('province_list');
+                    }else{
+                        $res = httpRequest('https://shop.gogo198.cn/collect_website/public/?s=api/gather/gettableinfo', ['id' => 4,'country_id'=>162]);
+                        $res2 = json_decode($res, true);
+                        $res = json_decode($res2['list'],true);
+                        session('province_list', $res);
+//                    $request->session()->put('country_list', $res);
+                        $condition['province'] = $res;
+                    }
+                }
+            }
+        }
+        $condition['column_content'] = $data['column_content'];
+        #条件============END
+
+        return $condition;
+    }
+
+    #去除重复字段
+    public function hasDuplicateField($arr, $field) {
+        $values = [];
+        foreach ($arr as $row) {
+            $values[] = $row[$field];
+        }
+
+        $uniqueValues = array_unique($values);
+        return $uniqueValues;
+    }
+
+    #淘中国列表
+    public function taozg(Request $request){
+        $data = input();
+
+        if(isset($data['pa'])){
+            if($data['pa']==1){
+                $id = isset($data['id'])?intval($data['id']):0;#框架id
+                $catename = trim($data['cate_name']);#关键字搜索
+
+                #先查询有无此商品名称
+                #后再查询分类名称
+                $cateinfo1 = Db::connect($this->config)->name('goods')->where([['goods_name', 'like', '%'.$catename.'%'],['goods_status','=',1]])->find();
+
+                if($cateinfo1['goods_id']>0){
+                    $list = Db::connect($this->config)->name('goods')->where([['goods_name', 'like', '%'.$catename.'%'],['goods_status','=',1]])->select();
+
+                    if(!empty($list)){
+                        $condition = $this->get_condition($id,$list,1);
+                        return json(['code'=>-1,'id'=>0,'msg'=>'搜索成功','data'=>$list,'condition'=>$condition]);
+                    }else{
+                        $list = $this->get_goods($catename);
+                        $new_list = $this->save_goods($list['data']);
+                        if($list['code']==0){
+                            $condition = $this->get_condition($id,$new_list,1);
+                            return json(['code'=>-1,'id'=>0,'msg'=>'搜索成功','data'=>$new_list,'condition'=>$condition]);
+                        }elseif($list['code']==-1){
+                            return json(['code'=>-2,'id'=>0,'msg'=>'暂无信息','data'=>'','condition'=>'']);
+                        }
+                    }
+                }
+                else{
+                    $cateinfo1 = Db::connect($this->config)->name('category')->where(['cat_name'=>$catename])->find();
+
+                    if(!empty($cateinfo1)){
+                        $list = Db::connect($this->config)->name('goods')->where(['cat_id'=>$cateinfo1['cat_id'],'goods_status'=>1])->select();
+
+                        if(!empty($list)){
+                            $condition = $this->get_condition($id,$list,1);
+                            return json(['code'=>-1,'id'=>0,'msg'=>'搜索成功','data'=>$list,'condition'=>$condition]);
+                        }else{
+                            $list = $this->get_goods($catename);
+                            $new_list = $this->save_goods($list['data']);
+                            if($list['code']==0){
+                                $condition = $this->get_condition($id,$new_list,1);
+                                return json(['code'=>-1,'id'=>0,'msg'=>'搜索成功','data'=>$new_list,'condition'=>$condition]);
+                            }elseif($list['code']==-1){
+                                return json(['code'=>-2,'id'=>0,'msg'=>'暂无信息','data'=>'','condition'=>'']);
+                            }
+                        }
+                    }else{
+                        return json(['code'=>-2,'id'=>0,'msg'=>'暂无信息','data'=>'','condition'=>'']);
+                    }
+
+                }
+            }
+            elseif($data['pa']==2){
+                #获取城市
+                $res = httpRequest('https://shop.gogo198.cn/collect_website/public/?s=api/gather/gettableinfo', ['id' => 5,'province_id'=>$data['province_id']]);
+                $res2 = json_decode($res, true);
+                $res = json_decode($res2['list'],true);
+//                    session('city_list', $res);
+//                    $request->session()->put('country_list', $res);
+                if(!empty($res)){
+                    return json(['code'=>0,'data'=>$res]);
+                }else{
+                    return json(['code'=>-1,'data'=>'']);
+                }
+            }
+        }else{
+            $cate_name = isset($data['cate_name'])?$data['cate_name']:'';
+            $company_id = intval($data['company_id']);
+            $company_type = intval($data['company_type']);
+
+            return view('index/shop_frontend/tao_zg',compact('cate_name','company_id','company_type'));
+        }
+    }
+
 }

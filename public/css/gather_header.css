@@ -1,0 +1,351 @@
+a {
+    text-decoration: none;
+    color: inherit;
+    font: inherit
+}
+
+body {
+    margin: 0;
+    font-family: Microsoft YaHei
+}
+
+li,ul {
+    padding: 0;
+    margin: 0;
+    list-style: none
+}
+
+.top {
+    width: 100%
+}
+
+.top-cen {
+    padding: 0
+}
+
+[v-cloak] {
+    display: none
+}
+
+.copy {
+    cursor: pointer;
+    width: 70px;
+    padding: 10px 0;
+    text-align: center;
+    display: inline-block;
+    background-color: #3440a6;
+    color: #fff;
+    border-radius: 5px
+}
+
+.no-scroll {
+    overflow: hidden
+}
+
+.header {
+    width: 100%;
+    background-color: #fff;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    transition: .5s;
+    box-shadow: 0 0 10px rgba(0,0,0,.1)
+}
+
+.header .nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center
+}
+
+.header .nav .nav-left {
+    flex: 1
+}
+
+.header .nav .nav-left,.header .nav .nav-left .logo {
+    display: flex;
+    align-items: center
+}
+
+.header .nav .nav-left .logo img {
+    width: 120px;
+    height: 48px
+}
+
+.header .nav .nav-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 0
+}
+
+.header .nav .nav-bar .nav-item {
+    cursor: pointer;
+    position: relative;
+    padding: 0 30px;
+    display: inline-block;
+    line-height: 80px
+}
+
+.header .nav .nav-bar .user {
+    position: relative;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    height: 80px;
+    width: 60px
+}
+
+.header .nav .nav-bar .user .user-profile {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%
+}
+
+.header .nav .nav-bar .user .user-id {
+    padding-right: 5px;
+    color: #ff8421
+}
+
+.header .nav .nav-bar .user a {
+    width: 100px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap
+}
+
+.header .nav .nav-bar .user:hover .member-fun {
+    height: 180px
+}
+
+.header .nav .nav-bar .user .member-fun {
+    position: absolute;
+    top: 97%;
+    left: 0;
+    width: 120px;
+    height: 0;
+    transition: all .3s;
+    text-align: center;
+    background: #fff;
+    line-height: normal;
+    box-shadow: 0 10px 16px rgba(0,0,0,.1);
+    border-radius: 0 0 10px 10px;
+    overflow: hidden
+}
+
+.header .nav .nav-bar .user .member-fun li {
+    padding: 12px 0
+}
+
+.header .nav .nav-bar .user .member-fun li:hover {
+    background: #f5f5f5
+}
+
+.header .nav .nav-bar .member-center {
+    background: #ff8421;
+    border-radius: 20px;
+    color: #fff;
+    padding: 12px 20px;
+    margin-left: 20px;
+    border: none;
+    line-height: 1
+}
+
+.header .nav .nav-mobile {
+    display: none;
+    cursor: pointer
+}
+
+.header .nav .nav-mobile .menu {
+    width: 3em;
+    height: 1.8em;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    align-items: center
+}
+
+.header .nav .nav-mobile .menu span {
+    width: 60%;
+    border: 1px solid #ffd400
+}
+
+@media (max-width: 1200px) {
+    .header .nav .nav-bar {
+        display:none
+    }
+
+    .header .nav .nav-mobile {
+        display: flex;
+        align-items: center;
+        padding: 26px 0
+    }
+}
+
+.header .sidebar {
+    position: fixed;
+    top: 20%;
+    right: 50px;
+    padding: 0 12px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,.1)
+}
+
+.header .sidebar .sidebar-item {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    padding: 17px 0;
+    border-bottom: 1px solid #ccc
+}
+
+.header .sidebar .sidebar-item:last-child {
+    border-bottom: none
+}
+
+.header .sidebar .sidebar-item .sidebar-img {
+    cursor: pointer;
+    z-index: 99
+}
+
+.header .sidebar .sidebar-item .back {
+    width: 21px
+}
+
+.header .sidebar .app .sidebar-content {
+    padding-right: 0
+}
+
+.header .sidebar .sidebar-img:hover+.sidebar-content {
+    opacity: 1;
+    width: 150px;
+    transform: translateX(0)
+}
+
+.header .sidebar .sidebar-content {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    right: 30px;
+    width: 0;
+    text-align: center;
+    background: #fff;
+    padding-right: 7px;
+    box-sizing: border-box;
+    border-radius: 10px 0 0 10px;
+    overflow: hidden;
+    transform: translateX(40px);
+    transition: all .3s
+}
+
+.header .sidebar .sidebar-content .top {
+    background: #ffd400;
+    padding: 6px 0
+}
+
+.header .sidebar .sidebar-content .content {
+    padding: 10px 0
+}
+
+.header .sidebar .sidebar-content .content img {
+    width: 120px;
+    height: 120px
+}
+
+.header .sidebar .back-top .content {
+    padding: 16px 0
+}
+
+.cookies {
+    display: none;
+    padding: 20px;
+    background-color: #000;
+    color: #fff
+}
+
+.cookies .cookies-main {
+    display: grid;
+    gap: 30px;
+    grid-template-columns: 3fr 1fr;
+    align-items: center
+}
+
+.cookies .cookies-main .left {
+    font-size: 14px;
+    line-height: 30px
+}
+
+.cookies .cookies-main .left .title {
+    font-size: 16px;
+    font-weight: 700
+}
+
+.cookies .cookies-main .right {
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center
+}
+
+.cookies .cookies-main .right .agree-btn {
+    cursor: pointer;
+    width: 100px;
+    padding: 10px 0;
+    margin: 10px 0;
+    text-align: center;
+    border-radius: 16px;
+    background-color: red
+}
+
+.switch-language {
+    margin-left: 20px
+}
+
+.switch-language .el-input__inner {
+    color: #fff;
+    border: 1px solid hsla(0,0%,100%,.1);
+    background-color: hsla(0,0%,100%,.1)
+}
+
+.switch-language .el-popper[x-placement^=bottom] {
+    background-color: transparent
+}
+
+.switch-language .el-select-dropdown__item {
+    color: #fff
+}
+
+.switch-language .selected {
+    border: none
+}
+
+.el-select-dropdown__item:hover,.switch-language .el-select-dropdown__item.hover {
+    background-color: rgba(83,83,83,.5)
+}
+
+.switch-language .el-select-dropdown {
+    border: 1px solid hsla(0,0%,100%,.1)
+}
+
+.switch-language .el-popper[x-placement^=bottom] {
+    background-color: rgba(0,0,0,.2)
+}
+
+.switch-language .el-select-dropdown__item.selected {
+    color: #409eff!important
+}
+
+.nav-is-select:after {
+    position: absolute;
+    width: 70%;
+    height: 3px;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    content: "";
+    background-color: #0e2e68
+}

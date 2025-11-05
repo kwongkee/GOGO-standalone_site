@@ -26,14 +26,14 @@
     </div>
     <div class="swiper-container cardSwiper{$k} swiper-container-horizontal" style="overflow:hidden;position:relative;padding:10px 10px;box-sizing:border-box;">
         <div class="swiper-wrapper">
-            {volist name="v['children']" key="k2" id="v2"}
+            {foreach name="v['children']" key="k2" id="v2"}
             <div class="swiper-slide" style="height:100%;">
                 <div class=" cross_border_content">
                     <div class="about-text">
                         <div class="cross-section" style="background-image:url({$data['source_link']}{$v2['back_content']});background-size: 100% 100%;position:relative;">
                             <div class="in_mask"></div>
                             <div class="cross-content">
-                                {if $v2['go_other']==0)}
+                                {if $v2['go_other']==0}
                                     <!--无跳转-->
                                     <a href="javascript:void(0);" target="_blank" class="f15"><h3 class="f22">{$v2['name']}</h3></a>
                                 {elseif($v2['go_other']==1 || $v2['go_other']==6 || $v2['go_other']==7)}
@@ -41,10 +41,10 @@
                                     <a href="javascript:common_operation({$v2['go_other']},this);" class="f15"><h3 class="f22">{$v2['name']}</h3></a>
                                 {elseif($v2['go_other']==2)}
                                     <!--商品链接-->
-                                    <a href="/?s=merch/goods&id={$v2['other_goods']}" target="_blank" class="f15"><h3 class="f22">{$v2['name']}</h3></a>
+                                    <a href="//www.gogo198.cn/goods-{$v2['other_goods']}.html" target="_blank" class="f15"><h3 class="f22">{$v2['name']}</h3></a>
                                 {elseif($v2['go_other']==3)}
                                     <!--菜单链接-->
-                                    <a href="/?s=index/detail&id={$v2['other_navbar']}" target="_blank" class="f15"><h3 class="f22">{$v2['name']}</h3></a>
+                                    <a href="/?s=merch/detail&id={$v2['other_navbar']}&company_id={$company_id}&company_type={$company_type}" target="_blank" class="f15"><h3 class="f22">{$v2['name']}</h3></a>
                                 {elseif($v2['go_other']==4)}
                                     <!--第三方链接-->
                                     <a href="{$v2['link']}" target="_blank" class="f15"><h3 class="f22">{$v2['name']}</h3></a>
@@ -59,10 +59,10 @@
                                     <a href="javascript:common_operation({$v2['go_other']},this);" class="f15 view_detail">查看详情&gt;</a>
                                     {elseif($v2['go_other']==2)}
                                     <!--商品链接-->
-                                    <a href="/?s=merch/goods&id={$v2['other_goods']}" target="_blank" class="f15 view_detail">查看详情&gt;</a>
+                                    <a href="//www.gogo198.cn/goods-{$v2['other_goods']}.html" target="_blank" class="f15 view_detail">查看详情&gt;</a>
                                     {elseif($v2['go_other']==3)}
                                     <!--菜单链接-->
-                                    <a href="/?s=index/detail&id={$v2['other_navbar']}" target="_blank" class="f15 view_detail">查看详情&gt;</a>
+                                    <a href="/?s=merch/detail&id={$v2['other_navbar']}&company_id={$company_id}&company_type={$company_type}" target="_blank" class="f15 view_detail">查看详情&gt;</a>
                                     {elseif($v2['go_other']==4)}
                                     <!--第三方链接-->
                                     <a href="{$v2['link']}" target="_blank" class="f15 view_detail">查看详情&gt;</a>
@@ -72,16 +72,16 @@
                                     {/if}
                                 {else}
                                     <ul class="withArrow">
-                                        {volist name="v2['children']" key="k3" id="v3"}
+                                        {foreach name="v2['children']" key="k3" id="v3"}
                                             {if $v3['go_other']==1 || $v3['go_other']==6 || $v3['go_other']==7}
                                             <!--分享&我要咨询&去找客服-->
                                             <li><a href="javascript:common_operation({$v3['go_other']},this);" class="f15"><i class="fa">&gt;</i> {$v3['name']}</a></li>
                                             {elseif($v3['go_other']==2)}
                                             <!--商品链接-->
-                                            <li><a href="/?s=merch/goods&id={$v3['other_goods']}" target="_blank" class="f15"><i class="fa">&gt;</i> {$v3['name']}</a></li>
+                                            <li><a href="//www.gogo198.cn/goods-{$v3['other_goods']}.html" target="_blank" class="f15"><i class="fa">&gt;</i> {$v3['name']}</a></li>
                                             {elseif($v3['go_other']==3)}
                                             <!--菜单链接-->
-                                            <li><a href="/?s=index/detail&id={$v3['other_navbar']}" target="_blank" class="f15"><i class="fa">&gt;</i> {$v3['name']}</a></li>
+                                            <li><a href="/?s=index/detail&id={$v3['other_navbar']}&company_id={$company_id}&company_type={$company_type}" target="_blank" class="f15"><i class="fa">&gt;</i> {$v3['name']}</a></li>
                                             {elseif($v3['go_other']==4)}
                                             <!--第三方链接-->
                                             <li><a href="{$v3['link']}" target="_blank" class="f15"><i class="fa">&gt;</i> {$v3['name']}</a></li>
@@ -89,7 +89,7 @@
                                             <!--搜索关键字-->
                                             <li><a href="/?s=merch/goods_list&frame_id=1&hotsearchId={$v3['id']}&searchTitle={$v3['gkeywords']}&company_id={$company_id}&company_type={$company_type}" class="f15"><i class="fa">&gt;</i> {$v3['name']}</a></li>
                                             {/if}
-                                        {/volist}
+                                        {/foreach}
                                     </ul>
                                 {/if}
                             </div>
@@ -97,7 +97,7 @@
                     </div>
                 </div>
             </div>
-            {/volist}
+            {/foreach}
         </div>
         <!--左右切换-->
         <!--<div class="swiper-button-next sn{$k+1}"></div>-->

@@ -1,0 +1,101 @@
+.about .title {
+    color: #fff;
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 50px
+}
+
+.about .sub-title {
+    color: #fff;
+    text-align: center;
+    font-weight: 400;
+    line-height: 25px
+}
+
+.about .about-content {
+    width: 80%;
+    max-width: 1200px;
+    margin: 80px auto
+}
+
+.about .about-content .about-system {
+    display: grid;
+    gap: 40px;
+    grid-template-columns: 1fr 1fr;
+    padding: 50px 0;
+    margin-bottom: 20px
+}
+
+.about .about-content .about-system span {
+    font-size: 20px;
+    font-weight: 700
+}
+
+.about .about-content .about-system h4 {
+    line-height: 25px;
+    font-size: 14px;
+    font-weight: 400
+}
+
+.about .contact {
+    background: unset;
+    overflow: hidden;
+    border:1px solid #fff;
+}
+
+.about .contact .contact-content {
+    width: 80%;
+    max-width: 1200px;
+    margin: 80px auto
+}
+
+.about .contact .contact-content .map {
+    display: grid;
+    gap: 40px;
+    grid-template-columns: 50% 50%;
+    padding: 50px 0
+}
+
+.about .contact .contact-content .map .address {
+    display: flex;
+    gap: 20px;
+    flex-direction: column;
+    justify-content: space-between
+}
+
+.about .contact .contact-content .map .address .address-item {
+    display: flex;
+    gap: 12px
+}
+
+.about .contact .contact-content .map .address .address-item img {
+    width: 48px;
+    height: 48px
+}
+
+.about .contact .contact-content .map .address .address-item .address-value {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between
+}
+
+.about .contact .contact-content .map .address .address-item .address-value .address-title {
+    font-size: 20px
+}
+
+.about .contact .contact-content .map #map-main {
+    height: 340px
+}
+
+@media (max-width: 768px) {
+    .about .about-content .about-system {
+        gap:20px;
+        grid-template-columns: 1fr
+    }
+
+    .about .contact .contact-content .map {
+        display: flex;
+        flex-direction: column-reverse
+    }
+}

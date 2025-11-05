@@ -26,11 +26,11 @@
     </div>
     <div class="swiper-container guide2_content{$k}">
         <div class="swiper-wrapper">
-            {volist name="v['children']" key="k2" id="v2"}
+            {foreach name="v['children']" key="k2" id="v2"}
             <div class="swiper-slide">
-                {volist name="v2" key="k3" id="v3"}
+                {foreach name="v2" key="k3" id="v3"}
                 <div class="hsColumn">
-                    {volist name="v3" key="k4" id="v4"}
+                    {foreach name="v3" key="k4" id="v4"}
                     <div class="hsBox disf">
                         <div class="hs2 hsDiv" style="position:relative;">
                             <!--当前节日，所有的国家循环-->
@@ -44,10 +44,10 @@
                                     <a href="javascript:common_operation({$v4['go_other']},this);">查看详情&gt;</a>
                                     {elseif($v4['go_other']==2)}
                                     <!--商品链接-->
-                                    <a href="/?s=merch/goods&id={$v4['other_goods']}" target="_blank">查看详情&gt;</a>
+                                    <a href="//www.gogo198.cn/goods-{$v4['other_goods']}.html" target="_blank">查看详情&gt;</a>
                                     {elseif($v4['go_other']==3)}
                                     <!--菜单链接-->
-                                    <a href="/?s=index/detail&id={$v4['other_navbar']}" target="_blank">查看详情&gt;</a>
+                                    <a href="/?s=merch/detail&id={$v4['other_navbar']}&company_id={$company_id}&company_type={$company_type}" target="_blank">查看详情&gt;</a>
                                     {elseif($v4['go_other']==4)}
                                     <!--第三方链接-->
                                     <a href="{$v4['link']}" target="_blank">查看详情&gt;</a>
@@ -59,11 +59,11 @@
                             </div>
                         </div>
                     </div>
-                    {/volist}
+                    {/foreach}
                 </div>
-                {/volist}
+                {/foreach}
             </div>
-            {/volist}
+            {/foreach}
         </div>
         <!--左右切换-->
         <div class="swiper-button-next sn-festival{$k}"></div>

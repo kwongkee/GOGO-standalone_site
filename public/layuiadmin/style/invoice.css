@@ -1,0 +1,231 @@
+.invoice-bg{
+	background: url('../images/invoice-bg2.jpg') no-repeat;
+	background-size: 100% 100%;
+	height: 297mm;
+	width: 210mm;
+	z-index: 1;
+}
+
+@page {
+	  /* size: 21cm 29.7cm; */
+	  font-size: 14pt;
+	  font-family: SimSun, 宋体, serif;
+	  color:black;
+	  line-height: 1.4;
+	  text-align: justify;
+	  margin:0;
+	  padding:0;
+	}
+
+body{
+	  font-size: 14pt;  /*在打印中，字体大小使用pt单位*/
+	  font-family: "Times New Roman", Times, serif;
+	}
+	.root{
+	  /*需要将预览显示的界面限定在A4大小*/
+	  width:210mm;
+	  /*这个高度为什么不是A4的大小，是经过N次验证的方式得到的，唯一的目的就是为了保证预览和打印预览一致*/
+	  /*可能是我写的有一点问题，但是如果设置为297，那么显示就会出现问题*/
+	  height:297mm;
+	  /*上下不要设置padding,否则打印预览下面的footer就会往上走*/   
+	  padding: 0 24mm 0 24mm;
+	  /* margin-bottom: 24mm; */
+	  background-color: darkgrey;
+	}
+	/*下面两个样式是为了保证屏幕上预览和打印预览一致*/
+	@media screen{
+	  .invoice-mid{
+	    width:210mm;
+	    height:297mm;
+	    /* padding-top:12mm; */
+	    display: flex;
+	    flex-direction: column;
+	  }
+	}
+	@media print{
+	  .invoice-mid{
+	    width:210mm;
+	    height:297mm;
+	    padding-top:18mm;
+	    display: flex;
+	    flex-direction: column;
+	  }
+	}
+	
+.template-wrapper-hidden {
+		  /*设置absolute使得 visibility:hidden时不占据空间*/
+		  /* position: absolute; */
+		  /* visibility: hidden; */
+		  overflow: hidden;
+		  display: none;   /*到最后发现还是这个最好使*/
+	}
+	.template-wrapper-show {
+		/*设置一个遮罩层，占满屏幕*/
+		  position: fixed;
+		  top: 0;
+		  left: 0;
+		  right: 0;
+		  bottom: 0;
+		  background: rgba(0, 0, 0, 0.3);
+		/*让遮罩层位于屏幕的最上方*/
+		  z-index: 1000;
+	}
+	.iframe-content {
+		/*只为了能完全显示那个html界面*/
+		  width: 260mm;
+		  height: 360mm;
+		  transform-origin: left top;
+		  overflow: hidden;
+	}
+
+.invoice-top{
+	margin: 0 auto;
+	width: 190mm;
+	height: 8.5em;
+	/*display: flex;*/
+}
+.invoice-mid{
+	margin: 0 auto 0.5em;
+	width: 190mm;
+	height: 40em;
+	/*display: flex;*/
+	/*min-height: 30em;*/
+	padding: 0 10mm;
+	background: #f9f9f9;
+}
+.invoice-bottom{
+	margin: 0 auto;
+	width: 190mm;
+	height: 8em;
+}
+
+.invoice-top-left{
+	width: 95mm;
+	float: left;
+}
+.invoice-top-right{
+	width: 75mm;
+	float: left;
+	margin-left: 20mm;
+}
+.top-left{
+	width: 30mm;
+	float: left;
+	text-align: right;
+	font-weight: bold;
+}
+.top-left-txt{
+	width: 65mm;
+	float: left;
+}
+.top-left-txt p{
+	padding: 0;
+	margin: 0;
+}
+.top-title, .invoice-num, .invoice-date{
+	font-weight: bold;
+}
+.invoice-num, .invoice-date{
+	margin: 0.4em auto;
+}
+.top-add{
+	font-size: 12pt;
+	line-height: 1.2em;
+}
+.invoice-pic{
+	margin: 2mm 0;
+	text-align: left;
+}
+.invoice-pic img{
+	width: 240px;
+	margin-left: 5mm;
+}
+.invoice-title{
+	text-align: left;
+	font-size: 38pt;
+	margin: 0.1em 0 0.15em;
+}
+.invoice-table{
+	border: 0;
+	margin: 0.5em 0;
+}
+.invoice-table tr th, .invoice-table tr td{
+	padding: 0.5em 0;
+	text-align: center;
+}
+.invoice-table tr td{
+	font-size: 12pt;
+	border-bottom: 1px solid #ddd;
+}
+.td1{
+	width: 20mm;
+}
+.td2{
+	width: 90mm;
+}
+.td3{
+	width: 30mm;
+}
+.td4{
+	width: 20mm;
+}
+.td5{
+	width: 30mm;
+}
+
+.bottom-left{
+	width: 95mm;
+	float: left;
+}
+.bottom-right{
+	width: 75mm;
+	float: left;
+	margin-left: 20mm;
+}
+.bottom-txt, .bottom-right{
+	font-weight: bold;
+}
+.info-title{
+	color: #079eeb;
+	margin: 0.4em 0;
+}
+.bottom-info{
+	margin-top: 5mm;
+}
+.bottom-info p{
+	padding: 0.15em 0;
+	margin: 0;
+	font-size: 12pt;
+}
+.bottom-right p{
+	padding: 0.1em 0;
+	margin: 0;
+}
+.w1{
+	width: 15mm;
+}
+.w2{
+	width: 65mm;
+	margin-left: 10mm;
+}
+.w3{
+	width: 45mm;
+	margin-left: 10mm;
+}
+.sign{
+	width: 50mm;
+    margin: 10mm auto 0;
+    font-weight: bold;
+    border-top: 1px solid #0f131e;
+    text-align: center;
+    padding: 3mm 0;
+}
+.seal{
+	position: absolute;
+    top: 248mm;
+    left: 178mm;
+    z-index: 999;
+}
+.seal img{
+	width: 55mm;
+}

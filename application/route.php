@@ -199,6 +199,11 @@ Route::get('index/merch_website_index', 'index/index/merch_website_index'); // �
 
 //**商家商城界面**====START
 Route::get('merch/merch_shop_index', 'index/Merch/merch_shop_index'); // 定义GET请求路由规则
+Route::any('merch/rate_detail', 'index/Merch/rate_detail'); // 定义GET请求路由规则
+Route::any('merch/detail', 'index/Merch/detail'); // 菜单详情
+Route::any('merch/goods_list', 'index/Merch/goods_list'); // 商品结果页
+Route::any('merch/taozg', 'index/Merch/taozg'); // 淘中国
+Route::any('merch/advice', 'index/Merch/advice'); // 建议
 
 //**商家商城界面**====END
 

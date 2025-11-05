@@ -1,0 +1,135 @@
+.contract-bg{
+	background: white;
+	width: 190mm;
+	height: 800pt;
+	padding: 10mm;
+}
+.contract-top{
+	width: 100%;
+}
+.contract-mid{
+	width: 100%;
+}
+.contract-bottom{
+	margin: 2mm 0;
+	text-align: center;
+	font-size: 10px;
+	color: #ccc;
+}
+.contract-logo{
+	width: 210mm;
+	text-align: left;
+}
+.contract-logo img{
+	width: 45mm;
+}
+.contract-title{
+	font-weight: bold;
+	text-align: center;
+	font-size: 16pt;
+	margin: 1mm 0 3mm;
+}
+.contract-table{
+	border: 1px solid #333;
+	width: 190mm;
+	border-collapse:collapse;
+	border-spacing:none;
+	margin-bottom: 2mm;
+}
+.contract-table tr td{
+	width: 47mm;
+	border-right: 1px solid #333;
+	border-bottom: 1px solid #333;
+	font-size: 12pt;
+	padding: 0.3em 0;
+}
+.border-right{
+	border-right: 0 !important;
+}
+.border-bottom{
+	border-bottom: 0 !important;
+}
+.commodity{
+	margin: 2mm 0;
+	border: 1px solid #333;
+	width: 190mm;
+	border-collapse:collapse;
+	border-spacing:none;
+}
+.commodity tr th{
+	border-right: 1px solid #333;
+	border-bottom: 1px solid #333;
+	font-size: 12pt;
+}
+.commodity tr td{
+	border-right: 1px solid #333;
+	border-bottom: 1px solid #333;
+	padding: 0.3em 0;
+	font-size: 12pt;
+	text-align: center;
+	height: 5mm;
+}
+.commodity p{
+	margin: 0;
+	padding: 0;
+}
+.commodity-en{
+	font-size: 10pt;
+}
+.commodity-w1{
+	width: 30mm;
+}
+.commodity-w2{
+	width: 20mm;
+}
+.commodity-w3{
+	width: 40mm;
+}
+.commodity-w4{
+	width: 80mm;
+}
+.commodity-w5{
+	width: 50mm;
+}
+.commodity-w6{
+	width: 65mm;
+}
+.commodity-w7{
+	width: 160mm;
+}
+.contract-con{
+	width: 100%;
+	font-size: 12pt;
+}
+.contract-con p{
+	margin: 0.5mm 0;
+	padding: 0;
+	line-height: 7mm;
+}
+.tiaokuan{
+	width: 100%;
+	display: inline-block;
+}
+.connum{
+	float: left;
+	width: 8mm;
+	line-height: 7mm;
+    margin: 0.5mm 0;
+    text-align: center;
+}
+.concon{
+	float: left;
+	width: 180mm;
+}
+.concon p{
+	text-align: justify;
+}
+.buyseal{
+	position: relative;
+    top: -36mm;
+    left: 130mm;
+    z-index: 999;
+}
+/*.buyseal img{
+	width: 55mm;
+}*/

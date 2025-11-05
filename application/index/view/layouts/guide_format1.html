@@ -28,7 +28,7 @@
     </div>
     <div class="swiper-container storeSwiper factorySwiper{$k}" style="overflow-y:visible;padding:7px;box-sizing: border-box;">
         <div class="swiper-wrapper">
-            {volist name="v['children']" key="k2" id="v2"}
+            {foreach name="v['children']" key="k2" id="v2"}
             <div class="swiper-slide">
                 <div class="hsBox disf">
                     <div class="hs2 hsDiv" style="position:relative;">
@@ -50,12 +50,12 @@
                                     <div class="price">{$v2['info']['goods_price']}</div>
                                 </div>
                                 <div class="detailDiv">
-                                    <a href="/?s=merch/goods&id={$v2['other_goods']}" target="_blank">查看详情&gt;</a>
+                                    <a href="//www.gogo198.cn/goods-{$v2['other_goods']}.html" target="_blank">查看详情&gt;</a>
                                 </div>
                                 {elseif($v2['go_other']==3)}
                                 <!--菜单链接-->
                                 <div class="detailDiv">
-                                    <a href="/?s=index/detail&id={$v2['other_navbar']}" target="_blank">查看详情&gt;</a>
+                                    <a href="/?s=merch/detail&id={$v2['other_navbar']}&company_id={$company_id}&company_type={$company_type}" target="_blank">查看详情&gt;</a>
                                 </div>
                                 {elseif($v2['go_other']==4)}
                                 <!--第三方链接-->
@@ -73,7 +73,7 @@
                     </div>
                 </div>
             </div>
-            {/volist}
+            {/foreach}
         </div>
         <!--左右切换-->
         <div class="swiper-button-next sn-store sn-factory{$k}"></div>
