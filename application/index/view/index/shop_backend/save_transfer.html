@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>独立站平台 - website.gogo198.net</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style>
+        :root {--primary: #8a2be2;--primary-dark: #6a1cb9;--primary-light: #9b4de3;--secondary: #bb86fc;--accent: #e6d7f5;--text: #333333;--text-light: #f8f8f8;--background: #f9f5fd;--card-bg: #ffffff;--gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));--gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary));--shadow: 0 10px 30px rgba(138, 43, 226, 0.15);--shadow-hover: 0 15px 35px rgba(138, 43, 226, 0.25);}
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        body {color: var(--text);line-height: 1.6;overflow-x: hidden;}
+        h1, h2, h3, h4, h5, h6 {font-family: 'Montserrat', sans-serif;font-weight: 700;}
+        .disf{display:flex;align-items: center;}
+
+        .btn {padding: 12px 25px;border-radius: 50px;text-decoration: none;font-weight: 600;transition: all 0.3s ease;cursor: pointer;display: inline-block;text-align: center;border: none;font-family: 'Montserrat', sans-serif;}
+        .btn-outline {border: 2px solid var(--primary);color: var(--primary);background: transparent;margin-right: 15px;}
+        .btn-outline:hover {background: var(--primary);color: white;transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-primary {background: var(--gradient);color: white;border: 2px solid transparent;}
+        .btn-primary:hover {background: transparent;border-color: var(--primary);color: var(--primary);transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-default{padding:padding:10px 10px;background: var(--primary);}
+
+        /* 模态框样式 */
+        .modal {display: none;position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.5);backdrop-filter: blur(5px);z-index: 2000;align-items: center;justify-content: center;}
+        .modal-content {background: white;border-radius: 20px;padding: 30px;width: 90%;max-width: 90%;box-shadow: var(--shadow-hover);position: relative;}
+        .close-modal {position: absolute;top: 20px;right: 20px;font-size: 1.5rem;color: #999;cursor: pointer;transition: color 0.3s ease;}
+        .close-modal:hover {color: var(--primary);}
+        .modal-title {font-size: 1.5rem;margin-bottom: 20px;color: var(--primary);}
+
+        /* 表单样式 */
+        .form-section {margin-bottom: 30px;}
+        .form-title {font-size: 1.3rem;margin-bottom: 20px;color: var(--primary-dark);display: flex;align-items: center}
+        .form-title i {margin-right: 10px;}
+        .form-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));gap: 20px;}
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select,
+        .form-group textarea {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;}
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {border-color: var(--primary);outline: none;}
+        .form-group textarea {min-height: 120px;resize: vertical;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
+
+        .sel_container .sel_line{margin-bottom:5px;}
+        .trush_box{display:none;}
+        .trush_box .trush{padding: 6px 6px;border: 1px solid #efefef;color: #6d6d6d;cursor: pointer;}
+        .currency_symbol{font-size: 15px;}
+        .amount{margin-left:5px;font-size: 15px;}
+
+        /* 动画 */
+        @keyframes fadeIn {
+            from {opacity: 0;transform: translateY(10px);}
+            to {opacity: 1;transform: translateY(0);}
+        }
+
+
+        @media (max-width: 576px) {
+            .btn {padding: 10px 20px;font-size: 0.9rem;}
+            /*.form-actions {flex-direction: column;}*/
+        }
+
+        /*自定义颜色配置*/
+        .layui-colorpicker.layui-colorpicker-lg,.layui-colorpicker-trigger-i.layui-icon-close{line-height: 24px;}
+        .layui-colorpicker, .layui-colorpicker-trigger-span{border-color:#777;}
+        .layui-colorpicker-main-input .layui-btn-container .layui-btn {margin: 0 0 0 5px;}
+        .layui-form-item .layui-form-label{width:100px;}
+
+        .edui-editor{z-index: 1 !important;}
+    </style>
+</head>
+<body>
+<form id="siteForm" class="layui-form" action="" method="post" lay-filter="component-form-menu" style="padding:10px;margin-bottom:0px;">
+    <input type="hidden" name="company_id" value="{$company_id}">
+    <input type="hidden" name="company_type" value="{$company_type}">
+    <input type="hidden" name="id" value="{$id}">
+
+    <fieldset class="layui-elem-field">
+        <legend>调入仓库&调出仓库</legend>
+        <div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-form-label">调入仓库</div>
+                <div class="layui-input-block">
+                    <select name="in_id" id="in_id" lay-filter="in_id" lay-search lay-verify="required">
+                        <option value="">请选择仓库</option>
+                        <option value="-1">+创建仓库信息</option>
+                        {volist name="list.warehouse" id="vo"}
+                        <option value="{$vo['id']}" {if $data['in_id']==$vo['id']}selected{/if}>{$vo['warehouse_name']}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-form-label">调出仓库</div>
+                <div class="layui-input-block">
+                    <select name="out_id" id="out_id" lay-filter="out_id" lay-search lay-verify="required">
+                        <option value="">请选择仓库</option>
+                        <option value="-1">+创建仓库信息</option>
+                        {volist name="list.warehouse" id="vo"}
+                        <option value="{$vo['id']}" {if $data['out_id']==$vo['id']}selected{/if}>{$vo['warehouse_name']}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+
+    <fieldset class="layui-elem-field">
+        <legend>调出信息</legend>
+        <div class="layui-field-box">
+            {if $id==0}
+            <div class="layui-form-item">
+                <div class="layui-form-label">选择商品</div>
+                <div class="layui-input-block">
+                    <button type="button" onclick="add_goods();" class="btn btn-default" style="margin-top:0px;color:#fff;">
+                        <i class="fas fa-add"></i>
+                        选择商品
+                    </button>
+                </div>
+            </div>
+            {/if}
+            <table class="layui-table goods_table" style="display: none;">
+                <thead>
+                <th>商品名称</th>
+                <th>调出数量</th>
+                <th>操作</th>
+                </thead>
+                <tbody>
+                {if isset($data.goods_info) && !empty($data.goods_info)}
+                {volist name="data.goods_info" id="goods"}
+                <tr id="goods_row_{$goods.goods_id}_{$goods.sku_id}" data-goods-id="{$goods.goods_id}">
+                    <td>
+                        {if $goods.sku_id > 0}
+                        <span style="font-weight: 600;">{$goods.goods_name}</span><br/><span style="font-size:12px;">{$goods.sku_name}</span>
+                        {else}
+                        <span style="font-weight: 600;">{$goods.goods_name}</span>
+                        {/if}
+                    </td>
+                    <td><input type="number" class="layui-input goods_quantity" name="goods_quantity[]" value="{$goods.goods_quantity}" min="1" onchange="calcGoodsAmount('goods_row_{$goods.goods_id}_{$goods.sku_id}')"></td>
+                    <td><input type="hidden" name="goods_id[]" value="{$goods.goods_id}"><input type="hidden" name="sku_id[]" value="{$goods.sku_id}"><div class="trush" onclick="del_goods(this)"><i class="fas fa-trash"></i></div></td>
+                </tr>
+                {/volist}
+                {/if}
+                </tbody>
+            </table>
+
+            <div class="layui-form-item">
+                <div class="layui-form-label">调出备注</div>
+                <div class="layui-input-block">
+                    <textarea name="remark" class="layui-textarea">{$data['remark']}</textarea>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="form-actions">
+        <button type="button" class="btn btn-outline" id="cancelBtnMenu" style="background:transparent;border: 2px solid var(--primary);color: var(--primary);display:none;">取消</button>
+        {if $id==0}
+        <button type="submit" class="btn btn-primary" lay-submit lay-filter="component-form-menu2">立即保存</button>
+        {/if}
+
+    </div>
+</form>
+
+<!-- 添加轮播图·模态框 -->
+<div class="modal" id="saveMenuModal">
+    <div class="modal-content" style="/**min-height:600px;max-height:600px;**/overflow-y:auto;">
+        <span class="close-modal close-modal-menu">&times;</span>
+        <h2 class="modal-title">保存信息</h2>
+        <iframe src="" class="menu_iframe" frameborder="0" style="width: 100%;height:400px;"></iframe>
+    </div>
+</div>
+</body>
+<script src="./layui/xm-select.js"></script>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    layui.use(['layer','form','laydate','upload','colorpicker'],function() {
+        var laydate = layui.laydate
+            ,layer = layui.layer
+            ,form = layui.form
+            ,$ = layui.jquery
+            ,upload = layui.upload
+            ,colorpicker = layui.colorpicker;
+
+        //菜单弹窗关闭事件===start
+        const menu_modal = document.getElementById('saveMenuModal');
+        const menu_closeBtn = document.querySelector('.close-modal-menu');
+        const cancelBtn = document.getElementById('cancelBtnMenu');
+
+        // 关闭模态框
+        function closeModalMenu() {
+            menu_modal.style.display = 'none';
+        }
+        menu_closeBtn.addEventListener('click', closeModalMenu);
+        cancelBtn.addEventListener('click', closeModalMenu);
+        // 点击模态框外部关闭
+        window.addEventListener('click', function(event) {
+            if (event.target === menu_modal) {
+                closeModalMenu();
+            }
+        });
+        //菜单弹窗关闭事件===end
+
+        //我的仓库
+        form.on('select(in_id)',function(data){
+            let val = data.value;
+            if(val==-1){
+                //创建我的仓库
+                var modal = document.getElementById('saveMenuModal');
+                modal.style.display = 'flex';
+
+                $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_warehouse&company_id={$company_id}&company_type={$company_type}');
+            }
+        });
+        form.on('select(out_id)',function(data){
+            let val = data.value;
+            if(val==-1){
+                //创建我的仓库
+                var modal = document.getElementById('saveMenuModal');
+                modal.style.display = 'flex';
+
+                $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_warehouse&company_id={$company_id}&company_type={$company_type}');
+            }
+        });
+
+        form.on('submit(component-form-menu2)', function(data){
+            layer.load();
+
+            $.ajax({
+                url:"/?s=index/save_transfer",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.closeAll('loading');
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            // let currentUrl = new URL(parent.location.href);
+                            // currentUrl.searchParams.set('tab', 'shop_head_menu');
+                            // parent.history.pushState({}, '', currentUrl.toString());
+                            parent.location.reload();
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+
+        // 检查是否有商品数据，如果有则显示表格
+        if ($('.goods_table tbody tr').length > 0) {
+            $('.goods_table').show();
+        }
+    });
+
+    //添加商品
+    function add_goods(){
+        var layer = layui.layer,
+            $ = layui.jquery,
+            form = layui.form;
+
+        layer.load();
+
+        // 通过AJAX获取商品数据
+        $.ajax({
+            url: "/?s=index/get_goods",
+            data:{'company_id':"{$company_id}",'company_type':"{$company_type}"},
+            method: 'post',
+            dataType: 'JSON',
+            success: function(res){
+                layer.closeAll('loading');
+                if(res.code == 0) {
+                    // 创建商品选择弹窗
+                    var content = '<div style="padding: 15px;">';
+
+                    content += '<div class="goods-list" style="max-height: 450px; overflow-y: auto; margin-top: 15px;">';
+                    content += '<table class="layui-table" style="margin: 0;">';
+                    content += '<thead>';
+                    content += '<tr><th></th><th>产品</th><th>库存</th></tr>';
+                    content += '</thead>';
+                    content += '<tbody>';
+
+                    // 获取已添加的商品ID
+                    var existingGoodsIds = getExistingGoodsIds();
+
+                    // 遍历商品数据
+                    $.each(res.data, function(index, product) {
+                        var hasVariants = product.variants && product.variants.length > 0;
+
+                        // 检查产品是否已存在
+                        var productUniqueId = product.goods_id + '_0'; // 产品本身的唯一标识
+                        var isProductDisabled = existingGoodsIds.includes(productUniqueId);
+
+                        // 如果有变体，检查是否所有变体都已添加
+                        var allVariantsDisabled = true;
+                        var hasEnabledVariants = false;
+                        if (hasVariants) {
+                            $.each(product.variants, function(vIndex, variant) {
+                                var variantUniqueId = product.goods_id + '_' + variant.sku_id;
+                                if (!existingGoodsIds.includes(variantUniqueId)) {
+                                    allVariantsDisabled = false;
+                                    hasEnabledVariants = true;
+                                }
+                            });
+                        }
+
+                        content += '<tr>';
+                        // 如果有变体且所有变体都已添加，或者没有变体但产品已添加，则禁用父级复选框
+                        var parentDisabled = (hasVariants && allVariantsDisabled) || (!hasVariants && isProductDisabled);
+                        content += '<td><input type="checkbox" name="product_variant" value="' + product.goods_id + '" lay-skin="primary" class="parent-checkbox" data-has-variants="' + hasVariants + '" data-product-id="' + product.goods_id + '" ' + (parentDisabled ? 'disabled' : '') + '></td>';
+                        content += '<td><img style="width:40px;height:40px;margin-right:5px;" src="'+product.goods_image+'">' + product.goods_name + '</td>';
+                        content += '<td>' + (product.goods_number || 0) + '</td>';
+                        content += '</tr>';
+
+                        // 如果有变体，显示变体
+                        if(hasVariants) {
+                            $.each(product.variants, function(vIndex, variant) {
+                                var variantUniqueId = product.goods_id + '_' + variant.sku_id;
+                                var isVariantDisabled = existingGoodsIds.includes(variantUniqueId);
+
+                                content += '<tr>';
+                                content += '<td><input type="checkbox" name="product_variant" value="' + variant.sku_id + '" lay-skin="primary" class="child-checkbox" data-product-id="' + product.goods_id + '" ' + (isVariantDisabled ? 'disabled' : '') + '></td>';
+                                content += '<td style="padding-left: 20px;">' + variant.spec_names + '</td>';
+                                content += '<td>' + (variant.goods_number || 0) + '</td>';
+                                content += '</tr>';
+                            });
+                        }
+                    });
+
+                    content += '</tbody>';
+                    content += '</table>';
+                    content += '</div>';
+
+                    content += '<div style="margin-top: 15px; padding: 10px 0; border-top: 1px solid #eee;">';
+                    content += '<span>已选择 <span id="selected_variants_count">0</span> 个变体</span>';
+                    content += '<div style="float: right;">';
+                    content += '<button type="button" class="btn btn-outline" id="cancelSelect">取消</button>';
+                    content += '<button type="button" class="btn btn-primary" id="confirmSelect">添加</button>';
+                    content += '</div>';
+                    content += '</div>';
+                    content += '</div>';
+
+                    // 打开弹窗
+                    var index = layer.open({
+                        type: 1,
+                        title: '添加商品',
+                        content: content,
+                        area: ['100%', '100%'],
+                        success: function(layero, index) {
+                            // 渲染表单元素
+                            form.render();
+
+                            // 统计已选择的变体数量
+                            function updateSelectedCount() {
+                                var selectedCount = $('input[name="product_variant"]:checked:not(.parent-checkbox)').length;
+                                $('#selected_variants_count').text(selectedCount);
+                            }
+
+                            // 绑定父级复选框变化事件
+                            $('.parent-checkbox').on('change', function() {
+                                var productId = $(this).data('product-id');
+                                var isChecked = $(this).prop('checked');
+                                var hasVariants = $(this).data('has-variants');
+
+                                // 如果产品有变体，则选中/取消选中所有子变体
+                                if (hasVariants) {
+                                    $('.child-checkbox[data-product-id="' + productId + '"]:not(:disabled)').prop('checked', isChecked);
+                                }
+
+                                updateSelectedCount();
+                            });
+
+                            // 绑定子级复选框变化事件
+                            $('.child-checkbox').on('change', function() {
+                                var productId = $(this).data('product-id');
+                                var allChildren = $('.child-checkbox[data-product-id="' + productId + '"]:not(:disabled)');
+                                var checkedChildren = $('.child-checkbox[data-product-id="' + productId + '"]:checked');
+
+                                // 如果所有子变体都被选中，则选中父级复选框
+                                if (allChildren.length > 0 && checkedChildren.length === allChildren.length) {
+                                    $('.parent-checkbox[data-product-id="' + productId + '"]').prop('checked', true);
+                                } else {
+                                    $('.parent-checkbox[data-product-id="' + productId + '"]').prop('checked', false);
+                                }
+
+                                updateSelectedCount();
+                            });
+
+                            // 绑定取消按钮事件
+                            $('#cancelSelect').on('click', function() {
+                                layer.close(index);
+                            });
+
+                            // 绑定确认按钮事件
+                            $('#confirmSelect').on('click', function() {
+                                var selectedVariants = [];
+                                var hasDuplicate = false;
+
+                                // 只收集选中的子变体
+                                $('.child-checkbox:checked').each(function() {
+                                    var variantId = $(this).val();
+                                    var productId = $(this).data('product-id');
+                                    var row = $(this).closest('tr');
+                                    var variantName = row.find('td:eq(1)').text().trim();
+
+                                    // 再次检查是否已存在
+                                    var variantUniqueId = productId + '_' + variantId;
+                                    if (existingGoodsIds.includes(variantUniqueId)) {
+                                        hasDuplicate = true;
+                                        return false; // 退出循环
+                                    }
+
+                                    selectedVariants.push({
+                                        id: variantId,
+                                        name: variantName,
+                                        goods_id: productId, // 商品ID
+                                        sku_id: variantId    // 规格ID
+                                    });
+                                });
+
+                                // 如果发现重复，显示错误信息
+                                if (hasDuplicate) {
+                                    layer.msg('选择的商品或规格已存在，请勿重复添加', {icon: 2});
+                                    return;
+                                }
+
+                                // 收集没有变体的产品
+                                $('.parent-checkbox:checked').each(function() {
+                                    var hasVariants = $(this).data('has-variants');
+                                    if (!hasVariants) {
+                                        var productId = $(this).val();
+                                        var row = $(this).closest('tr');
+                                        var productName = row.find('td:eq(1)').text().trim();
+
+                                        // 再次检查是否已存在
+                                        var productUniqueId = productId + '_0';
+                                        if (existingGoodsIds.includes(productUniqueId)) {
+                                            hasDuplicate = true;
+                                            return false; // 退出循环
+                                        }
+
+                                        selectedVariants.push({
+                                            id: productId,
+                                            name: productName,
+                                            goods_id: productId, // 商品ID
+                                            sku_id: 0           // 没有规格，SKU ID为0
+                                        });
+                                    }
+                                });
+
+                                // 如果发现重复，显示错误信息
+                                if (hasDuplicate) {
+                                    layer.msg('选择的商品或规格已存在，请勿重复添加', {icon: 2});
+                                    return;
+                                }
+
+                                if(selectedVariants.length > 0) {
+                                    addGoodsToTable(selectedVariants);
+                                    layer.close(index);
+                                } else {
+                                    layer.msg('请至少选择一个商品或变体', {icon: 2});
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    layer.msg(res.msg || '获取商品数据失败', {icon: 2});
+                }
+            },
+            error: function() {
+                layer.msg('系统错误，获取商品数据失败', {icon: 2});
+            }
+        });
+    }
+
+    // 获取已存在的商品ID
+    function getExistingGoodsIds() {
+        var $ = layui.jquery;
+        var existingIds = [];
+
+        $('.goods_table tbody tr').each(function() {
+            var goodsId = $(this).data('goods-id');
+            var skuId = $(this).find('input[name="sku_id[]"]').val();
+            if (goodsId) {
+                // 对于有规格的商品，使用 goodsId_skuId 作为唯一标识
+                // 对于没有规格的商品，使用 goodsId_0 作为唯一标识
+                var uniqueId = goodsId + '_' + (skuId || '0');
+                existingIds.push(uniqueId);
+            }
+        });
+
+        return existingIds;
+    }
+
+    // 添加商品到表格
+    function addGoodsToTable(selectedVariants) {
+        var layer = layui.layer,
+            $ = layui.jquery,
+            form = layui.form;
+
+        // 获取最新的已存在商品ID
+        var existingGoodsIds = getExistingGoodsIds();
+        var validVariants = [];
+
+        // 过滤掉已存在的商品/变体
+        $.each(selectedVariants, function(index, variant) {
+            var goodsId = variant.goods_id || variant.id;
+            var skuId = variant.sku_id || 0;
+            var uniqueId = goodsId + '_' + skuId;
+
+            if (!existingGoodsIds.includes(uniqueId)) {
+                validVariants.push(variant);
+            }
+        });
+
+        if (validVariants.length === 0) {
+            layer.msg('选择的商品或规格已存在，请勿重复添加', {icon: 2});
+            return;
+        }
+
+        // 显示表格
+        $('.goods_table').show();
+
+        var tbody = $('.goods_table tbody');
+
+        // 遍历选中的商品/变体
+        $.each(validVariants, function(index, variant) {
+            // 生成唯一ID用于后续操作
+            var rowId = 'goods_row_' + new Date().getTime() + '_' + index;
+
+            // 解析商品ID和SKU ID
+            var goodsId = variant.goods_id || variant.id;
+            var skuId = variant.sku_id || 0;
+            var html = '<tr id="' + rowId + '" data-goods-id="' + goodsId + '">';
+            html += '<td><span style="font-size:12px;">' + variant.name + '</span></td>';
+            html += '<td><input type="number" class="layui-input goods_quantity" name="goods_quantity[]" value="1" min="1"></td>';
+            html += '<td><input type="hidden" name="goods_id[]" value="' + goodsId + '"><input type="hidden" name="sku_id[]" value="' + skuId + '"><div class="trush" onclick="del_goods(this)"><i class="fas fa-trash"></i></div></td>';
+            html += '</tr>';
+
+            tbody.append(html);
+        });
+
+        // 重新渲染表单
+        form.render();
+    }
+
+    // 删除商品行
+    function del_goods(t) {
+        var $ = layui.jquery;
+
+        $(t).closest('tr').remove();
+
+        // 如果表格中没有商品了，隐藏表格
+        if ($('.goods_table tbody tr').length === 0) {
+            $('.goods_table').hide();
+        }
+    }
+</script>
+</html>

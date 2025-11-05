@@ -1,0 +1,488 @@
+{include file="common/header"}
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;}
+    .content{border:1px solid {$website['color_word']};padding:20px 20px;box-sizing:border-box;box-shadow:1px 1px 10px {$website['color_word']};}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .title{font-size:26px;color:{$website['color_word']};font-weight:800;text-align:center;line-height:normal !important;}
+    .content .control-group{margin-top:10px;}
+    .content .control-group .label_title{width:80px;color:{$website['color_word']};font-weight:800;font-size:15px;text-align:right;margin-right:10px;}
+    .content .control-group span{color:{$website['color_word']};font-weight:800;font-size:15px;}
+    .content .control-group .controls .form-control{width:90%;font-size:15px;}
+    .content .control-group .controls .btn-send{padding:7px 0px;width:25%;background:{$website['color']};color:{$website['color_word']};border:1px solid {$website['color_word']};}
+    .content form{text-align:center;}
+    .content form .btn-submit{background:{$website['color']};color:{$website['color_word']};border:1px solid #D2A778;padding:10px 100px;box-sizing:border-box;float:unset !important;margin-top:15px;}
+    
+    .phone{display:none;}
+    .tipsp{color:{$website['color_word']};font-size:15px;}
+	.enterprise_type{width: 90%;margin-left: 0px;height: 38px;}
+	@media (max-width: 992px) {
+		.enterprise_type{width: 89.3%;margin-left: 0px;height: 38px;}
+	}
+    /**文件上传**/
+    .image_box{}
+    .image_box .image_item{}
+    .image_box .image_item .remove_image{color:{$website['color_word']};font-size:15px;}
+</style>
+<link rel="stylesheet" href="./css/ajaxupload/font-awesome.min.css?x=123">
+<link rel="stylesheet" href="./css/ajaxupload/style.css?x=1111">
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<section id="content" class="non_topimg" >
+    <div class="container">
+        <!--<div class="title">商户合作</div>-->
+        <div class="content" >
+            <div class="col-md-12">
+                {if $open!=1}
+                    <a href="javascript:history.back(-1);">
+                        <div style="display:flex;align-items:center;border: 1px solid #fff;width: fit-content;padding: 10px 20px;border-radius: 15px;background: #8f8b8b;margin-bottom:30px;">
+                            <img class="" src="./img/account/back.png" alt="" style="width: 18px;margin-right: 10px;"/>
+                            返回
+                        </div>
+                    </a>
+                {/if}
+                <form name="sentMessage" id="regForm"  novalidate>
+        	        <div class="title">关联企业</div>
+							<div class="control-group">
+								<div class="controls disf">
+									<label class="label_title">企业类型</label>
+									<select name="reg_method" id="reg_method" class="enterprise_type">
+										<option value="1" selected>境内企业</option>
+										<option value="2">境外企业</option>
+									</select>
+								</div>
+							</div>
+							<div class="control-group">
+								<div class="controls disf">
+									<label class="label_title">商户类别</label>
+									<select name="type" id="type" class="enterprise_type">
+										<option value="1" selected>电商企业</option>
+										<option value="2">物流企业</option>
+										<option value="3">支付企业</option>
+									</select>
+								</div>
+							</div>
+							<div class="control-group type2" style="display:none;">
+								<div class="controls disf">
+									<label class="label_title">商户类别</label>
+									<select name="type2" id="type2" class="enterprise_type">
+										<option value="1" selected>头程集货</option>
+										<option value="2">国际转运</option>
+										<option value="3">海外仓储</option>
+									</select>
+								</div>
+							</div>
+							<div class="jn">
+								<div class="control-group">
+									<div class="controls disf">
+										<label class="label_title">企业名称</label>
+										<input type="text" class="form-control" placeholder="请输入企业名称" id="company" name="company" />
+										<p class="help-block"></p>
+									</div>
+								</div>
+								<div class="control-group">
+									<div class="controls disf">
+										<label class="label_title">手机号码</label>
+										<input type="text" class="form-control" placeholder="请输入手机号码" id="phone" name="phone" value="<?php echo session('account.phone');?>"/>
+										<p class="help-block"></p>
+									</div>
+								</div>
+								<div class="control-group">
+									<div class="controls disf">
+										<label class="label_title">真实姓名</label>
+										<input type="text" class="form-control" placeholder="请输入您的真实姓名" id="realname" name="realname" value="<?php echo session('account.realname');?>"/>
+										<p class="help-block"></p>
+									</div>
+								</div>
+								<div class="control-group">
+									<div class="controls disf">
+										<label class="label_title">身份证号</label>
+										<input type="text" class="form-control" placeholder="请输入您的身份证号" id="idcard" name="idcard" value="<?php echo session('account.idcard');?>" />
+										<p class="help-block"></p>
+									</div>
+								</div>
+							</div>
+
+
+        	                <!--提交文件-->
+        	                <div class="uploadbox jw" style="margin-top:15px;display:none;">
+								<div class="control-group">
+									<div class="controls disf">
+										<label class="label_title">企业名称</label>
+										<input type="text" class="form-control" placeholder="请输入企业名称" id="company2" name="company2" />
+										<p class="help-block"></p>
+									</div>
+								</div>
+        	                    <div id="image_box" style="margin-bottom:15px;"></div>
+    	                        <div class="fileupload_box">
+            						<label class="fileupload">
+            							<div class="pic_show">
+            								
+            								<div class="text">
+            									<i class="icon icon_plus"></i>
+            									<span class="f12">上传文件</span>
+            								</div>
+            								
+            								<img id="image_file_image" src=""  />
+            								<input type="button" class="filebox" name="image_file" id="image_file" value="" />	
+            								<div class="fileuploading"></div>
+            							</div>
+            						</label>
+            					</div>
+        	                </div>
+
+        	            	<button type="submit" class="btn pull-center btn-submit">提交关联</button><br />
+                  </form>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="form_info"></div>
+{include file="common/footer"}
+<script type="text/javascript" src="./js/ajaxupload/jquery-1.8.2.min.js"></script>
+<script type="text/javascript" src="./js/ajaxupload/ajaxupload.js"></script>
+<script type="text/javascript" src="./js/ajaxupload/edit_deal_item.js"></script>
+<script type="text/javascript" src="./js/ajaxupload/juUI.js"></script>
+<script type="text/javascript" src="./js/ajaxupload/plupload.full.min.js"></script>
+<script type="text/javascript" src="./js/ajaxupload/script.js"></script>
+<script type="text/javascript" src="./js/ajaxupload/jquery.bgiframe.js"></script>
+<script type="text/javascript" src="./js/ajaxupload/jquery.weebox.js"></script>
+<script type="text/javascript" src="./js/ajaxupload/touch.js"></script>
+
+<script type="text/javascript" charset="utf-8">
+    $(function(){
+        $('#reg_method').change(function(){
+            if($(this).val()==1){
+                $('.jn').show();
+                $('.jw').hide();
+            }else if($(this).val()==2){
+                $('.jn').hide();
+                $('.jw').show();
+            }
+        });
+
+        $('#type').change(function(){
+            if($(this).val()==1){
+                $('.type2').hide();
+            }else if($(this).val()==2){
+                $('.type2').show();
+            }else if($(this).val()==3){
+				$('.type2').hide();
+			}
+        });
+        
+        get_file_fun("image_file");
+        
+        $('#regForm').submit(function(){
+            var reg_method = $('#reg_method').val();
+            
+            var data = '';
+            if(reg_method==1){
+				//境内企业
+				data = $('input[name="company"]').val()+','+$('input[name="realname"]').val()+','+$('input[name="idcard"]').val()+','+$('input[name="phone"]').val()+','+$('input[name="email"]').val()+','+$('input[name="code"]').val()+','+$('#type').val()+','+$('type2').val();
+				$.ajax({
+					url:"?s=index/merchant_reg",
+					method:'post',
+					data:{'reg_method':reg_method,'data':data},
+					dataType:"json",
+					success:function(res){
+						if(res.code==0){
+							alert(res.msg);
+							setTimeout(function(){
+								window.history.back(-1);
+							},2000);
+							// $.ajax({
+							// 	url: 'https://decl.gogo198.cn/api/auth_verify',
+							// 	method: 'post',
+							// 	data: {
+							// 		'mobile': res.data[0],
+							// 		'idcard': res.data[2],
+							// 		'realname': res.data[1],
+							// 		'company_id': res.data[3],
+							// 		'reg_type':2,
+							// 		'is_merch':1
+							// 	},
+							// 	dataType: 'JSON',
+							// 	success: function (rres) {
+							// 		$.ajax({
+							// 			url: 'https://decl.gogo198.cn/api/record_merch',
+							// 			method: 'post',
+							// 			data: {
+							// 				'id':"<?php echo session('account')['id'];?>",
+							// 				'company_id':res.data[3],
+							// 				'form': rres,
+							// 			},
+							// 			dataType: 'JSON',
+							// 			success: function (rres2) {
+							// 				$('.form_info').html(rres2.info);
+							// 				// window.location.href=rres2.url;
+							// 			}
+							// 		});
+							// 	}
+							// });
+						}else if(res.code==-1){
+							alert(res.msg);
+						}else if(res.code==1){
+							window.location.reload();
+						}
+					}
+				});
+			}
+            else if(reg_method==2){
+				//境外企业
+				var files = $('.files');
+				var filenames = $('.filenames');
+				var filesarr = [];var filenamesarr = [];
+				for(let i=0;i<files.length;i++){
+					filesarr.push(files[i].value);
+				}
+				for(let i=0;i<filenames.length;i++){
+					filenamesarr.push(filenames[i].value);
+				}
+				let type = $('#type').val();
+				let type2 = $('#type2').val();
+				let company_name = $('#company_name2').val();
+
+				$.ajax({
+					url:"?s=index/merchant_reg",
+					method:'post',
+					data:{'reg_method':reg_method,'files':filesarr,'filenames':filenamesarr,'type':type,'type2':type2,'company_name':company_name},
+					dataType:"json",
+					success:function(res){
+						if(res.code==0){
+							alert(res.msg);
+							setTimeout(function(){
+								window.location.reload();
+							},3000);
+						}
+					}
+				});
+			}
+			return false;
+
+            if("<?php echo session('account')['reg_method'];?>"==1){
+                data = $('input[name="company"]').val()+','+$('input[name="realname"]').val()+','+$('input[name="idcard"]').val()+','+$('input[name="phone"]').val()+','+$('input[name="email"]').val()+','+$('input[name="code"]').val();
+                $.ajax({
+                    url:"?s=index/merchant_reg",
+                    method:'post',
+                    data:{'reg_method':"<?php echo session('account')['reg_method'];?>",'data':data},
+                    dataType:"json",
+                    success:function(res){
+                        if(res.code==0){
+                            $.ajax({
+                                url: 'https://decl.gogo198.cn/api/auth_verify',
+                                method: 'post',
+                                data: {
+                                    'mobile': res.data[0],
+                                    'idcard': res.data[2],
+                                    'realname': res.data[1],
+                                    'reg_type':2,
+                                    'is_merch':1
+                                },
+                                dataType: 'JSON',
+                                success: function (rres) {
+                                    $.ajax({
+                                        url: 'https://decl.gogo198.cn/api/record_merch',
+                                        method: 'post',
+                                        data: {
+                                            'id':"<?php echo session('account')['id'];?>",
+                                            'form': rres,
+                                        },
+                                        dataType: 'JSON',
+                                        success: function (rres2) {
+                                            window.location.href=rres2.url;
+                                        }
+                                    });
+                                }
+                           });
+                        }else if(res.code==1){
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+            else if("<?php echo session('account')['reg_method'];?>"==2){
+                var files = $('.files');
+                var filenames = $('.filenames');
+                var filesarr = [];var filenamesarr = [];
+                for(let i=0;i<files.length;i++){
+                    filesarr.push(files[i].value);
+                }
+                for(let i=0;i<filenames.length;i++){
+                    filenamesarr.push(filenames[i].value);
+                }
+                $.ajax({
+                    url:"?s=index/merchant_reg",
+                    method:'post',
+                    data:{'reg_method':"<?php echo session('account')['reg_method'];?>",'files':filesarr,'filenames':filenamesarr},
+                    dataType:"json",
+                    success:function(res){
+                        if(res.code==0){
+                            alert(res.msg);
+                            setTimeout(function(){
+                                window.location.reload();
+                            },3000);
+                        }
+                    }
+                });
+            }
+            else if(reg_method==1){
+                data = $('input[name="company"]').val()+','+$('input[name="realname"]').val()+','+$('input[name="idcard"]').val()+','+$('input[name="phone"]').val()+','+$('input[name="email"]').val()+','+$('input[name="code"]').val();
+                $.ajax({
+                    url:"?s=index/merchant_reg",
+                    method:'post',
+                    data:{'reg_method':reg_method,'data':data},
+                    dataType:"json",
+                    success:function(res){
+                        if(res.code==0){
+                            $.ajax({
+                                url: 'https://decl.gogo198.cn/api/auth_verify',
+                                method: 'post',
+                                data: {
+                                    'mobile': res.data[0],
+                                    'idcard': res.data[2],
+                                    'realname': res.data[1],
+                                    'reg_type':2,
+                                    'is_merch':1
+                                },
+                                dataType: 'JSON',
+                                success: function (rres) {
+                                    $.ajax({
+                                        url: 'https://decl.gogo198.cn/api/record_merch',
+                                        method: 'post',
+                                        data: {
+                                            'id':"<?php echo session('account')['id'];?>",
+                                            'form': rres,
+                                        },
+                                        dataType: 'JSON',
+                                        success: function (rres2) {
+                                            window.location.href=rres2.url;
+                                        }
+                                    });
+                                }
+                           });
+                        }else if(res.code==-1){
+                            alert(res.msg);
+                        }else if(res.code==1){
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+            else if(reg_method==2){
+                var files = $('.files');
+                var filenames = $('.filenames');
+                var filesarr = [];var filenamesarr = [];
+                for(let i=0;i<files.length;i++){
+                    filesarr.push(files[i].value);
+                }
+                for(let i=0;i<filenames.length;i++){
+                    filenamesarr.push(filenames[i].value);
+                }
+                $.ajax({
+                    url:"?s=index/merchant_reg",
+                    method:'post',
+                    data:{'reg_method':reg_method,'files':filesarr,'filenames':filenamesarr},
+                    dataType:"json",
+                    success:function(res){
+                        if(res.code==0){
+                            alert(res.msg);
+                            setTimeout(function(){
+                                window.location.reload();
+                            },3000);
+                        }
+                    }
+                });
+            }
+            return false;
+        });
+    });
+    
+    //倒计时
+    var n=60;
+    function timers(){
+        n-=1;
+        if(n==0){
+            n=60;
+            $("#sendCode").html('发送');
+        }else{
+            $("#sendCode").html(n+"重试");
+            setTimeout(function () {
+                timers();
+            },1000);
+        }
+    }
+    
+    function send_code(){
+        let val = $('#reg_method').val();
+        let number = '';
+        
+        if(val==1){
+            number = $('input[name="phone"]').val();
+            if(number==''){
+                alert('手机格式错误');return false;
+            }
+        }else if(val==2){
+            number = $('input[name="email"]').val();
+            var myreg=/^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/; //邮箱正则
+            if (!myreg.test(number)){
+                alert('邮箱格式错误');return false;
+            }
+        }
+        if(n==60){
+            timers();
+            $.ajax({
+                url: "?s=index/send_code2",
+                method: 'post',
+                data: {'code_type':val,'number':number,'islogin':1},
+                dataType: 'JSON',
+                success: function (res) {
+                    if(res.code==-1){
+                        alert(res.msg);
+                        return false;
+                    }else{
+                        
+                    }
+                },
+                error: function (data) {
+                    
+                }
+            });   
+        }
+    }
+    
+    var MAX_FILE_SIZE = "3MB";
+    var UPLOAD_URL ='?s=index/upload_file';
+	var UPLOAD_SWF='./js/ajaxupload/Moxie.swf';
+	var UPLOAD_XAP='./js/ajaxupload/Moxie.xap';
+	var ALLOW_IMAGE_EXT= "gif,jpg,jpeg,png,bmp,xls,excel,xlsx,word,pdf";
+	var MAX_IMAGE_SIZE= "3MB";
+	function get_file_fun(name){
+		$("#"+name).ui_upload({
+		    multi:true,
+			FileUploaded:function(ajaxobj){
+				if($("#image_box .image_item").length>=5) {
+					alert("最多只能上传5个文件");
+				}
+ 				else if(ajaxobj.error==0) {
+					alert(ajaxobj.message);
+				}
+				else {
+					$("#image_box").append(
+		   				'<div class="image_item" style="display: inline-block;margin-right: 15px;width:90px;text-align:center;margin-bottom:15px;">'+
+							'<div class="remove_image" style="color:{$website["color_word"]};font-size:15px;"><i class="fa fa-remove"></i></div>'+
+							'<img src=".'+ajaxobj.file_path+'" width=90 height=90 class="b_radius6" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png" />'+
+							'<input type="hidden" name="file[]" class="files" value="'+ajaxobj.file_path+'"  />'+
+							'<input type="text" name="filename[]" class="filenames" value="" placeholder="填写文件名称" style="width:100%;height:30px;border: 1px solid #D2A778;">'+
+						'</div>'
+					);
+		   			bind_del_image(); // 删除已上传的图片
+		   			if($("#image_box .image_item").length>=5) {
+		   			    hide_imgupload(); // 上传5张图片后，隐藏上传图片按钮
+		   			}
+ 				}
+			},Error:function(error) {
+				alert(error.message);
+	 		}
+	 	});
+	}
+</script>

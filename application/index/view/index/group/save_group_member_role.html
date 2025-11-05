@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>独立站平台 - website.gogo198.net</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {--primary: #8a2be2;--primary-dark: #6a1cb9;--primary-light: #9b4de3;--secondary: #bb86fc;--accent: #e6d7f5;--text: #333333;--text-light: #f8f8f8;--background: #f9f5fd;--card-bg: #ffffff;--gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));--gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary));--shadow: 0 10px 30px rgba(138, 43, 226, 0.15);--shadow-hover: 0 15px 35px rgba(138, 43, 226, 0.25);}
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        body {color: var(--text);line-height: 1.6;overflow-x: hidden;}
+        h1, h2, h3, h4, h5, h6 {font-family: 'Montserrat', sans-serif;font-weight: 700;}
+
+        /* 导航栏样式 */
+        header {background: rgba(255, 255, 255, 0.95);color: var(--text);padding: 15px 0;box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);position: sticky;top: 0;z-index: 1000;backdrop-filter: blur(10px);}
+        nav {display: flex;justify-content: space-between;align-items: center;position: relative;}
+        .logo {font-size: 1.8rem;font-weight: 700;display: flex;align-items: center;background: var(--gradient);-webkit-background-clip: text;background-clip: text;color: transparent;z-index: 1001;}
+        .logo i {margin-right: 10px;color: var(--primary);}
+        .nav-links {display: flex;list-style: none;}
+        .nav-links li {margin-left: 25px;position: relative;}
+        .nav-links a {color: var(--text);text-decoration: none;font-weight: 500;transition: all 0.3s ease;padding: 8px 12px;border-radius: 4px;position: relative;display: flex;align-items: center;}
+        .nav-links a::after {content: '';position: absolute;bottom: 0;left: 50%;width: 0;height: 2px;background: var(--gradient);transition: all 0.3s ease;transform: translateX(-50%);}
+        .nav-links a:hover {color: var(--primary);}
+        .nav-links a:hover::after {width: 80%;}
+        .auth-buttons {display: flex;align-items: center;}
+        .btn {padding: 12px 25px;border-radius: 50px;text-decoration: none;font-weight: 600;transition: all 0.3s ease;cursor: pointer;display: inline-block;text-align: center;border: none;font-family: 'Montserrat', sans-serif;}
+        .btn-outline {border: 2px solid var(--primary);color: var(--primary);background: transparent;margin-right: 15px;}
+        .btn-outline:hover {background: var(--primary);color: white;transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-primary {background: var(--gradient);color: white;border: 2px solid transparent;}
+        .btn-primary:hover {background: transparent;border-color: var(--primary);color: var(--primary);transform: translateY(-3px);box-shadow: var(--shadow);}
+
+        /* 表单样式 */
+        .form-section {margin-bottom: 30px;}
+        .form-title {font-size: 1.3rem;margin-bottom: 20px;color: var(--primary-dark);display: flex;align-items: center}
+        .form-title i {margin-right: 10px;}
+        .form-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));gap: 20px;}
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select,
+        .form-group textarea {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;}
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {border-color: var(--primary);outline: none;}
+        .form-group textarea {min-height: 120px;resize: vertical;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
+
+
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}
+        .form-group input:focus,
+        .form-group select:focus {border-color: var(--primary);outline: none;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
+
+        .layui-form-item .layui-form-label{width:100px;}
+        /* 动画 */
+        @keyframes fadeIn {
+            from {opacity: 0;transform: translateY(10px);}
+            to {opacity: 1;transform: translateY(0);}
+        }
+
+        @media (max-width: 576px) {
+            .btn {padding: 10px 20px;font-size: 0.9rem;}
+            /*.form-actions {flex-direction: column;}*/
+        }
+    </style>
+    <link rel="stylesheet" href="layui/css/layui.css">
+</head>
+<body>
+<form class="layui-form" id="siteForm" action="" method="post" lay-filter="component-form-demo" style="padding:0px;">
+    <input type="hidden" name="company_id" value="{$company_id}">
+    <input type="hidden" name="company_type" value="0">
+    <input type="hidden" name="id" value="{$id}">
+
+    <div class="form-group" style="padding:0px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色名称</label>
+            <div class="layui-input-inline layui-select-fscon">
+                <input type="text" name="name" lay-verify="required" placeholder="请输入角色名称" autocomplete="off" class="layui-input" value="{$info['name']}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">角色描述</label>
+            <div class="layui-input-inline layui-select-fscon">
+                <input type="text" name="desc" lay-verify="required" placeholder="请输入角色描述" autocomplete="off" class="layui-input" value="{$info['desc']}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline layui-select-fs" style="display: none;">
+                <label class="layui-form-label">权限配置</label>
+                <div class="layui-input-inline layui-select-fscon">
+                    <div class="layui-col-xs8">
+                        <ul id="treeDemo" class="ztree"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item" style="display: none;">
+            <label class="layui-form-label">下级分销权限</label>
+            <div class="layui-input-inline layui-select-fscon">
+                <select name="distribution_auth">
+                    <option value="0" {if $info['distribution_auth']==0}selected{/if}>禁止</option>
+                    <option value="1" {if $info['distribution_auth']==1}selected{/if}>允许</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-col-xs12" style="display:none;">
+            <div class="layui-form-item">
+                <label class="layui-form-label">数据查阅管理</label>
+                <div class="layui-col-xs3">
+                    <select name="data[data_auth]" lay-filter="data_auth">
+                        <option value="0" {if $info['data']['data_auth']==0}selected{/if}>禁止</option>
+                        <option value="1" {if $info['data']['data_auth']==1}selected{/if}>允许</option>
+                    </select>
+                </div>
+            </div>
+            <div class="view_info" style="display:none;" {if $info['data']['data_auth']==1}style="display:flex;"{/if}>
+                <div class="layui-form-item layui-input-inline">
+                    <label class="layui-form-label" style="margin-left:0 !important;padding-left:0;width:90px;">查阅上级数据</label>
+                    <div class="layui-col-xs4">
+                        <select name="data[view_up]">
+                            <option value="0" {if $info['data']['view_up']==0}selected{/if}>禁止</option>
+                            <option value="1" {if $info['data']['view_up']==1}selected{/if}>允许</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-input-inline">
+                    <label class="layui-form-label" style="margin-left:0 !important;padding-left:0;width:90px;">查阅下级数据</label>
+                    <div class="layui-col-xs4">
+                        <select name="data[view_down]">
+                            <option value="0" {if $info['data']['view_down']==0}selected{/if}>禁止</option>
+                            <option value="1" {if $info['data']['view_down']==1}selected{/if}>允许</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-xs12" style="display:none;">
+            <div class="layui-form-item">
+                <label class="layui-form-label">数据关联管理</label>
+                <div class="layui-col-xs3">
+                    <select name="connect[connect_auth]" lay-filter="connect_auth">
+                        <option value="0" {if $info['connect']['connect_auth']==0}selected{/if}>禁止</option>
+                        <option value="1" {if $info['connect']['connect_auth']==1}selected{/if}>允许</option>
+                    </select>
+                </div>
+            </div>
+            <div class="connect_info" style="display:none;" {if $info['connect']['connect_auth']==1}style="display:block;"{/if}>
+                <div class="layui-form-item layui-input-inline">
+                    <label class="layui-form-label" style="margin-left:0 !important;padding-left:0;width:90px;">关联上级数据</label>
+                    <div class="layui-col-xs4">
+                        <select name="connect[connect_up]">
+                            <option value="0" {if $info['connect']['connect_up']==0}selected{/if}>禁止</option>
+                            <option value="1" {if $info['connect']['connect_up']==1}selected{/if}>允许</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-input-inline" style="display:none;">
+                    <label class="layui-form-label" style="margin-left:0 !important;padding-left:0;width:90px;">关联下级数据</label>
+                    <div class="layui-col-xs4">
+                        <select name="connect[connect_down]">
+                            <option value="0" {if $info['connect']['connect_down']==0}selected{/if}>禁止</option>
+                            <option value="1" {if $info['connect']['connect_down']==1}selected{/if}>允许</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item" style="display:none;">
+            <label class="layui-form-label">分销权限</label>
+            <div class="layui-input-inline layui-select-fscon">
+                <select name="commission_type">
+                    <option value="0" {if $info['commission_type']==0}selected{/if}>禁止</option>
+                    <option value="1" {if $info['commission_type']==1}selected{/if}>允许</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="button" class="btn btn-outline" id="cancelBtn" style="background:transparent;border: 2px solid var(--primary);color: var(--primary);">取消</button>
+        <button type="submit" class="btn btn-primary" lay-submit lay-filter="component-form-demo">立即保存</button>
+    </div>
+</form>
+
+</body>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="layui/layui.js"></script>
+
+<script>
+    layui.use(['layer','form','laydate','upload','colorpicker'],function() {
+        laydate = layui.laydate;
+        layer = layui.layer;
+        var form = layui.form;
+        $ = layui.jquery;
+        var upload = layui.upload;
+        var colorpicker = layui.colorpicker;
+
+        const modal = parent.document.getElementById('saveRotateModal');
+        // const closeBtn = document.querySelector('.close-modal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        // 关闭模态框
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+        // closeBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+
+        // 点击模态框外部关闭
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        /* 监听提交 */
+        form.on('submit(component-form-demo)', function (data) {
+            layer.load();
+            $.ajax({
+                url: "/?s=index/save_group_member_role",
+                method: 'post',
+                data: data.field,
+                dataType: 'JSON',
+                success: function (res) {
+                    layer.closeAll('loading'); //关闭loading
+                    layer.msg(res.msg, {time: 2000}, function () {
+                        if (res.code == 0) {
+
+                            parent.location.reload();
+                        }
+                    });
+                },
+                error: function (data) {
+                    layer.msg('系统错误', {time: 2000});
+                }
+            });
+            return false;
+        });
+    });
+
+    function delPic(obj)
+    {
+        var layer = layui.layer,$ = layui.$;
+        layer.confirm('确认要删除该附件？', {
+            btn: ['删除','取消']
+        }, function(){
+            $(obj).parent().remove();
+            layer.closeAll();
+        }, function(){
+
+        });
+    }
+</script>
+</html>

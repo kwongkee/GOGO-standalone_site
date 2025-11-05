@@ -1,0 +1,579 @@
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+
+<style>
+    .disf{display:flex;align-items: center;}
+    /**聊天模板**/
+    .conatact_info{padding:10px;box-sizing: border-box;}
+    .chat_content{border:1px solid #eee;height:{$control_height};margin-bottom:0px;overflow-y:scroll;overflow-x:hidden;background:rgb(240,230,221);border:1px solid #000;border-bottom:0;}
+    .chat_content .center{width: fit-content;margin: 0 auto;padding: 5px 20px;box-sizing: border-box;background: unset;border-radius: 8px;margin-top: 10px;}
+    .conatact_info .right{float:right;margin-top:5px;}
+    .conatact_info .left{float:left;margin-top:5px;}
+    .conatact_info .disflex{display:flex;align-items:center;max-width:80%;}
+    .conatact_info img{width:50px;height:50px;}
+    .conatact_info .withdraw_txt{font-size:15px;text-align: center;}
+    /**右**/
+    .conatact_info .right .my_txt{background:rgb(230,254,218);color:#000;font-size:15px;padding:0px 5px 0px;padding-right:7px;box-sizing: border-box;border-radius: 10px;border-top-right-radius:5px;margin-right:15px;box-shadow:0px 0px 10px 2px #efeded;position:relative;min-width:80px;font-weight: 600;max-width: 380px;}
+    /*calc(50% - 10px)*/
+    .conatact_info .right .my_txt::after{content: '';width: 0;height: 0;border-top: 10px solid transparent;border-left: 10px solid rgb(230,254,218);border-bottom: 10px solid transparent;position: absolute;right: -8px;top: 0;}
+    .conatact_info .right .my_txt .chatlog{text-align:right;margin-top:3px;white-space: pre-wrap;word-wrap: break-word;}
+    /*.conatact_info .right  .time_info{position:absolute;bottom:0px;right:6px;}*/
+    .conatact_info .right  .time_info .time{font-size:12px;font-weight:bold;color:#666;margin-right: 8px;}
+    /*.conatact_info .right .my_txt .toolbar{position:absolute;bottom:-22px;right:6px;}*/
+    .conatact_info .right .my_txt .toolbar{position:absolute;top:0px;right:-35px;}
+    .conatact_info .right .my_txt .toolbar .toolbarImg{margin-right:5px;cursor:pointer;}
+    .conatact_info .right .my_txt .toolbar img{width:25px;height:25px;}
+    /*.conatact_info .right .my_txt .quoteBtm{position:absolute;right:0;bottom:-28px;}*/
+    .conatact_info .right .my_txt .quoteBtm .quoteBox{}
+    .conatact_info .right .my_txt .quoteBtm .quoteBox .quote_info{border-left: 3px solid #5f11da;border-top-left-radius: 3px;border-bottom-left-radius: 3px;background: #def6d6;padding: 0px 20px 0 10px;max-width: 160px;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;color: #000;font-size: 12px;}
+    .conatact_info .right .more_sel_box{display:none;position: absolute;font-weight: 100;background: #fff;box-shadow: 0px 0px 8px #999;top: 30px;left: -60px;z-index: 9;padding: 5px 10px;font-size: 13px;box-sizing: border-box;width: 70px;text-align: center;}
+    .conatact_info .right .more_sel_box .toolbar_info{border-bottom:1px solid #000;padding-bottom:3px;padding-top:3px;cursor:pointer;}
+    .conatact_info .right .more_sel_box .toolbar_info:last-child{border-bottom:0;}
+    .conatact_info .right .more_sel_box .toolbar_info:first-child{padding-top:0;}
+    /**左**/
+    .conatact_info .left .other_people_name{background:{$website['color']};color: #fff;border-radius: 50%;font-size: 12px;text-align: center;height: 30px;width: 30px;line-height: 30px;}
+    .conatact_info .left .my_txt{background:#d9d9d9;color:#000;font-size:15px;padding:0px 5px 0px;padding-left:7px;box-sizing: border-box;border-radius: 10px;border-top-left-radius:5px;margin-left:15px;box-shadow:0px 0px 10px 2px #d9d9d9;position: relative;font-weight:600;max-width: 380px;}
+    .conatact_info .left .my_txt::after{width: 0;height: 0;border-top: 10px solid transparent;border-right: 10px solid #d9d9d9;border-bottom: 10px solid transparent;content: '';position: absolute;left: -10px;top: 0;}
+    .conatact_info .left .my_txt .chatlog{text-align:left;margin-top:3px;white-space: pre-wrap;word-wrap: break-word;}
+    .conatact_info .left .time_info{position:absolute;bottom:0;left:55px;}
+    .conatact_info .left .time_info .time{font-size:12px;font-weight:bold;color:#666;margin-right: 8px;}
+    .conatact_info .left .my_txt .toolbar{position:absolute;top:2px;left:-63px;}
+    .conatact_info .left .my_txt .toolbar img{width: 25px;height: 25px;}
+    .conatact_info .left .my_txt .toolbar .toolbarImg {margin-left: 0px;cursor: pointer;}
+    /*.conatact_info .left .my_txt .quoteBtm{position:absolute;left:0;bottom:-28px;}*/
+    .conatact_info .left .my_txt .quoteBtm .quoteBox{position:relative;}
+    .conatact_info .left .my_txt .quoteBtm .quoteBox .quote_info{border-right: 3px solid #5f11da;border-top-right-radius: 3px;border-bottom-right-radius: 3px;background: #e5e5e5;padding: 0px 20px 0 10px;max-width: 160px;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;color: #000;font-size: 12px;}
+    .conatact_info .left .more_sel_box{display:none;position: absolute;font-weight: 100;background: #fff;box-shadow: 0px 0px 8px #999;top: 30px;left: 15px;z-index: 9;padding: 5px 10px;font-size: 13px;box-sizing: border-box;width: 70px;text-align: center;}
+    .conatact_info .left .more_sel_box .toolbar_info{border-bottom:1px solid #000;padding-bottom:3px;padding-top:3px;}
+    .conatact_info .left .more_sel_box .toolbar_info:last-child{border-bottom:0;}
+    .conatact_info .left .more_sel_box .toolbar_info:first-child{padding-top:0;}
+    .conatact_info .my_ava img{width:30px;height:30px;}
+    .edui-editor-iframeholder iframe {background: #444444;}
+    /**对号样式**/
+    .check-style-unequal-width {width: 5px;height: 10px;border-color: #1790FF;border-style: solid;border-width: 0 3px 3px 0;transform: rotate(35deg);}
+    .check-style-unequal-width-1 {width: 5px;height: 10px;border-color: #666;border-style: solid;border-width: 0 3px 3px 0;transform: rotate(35deg);}
+    .check-style-unequal-width2 {width: 5px;height: 10px;border-color: #1790FF;border-style: solid;border-width: 0 3px 3px 0;transform: rotate(35deg);}
+    .check-style-unequal-width2-1 {width: 5px;height: 10px;border-color: #666;border-style: solid;border-width: 0 3px 3px 0;transform: rotate(35deg);}
+
+    .chatBox_con .chatContent{position:relative;border: 1px solid #000;}
+    .chatBox_con .chatContent .rightBtm{position:absolute;right:10px;bottom:10px;}
+    .chatBox_con .chatContent .rightBtm .chatIcon img{width:30px;height:30px;margin-right:15px;cursor:pointer;background: #fff;}
+    .chatBox_con .chatContent .leftBtm{position:absolute;left:10px;bottom:10px;}
+    .chatBox_con .chatContent .leftBtm .quoteBox{position:relative;}
+    .chatBox_con .chatContent .leftBtm .quoteBox .quote_info{background: #ddd;padding: 0px 20px 0 10px;max-width: 160px;text-overflow: ellipsis;white-space: nowrap;overflow:hidden;color: #000;font-size: 12px;}
+    .chatBox_con .chatContent .leftBtm .quoteBox .close{position: absolute;top:5px;right:0;cursor:pointer;}
+    .chatBox_con .chatContent .leftBtm .quoteBox .close .closeBtn{font-size:18px;color:#000;line-height: 0;}
+
+    .shareBox{display: none;padding:10px;overflow: hidden;}
+    .shareBox .link{white-space: pre-wrap;width: 100%;height: 95px;}
+    .shareBox .shareBtn{width: 100%;justify-content: space-between}
+    .shareBox .shareBtn .shareBox_btn{width: 45%;color:#fff;padding:7px 0;text-align: center;cursor:pointer;}
+    .shareBox .shareBtn .left{background:#1f5188;}
+    .shareBox .shareBtn .right{background:#009688;}
+    /**聊天样式结束**/
+
+    .chatBox_con .layui-card-body{position: relative;}
+    .operation_div{position: absolute;left: 50%;width: 50%;bottom:23%;transform: translate(-50%, -45%);border-radius: 5px;text-align: center;height:fit-content;}
+    .operation_div .tips{text-align: left;font-size: 15px;position:relative;margin-bottom:5px;}
+    .operation_div .tips:after{position:absolute;right:0;top:8px;width: 0;height: 0;border-left: 8px solid transparent;border-right: 8px solid transparent;border-bottom: 8px solid #999;content:'';transform: rotate(180deg);}
+    .operation_div .operation_content{background:#fff;opacity:0.7;box-shadow: 0px 0px 10px 0px #999;}
+    .operation_div .sel{height:70px;border-right: 1px solid #fff;background:#fff;border-right:1px solid #999;}
+    .operation_div .sel select{height:100%;border:0;width:50px;}
+    .operation_div .info{width: 100%;padding:0 8px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+    .operation_div .submit-btn{height: 70px;line-height: 70px;}
+    .layui-textarea{min-height: 150px;padding:6px 80px 42px 10px;overflow-y: auto;box-sizing: border-box;}
+
+    .submit-btn{background:{$website['color']} !important;}
+    @media screen and (max-width: 768px){
+        .operation_div{position: absolute;left:50%;width:90%;bottom:19%;border-radius: 5px;text-align: center;height:fit-content;}
+        .conatact_info .right .my_txt{max-width:160px;}
+        .conatact_info .left .my_txt{max-width: 160px;}
+    }
+</style>
+
+<div class="chatBox_con">
+    <div class="layui-fluid" style="padding: 0;">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 0px;background:#fff;">
+                <form class="layui-form" action="" lay-filter="component-form-group">
+                    <input type="hidden" name="pid" id="pid" value="{$pid}">
+                    <input type="hidden" name="id" id="id" value="{$id}">
+                    <div class="layui-col-xs12 chat_content">
+
+                    </div>
+                    <!--操作卡片-->
+                    <div class="operation_div">
+                        <div class="f15 tips">注意：我们正在讨论以下：{$info['taolun']}</div>
+                        <div class="disf operation_content">
+                            <div class="sel">
+                                <select name="" id="" lay-ignore>
+                                    {volist name="list" id="vo"}
+                                    <option value="{$vo['id']}" {if $pid==$vo['id']}selected{/if}>{$vo['title']}</option>
+                                    {/volist}
+                                </select>
+                            </div>
+                            <div class="info">{$info['detail']}</div>
+                            <div class="layui-btn submit-btn"><a href="{$info['url']}" target="_blank" style="color:#fff;">打开</a></div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" style="margin-bottom:0;padding-top: 120px;background: rgb(240,230,221);">
+                        <div class="chatContent">
+                            <textarea class="layui-textarea" name="content" id="content" placeholder="开始聊天~~"></textarea>
+
+                            <div class="disf rightBtm" style="align-items: end;">
+                                <div class="chatIcon">
+                                    <img src="/img/chat_upload.png" alt="" id="fileUpload">
+                                </div>
+                                <div class="chatIcon">
+                                    <img src="/img/chat_share.png" alt="" style="width: 26px;height:26px;" id="shareBox" onclick="shareInfo()">
+                                </div>
+                                <button class="layui-btn submit-btn" lay-submit="" lay-filter="component-form-demo1" style="margin-top:0px;height:130px;">发送</button>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs12" style="text-align: center;display:none;">
+                            <button class="layui-btn submit-btn" lay-submit="" lay-filter="component-form-demo1" style="margin-top:10px;">立即提交</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="copy_info" value="">
+<div class="shareBox">
+    <div class="link"></div>
+
+    <div class="disf shareBtn">
+        <div class="left shareBox_btn" onclick="openLink()">打开链接</div>
+        <div class="right shareBox_btn" onclick="sendLink()">发送链接</div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    layui.use(['layer','form','laydate','upload','element'],function() {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , laydate = layui.laydate
+            , element = layui.element
+            , upload = layui.upload;
+
+        form.render(null, 'component-form-element');
+
+        chat();
+
+        /* 监听提交聊天记录 */
+        form.on('submit(component-form-demo1)', function (data) {
+            layer.load();
+            data.field['content_type'] = 1;
+            data.field['pa'] = 1;
+            data.field['who_send'] = "{$who_send}";
+
+            // if ($('.chatBox_con').find('.layui-this').attr('data-i') == 2) {
+            //     data.field['content_type'] = 2;
+            //     data.field['content'] = data.field['editorValue'];
+            // }
+            data.field['content'] = $('#content').val();
+
+            if (data.field['content'] == '') {
+                layer.msg('请输入内容！');
+                return false;
+            }
+
+            data.field['quote_text'] = '';
+            if($('.chatContent').find('.leftBtm').length>0){
+                data.field['quote_text'] = $('.chatContent').find('.leftBtm').find('.quoteBox').find('.quote_info').text();
+            }
+
+            data.field['origin_page'] = window.parent.location.href;
+
+            $.ajax({
+                url: "/?s=customer/customer_online",
+                method: 'post',
+                data: data.field,
+                dataType: 'JSON',
+                success: function (res) {
+                    layer.closeAll('loading');
+                    layer.msg(res.msg, {time: 2000}, function () {
+                        if (res.code == 0) {
+                            chat();
+                            $('#content').val("");
+                            $('.chatContent').find('.leftBtm').remove();
+                        }
+                    });
+                },
+                error: function (data) {
+                    layer.msg('系统错误', {time: 2000});
+                }
+            });
+            return false;
+        });
+
+        upload.render({
+            elem: '#fileUpload'
+            ,url: '/?s=customer/upload_files'
+            ,accept: 'file'
+            ,data: { folder: 'shopping', type: 'advice'}
+            ,multiple: false
+            ,number:1
+            ,before: function(obj){
+                // layer.load(); //上传loading
+            }
+            ,done: function(res){
+                // layer.closeAll('loading'); //关闭loading
+                if(res.code == 1)
+                {
+                    let content = '<a href="//shop.gogo198.cn/'+ res.file_path +'" target="_blank"><img src="//shop.gogo198.cn/'+ res.file_path +'" onerror=src="//shop.gogo198.cn/attachment/images/default_file.png" /></a>';
+                    let pid = $('#pid').val();
+                    let origin_page = window.parent.location.href;
+
+                    $.ajax({
+                        url: "/?s=customer/customer_online",
+                        method: 'post',
+                        data: {'pid':pid,'content_type':2,'pa':1,'who_send':"{$who_send}",'content':content,'origin_page':origin_page},
+                        dataType: 'JSON',
+                        success: function (res) {
+                            layer.msg(res.msg, {time: 2000}, function () {
+                                if (res.code == 0) {
+                                    chat();
+                                }
+                            });
+                        },
+                        error: function (data) {
+                            layer.msg('系统错误', {time: 2000});
+                        }
+                    });
+                }
+            }
+        });
+    });
+
+    function isMobile() {
+        var userAgentInfo = navigator.userAgent;
+        var mobileAgents = [ "Android", "iPhone", "SymbianOS", "Windows Phone", "iPad","iPod"];
+        var mobile_flag = false;
+        //根据userAgent判断是否是手机
+        for (var v = 0; v < mobileAgents.length; v++) {
+            if (userAgentInfo.indexOf(mobileAgents[v]) > 0) {
+                mobile_flag = true;
+                break;
+            }
+        }
+        var screen_width = window.screen.width;
+        var screen_height = window.screen.height;
+        //根据屏幕分辨率判断是否是手机
+        if(screen_width < 500 && screen_height < 800){
+            mobile_flag = true;
+        }
+        return mobile_flag;
+    }
+
+    var shareWindow = '';
+    function shareInfo(){
+        var $ = layui.$
+            , layer = layui.layer;
+
+        //获取上级链接
+        let upLink = window.parent.location.href;
+        $('.shareBox').find('.link').text(upLink);
+
+        //分享样式
+        let html = $('.shareBox');
+
+        let area = ['50%','50%'];
+        if(isMobile()){
+            area = ['95%','30%'];
+        }
+
+        //弹出窗口
+        shareWindow = layer.open({
+            type: 1,
+            title: '分享链接',
+            area:area,
+            content: html
+        });
+    }
+
+    function openLink(){
+        var $ = layui.$
+            , layer = layui.layer;
+
+        let upLink = window.parent.location.href;
+        window.open(upLink);
+    }
+
+    function sendLink(){
+        var $ = layui.$
+            , layer = layui.layer;
+
+        let upLink = window.parent.location.href;
+        let content = '<a href="'+ upLink +'" target="_blank">'+upLink+'</a>';
+        let pid = $('#pid').val();
+
+        $.ajax({
+            url: "/?s=customer/customer_online",
+            method: 'post',
+            data: {'pid':pid,'content_type':2,'pa':1,'who_send':"{$who_send}",'content':content,'origin_page':upLink},
+            dataType: 'JSON',
+            success: function (res) {
+                layer.msg(res.msg, {time: 2000}, function () {
+                    if (res.code == 0) {
+                        chat();
+                        layer.close(shareWindow);
+                    }
+                });
+            },
+            error: function (data) {
+                layer.msg('系统错误', {time: 2000});
+            }
+        });
+    }
+
+    function chat(){
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , laydate = layui.laydate;
+        let html = '';
+        let who_send="{$who_send}";
+
+        $.ajax({
+            url: "/?s=customer/customer_online",
+            method: 'post',
+            data: {'pa':2,'who_send':who_send,'id':"{$id}",'pid':"{$pid}"},
+            dataType: 'JSON',
+            success: function (res) {
+                if(res.data.length>0){
+                    $('#pid').val(res.pid);
+                    for(let i=0;i<res.data.length;i++){
+                        html += '             <div class="center">'+res.data[i].time+'</div>\n';
+                        for(let i2=0;i2<res.data[i].info.length;i2++) {
+                            if (res.data[i].info[i2]['who_send'] == who_send) {
+                                html += '                <div class="conatact_info layui-col-xs12">\n';
+                                if(res.data[i].info[i2]['is_withdraw']==1){
+                                    html += '<p class="withdraw_txt">您撤回了一条消息</p>';
+                                }else {
+                                    //disflex
+                                    html += '                            <div class="right">\n';
+                                    if (res.data[i].info[i2]['quote_text'] != null) {
+                                        html += '                                <div class="my_txt" style="margin-bottom:0px;">\n';
+                                    } else {
+                                        html += '                                <div class="my_txt">\n';
+                                    }
+                                    if (res.data[i].info[i2]['quote_text'] != null) {
+                                        html += '                          <div class="quoteBtm">\n' +
+                                            '                                 <div class="quoteBox">\n' +
+                                            '                                    <div class="quote_info">' + res.data[i].info[i2]['quote_text'] + '</div>\n' +
+                                            '                                 </div>\n' +
+                                            '                              </div>';
+                                    }
+                                    html += '                             <div class="chatlog">' + res.data[i].info[i2]['content'] + '</div>';
+
+                                    html += '                            <div class="toolbar disf">\n' +
+                                        '                                    <div class="more_sel toolbarImg" onclick="more_sel(this,'+res.data[i].info[i2]['id']+')"><img src="/img/more_sel.png"></div>';
+                                    html += '                                <div class="more_sel_box">\n'+
+                                        '                                      <div class="quote_sel toolbar_info" onclick="quoteInfo(this,' + res.data[i].info[i2]['id'] + ')">引用</div>\n'+
+                                        '                                      <div class="copy_sel toolbar_info" onclick="copyInfo(this,'+res.data[i].info[i2]['id']+')">复制</div>\n';
+                                    if (res.data[i].info[i2]['is_read'] == 0) {
+                                        html += '                                      <div class="withdraw_sel toolbar_info" onclick="withdrawInfo(this,' + res.data[i].info[i2]['id'] + ')">撤回</div>\n';
+                                    }
+                                    html += '                                </div>\n';
+                                    //     '                                 <div class="quote toolbarImg" onclick="quoteInfo(this,' + res.data[i].info[i2]['id'] + ')"><img src="https://www.gogo198.cn/assets/d2eace91/images/newhome/chat_quote.png"></div>\n';
+                                    // if (res.data[i].info[i2]['is_read'] == 0) {
+                                    //     html += '                                 <div class="withdraw toolbarImg" onclick="withdrawInfo(this,' + res.data[i].info[i2]['id'] + ')"><img src="https://www.gogo198.cn/assets/d2eace91/images/newhome/chat_withdraw.png"></div>';
+                                    // }
+                                    html += '                            </div>\n';
+                                    html += '                           </div>\n';
+                                    html += '                            <div class="disf time_info" style="justify-content: flex-end;margin-right: 15px;">\n' +
+                                        '                                        <div class="time">' + res.data[i].info[i2]['createtime'] + '</div>\n' +
+                                        '                                        <div class="status disf">\n';
+                                    html += '                               <div class="check-style-unequal-width" style="margin-right:3px;"></div>\n';
+                                    if (res.data[i].info[i2]['is_read'] == 0) {
+                                        <!--对方未收到-->
+                                        html += '                               <div class="check-style-unequal-width2-1" style="margin-right:3px;"></div>\n';
+                                    } else if (res.data[i].info[i2]['is_read'] == 1) {
+                                        html += '                               <div class="check-style-unequal-width2" style="margin-right:3px;"></div>\n';
+                                    }
+                                    html += '                                 </div>\n' +
+                                        '                                    </div>\n';
+                                    html += '                            </div>\n';
+                                }
+                                html += '                     </div>\n';
+                            }
+                            else if (res.data[i].info[i2]['who_send'] == 1) {
+                                html += '                       <div class="conatact_info layui-col-xs12">\n';
+                                if(res.data[i].info[i2]['is_withdraw']==1){
+                                    html += '<p class="withdraw_txt">对方撤回了一条消息</p>';
+                                }else {
+                                    html += '                            <div class="left disflex" style="align-items: flex-start;">\n'+
+                                        '                                <div class="other_people_name">'+res.data[i].info[i2]['kefu_name']+'</div>';
+                                    if (res.data[i].info[i2]['quote_text'] != null) {
+                                        html += '                                <div class="my_txt" style="margin-bottom:15px;">\n';
+                                    } else {
+                                        html += '                                <div class="my_txt">\n';
+                                    }
+                                    if (res.data[i].info[i2]['quote_text'] != null) {
+                                        html += '                          <div class="quoteBtm">\n' +
+                                            '                                 <div class="quoteBox">\n' +
+                                            '                                    <div class="quote_info">' + res.data[i].info[i2]['quote_text'] + '</div>\n' +
+                                            '                                 </div>\n' +
+                                            '                              </div>';
+                                    }
+                                    html += '                              <div class="chatlog">' + res.data[i].info[i2]['content'] + '</div>\n' +
+                                        '                                  <div class="toolbar disf">\n' +
+                                        '                                    <div class="more_sel toolbarImg" onclick="more_sel(this,'+res.data[i].info[i2]['id']+')"><img src="/img/more_sel.png"></div>'+
+                                        '                                    <div class="more_sel_box">\n'+
+                                        '                                      <div class="quote_sel toolbar_info" onclick="quoteInfo(this,' + res.data[i].info[i2]['id'] + ')">引用</div>\n'+
+                                        '                                      <div class="copy_sel toolbar_info" onclick="copyInfo(this,'+res.data[i].info[i2]['id']+')">复制</div>\n'+
+                                        '                                    </div>\n'+
+                                        // '                                         <div class="quote toolbarImg" onclick="quoteInfo(this,' + res.data[i].info[i2]['id'] + ')"><img src="https://www.gogo198.cn/assets/d2eace91/images/newhome/chat_quote.png"></div>\n' +
+                                        '                                  </div>\n'+
+                                        '                                </div>\n'+
+                                        '                                <div class="disf time_info">\n' +
+                                        '                                    <div class="time">' + res.data[i].info[i2]['createtime'] + '</div>\n' +
+                                        '                                </div>\n'+
+                                        '                            </div>\n';
+
+                                }
+                                html += '                        </div>\n';
+                            }
+                        }
+                    }
+                }else{
+                    $('.chat_content').html('');
+                }
+                if(html != ''){
+                    $('.chat_content').html(html);
+                }
+
+                let conatact_height = 0;
+                for(let i=0;i<$('.conatact_info').length;i++){
+                    conatact_height += $('.conatact_info').eq(i).height();
+                }
+                for(let i=0;i<$('.chatBox_con').find('.chat_content').find('.center').length;i++){
+                    conatact_height += $('.chatBox_con').find('.chat_content').find('.center').eq(i).height();
+                }
+                // $('.chat_content').scrollTop(conatact_height+10000, -1);
+                setTimeout(function(){
+                    $('.chat_content').scrollTop($('.chat_content')[0].scrollHeight, -1);
+                },100);
+                form.on(null,'component-form-group');
+            }
+        });
+        // console.log(idx,template_name);
+    }
+
+    //更多操作
+    function more_sel(t,id){
+        var $ = layui.$
+            , layer = layui.layer;
+        if($(t).parent().find('.more_sel_box').css('display') == 'none'){
+            $(t).parent().find('.more_sel_box').css('display','block');
+        }else{
+            $(t).parent().find('.more_sel_box').css('display','none');
+        }
+    }
+
+    //引用
+    function quoteInfo(t,id){
+        var $ = layui.$
+            , layer = layui.layer;
+
+        let txt = $(t).parents(":eq(2)").find('.chatlog').text();
+        if(txt=='' || typeof(txt)=='undefined'){
+            let file_name = $(t).parents(":eq(2)").find('.chatlog').find('a').attr('href');
+            file_name = file_name.split('/');
+            txt = 'File：'+file_name[8];
+        }
+
+        if($('.chatContent').find('.leftBtm').length>0){
+            let html = '<div class="quoteBox">\n'+
+                '            <div class="quote_info">'+txt+'</div>\n'+
+                '            <div class="close" onclick="chatClose(this)"><div class="closeBtn">×</div></div>\n'+
+                '       </div>\n';
+            $('.chatContent').find('.leftBtm').html(html);
+        }else{
+            let html = '<div class="leftBtm">\n'+
+                '   <div class="quoteBox">\n'+
+                '    <div class="quote_info">'+txt+'</div>\n'+
+                '    <div class="close" onclick="chatClose(this)"><div class="closeBtn">×</div></div>\n'+
+                '   </div>\n'+
+                '</div>';
+            $('.chatContent').append(html);
+        }
+
+        $(t).parent().hide();
+    }
+
+    //复制
+    function copyInfo(t,id){
+        var $ = layui.$
+            , layer = layui.layer;
+        // var texts = document.getElementById('copy_info');
+        if(navigator.userAgent.match(/(iPhone|iPod|iPad);?/i)){
+            //区分iPhone设备
+            document.getElementById('copy_info').value = $(t).parents(':eq(2)').find('.chatlog').text();
+            window.getSelection().removeAllRanges();//这段代码必须放在前面否则无效
+            var Url2=document.getElementById("copy_info");//要复制文字的节点
+            var range = document.createRange();
+            // 选中需要复制的节点1
+            range.selectNode(Url2);
+            // 执行选中元素
+            window.getSelection().addRange(range);
+            // 执行 copy 操作
+            var successful = document.execCommand('Copy');
+            // 移除选中的元素
+            window.getSelection().removeAllRanges();
+        }else{
+            //先copy
+            // var ordersn = $('#copy_info').text();
+            var ordersn = $(t).parents(':eq(2)').find('.chatlog').text();
+            var oInput = document.createElement('textarea');
+            oInput.style.opacity = '0';
+            oInput.style.height = '0px';
+            oInput.value = ordersn;
+            document.body.appendChild(oInput);
+            oInput.select(); // 选择对象
+            var valueLength = ordersn.length;
+            document.execCommand("Copy"); // 执行浏览器复制命令
+        }
+        layer.msg('复制成功');
+        $(t).parent().hide();
+    }
+
+    function chatClose(t){
+        var $ = layui.$
+            , layer = layui.layer;
+
+        $(t).parents(':eq(1)').remove();
+    }
+
+    //撤回
+    function withdrawInfo(t,id){
+        var $ = layui.$
+            , layer = layui.layer;
+
+        if(id>0){
+            var confirm_div = layer.confirm('确定要撤回此消息吗？', {
+                btn: ['确定','取消']
+            }, function(){
+                $.ajax({
+                    url: "/?s=customer/customer_online",
+                    method: 'post',
+                    data: {'pa': 3, 'id': id},
+                    dataType: 'JSON',
+                    success: function (res) {
+                        if(res.code==0){
+                            chat();
+                            layer.close(confirm_div);
+                        }
+                    }
+                });
+            }, function(){
+
+            });
+            $(t).parent().hide();
+        }
+    }
+</script>

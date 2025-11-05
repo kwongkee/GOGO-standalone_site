@@ -1,0 +1,212 @@
+{include file="common/header1"}
+<link href="css/gallery-1.css" rel="stylesheet">
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    .fa, .far, .fas{font-family: FontAwesome !important;}
+    body{background:linear-gradient(135deg, #f5f7fa, #e4edf9);}
+
+    /**轮播图修改样式**/
+    .swiper-button-prev, .swiper-button-next{color: #fff;background: #5e5f5e;}
+    .swiper-button-prev:after, .swiper-button-next:after {font-size: 16px;}
+    .swiper-pagination-bullet {width: 6px;height: 6px;background-color: #FFFFFF;opacity: 1;}
+    .swiper-pagination-bullet-active {width: 14px;height: 6px;border-radius: 3px;opacity: 1;background-color: #FFFFFF;}
+
+    #gallery-1 .active a{color:#D2A778;}
+    .isotope-hidden{display:none;}
+    #content{padding-top:130px;background:unset;}
+    #content .color_word{font-size:16px;padding: 15px 10px;box-sizing:border-box;}
+    .filter li:before{color:{$website['color_word']};}
+    .filter li a{color:{$website['color_word']};}
+    .filter li a:hover, .filter li a:focus, .filter li a.active{color:#d1a575;}
+    h3, h4, h5, h6{color:{$website['color']};}
+    .about-logo p,.about-logo span{white-space: pre-wrap !important;}
+    .about-logo img{width:100%;}
+    @media (min-width: 993px) {
+        .about-logo img{width:500px;}
+    }
+
+    .content-card{transition: transform 0.3s, box-shadow 0.3s;}
+    .content-card:hover {transform: translateY(-5px);box-shadow: 0 12px 40px rgba(31, 38, 135, 0.2);}
+
+    .navbar_menu{color:{$website['color']};font-size:16px;margin-bottom:10px;}
+    .navbar_menu a{color:#000;}
+    .navbar_menu a:last-child{color:{$website['color']};font-weight:700;}
+    .filter li a{font-size:16px;}
+    .gallery-thumb{box-shadow:1px 1px 10px #000;border-radius:6px;}
+    .gallery-item .gallery-thumb img{width:100%;height:200px;}
+    .gallery-item .gallery-details h5{font-size:16px;}
+    .gallery-item .gallery-details{background:unset;}
+
+    @media (min-width: 1000px){
+        /*.need_service_box{margin-top: 180px;margin-left: 180px;}*/
+        .main_img,.color_word{width:400px;height:280px;text-align:center;margin:20px auto;}
+    }
+    @media (max-width: 992px){
+        .main_img,.color_word{width:100%;height:250px;text-align:center;margin:20px auto;}
+        .color_word{padding:30px;box-sizing:border-box;}
+    }
+    .carousel-image{height:450px;width: 100%;}
+    .detail_container .row .about-logo *{background:{$website['color_inner']} !important;font-size:16px;}
+    .detail_container .row .about-logo img{box-shadow:1px 1px 15px #000;}
+
+    footer{display:block !important;}
+
+    @media (max-width: 992px){
+        .carousel-image{height:150px;}
+
+        /**小程序打开隐藏事项**/
+    {if session('miniprogram')==1}
+        #banner{margin-top: 0px;}
+    {/if}
+    }
+</style>
+
+<section id="content" style="background:{$website['color_inner']};">
+    <div class="container detail_container">
+        {if !empty($navbar_menu)}
+        <p class="navbar_menu"><i class="fa fa-sign-in" style="margin-right:5px;display:none;"></i><a href="/">HOME</a>&nbsp;<span style="color:#d1a575;">\</span>&nbsp;{$navbar_menu}</p>
+        {/if}
+
+        {if !empty($news['content'])}
+        <div class="row content-card" style="width:100%;margin:0 auto;transform: translateY(0px);background:{$website['color']};color:{$website['color_word']};border-radius:24px;">
+            <div class="col-md-12" style="padding:25px;box-sizing:border-box;">
+                <div class="about-logo" style="margin-bottom:10px;">
+                    {if $news['avatar_location']==1}
+                    <div class="" style="text-align:center;">
+                        {if $news['format']==1 && isset($news['thumb'])}
+                        <img class="main_img" src="//shop.gogo198.cn/{$news['thumb']}" alt="" />
+                        {elseif($news['format']==2 && isset($news['color']))}
+                        <div class="color_word" style="background:{$news['color']} !important;color:{$news['word_color']};width:500px;height:280px;">{$news['color_word']}</div>
+                        {/if}
+                    </div>
+                    {/if}
+                    {$news['content']}
+                    {if $news['avatar_location']==2}
+                    <div class="" style="text-align:center;">
+                        {if $news['format']==1 && isset($news['thumb'])}
+                        <img class="main_img" src="//shop.gogo198.cn/{$news['thumb']}" alt="" />
+                        {elseif($news['format']==2 && isset($news['color']))}
+                        <div class="color_word" style="background:{$news['color']} !important;color:{$news['word_color']};font-size:16px;width:500px;height:280px;">{$news['color_word']}</div>
+                        {/if}
+                    </div>
+                    {/if}
+                </div>
+                {include file="common/like"}
+                <div class="like">
+                    <div class="disf">
+                        <div class="like_box disf" onclick="like_num()">
+                            <img src="./img/like.png" alt="">
+                            <div class="like_num upd_num">&nbsp;{$news['like_num']}</div>
+                        </div>
+                        <div class="like_box disf" onclick="comment()">
+                            <img src="./img/comment.png" alt="">
+                            <div class="like_num upd_comment_num">&nbsp;{$news['comment_num']}</div>
+                        </div>
+                        <div class="like_box disf" onclick="show_share()">
+                            <i class="fa fa-share-square-o" style="color:{$website['color_word']};font-size:15px;margin-right:3px;"></i>
+                            <div class="like_num upd_share_num">&nbsp;{$news['share_num']}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {include file="common/advice"}
+            </div>
+        </div>
+        <div class="row comment_box" style="border:1px solid {$website['color']};background:{$website['color']};border-radius: 24px;overflow-y:auto;margin:0;margin-bottom:60px;">
+            {if !empty($all_comment)}
+            {volist name="all_comment" id="vo"}
+            <div class="comment_div">
+                <div class="disf" style="justify-content: space-between;">
+                    <div class="name f15">游客:{$vo['ip']}</div>
+                    <div class="time f15"><?php echo date('Y-m-d H:i',$vo['createtime']);?></div>
+                </div>
+                <div class="comment_content f15">{$vo.text}</div>
+            </div>
+            {/volist}
+            {else}
+            <div class="f15 no_comment" style="text-align: center;color:{$website['color_word']};">——暂无评论——</div>
+            {/if}
+        </div>
+        {/if}
+    </div>
+</section>
+<div class="comment" style="display: none;padding:20px;box-sizing: border-box;text-align: center;">
+    <textarea name="comment_content" id="comment_content" class="layui-textarea" placeholder="请留下您的评论..."></textarea>
+    <div class="layui-btn layui-btn-md submit_comment" style="margin-top:15px;">立即评论</div>
+</div>
+{include file="common/footer"}
+<script type="text/javascript" charset="utf-8">
+    $(function(){
+        // 卡片悬停效果增强
+        $('.content-card').hover(
+            function() {
+                $(this).css('transform', 'translateY(-10px)');
+            },
+            function() {
+                $(this).css('transform', 'translateY(0)');
+            }
+        );
+    });
+
+    //轮播图开始
+    var mySwiper = new Swiper ('.swiper-container', {
+        // direction: 'vertical', // 垂直切换选项（不设置默认是水平切换）
+        loop: true, // 循环模式选项
+        autoplay: true,
+        // 如果需要分页器
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+
+        // 如果需要前进后退按钮
+        // navigation: {
+        //   nextEl: '.sn1',
+        //   prevEl: '.sp1',
+        // },
+    });
+
+    //板块开始
+    if(window.screen.width < 992){
+        var mySwiper = new Swiper ('.swiper-container2', {
+            // direction: 'vertical', // 垂直切换选项（不设置默认是水平切换）
+            loop: true, // 循环模式选项
+            autoplay: true,
+            // 如果需要分页器
+            pagination: {
+                el: '.swiper-pagination2',
+            },
+
+            // 如果需要前进后退按钮
+            // navigation: {
+            //   nextEl: '.sn1',
+            //   prevEl: '.sp1',
+            // },
+        });
+    }
+    else{
+        var mySwiper = new Swiper ('.swiper-container2', {
+            // direction: 'vertical', // 垂直切换选项（不设置默认是水平切换）
+            loop: true, // 循环模式选项
+            autoplay: true,
+            // 如果需要分页器
+            pagination: {
+                el: '.swiper-pagination2',
+            },
+            slidesPerView: 3,
+            paginationClickable: true,
+            spaceBetween: 60,
+
+            // 如果需要前进后退按钮
+            // navigation: {
+            //   nextEl: '.sn1',
+            //   prevEl: '.sp1',
+            // },
+        });
+    }
+</script>
+

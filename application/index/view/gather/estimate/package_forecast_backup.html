@@ -1,0 +1,565 @@
+{include file="common/gather_header"}
+<meta name="viewport" content="width=device-width, initial-scale=0.5" />
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;background:#fafafa;}
+    #content .container{width: 80%;max-width: 1200px;padding: 0px;margin: 30px auto 40px;border-radius: 5px;background-color: #fff;box-shadow: 0 0 16px rgba(0,0,0,.04);background: #fafafa;box-shadow: unset;}
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+    .content .box_content{background:;color:;border:1px solid ;font-size:25px;text-align:center;padding:30px;width:100%;}
+    .content .box_content img{width:40px;margin-right:5px;}
+    .personalMain{overflow: hidden;background-color: #fafafa;}
+    .personalMain .personal{width: 1200px;display: grid;gap: 20px;grid-template-columns: 1fr 4fr;margin: 0px auto;word-wrap: break-word;word-break: break-all;}
+    .personal-left{min-width: 240px;align-self: start;color: #666;background-color: #fff;border-radius: 5px;box-shadow: 0 0 16px rgba(0,0,0,.04);}
+    .personal-left .personal-item {display: flex;flex-direction: column;border-bottom: 1px solid #eee;}
+    .personal-left .personal-item .router-sty{padding: 16px 0 16px 50px;position: relative;}
+    .operat-box {display: flex;align-items: center;justify-content: space-between;padding: 16px 30px;background-color: #eee;}
+    .main-container-title {padding-right: 20px;}
+    .online-order-container .content {padding: 30px;}
+    .online-order-container .content .tips-box {padding: 20px 30px;color: #666;font-size: 14px;line-height: 24px;border: 1px solid #eee;}
+    .online-order-container .content .warehouse {display: grid;grid-template-columns: 1fr 1fr;padding-top: 30px;}
+    .el-form-item {margin-bottom: 22px;}
+    .el-form--label-top .el-form-item__label {float: none;display: inline-block;text-align: left;padding: 0 0 10px;}
+    .el-form-item__content {line-height: 40px;position: relative;font-size: 14px;}
+    .el-select {display: inline-block;position: relative;}
+    .el-select .el-input.is-focus .el-input__inner {border-color: #ffd400;}
+    .online-order-container{background: #fff;}
+    .online-order-container .content .warehouse .box-right {color: #666;line-height: 40px;}
+    .online-order-container .content .warehouse .box-right .warehouse-name {color: #333;}
+    .online-order-container .content .warehouse .box-right .warehouse-item {display: flex;}
+    .online-order-container .content .warehouse .box-right .warehouse-item .warehouse-label {width: 100px;text-align: justify;-moz-text-align-last: justify;text-align-last: justify;}
+    .online-order-container .content .warehouse .box-right .warehouse-item .warehouse-value {flex: 1;}
+    .online-order-container .content .border-top {display: flex;align-items: center;justify-content: space-between;}
+    .add-btn-container[data-v-00017d9f] {display: flex;align-items: center;padding: 8px 28px;cursor: pointer;border-radius: 5px;background: #ffd400;}
+    .add-btn-container .el-icon-plus[data-v-00017d9f] {font-weight: 700;}
+    .online-order-container .content .package-list {padding: 20px 0;}
+    .el-table--border {border-right: none;border-bottom: none;}
+    .el-table__body, .el-table__footer, .el-table__header {table-layout: fixed;border-collapse: separate;}
+    .el-table thead {color: #909399;font-weight: 500;}
+    .el-table tr {background-color: #fff;}
+    .el-table td, .el-table th.is-leaf {border-bottom: 1px solid #ebeef5;}
+    .el-table td, .el-table th {padding: 12px 0;min-width: 0;box-sizing: border-box;text-overflow: ellipsis;vertical-align: middle;position: relative;text-align: left;}
+    .el-table th>.cell {display: inline-block;box-sizing: border-box;position: relative;vertical-align: middle;padding-left: 10px;padding-right: 10px;width: 100%;}
+    .el-table__empty-block {min-height: 60px;text-align: center;width: 100%;display: flex;justify-content: center;align-items: center;}
+    .el-table__empty-text {line-height: 60px;width: 50%;color: #909399;}
+    .el-table--border, .el-table--group {border: 1px solid #ebeef5;}
+    .online-order-container .content .service .service-list {display: flex;gap: 55px;padding-top: 30px;}
+    .el-checkbox-group {font-size: 0;}
+    .el-checkbox {color: #606266;font-weight: 500;font-size: 14px;position: relative;cursor: pointer;display: inline-block;white-space: nowrap;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;margin-right: 30px;}
+    .el-checkbox__input {white-space: nowrap;cursor: pointer;outline: none;display: inline-block;line-height: 1;position: relative;vertical-align: middle;}
+    .el-checkbox__label {display: inline-block;padding-left: 10px;line-height: 19px;font-size: 14px;}
+    .online-order-container .content .icon-remark {color: #ffd400;}
+    .online-order-container .content .submit-box {display: flex;flex-direction: column;align-items: center;}
+    .online-order-container .content .submit-box .submit-btn {padding: 12px 74px;margin: 60px 0 20px;color: #333;border: none;border-radius: 5px;}
+    .el-checkbox:last-of-type {margin-right: 0;}
+    .el-checkbox__input {white-space: nowrap;cursor: pointer;outline: none;display: inline-block;line-height: 1;position: relative;vertical-align: middle;}
+    .el-checkbox__input.is-checked+.el-checkbox__label {color: #ffd400;}
+    .el-button--primary {color: #fff;background-color: #ffd400;border-color: #ffd400;}
+
+    /**添加包裹**/
+    .el-popper[x-placement^=bottom] {margin-top: 12px;}
+    .el-dialog {position: relative;margin: 0 auto 50px;background: #fff;border-radius: 2px;box-shadow: 0 1px 3px rgba(0,0,0,.3);box-sizing: border-box;width: 50%;}
+    .main-dialog-container .el-dialog__header {background-color: #ffd400;text-align: center;padding: 10px 20px;}
+    .el-dialog__title {line-height: 24px;font-size: 18px;color: #303133;}
+    .main-dialog-container .el-dialog__headerbtn {top: 15px;}
+    .el-dialog__headerbtn {position: absolute;top: 20px;right: 20px;padding: 0;background: transparent;border: none;outline: none;cursor: pointer;font-size: 16px;}
+    .main-dialog-container .el-dialog__body {padding: 40px 50px!important;}
+    .el-dialog__body {padding: 30px 20px;color: #606266;font-size: 14px;word-break: break-all;}
+    .el-row {position: relative;box-sizing: border-box;}
+    .el-col-12 {width: 50%;}
+    [class*=el-col-] {float: left;box-sizing: border-box;}
+    .el-form-item {margin-bottom: 22px;}
+    .el-form--label-top .el-form-item__label {float: none;display: inline-block;text-align: left;padding: 0 0 10px;}
+    .el-form-item__label {text-align: right;vertical-align: middle;float: left;font-size: 14px;color: #606266;line-height: 40px;padding: 0 12px 0 0;box-sizing: border-box;}
+    .el-form-item.is-required:not(.is-no-asterisk) .el-form-item__label-wrap>.el-form-item__label:before, .el-form-item.is-required:not(.is-no-asterisk)>.el-form-item__label:before {content: "*";color: #f56c6c;margin-right: 4px;}
+    .el-form-item__content {line-height: 40px;position: relative;font-size: 14px;}
+    .package-dialog-container .form-ipt {width: 100%;}
+    .el-select {display: inline-block;position: relative;}
+    .el-row:after, .el-row:before {display: table;content: "";}
+    .el-row:after {clear: both;}
+    .package-dialog-container .form-ipt {width: 100%;}
+    .el-button--primary {color: #fff;background-color: #ffd400;border-color: #ffd400;}
+    .el-button {display: inline-block;line-height: 1;white-space: nowrap;cursor: pointer;background: #fff;border: 1px solid #dcdfe6;color: #606266;-webkit-appearance: none;text-align: center;box-sizing: border-box;outline: none;margin: 0;transition: .1s;font-weight: 500;-moz-user-select: none;-webkit-user-select: none;-ms-user-select: none;padding: 12px 20px;font-size: 14px;border-radius: 4px;}
+</style>
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="personalMain">
+            <div class="personal">
+                {include file="common/member_left"}
+                <div class="online-order-container main-container">
+                    <div  class="operat-box"><span  class="main-container-title">添加包裹</span>
+                    </div>
+                    <div  class="content">
+                        <div  class="tips-box">
+                            <div >提示:</div>
+                            <div >
+                                1.添加您寄到本仓库的快递单号，请注意不要填成订单号
+                            </div>
+                            <div >
+                                2.物品名称请描述具体，如老干妈、小火锅之类，不要统称食品
+                            </div>
+                            <div >
+                                3.如果您的包裹已签收第二天还未入库，请发送单号给客服查询
+                            </div>
+                        </div>
+                        <div  class="warehouse">
+                            <div  class="box-left">
+                                <form  class="el-form el-form--label-top">
+                                    <div  class="el-form-item"><label
+                                            class="el-form-item__label">目的地</label>
+                                        <div class="el-form-item__content">
+                                            <div  class="el-select">
+                                                <select name="" id="">
+                                                    <option value="">请选择目的地</option>
+                                                    <option value="1">德国</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div  class="el-form-item"><label
+                                            class="el-form-item__label">寄送仓库</label>
+                                        <div class="el-form-item__content">
+                                            <div  class="el-select">
+                                                <select name="" id="">
+                                                    <option value="">请选择寄送仓库</option>
+                                                    <option value="1">上海仓</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div  class="box-right" style="">
+                                <div  class="warehouse-name">上海仓库</div>
+                                <div  class="warehouse-item">
+                                    <div  class="warehouse-label">收件人</div>
+                                    ：
+                                    <div  class="warehouse-value">
+                                        必购家(398249)
+                                    </div>
+                                </div>
+                                <div  class="warehouse-item">
+                                    <div  class="warehouse-label">联系电话</div>
+                                    ：
+                                    <div  class="warehouse-value">18017143895</div>
+                                </div>
+                                <div  class="warehouse-item">
+                                    <div  class="warehouse-label">详细地址</div>
+                                    ：
+                                    <div  class="warehouse-value">
+                                        上海市松江区九亭镇九泾路1000号2号楼南侧1楼B102-3号右侧铁门(398249)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div >
+                            <div  class="border-top">
+                                <div >包裹列表</div>
+                                <div data-v-00017d9f=""  class="add-btn-container"><i
+                                        data-v-00017d9f="" class="el-icon-plus add"></i>
+                                    <div data-v-00017d9f="">添加包裹</div>
+                                </div>
+                            </div>
+                            <div  class="package-list">
+                                <div 
+                                     class="el-table el-table--fit el-table--border el-table--enable-row-hover">
+                                    <div class="hidden-columns">
+                                        <div ></div>
+                                        <div ></div>
+                                        <div ></div>
+                                        <div ></div>
+                                        <div ></div>
+                                        <div ></div>
+                                        <div ></div>
+                                        <div ></div>
+                                    </div>
+                                    <div class="el-table__header-wrapper">
+                                        <table cellspacing="0" cellpadding="0" border="0" class="el-table__header"
+                                               style="width: 879px;">
+                                            <colgroup>
+                                                <col name="el-table_3_column_17" width="48">
+                                                <col name="el-table_3_column_18" width="131">
+                                                <col name="el-table_3_column_19" width="126">
+                                                <col name="el-table_3_column_20" width="126">
+                                                <col name="el-table_3_column_21" width="126">
+                                                <col name="el-table_3_column_22" width="126">
+                                                <col name="el-table_3_column_23" width="126">
+                                                <col name="el-table_3_column_24" width="70">
+                                                <col name="gutter" width="0">
+                                            </colgroup>
+                                            <thead class="has-gutter">
+                                            <tr class="">
+                                                <th colspan="1" rowspan="1" class="el-table_3_column_17     is-leaf"
+                                                    style="background: rgb(238, 238, 238); color: rgb(51, 51, 51); text-align: center;">
+                                                    <div class="cell">#</div>
+                                                </th>
+                                                <th colspan="1" rowspan="1" class="el-table_3_column_18     is-leaf"
+                                                    style="background: rgb(238, 238, 238); color: rgb(51, 51, 51); text-align: center;">
+                                                    <div class="cell">物品名称</div>
+                                                </th>
+                                                <th colspan="1" rowspan="1" class="el-table_3_column_19     is-leaf"
+                                                    style="background: rgb(238, 238, 238); color: rgb(51, 51, 51); text-align: center;">
+                                                    <div class="cell">物流公司</div>
+                                                </th>
+                                                <th colspan="1" rowspan="1" class="el-table_3_column_20     is-leaf"
+                                                    style="background: rgb(238, 238, 238); color: rgb(51, 51, 51); text-align: center;">
+                                                    <div class="cell">快递单号</div>
+                                                </th>
+                                                <th colspan="1" rowspan="1" class="el-table_3_column_21     is-leaf"
+                                                    style="background: rgb(238, 238, 238); color: rgb(51, 51, 51); text-align: center;">
+                                                    <div class="cell">数量</div>
+                                                </th>
+                                                <th colspan="1" rowspan="1" class="el-table_3_column_22     is-leaf"
+                                                    style="background: rgb(238, 238, 238); color: rgb(51, 51, 51); text-align: center;">
+                                                    <div class="cell">价值</div>
+                                                </th>
+                                                <th colspan="1" rowspan="1" class="el-table_3_column_23     is-leaf"
+                                                    style="background: rgb(238, 238, 238); color: rgb(51, 51, 51); text-align: center;">
+                                                    <div class="cell">属性</div>
+                                                </th>
+                                                <th colspan="1" rowspan="1" class="el-table_3_column_24     is-leaf"
+                                                    style="background: rgb(238, 238, 238); color: rgb(51, 51, 51); text-align: center;">
+                                                    <div class="cell">操作</div>
+                                                </th>
+                                                <th class="gutter" style="width: 0px; display: none;"></th>
+                                            </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                    <div class="el-table__body-wrapper is-scrolling-none">
+                                        <table cellspacing="0" cellpadding="0" border="0" class="el-table__body"
+                                               style="width: 879px;">
+                                            <colgroup>
+                                                <col name="el-table_3_column_17" width="48">
+                                                <col name="el-table_3_column_18" width="131">
+                                                <col name="el-table_3_column_19" width="126">
+                                                <col name="el-table_3_column_20" width="126">
+                                                <col name="el-table_3_column_21" width="126">
+                                                <col name="el-table_3_column_22" width="126">
+                                                <col name="el-table_3_column_23" width="126">
+                                                <col name="el-table_3_column_24" width="70">
+                                            </colgroup>
+                                            <tbody></tbody>
+                                        </table>
+                                        <div class="el-table__empty-block" style="height: 100%; width: 879px;"><span
+                                                class="el-table__empty-text">暂无数据</span></div></div>
+                                    
+                                    <div class="el-table__column-resize-proxy" style="display: none;"></div>
+                                </div>
+                            </div>
+                            <div  class="service">
+                                <div >增值服务</div>
+                                <div  role="group" aria-label="checkbox-group"
+                                     class="el-checkbox-group service-list"><label 
+                                                                                   class="el-checkbox"><span
+                                        class="el-checkbox__input"><span class="el-checkbox__inner"></span><input
+                                        type="checkbox" aria-hidden="false" class="el-checkbox__original"
+                                        value="72"></span><span class="el-checkbox__label"><span 
+                                                                                                 style="color: rgb(51, 51, 51) !important;">拆除快递包装</span> <i
+                                         class="el-tooltip el-icon-question icon-remark"
+                                        aria-describedby="el-tooltip-1133" tabindex="0"></i></span></label><label
+                                         class="el-checkbox"><span class="el-checkbox__input"><span
+                                        class="el-checkbox__inner"></span><input type="checkbox" aria-hidden="false"
+                                                                                 class="el-checkbox__original"
+                                                                                 value="73"></span><span
+                                        class="el-checkbox__label"><span 
+                                                                         style="color: rgb(51, 51, 51) !important;">拆除商品包装</span> <i
+                                         class="el-tooltip el-icon-question icon-remark"
+                                        aria-describedby="el-tooltip-8388" tabindex="0"></i></span></label><label
+                                         class="el-checkbox"><span class="el-checkbox__input"><span
+                                        class="el-checkbox__inner"></span><input type="checkbox" aria-hidden="false"
+                                                                                 class="el-checkbox__original"
+                                                                                 value="74"></span><span
+                                        class="el-checkbox__label"><span 
+                                                                         style="color: rgb(51, 51, 51) !important;">赠品丢弃</span> <i
+                                         class="el-tooltip el-icon-question icon-remark"
+                                        aria-describedby="el-tooltip-541" tabindex="0"></i></span></label><label
+                                         class="el-checkbox"><span class="el-checkbox__input"><span
+                                        class="el-checkbox__inner"></span><input type="checkbox" aria-hidden="false"
+                                                                                 class="el-checkbox__original"
+                                                                                 value="207"></span><span
+                                        class="el-checkbox__label"><span 
+                                                                         style="color: rgb(51, 51, 51) !important;">抽真空服务</span> <i
+                                         class="el-tooltip el-icon-question icon-remark"
+                                        aria-describedby="el-tooltip-526" tabindex="0"></i></span></label><label
+                                         class="el-checkbox"><span class="el-checkbox__input"><span
+                                        class="el-checkbox__inner"></span><input type="checkbox" aria-hidden="false"
+                                                                                 class="el-checkbox__original"
+                                                                                 value="247"></span><span
+                                        class="el-checkbox__label"><span 
+                                                                         style="color: rgb(51, 51, 51) !important;">入库拆箱检查违禁品</span> <i
+                                         class="el-tooltip el-icon-question icon-remark"
+                                        aria-describedby="el-tooltip-8875" tabindex="0"></i></span></label></div>
+                            </div>
+                        </div>
+                        <div  class="submit-box">
+                            <button  type="button" class="el-button submit-btn el-button--primary">
+                                <span>提交</span></button>
+                            <label  class="el-checkbox is-checked"><span
+                                    class="el-checkbox__input is-checked"><span class="el-checkbox__inner"></span><input
+                                    type="checkbox" aria-hidden="false" class="el-checkbox__original"
+                                    value=""></span><span class="el-checkbox__label"><div ><span
+                                     style="color: rgb(51, 51, 51) !important;">已阅读并同意</span> <span
+                                    >《BeeGoPlus集运协议》</span></div></span></label></div>
+                        <div  class="el-dialog__wrapper" style="display: none;">
+                            <div role="dialog" aria-modal="true" aria-label="包裹转运规则" class="el-dialog"
+                                 style="margin-top: 15vh; width: 50%;">
+                                <div class="el-dialog__header"><span class="el-dialog__title">包裹转运规则</span>
+                                    <button type="button" aria-label="Close" class="el-dialog__headerbtn"><i
+                                            class="el-dialog__close el-icon el-icon-close"></i></button>
+                                </div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div  class="el-dialog__wrapper package-dialog-container main-dialog-container"
+     style="z-index: 2055; display: none;">
+    <div role="dialog" aria-modal="true" aria-label="添加包裹信息" class="el-dialog" style="margin-top: 15vh; width: 900px;">
+        <div class="el-dialog__header"><span class="el-dialog__title">添加包裹信息</span>
+            <button type="button" aria-label="Close" class="el-dialog__headerbtn">X</button>
+        </div>
+        <div class="el-dialog__body">
+            <div  class="el-row" style="margin-left: -20px; margin-right: -20px;">
+                <div  class="el-col el-col-12" style="padding-left: 20px; padding-right: 20px;">
+                    <form  class="el-form package-form el-form--label-top">
+                        <div  class="el-form-item is-required"><label for="express"
+                                                                                        class="el-form-item__label">快递名称</label>
+                            <div class="el-form-item__content">
+                                <div  class="el-select form-ipt company"><!---->
+                                    <div class="el-input el-input--suffix"><!----><input type="text" readonly="readonly"
+                                                                                         autocomplete="off"
+                                                                                         placeholder="请选择快递公司"
+                                                                                         class="el-input__inner"><!----><span
+                                            class="el-input__suffix"><span class="el-input__suffix-inner"><i
+                                            class="el-select__caret el-input__icon el-icon-arrow-up"></i><!----><!---->
+                                        <!----><!----><!----></span><!----></span><!----><!----></div>
+                                    <div class="el-select-dropdown el-popper" style="display: none; min-width: 0px;">
+                                        <div class="el-scrollbar" style="">
+                                            <div class="el-select-dropdown__wrap el-scrollbar__wrap"
+                                                 style="margin-bottom: -17px; margin-right: -17px;">
+                                                <ul class="el-scrollbar__view el-select-dropdown__list"><!---->
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>圆通速递</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>韵达快递</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>中通快递</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>顺丰速运</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>申通快递</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>邮政快递包裹</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>百世快递</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>京东物流</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>EMS</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>极兔速递</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>邮政标准快递</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>德邦</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>德邦快递</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>宅急送</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>优速快递</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>圆通快运</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>百世快运</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>中通国际</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>丹鸟</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>中通快运</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>其它</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>全信达</span></li>
+                                                    <li  class="el-select-dropdown__item"><span>EMS（邮政快递）</span>
+                                                    </li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>安能物流</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>天天快递</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>中国邮政</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>百世汇通</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>丹鸟快递</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>其他</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>苏宁快递</span></li>
+                                                </ul>
+                                            </div>
+                                            <div class="el-scrollbar__bar is-horizontal">
+                                                <div class="el-scrollbar__thumb"
+                                                     style="transform: translateX(0%);"></div>
+                                            </div>
+                                            <div class="el-scrollbar__bar is-vertical">
+                                                <div class="el-scrollbar__thumb"
+                                                     style="transform: translateY(0%);"></div>
+                                            </div>
+                                        </div><!----></div>
+                                </div><!----></div>
+                        </div>
+                        <div  class="el-form-item is-required"><label for="package_name"
+                                                                                        class="el-form-item__label">包裹名称</label>
+                            <div class="el-form-item__content">
+                                <div  class="el-input el-input--suffix"><!----><input type="text"
+                                                                                                        autocomplete="off"
+                                                                                                        placeholder="填写包裹申报品名"
+                                                                                                        class="el-input__inner">
+                                    <!----><!----><!----><!----></div><!----></div>
+                        </div>
+                        <div  class="el-form-item"><label for="category_id"
+                                                                            class="el-form-item__label">包裹类型</label>
+                            <div class="el-form-item__content">
+                                <div  class="form-ipt pack-type el-cascader">
+                                    <div class="el-input el-input--suffix"><!----><input type="text" readonly="readonly"
+                                                                                         autocomplete="off"
+                                                                                         placeholder="请选择包裹类型"
+                                                                                         class="el-input__inner"
+                                                                                         style="height: 40px;">
+                                        <!----><span class="el-input__suffix"><span class="el-input__suffix-inner"><i
+                                                class="el-input__icon el-icon-arrow-down"></i><!----><!----><!---->
+                                            <!----></span><!----></span><!----><!----></div>
+                                    <div class="el-cascader__tags"><!----></div>
+                                </div><!----></div>
+                        </div>
+                        <div  class="el-form-item is-required"><label for="qty"
+                                                                                        class="el-form-item__label">包裹内物品数量</label>
+                            <div class="el-form-item__content">
+                                <div  class="el-input"><!----><input type="number" autocomplete="off"
+                                                                                       placeholder="请输入物品数量"
+                                                                                       class="el-input__inner"><!---->
+                                    <!----><!----><!----></div><!----></div>
+                        </div>
+                        <div  class="el-form-item"><label for="remark" class="el-form-item__label">包裹备注</label>
+                            <div class="el-form-item__content">
+                                <div  class="el-textarea"><textarea autocomplete="off"
+                                                                                      placeholder="您可以在这里告诉我们商品的颜色尺码等信息"
+                                                                                      rows="5"
+                                                                                      class="el-textarea__inner"
+                                                                                      style="min-height: 33px;"></textarea>
+                                    <!----></div><!----></div>
+                        </div>
+                        <div  class="el-form-item"><!---->
+                            <div class="el-form-item__content">
+                                <button  type="button" class="el-button form-ipt el-button--primary">
+                                    <!----><!----><span>确定</span></button><!----></div>
+                        </div>
+                    </form>
+                </div>
+                <div  class="el-col el-col-12" style="padding-left: 20px; padding-right: 20px;">
+                    <form  class="el-form package-form el-form--label-top">
+                        <div  class="el-form-item is-required"><label for="express_num"
+                                                                                        class="el-form-item__label">快递单号</label>
+                            <div class="el-form-item__content">
+                                <div  class="el-input el-input--suffix"><!----><input type="text"
+                                                                                                        autocomplete="off"
+                                                                                                        placeholder="请输入您的国内快递单号"
+                                                                                                        class="el-input__inner">
+                                    <!----><!----><!----><!----></div><!----></div>
+                        </div>
+                        <div  class="el-form-item is-required"><label for="package_value"
+                                                                                        class="el-form-item__label">包裹价值(￥)</label>
+                            <div class="el-form-item__content">
+                                <div  class="el-input"><!----><input type="number" autocomplete="off"
+                                                                                       placeholder="请填写包裹申报价值"
+                                                                                       class="el-input__inner"><!---->
+                                    <!----><!----><!----></div><!----></div>
+                        </div>
+                        <div  class="el-form-item is-required"><label for="prop"
+                                                                                        class="el-form-item__label">包裹属性</label>
+                            <div class="el-form-item__content">
+                                <div  class="el-select form-ipt attribute">
+                                    <div class="el-select__tags" style="width: 100%; max-width: 348px;">
+                                        <!----><span></span><!----></div>
+                                    <div class="el-input el-input--suffix"><!----><input type="text" readonly="readonly"
+                                                                                         autocomplete="off"
+                                                                                         placeholder="请选择包裹属性"
+                                                                                         class="el-input__inner"
+                                                                                         style="height: 40px;">
+                                        <!----><span class="el-input__suffix"><span class="el-input__suffix-inner"><i
+                                                class="el-select__caret el-input__icon el-icon-arrow-up"></i><!---->
+                                            <!----><!----><!----><!----></span><!----></span><!----><!----></div>
+                                    <div class="el-select-dropdown el-popper is-multiple"
+                                         style="display: none; min-width: 0px;">
+                                        <div class="el-scrollbar" style="">
+                                            <div class="el-select-dropdown__wrap el-scrollbar__wrap"
+                                                 style="margin-bottom: -17px; margin-right: -17px;">
+                                                <ul class="el-scrollbar__view el-select-dropdown__list"><!---->
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>普货</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>防疫物资</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>弱磁</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>内置电</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>食品</span></li>
+                                                    <li  class="el-select-dropdown__item"><span>非液体化妆品/膏体</span>
+                                                    </li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>液体</span></li>
+                                                    <li  class="el-select-dropdown__item"><span>粉末（除白色粉末）</span>
+                                                    </li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>西药</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>中成药</span></li>
+                                                    <li  class="el-select-dropdown__item">
+                                                        <span>违禁品</span></li>
+                                                </ul>
+                                            </div>
+                                            <div class="el-scrollbar__bar is-horizontal">
+                                                <div class="el-scrollbar__thumb"
+                                                     style="transform: translateX(0%);"></div>
+                                            </div>
+                                            <div class="el-scrollbar__bar is-vertical">
+                                                <div class="el-scrollbar__thumb"
+                                                     style="transform: translateY(0%);"></div>
+                                            </div>
+                                        </div><!----></div>
+                                </div><!----></div>
+                        </div> <!----> <!----></form>
+                </div>
+            </div>
+        </div><!----></div>
+</div>
+{include file="common/gather_footer"}
+<script>
+    layui.use(['layer', 'form', 'table', 'upload'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , element = layui.element
+            , upload = layui.upload
+            , table = layui.table;
+
+        $('.add-btn-container').click(function(){
+            $('.main-dialog-container').css({"position": "fixed","top": 0,"right": 0,"left":0,"bottom":0,"overflow":"auto","margin": 0});
+            $('.main-dialog-container').show();
+        });
+
+        $('.el-dialog__headerbtn').click(function(){
+            $('.main-dialog-container').hide();
+        });
+    });
+</script>

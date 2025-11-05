@@ -1,0 +1,442 @@
+{include file="common/header2"}
+<link rel="stylesheet" href="layui/css/layui.css">
+<style>
+    /* 主内容区域 */
+    .main-content {padding: 40px 0;min-height: calc(100vh - 200px);}
+    .dashboard {display: grid;grid-template-columns: 300px 1fr;gap: 30px;margin-top: 30px;}
+
+    /* 侧边栏样式 */
+    .sidebar {background: var(--card-bg);border-radius: 20px;padding: 30px;box-shadow: var(--shadow);height: fit-content;}
+    .sidebar-title {font-size: 1.5rem;margin-bottom: 25px;color: var(--primary);display: flex;align-items: center;}
+    .sidebar-title i {margin-right: 10px;}
+    .enterprise-list {list-style: none;margin-bottom: 30px;}
+    .enterprise-item {padding: 15px;border-radius: 10px;margin-bottom: 10px;cursor: pointer;transition: all 0.3s ease; /*border: 2px solid transparent;*/border:2px solid var(--accent);}
+    .enterprise-item:hover {background: var(--accent);}
+    .enterprise-item.active {background: var(--accent);border-color: var(--primary);}
+    .enterprise-name {font-weight: 600;margin-bottom: 5px;}
+    .enterprise-desc {font-size: 0.9rem;color: #666;}
+    .add-enterprise {display: flex;align-items: center;justify-content: center;padding: 15px;border: 2px dashed var(--primary-light);border-radius: 10px;color: var(--primary);font-weight: 600;cursor: pointer;transition: all 0.3s ease;}
+    .add-enterprise:hover {background: var(--accent);border-color: var(--primary);}
+    .add-enterprise i {margin-right: 10px;}
+
+    /* 站点管理区域 */
+    .sites-panel {background: var(--card-bg);border-radius: 20px;padding: 30px;box-shadow: var(--shadow);}
+    .panel-header {display: flex;justify-content: space-between;align-items: center;margin-bottom: 30px;}
+    .panel-title {font-size: 1.8rem;color: var(--primary);font-weight:600;}
+    .create-site-btn {background: var(--gradient);color: white;border: none;padding: 12px 25px;border-radius: 50px;font-weight: 600;cursor: pointer;transition: all 0.3s ease;display: flex;align-items: center;}
+    .create-site-btn:hover {transform: translateY(-3px);box-shadow: var(--shadow);}
+    .create-site-btn i {margin-right: 8px;}
+    .sites-grid {display: grid;grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));gap: 25px;}
+    .site-card {background: var(--background);border-radius: 15px;padding: 25px;box-shadow: var(--shadow);transition: all 0.3s ease;border: 2px solid transparent;position: relative;overflow: hidden;}
+    .site-card::before {content: '';position: absolute;top: 0;left: 0;width: 100%;height: 5px;background: var(--gradient);}
+    .site-card:hover {transform: translateY(-5px);box-shadow: var(--shadow-hover);border-color: var(--primary-light);}
+    .site-header {display: flex;justify-content: space-between;align-items: center;margin-bottom: 15px;}
+    .site-name {font-size: 1.3rem;font-weight: 600;color: var(--primary-dark);}
+    .site-status {background: var(--primary-light);color: white;padding: 5px 10px;border-radius: 20px;font-size: 0.8rem;font-weight: 500;}
+    .site-domain {color: var(--primary);margin-bottom: 15px;font-weight: 500;display: flex;align-items: center;}
+    .site-domain i {margin-right: 8px;}
+    .site-actions {display: flex;gap: 10px;margin-top: 20px;}
+    .action-btn {padding: 8px 15px;border-radius: 8px;font-size: 0.9rem;font-weight: 500;cursor: pointer;transition: all 0.3s ease;display: flex;align-items: center;}
+    .action-btn i {margin-right: 5px;}
+    .btn-manage {background: var(--primary-light);color: white;border: none;}
+    .btn-manage:hover {background: var(--primary);}
+    .btn-settings {background: transparent;color: var(--primary);border: 2px solid var(--primary-light);}
+    .btn-settings:hover {background: var(--primary-light);color: white;}
+
+    /* 模态框样式 */
+    .modal {display: none;position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.5);backdrop-filter: blur(5px);z-index: 2000;align-items: center;justify-content: center;}
+    .modal-content {background: white;border-radius: 20px;padding: 30px;width: 90%;max-width: 500px;box-shadow: var(--shadow-hover);position: relative;}
+    .close-modal {position: absolute;top: 20px;right: 20px;font-size: 1.5rem;color: #999;cursor: pointer;transition: color 0.3s ease;}
+    .close-modal:hover {color: var(--primary);}
+    .modal-title {font-size: 1.5rem;margin-bottom: 20px;color: var(--primary);}
+    .form-group {margin-bottom: 20px;}
+    .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+    .form-group input,
+    .form-group select {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}
+    .form-group input:focus,
+    .form-group select:focus {border-color: var(--primary);outline: none;}
+    .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
+
+    .siteNames{font-size: 18px;color: var(--primary);margin: 30px 0 15px 0;padding-bottom: 8px;border-bottom: 2px solid var(--accent);position:relative;padding-left:20px;}
+    .siteNames:before{position:absolute;content:'';border-top: 8px solid transparent;border-bottom: 8px solid transparent;border-left: 13px solid var(--primary-dark);top:6px;left:0px;}
+    .site-url{color: var(--primary);}
+
+    /* 响应式设计 */
+    @media (max-width: 992px) {
+        .dashboard {grid-template-columns: 1fr;}
+        .sidebar {order: 2;}
+        .sites-panel {order: 1;}
+        .nav-links {display: none;}
+        .mobile-menu-btn {display: block;}
+    }
+
+    @media (max-width: 768px) {
+        .sites-grid {grid-template-columns: 1fr;}
+        .panel-header {flex-direction: column;align-items: flex-start;gap: 15px;}
+        .hero h1 {font-size: 2.3rem;}
+        .hero p {font-size: 1.1rem;}
+    }
+
+    @media (max-width: 576px) {
+        .hero h1 {font-size: 2rem;}
+        .btn {padding: 10px 20px;font-size: 0.9rem;}
+        .logo {font-size: 1.5rem;}
+        .site-actions {flex-direction: column;}
+    }
+
+    /* 移动菜单按钮 */
+    .mobile-menu-btn {display: none;background: none;border: none;font-size: 1.5rem;color: var(--primary);cursor: pointer;}
+
+    @media (max-width: 992px) {
+        .mobile-menu-btn {display: block;}
+    }
+</style>
+
+<!-- 主内容区域 -->
+<div class="container main-content">
+    <h1>企业站点管理平台</h1>
+    <p>注册一个账号，关联多家企业，为每家企业创建独立站点</p>
+
+    <div class="dashboard">
+        <!-- 侧边栏 - 企业管理 -->
+        <div class="sidebar">
+            <h2 class="sidebar-title"><i class="fas fa-building"></i> 我的企业</h2>
+            <ul class="enterprise-list">
+                {volist name="company" id="vo"}
+                <li class="enterprise-item" data-id="{$vo['id']}" onclick="get_enterprise_info({$vo['id']})">
+                    <div class="enterprise-name">{$vo['company']}</div>
+                    {if !empty($vo['domain_name'])}
+                        <div class="enterprise-desc">{$vo['domain_name']}</div>
+                    {/if}
+                </li>
+                {/volist}
+            </ul>
+            <div class="add-enterprise" id="add-enterprise">
+                <i class="fas fa-plus"></i> 添加新企业
+            </div>
+        </div>
+
+        <!-- 站点管理区域 -->
+        <div class="sites-panel">
+            <div class="panel-header">
+                <h2 class="panel-title">服务管理</h2>
+                <div class="company_domain_btn"></div>
+            </div>
+
+            {if empty($company)}
+                <div class="save_enterprise">请先点击左侧添加新企业</div>
+            {else}
+            <div class="sites-container">
+                <!-- 站点卡片 -->
+
+            </div>
+            {/if}
+        </div>
+    </div>
+</div>
+
+<!-- 创建站点模态框 -->
+<div class="modal" id="createSiteModal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 class="modal-title">站点（二级）域名</h2>
+        <form id="siteForm">
+            <input type="hidden" id="siteCompanyId" value="">
+<!--            <div class="form-group">-->
+<!--                <label for="siteName">站点名称</label>-->
+<!--                <input type="text" id="siteName" placeholder="请输入站点名称" required>-->
+<!--            </div>-->
+            <div class="form-group">
+<!--                <label for="siteDomain">二级域名</label>-->
+                <div class="domain_input" style="display: flex; align-items: center;">
+                    <span style="background: #f0f0f0; padding: 17px 10px; border: 2px solid #e0e0e0; border-right: none; border-radius: 10px; border-top-right-radius: 0px; border-bottom-right-radius: 0px;">www.</span>
+                    <input type="text" id="siteDomain" placeholder="xxx" required style="border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                    <select id="siteType" required>
+                        <option value=".com">.com</option>
+                        <option value=".cn">.cn</option>
+                        <option value=".net">.net</option>
+                        <option value=".org">.org</option>
+                        <option value=".info">.info</option>
+                        <option value=".edu">.edu</option>
+                        <option value=".gov">.gov</option>
+                        <option value=".co">.co</option>
+                        <option value=".io">.io</option>
+                        <option value=".online">.online</option>
+                        <option value=".us">.us</option>
+                        <option value=".gov.cn">.gov.cn</option>
+                        <option value=".edu.cn">.edu.cn</option>
+                    </select>
+                </div>
+                <div class="domain_input2" style="display: flex; align-items: center;font-size: 20px;text-align: center;"></div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-outline" id="cancelBtn">取消</button>
+                <button type="submit" class="btn btn-primary">保存域名</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 模态框控制
+        const modal = document.getElementById('createSiteModal');
+        const createBtn = document.getElementById('createSiteBtn');
+        const closeBtn = document.querySelector('.close-modal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const siteForm = document.getElementById('siteForm');
+
+        // 打开模态框
+        // createBtn.addEventListener('click', function() {
+        //     modal.style.display = 'flex';
+        // });
+
+        // 关闭模态框
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        closeBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+
+        // 点击模态框外部关闭
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        // 企业选择
+        const enterpriseItems = document.querySelectorAll('.enterprise-item');
+        enterpriseItems.forEach(item => {
+            item.addEventListener('click', function() {
+                enterpriseItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // 移动菜单切换
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenuBtn.addEventListener('click', function() {
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // 新增企业
+        document.getElementById('add-enterprise').addEventListener('click', function() {
+            window.open('https://boss.gogo198.cn/?s=members/member_center&mid={$mid}&first_idx=10&second_idx=13', '_blank');
+        });
+    });
+
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form','upload'], function() {
+        var $ = layui.$
+            , admin = layui.admin
+            , element = layui.element
+            , layer = layui.layer
+            , form = layui.form
+            , dropdown = layui.dropdown
+            , upload = layui.upload;
+
+        const modal = document.getElementById('createSiteModal');
+        const siteForm = document.getElementById('siteForm');
+
+        // 表单提交
+        siteForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            var company_id = document.getElementById('siteCompanyId').value;
+            var site_domain = document.getElementById('siteDomain').value;
+            var site_type = document.getElementById('siteType').value;
+
+            $.ajax({
+                url: "/?s=index/save_domainname",
+                method: 'post',
+                data: {'company_id':company_id,'site_domain':site_domain,'site_type':site_type},
+                dataType: 'JSON',
+                success: function (res) {
+                    layer.closeAll('loading'); //关闭loading
+                    layer.msg(res.msg, {time: 2000}, function () {
+                        if (res.code == 0) {
+                            get_enterprise_info(company_id);
+                        }
+                    });
+                },
+                error: function (data) {
+                    layer.msg('系统错误', {time: 2000});
+                }
+            });
+
+            modal.style.display = 'none';
+        });
+    });
+
+    $(function(){
+        setTimeout(function(){
+            //如果有企业则默认第一个企业
+            {if !empty($company)}
+                {if empty($cid)}
+                    $('.enterprise-list').find('.enterprise-item').eq(0).click();
+                {else}
+                    for(let i=0;i<$('.enterprise-item').length;i++){
+                        if($('.enterprise-item').eq(i).attr('data-id') == "{$cid}"){
+                            $('.enterprise-list').find('.enterprise-item').eq(i).click();
+                        }
+                    }
+                {/if}
+            {/if}
+        },1000);
+
+    });
+
+    function get_enterprise_info(company_id){
+        layer.load();
+
+        $.ajax({
+            url: "/?s=index/get_enterprise_info",
+            method: 'post',
+            data: {company_id:company_id},
+            dataType: 'JSON',
+            success: function (res) {
+                layer.closeAll('loading'); //关闭loading
+                layer.msg(res.msg, {time: 2000}, function () {
+                    if (res.code == 0) {
+                        var html2 = '';
+                        if(res.list2.length>0){
+                            for(let i=0;i<res.list2.length;i++){
+                                if(res.list2[i].pid==0){
+                                    if(i!=0){
+                                        html2 += '</div>\n';
+                                    }
+                                    html2 += '<div class="siteNames">\n' + res.list2[i].title+ '</div>\n'+
+                                             '<div class="sites-grid">\n';
+                                }
+                                else{
+                                    html2 += '<div class="site-card">\n' +
+                                        '                    <div class="site-header">\n' +
+                                        '                        <h3 class="site-name">' + res.list2[i].title + '</h3>\n' +
+                                        '                    </div>\n';
+                                    if(res.list2[i].id==319 || res.list2[i].id==320) {
+                                        html2 += '           <div class="site-domain">\n' +
+                                            '                        <i class="fas fa-link"></i> \n';
+                                        if (res.list.domain_name == 0) {
+                                            html2 += '未配置二级域名';
+                                        } else {
+                                            if (res.list2[i].id == 319) {
+                                                html2 += '';
+                                            } else if (res.list2[i].id == 320) {
+                                                html2 += '';
+                                            } else if (1 > 2) {
+                                                if (res.list2[i].id == 322) {
+                                                    html2 += 'gpay';
+                                                } else if (res.list2[i].id == 323) {
+                                                    html2 += 'cpay';
+                                                } else if (res.list2[i].id == 325) {
+                                                    html2 += 'group';
+                                                } else if (res.list2[i].id == 326) {
+                                                    html2 += 'aigogo';
+                                                } else if (res.list2[i].id == 328) {
+                                                    html2 += 'seo';
+                                                } else if (res.list2[i].id == 329) {
+                                                    html2 += 'geo';
+                                                } else if (res.list2[i].id == 331) {
+                                                    html2 += 'market';
+                                                } else if (res.list2[i].id == 332) {
+                                                    html2 += 'digital';
+                                                }
+                                            }
+
+                                            if (res.list2[i].id == 319) {
+                                                html2 += '<a href="http://website.'+res.list.domain_name2+'.gogo198.net" target="_blank" class="site-url">website.' + res.list.domain_name2 + '.gogo198.net</a>';
+                                            }
+
+                                            if (res.list2[i].id == 320) {
+                                                html2 += '<a href="http://shop.'+res.list.domain_name2+'.gogo198.net" target="_blank" class="site-url">shop.' + res.list.domain_name2 + '.gogo198.net</a>';
+                                            }
+                                        }
+                                        html2 += '            </div>\n';
+                                    }
+                                    html2 += '               <div class="site-actions">\n' +
+                                        '                        <button class="action-btn btn-manage" data-id="'+company_id+'" data-domain_name="'+res.list.domain_name+'" onclick="website_manage2(\''+res.list2[i].url+'\','+company_id+')"><i class="fas fa-cog"></i> 管理</button>\n' +
+                                        '                    </div>\n' +
+                                        '                </div>\n';
+                                }
+                            }
+                            html2 += '</div>';
+                        }else{
+                            html2 = '<div class="tips">请联系管理员添加功能权限</div>';
+                        }
+
+                        $('.dashboard .sites-panel .sites-container').html(html2);
+
+                        // 二级域名弹窗
+                        let domain_btn = '<button class="create-site-btn" id="createSiteBtn" data-id="'+company_id+'" onclick="createSiteDomain('+company_id+')">\n' +
+                            '                   <i class="fas fa-cog"></i> 二级域名\n' +
+                            '             </button>';
+                        $('.dashboard .sites-panel .company_domain_btn').html(domain_btn);
+
+                        if(res.list.domain_name==0){
+                            $('#createSiteModal .domain_input').css('display','flex');
+                            $('#createSiteModal .domain_input2').css('display','none');
+                            $('#createSiteModal .form-actions .btn-primary').css('display','block');
+                        }else{
+                            $('#createSiteModal .domain_input').css('display','none');
+                            $('#createSiteModal .domain_input2').html(res.list.domain_name);
+                            $('#createSiteModal .domain_input2').css('display','flex');
+                            $('#createSiteModal .form-actions .btn-primary').css('display','none');
+                        }
+                    }
+                });
+            },
+            error: function (data) {
+                layer.msg('系统错误', {time: 2000});
+            }
+        });
+    }
+
+    //为该企业添加二级域名
+    function createSiteDomain(company_id){
+        var modal = document.getElementById('createSiteModal');
+        modal.style.display = 'flex';
+
+        $('#createSiteModal #siteCompanyId').val(company_id);
+    }
+
+    //管理企业
+    function website_manage(typ,company_id) {
+        var lang = getLanguageFromUrl();
+
+        if(typ==1){
+            //资讯网站
+            window.open(lang+'/?s=index/website_official&typ='+typ+'&company_id='+company_id, '_blank');
+        }
+        else if(typ==0){
+            //电商网店
+            window.open(lang+'/?s=index/website_shop&typ='+typ+'&company_id='+company_id, '_blank');
+        }
+        else if(typ==3){
+            //智能客服
+            window.open(lang+'/?s=index/website_group&typ='+typ+'&company_id='+company_id, '_blank');
+        }
+        else if(typ==4){
+            //智能运营
+            window.open(lang+'/?s=index/website_ai&typ='+typ+'&company_id='+company_id, '_blank');
+        }
+    }
+
+    //管理企业2（用这个）
+    function website_manage2(url,company_id){
+        var lang = getLanguageFromUrl();
+
+        window.open(lang+url+'&company_id='+company_id, '_blank');
+    }
+</script>
+
+{include file="common/footer2"}

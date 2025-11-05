@@ -1,0 +1,87 @@
+{include file="common/gather_header"}
+<meta name="viewport" content="width=device-width, initial-scale=0.5" />
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    .main-container {display: flex;flex-direction: column;flex: 1;background-color: unset;padding-bottom: 20px;border-radius: 5px;overflow: hidden;box-shadow: 0 0 14px rgba(0,0,0,.04);border:1px solid #fff;}
+    .operat-box {display: flex;align-items: center;justify-content: space-between;padding: 16px 30px;background-color: #0e2e68;color:#fff;}
+    .main-container-title {padding-right: 20px;}
+    .become-partner-container .partner-content {display: flex;flex-direction: column;align-items: center;color:#fff;}
+    .become-partner-container .cash {width: 100%;}
+    .become-partner-container .partner-content .operat-title {padding: 40px 0;}
+    .become-partner-container .partner-content .agent-form {width: 50%;}
+    .el-form-item {margin-bottom: 22px;}
+    .el-form-item__label {text-align: right;vertical-align: middle;float: left;font-size: 14px;color: #fff;line-height: 40px;padding: 0 12px 0 0;box-sizing: border-box;}
+    .el-form-item__content {line-height: 40px;position: relative;font-size: 14px;}
+    .el-input {position: relative;font-size: 14px;display: inline-block;width: 100%;}
+    .become-partner-container .partner-content .el-input__inner {border: none!important;border-bottom: 1px solid #eee!important;}
+    .el-input__inner {-webkit-appearance: none;background-color: #fff;background-image: none;border-radius: 4px;border: 1px solid #dcdfe6;box-sizing: border-box;color: #606266;display: inline-block;font-size: inherit;height: 40px;line-height: 40px;outline: none;padding: 0 15px;transition: border-color .2s cubic-bezier(.645,.045,.355,1);width: 100%;}
+    .become-partner-container .partner-content .submit {cursor: pointer;width: 148px;padding: 12px 0;margin-top: 30px 0 50px 0;text-align: center;border-radius: 5px;background: #0e2e68;border:1px solid #fff;}
+    .become-partner-container .tips {padding: 30px;color: #fff;line-height: 30px;}
+    .become-partner-container .tips .content {padding-left: 20px;}
+    
+</style>
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="personalMain">
+            <div class="personal">
+                {include file="common/member_left"}
+                <div   class="become-partner-container main-container">
+                    <div  class="operat-box"><span  class="main-container-title">成为合伙人</span>
+                    </div>
+                    <div  class="partner-content"><img  src="/images/cash.png"
+                                                                         alt="" class="cash">
+                        <div  class="operat-title">联系方式</div>
+                        <form  class="el-form agent-form">
+                            <div  class="el-form-item"><label class="el-form-item__label"
+                                                                                style="width: 100px;">*联系人:</label>
+                                <div class="el-form-item__content" style="margin-left: 100px;">
+                                    <div  class="el-input"><!----><input type="text"
+                                                                                           autocomplete="off"
+                                                                                           placeholder="请输入联系人"
+                                                                                           class="el-input__inner">
+                                        <!----><!----><!----><!----></div><!----></div>
+                            </div>
+                            <div  class="el-form-item"><label class="el-form-item__label"
+                                                                                style="width: 100px;">*联系电话:</label>
+                                <div class="el-form-item__content" style="margin-left: 100px;">
+                                    <div  class="el-input"><!----><input type="text"
+                                                                                           autocomplete="off"
+                                                                                           placeholder="请输入联系电话"
+                                                                                           class="el-input__inner">
+                                        <!----><!----><!----><!----></div><!----></div>
+                            </div>
+                            <div  class="el-form-item"><label class="el-form-item__label"
+                                                                                style="width: 100px;">*联系邮箱:</label>
+                                <div class="el-form-item__content" style="margin-left: 100px;">
+                                    <div  class="el-input"><!----><input type="text"
+                                                                                           autocomplete="off"
+                                                                                           placeholder="请输入联系邮箱"
+                                                                                           class="el-input__inner">
+                                        <!----><!----><!----><!----></div><!----></div>
+                            </div>
+                        </form>
+                        <div  class="submit">
+                            确认申请
+                        </div>
+                    </div>
+                    <div  class="tips">
+                        <div >温馨提示</div>
+                        <div  class="content">
+                            <div >
+                                1、邀请他人注册BEEGOPLUS，他人购物成功并生成国际运单，您将获得丰厚奖金；
+                            </div>
+                            <div >
+                                2、申请完成后我们的合伙负责人将第一时间添加您的微信，为您介绍详细规则及奖金比例；
+                            </div>
+                            <div >
+                                3、可通过各大社交平台（小红书、微信、朋友圈、微博、Facebook）分享，分享给朋友、亲人、同事、团体。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{include file="common/gather_footer"}

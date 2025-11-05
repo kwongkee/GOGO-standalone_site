@@ -1,0 +1,753 @@
+{include file="common/header"}
+<link rel="stylesheet" href="https://www.gogo198.net/layui/font/iconfont.woff?v=256">
+<link rel="stylesheet" href="layui/css/layui.css">
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;background:{$website['color_inner']};}
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+    .content .box_content{background:{$website['color']};color:{$website['color_word']};border:1px solid {$website['color_word']};font-size:25px;text-align:center;padding:30px;width:100%;}
+    .content .box_content img{width:40px;margin-right:5px;}
+    .inquiry_box{display:none;}
+    .navbar_menu{color: {$website['color_word']};font-size: 16px;margin-bottom:10px;}
+    .context,.navbar_menu a{color:{$website['color_word']};}
+    .context{margin-bottom:1cm;}
+    .layui-colla-title{color:{$website['color_word']};background-color:#0e2e68;}
+    .preamble_con,.layui-colla-content{color:{$website['color_word']};font-size:15px;}
+    .layui-colla-content p{margin-bottom:0.3cm;}
+
+    .navbar_menu{color:{$website['color_word']};font-size:16px;margin-bottom:10px;margin-top:15px;margin-left:10px;}
+    .navbar_menu a{color:{$website['color_word']};}
+    .navbar_menu a:last-child{color:#D2A778;font-weight:700;}
+    .layui-elem-field legend{border-bottom: 0;color: #fff;width:fit-content;}
+    .no_sub_info .layui-form-item{border-bottom: 1px solid #bbbbbb;padding-bottom: 5px;}
+    .no_sub_info .layui-form-label{padding:10px;text-align: left;font-weight:600;}
+    .no_sub_info .layui-input-block{min-height: fit-content;margin-left: 80px;color:#000;}
+    .no_sub_info .layui-input-block .layui-form-select{width:100%;}
+    .hide2{display:none;}
+    .add,.del{font-size: 30px;padding: 5px 0px;line-height: 17px;height: 30px;width: 40px;}
+    .white_color{color:{$website['color_word']};white-space:nowrap;margin-right:2px;}
+    .ori_block{min-height:38px !important;line-height:38px;}
+    .edit_background{background:rgb(237,159,69);}
+    .black_color{color:#000;white-space:nowrap;margin-right:2px;}
+    .no_sub_info .wrap{overflow: visible;white-space: pre-wrap;}
+</style>
+<script src="layui/layui.js"></script>
+<section id="content" class="non_topimg">
+    <div class="container">
+        <p class="navbar_menu"><a href="/?s=index/express&id={$id}">集运管理</a>&nbsp;<span style="color:#d1a575;">\</span>
+            {if $type==1}&nbsp;<a href="/?s=index/express_list&id={$id}&type=1">待处理运单列表</a>&nbsp;<span style="color:#d1a575;">\</span>{/if}
+            {if $type==2}&nbsp;<a href="/?s=index/express_list&id={$id}&type=2">已处理运单列表</a>&nbsp;<span style="color:#d1a575;">\</span>{/if}
+            <a href="/?s=index/express_info&id={$id}&type={$type}">运单详情</a>&nbsp;<span style="color:#d1a575;">\</span>
+            {if $gtype==1}&nbsp;<a href="javascript:;">货物清单</a>&nbsp;<span style="color:#d1a575;">\</span>{/if}
+            {if $gtype==2}&nbsp;<a href="javascript:;">货物材积</a>&nbsp;<span style="color:#d1a575;">\</span>{/if}
+            {if $gtype==3}&nbsp;<a href="javascript:;">物流渠道</a>&nbsp;<span style="color:#d1a575;">\</span>{/if}
+            {if $gtype==4}&nbsp;<a href="javascript:;">物流运单</a>&nbsp;<span style="color:#d1a575;">\</span>{/if}
+        </p>
+
+        <div class="content" style="padding:0px;">
+            <div class="no_sub_info">
+                <form class="layui-form" action="" method="post" lay-filter="component-form-element">
+                    <input type="text" style="display:none;" name="id" id="id" value="{$id}">
+                    <input type="text" style="display:none;" name="type" id="type" value="{$type}">
+                    <input type="text" style="display:none;" name="gtype" id="gtype" value="{$gtype}">
+                    {if $gtype==1}
+                    <input type="text" id="goods_list_num" value="<?php echo count($info['goods_list']['cate']);?>" style="display: none;">
+                    <div class="layui-collapse" lay-accordion>
+                        {volist name="info.goods_list.cate" key="key2" id="v"}
+                        <div class="layui-colla-item">
+                            <h2 class="layui-colla-title" style="display:flex;align-items:center;justify-content:space-between;">
+                                货物{$key2}
+                                <div>
+                                    <!--<div class="layui-btn layui-btn-danger del" onclick="del_goods_list(this)">-</div>-->
+                                </div>
+                            </h2>
+                            <div class="layui-colla-content">
+                                <div class="layui-form-item">
+                                    <div class="layui-form-label">类别</div>
+                                    {if isset($info['origin_goods_list']['cate'][$key2-1])}
+                                    {if $v!=$info['origin_goods_list']['cate'][$key2-1]}
+                                    <div class="layui-input-block ori_block">
+                                                <span class="white_color ori_data">原数据：
+                                                    {volist name="category" key="key" id="vo"}
+                                                        {if $vo['id'] == $info['origin_goods_list']['cate'][$key2-1]}{$vo['name']}{/if}
+                                                    {/volist}
+                                                </span>
+                                    </div>
+                                    {/if}
+                                    {/if}
+                                    <div class="layui-input-block disf {if isset($info['origin_goods_list']['cate'][$key2-1])}{if $v!=$info['origin_goods_list']['cate'][$key2-1]}edit_background{/if}{/if}">
+                                        <span class="white_color now_data">现数据：</span>
+                                        <select name="goods_list[cate][{$key2-1}]" lay-verify="required" lay-search>
+                                            <option>请选择类别</option>
+                                            {volist name="category" key="key" id="vo"}
+                                            <option value="{$vo['id']}" {if $v==$vo['id']}selected{/if}>{$vo['name']}</option>
+                                            {/volist}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-form-label">属性</div>
+                                    <div class="layui-input-block disf">
+                                        <div class="layui-btn layui-btn-normal" onclick="view_value(this)">选择属性</div>
+                                        <div class="value_box" style="display: none;padding:15px 20px 15px 0;box-sizing: border-box;">
+                                            <div class="layui-form-item">
+                                                <div class="layui-form-label">选择属性</div>
+                                                {if isset($info['origin_goods_list']['value'][$key2-1])}
+                                                {if $info['goods_list']['value'][$key2-1]!=$info['origin_goods_list']['value'][$key2-1]}
+                                                <div class="layui-input-block ori_block">
+                                                            <span class="black_color ori_data">原数据：
+                                                            {volist name="info.goods_list.value_desc[$key2-1]" key="key" id="vo"}
+                                                                {$info['origin_goods_list']['value_select'][$key2-1][$key-1]}
+                                                            {/volist}
+                                                            </span>
+                                                </div>
+                                                {/if}
+                                                {/if}
+                                                <div class="layui-input-block disf {if isset($info['origin_goods_list']['value'][$key2-1])}{if $info['goods_list']['value'][$key2-1]!=$info['origin_goods_list']['value'][$key2-1]}edit_background{/if}{/if}">
+                                                    <span class="black_color now_data">现数据：</span>
+                                                    <div id="value{$key2}" class="xm-select-demo"></div>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="value_box_box vbb{$key2}">
+                                                {volist name="info.goods_list.value_desc[$key2-1]" key="key" id="vo"}
+                                                <div class="layui-form-item value_box{$key}">
+                                                    {if isset($info['goods_list']['value_select'][$key2-1][$key-1])}
+                                                    <div class="layui-form-label" style="overflow: visible;white-space: pre-wrap;">{$info['goods_list']['value_select'][$key2-1][$key-1]}</div>
+                                                    {if isset($info['origin_goods_list']['value_desc'][$key2-1][$key-1])}
+                                                    {if $vo!=$info['origin_goods_list']['value_desc'][$key2-1][$key-1]}
+                                                    <div class="layui-input-block ori_block">
+                                                        <span class="black_color ori_data">原数据：{$info['origin_goods_list']['value_desc'][$key2-1][$key-1]}</span>
+                                                    </div>
+                                                    {/if}
+                                                    {/if}
+                                                    {/if}
+                                                    <div class="layui-input-block disf {if isset($info['origin_goods_list']['value_desc'][$key2-1][$key-1])}{if $vo!=$info['origin_goods_list']['value_desc'][$key2-1][$key-1]}edit_background{/if}{/if}">
+                                                        <span class="black_color now_data">现数据：</span>
+                                                        <input type="text" name="goods_list[value_desc][{$key2-1}][]" class="layui-input" placeholder="该属性描述" value="{$vo}">
+                                                    </div>
+                                                </div>
+                                                {/volist}
+                                            </div>
+                                            <div class="layui-btn layui-btn-normal sure" style="margin-left:50px;">确定</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-form-label">描述</div>
+                                    {if isset($info['origin_goods_list']['desc'][$key2-1])}
+                                    {if $info['goods_list']['desc'][$key2-1]!=$info['origin_goods_list']['desc'][$key2-1]}
+                                    <div class="layui-input-block ori_block">
+                                        <span class="white_color ori_data">原数据：{$info['origin_goods_list']['desc'][$key2-1]}</span>
+                                    </div>
+                                    {/if}
+                                    {/if}
+                                    <div class="layui-input-block disf {if isset($info['origin_goods_list']['desc'][$key2-1])}{if $info['goods_list']['desc'][$key2-1]!=$info['origin_goods_list']['desc'][$key2-1]}edit_background{/if}{/if}">
+                                        <span class="white_color now_data">现数据：</span>
+                                        <input type="text" name="goods_list[desc][{$key2-1}]" placeholder="描述" autocomplete="off" class="layui-input" value="{$info['goods_list']['desc'][$key2-1]}">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-form-label">品牌</div>
+                                    {if isset($info['origin_goods_list']['brand_type'][$key2-1])}
+                                    {if $info['goods_list']['brand_type'][$key2-1]!=$info['origin_goods_list']['brand_type'][$key2-1]}
+                                    <div class="layui-input-block ori_block">
+                                                <span class="white_color ori_data">原数据：{if $info['origin_goods_list']['brand_type'][$key2-1]==1}无牌（无商标信息）{/if}{if $info['origin_goods_list']['brand_type'][$key2-1]==2}仿牌（商品无注册）{/if}{if $info['origin_goods_list']['brand_type'][$key2-1]==3}普通品牌（有注册非知名）{/if}{if $info['origin_goods_list']['brand_type'][$key2-1]==4}奢侈品牌（有注册且知名）{/if}
+
+                                                    {if $info['origin_goods_list']['brand_type'][$key2-1]==2 || $info['origin_goods_list']['brand_type'][$key2-1]==3}，{$info['origin_goods_list']['brand_name'][$key2-1]}{/if}
+
+                                                    {if $info['origin_goods_list']['brand_type'][$key2-1]==4}
+                                                        {volist name="brand" key="key" id="vo"}{if $info['origin_goods_list']['brand_name2'][$key2-1]==$vo['name']}，{$vo['name']}{/if}{/volist}
+                                                    {/if}
+                                                </span>
+                                    </div>
+                                    {/if}
+                                    {/if}
+                                    <div class="layui-input-block disf {if isset($info['origin_goods_list']['brand_type'][$key2-1])}{if $info['goods_list']['brand_type'][$key2-1]!=$info['origin_goods_list']['brand_type'][$key2-1]}edit_background{/if}{/if}">
+                                        <span class="white_color now_data">现数据：</span>
+                                        <select name="goods_list[brand_type][{$key2-1}]" lay-filter="brand_type">
+                                            <option value="1" {if $info['goods_list']['brand_type'][$key2-1]==1}selected{/if}>无牌（无商标信息）</option>
+                                            <option value="2" {if $info['goods_list']['brand_type'][$key2-1]==2}selected{/if}>仿牌（商品无注册）</option>
+                                            <option value="3" {if $info['goods_list']['brand_type'][$key2-1]==3}selected{/if}>普通品牌（有注册非知名）</option>
+                                            <option value="4" {if $info['goods_list']['brand_type'][$key2-1]==4}selected{/if}>奢侈品牌（有注册且知名）</option>
+                                        </select>
+
+                                        <input type="text" class="layui-input brand_name {if $info['goods_list']['brand_type'][$key2-1]==1}hide2{/if} {if $info['goods_list']['brand_type'][$key2-1]==4}hide2{/if}" name="goods_list[brand_name][{$key2-1}]" placeholder="品牌名称" style="margin:10px 0;" value="{$info['goods_list']['brand_name'][$key2-1]}">
+                                        <div class="select_brand_name" {if $info['goods_list']['brand_type'][$key2-1]!=4}style="display: none;"{/if}>
+                                        <select name="goods_list[brand_name2][{$key2-1}]" id="select_brand_name" lay-filter="brand_name" lay-search>
+                                            <option value="">请选择品牌名称</option>
+                                            {volist name="brand" key="key" id="vo"}
+                                            <option value="{$vo['name']}" {if $info['goods_list']['brand_name2'][$key2-1]==$vo['name']}selected{/if}>{$vo['name']}</option>
+                                            {/volist}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-form-label">数量</div>
+                                {if isset($info['origin_goods_list']['num'][$key2-1])}
+                                {if $info['goods_list']['num'][$key2-1]!=$info['origin_goods_list']['num'][$key2-1]}
+                                <div class="layui-input-block ori_block">
+                                    <span class="white_color ori_data">原数据：{$info['origin_goods_list']['num'][$key2-1]}</span>
+                                </div>
+                                {/if}
+                                {/if}
+                                <div class="layui-input-block disf {if isset($info['origin_goods_list']['num'][$key2-1])}{if $info['goods_list']['num'][$key2-1]!=$info['origin_goods_list']['num'][$key2-1]}edit_background{/if}{/if}">
+                                    <span class="white_color now_data">现数据：</span>
+                                    <input type="text" name="goods_list[num][{$key2-1}]" placeholder="数量" autocomplete="off" class="layui-input" value="{$info['goods_list']['num'][$key2-1]}">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-form-label">单位</div>
+                                {if isset($info['origin_goods_list']['unit'][$key2-1])}
+                                {if $info['goods_list']['unit'][$key2-1]!=$info['origin_goods_list']['unit'][$key2-1]}
+                                <div class="layui-input-block ori_block">
+                                               <span class="white_color ori_data">原数据：
+                                                   {volist name="unit" key="key" id="vo"}
+                                                        {if $vo['code_value']==$info['origin_goods_list']['unit'][$key2-1]}{$vo['code_name']}{/if}
+                                                   {/volist}
+                                               </span>
+                                </div>
+                                {/if}
+                                {/if}
+                                <div class="layui-input-block disf {if isset($info['origin_goods_list']['unit'][$key2-1])}{if $info['goods_list']['unit'][$key2-1]!=$info['origin_goods_list']['unit'][$key2-1]}edit_background{/if}{/if}">
+                                    <span class="white_color now_data">现数据：</span>
+                                    <select name="goods_list[unit][{$key2-1}]" lay-search>
+                                        <option>请选择单位</option>
+                                        {volist name="unit" key="key" id="vo"}
+                                        <option value="{$vo['code_value']}" {if $info['goods_list']['unit'][$key2-1]==$vo['code_value']}selected{/if}>{$vo['code_name']}</option>
+                                        {/volist}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/volist}
+            </div>
+            {elseif($gtype==2)}
+            <div class="layui-form-item">
+                <div class="layui-form-label white_color">长</div>
+                {if isset($info['origin_goods_volumn']['long'])}
+                {if $info['goods_volumn']['long']!=$info['origin_goods_volumn']['long']}
+                <div class="layui-input-block ori_block">
+                    <span class="white_color ori_data">原数据：{$info['origin_goods_volumn']['long']}&nbsp;{if $info['goods_volumn']['unit']==1}CM{/if}{if $info['goods_volumn']['unit']==2}M{/if}</span>
+                </div>
+                {/if}
+                {/if}
+                <div class="layui-input-block disf {if isset($info['origin_goods_volumn']['long'])}{if $info['goods_volumn']['long']!=$info['origin_goods_volumn']['long']}edit_background{/if}{/if}">
+                    <span class="white_color now_data">现数据：</span>
+                    <input type="text" name="goods_volumn[long]" placeholder="" autocomplete="off" class="layui-input" value="{$info['goods_volumn']['long']}">
+                    <select name="goods_volumn[unit]" class="unit" lay-filter="unit">
+                        <option value="1" {if $info['goods_volumn']['unit']==1}selected{/if}>CM</option>
+                        <option value="2" {if $info['goods_volumn']['unit']==2}selected{/if}>M</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label white_color">宽</div>
+                {if isset($info['origin_goods_volumn']['width'])}
+                {if $info['goods_volumn']['width']!=$info['origin_goods_volumn']['width']}
+                <div class="layui-input-block ori_block">
+                    <span class="white_color ori_data">原数据：{$info['origin_goods_volumn']['width']}&nbsp;{if $info['goods_volumn']['unit']==1}CM{/if}{if $info['goods_volumn']['unit']==2}M{/if}</span>
+                </div>
+                {/if}
+                {/if}
+                <div class="layui-input-block disf {if isset($info['origin_goods_volumn']['width'])}{if $info['goods_volumn']['width']!=$info['origin_goods_volumn']['width']}edit_background{/if}{/if}">
+                    <span class="white_color now_data">现数据：</span>
+                    <input type="text" name="goods_volumn[width]" placeholder="" autocomplete="off" class="layui-input" value="{$info['goods_volumn']['width']}">
+                    <select name="goods_volumn[unit]" class="unit" lay-filter="unit">
+                        <option value="1" {if $info['goods_volumn']['unit']==1}selected{/if}>CM</option>
+                        <option value="2" {if $info['goods_volumn']['unit']==2}selected{/if}>M</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label white_color">高</div>
+                {if isset($info['origin_goods_volumn']['height'])}
+                {if $info['goods_volumn']['height']!=$info['origin_goods_volumn']['height']}
+                <div class="layui-input-block ori_block">
+                    <span class="white_color ori_data">原数据：{$info['origin_goods_volumn']['height']}&nbsp;{if $info['goods_volumn']['unit']==1}CM{/if}{if $info['goods_volumn']['unit']==2}M{/if}</span>
+                </div>
+                {/if}
+                {/if}
+                <div class="layui-input-block disf {if isset($info['origin_goods_volumn']['height'])}{if $info['goods_volumn']['height']!=$info['origin_goods_volumn']['height']}edit_background{/if}{/if}">
+                    <span class="white_color now_data">现数据：</span>
+                    <input type="text" name="goods_volumn[height]" placeholder="" autocomplete="off" class="layui-input" value="{$info['goods_volumn']['height']}">
+                    <select name="goods_volumn[unit]" class="unit" lay-filter="unit">
+                        <option value="1" {if $info['goods_volumn']['unit']==1}selected{/if}>CM</option>
+                        <option value="2" {if $info['goods_volumn']['unit']==2}selected{/if}>M</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label white_color">体积比</div>
+                {if isset($info['origin_goods_volumn']['volumn'])}
+                {if $info['goods_volumn']['volumn']!=$info['origin_goods_volumn']['volumn']}
+                <div class="layui-input-block ori_block">
+                    <span class="white_color ori_data">原数据：{$info['origin_goods_volumn']['volumn']}</span>
+                </div>
+                {/if}
+                {/if}
+                <div class="layui-input-block disf {if isset($info['origin_goods_volumn']['volumn'])}{if $info['goods_volumn']['volumn']!=$info['origin_goods_volumn']['volumn']}edit_background{/if}{/if}">
+                    <span class="white_color now_data">现数据：</span>
+                    <input type="text" name="goods_volumn[volumn]" placeholder="" autocomplete="off" class="layui-input" value="{$info['goods_volumn']['volumn']}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label white_color">毛重</div>
+                {if isset($info['origin_goods_volumn']['grosswt'])}
+                {if $info['goods_volumn']['grosswt']!=$info['origin_goods_volumn']['grosswt']}
+                <div class="layui-input-block ori_block">
+                    <span class="white_color ori_data">原数据：{$info['origin_goods_volumn']['grosswt']}&nbsp;{if $info['goods_volumn']['unit2']==1}KGS{/if}{if $info['goods_volumn']['unit2']==2}GS{/if}</span>
+                </div>
+                {/if}
+                {/if}
+                <div class="layui-input-block disf {if isset($info['origin_goods_volumn']['grosswt'])}{if $info['goods_volumn']['grosswt']!=$info['origin_goods_volumn']['grosswt']}edit_background{/if}{/if}">
+                    <span class="white_color now_data">现数据：</span>
+                    <input type="text" name="goods_volumn[grosswt]" placeholder="" autocomplete="off" class="layui-input" value="{$info['goods_volumn']['grosswt']}">
+                    <select name="goods_volumn[unit2]" class="unit2" lay-filter="unit2">
+                        <option value="1" {if $info['goods_volumn']['unit2']==1}selected{/if}>KGS</option>
+                        <option value="2" {if $info['goods_volumn']['unit2']==2}selected{/if}>GS</option>
+                    </select>
+                </div>
+            </div>
+            {elseif($gtype==3)}
+            <div class="layui-form-item">
+                <div class="layui-form-label white_color">集运商</div>
+                <div class="layui-input-block disf">
+                    <span class="white_color now_data">现数据：</span>
+                    <input type="text" name="logistics_channel[name]" placeholder="" autocomplete="off" class="layui-input" value="{$info['logistics_channel']['name']}" readonly>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label white_color">线路名称</div>
+                {if isset($info['origin_logistics_channel']['line_name'])}
+                {if $info['logistics_channel']['line_name']!=$info['origin_logistics_channel']['line_name']}
+                <div class="layui-input-block ori_block">
+                    <span class="white_color ori_data">原数据：{$info['origin_logistics_channel']['line_name']}</span>
+                </div>
+                {/if}
+                {/if}
+                <div class="layui-input-block disf {if isset($info['origin_logistics_channel']['line_name'])}{if $info['logistics_channel']['line_name']!=$info['origin_logistics_channel']['line_name']}edit_background{/if}{/if}">
+                    <span class="white_color now_data">现数据：</span>
+                    <input type="text" name="logistics_channel[line_name]" placeholder="" autocomplete="off" class="layui-input" value="{$info['logistics_channel']['line_name']}">
+                </div>
+            </div>
+            {elseif($gtype==4)}
+            <input type="text" id="waybill_num" value="<?php echo count($info['logistics_waybill']['express']);?>" style="display: none;">
+            <div class="no_sub_info">
+                <div class="layui-collapse" lay-accordion>
+                    {volist name="info.logistics_waybill.express" key="key2" id="v"}
+                    <div class="layui-colla-item">
+                        <h2 class="layui-colla-title" style="display:flex;align-items:center;justify-content:space-between;">
+                            第{$key2}段
+                            <div>
+                                <!--<div class="layui-btn layui-btn-danger del" onclick="del_express_list(this)">-</div>-->
+                            </div>
+                        </h2>
+                        <div class="layui-colla-content">
+                            <div class="layui-form-item">
+                                <div class="layui-form-label wrap">物流商名称</div>
+                                {if isset($info['origin_logistics_waybill']['express'][$key2-1])}
+                                {if $v!=$info['origin_logistics_waybill']['express'][$key2-1]}
+                                <div class="layui-input-block ori_block">
+                                                    <span class="white_color ori_data">原数据：
+                                                        {volist name="express" id="vo"}
+                                                            {if $vo['id'] == $info['origin_logistics_waybill']['express'][$key2-1]}{$vo['param3']}{/if}
+                                                        {/volist}
+                                                    </span>
+                                </div>
+                                {/if}
+                                {/if}
+                                <div class="layui-input-block disf {if isset($info['origin_logistics_waybill']['express'][$key2-1])}{if $v!=$info['origin_logistics_waybill']['express'][$key2-1]}edit_background{/if}{/if}">
+                                    <span class="white_color now_data">现数据：</span>
+                                    <select name="logistics_waybill[express][{$key2-1}]" lay-verify="required" lay-search>
+                                        <option>请选择物流商</option>
+                                        {volist name="express" key="key" id="vo"}
+                                        <option value="{$vo['id']}" {if $v==$vo['id']}selected{/if}>{$vo['param3']}</option>
+                                        {/volist}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-form-label">物流单号</div>
+                                {if isset($info['origin_logistics_waybill']['express_no'][$key2-1])}
+                                {if $info['logistics_waybill']['express_no'][$key2-1]!=$info['origin_logistics_waybill']['express_no'][$key2-1]}
+                                <div class="layui-input-block ori_block">
+                                    <span class="white_color ori_data">原数据：{$info['origin_logistics_waybill']['express_no'][$key2-1]}</span>
+                                </div>
+                                {/if}
+                                {/if}
+                                <div class="layui-input-block disf {if isset($info['origin_logistics_waybill']['express_no'][$key2-1])}{if $info['logistics_waybill']['express_no'][$key2-1]!=$info['origin_logistics_waybill']['express_no'][$key2-1]}edit_background{/if}{/if}">
+                                    <span class="white_color now_data">现数据：</span>
+                                    <input type="text" name="logistics_waybill[express_no][{$key2-1}]" placeholder="" autocomplete="off" class="layui-input" value="{$info['logistics_waybill']['express_no'][$key2-1]}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/volist}
+                </div>
+                {/if}
+                <div style="text-align:center;margin-top:10px;">
+                    {if $gtype==1}
+                    <div class="layui-btn layui-btn-normal" style="background:#009688;" onclick="add_goods_list()">+增加货物</div>
+                    {elseif($gtype==4)}
+                    <div class="layui-btn layui-btn-normal" style="background:#009688;" onclick="add_express_list()">+增加运单</div>
+                    {/if}
+                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="component-form-element2">确认修改</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<script src="./layui/xm-select.js"></script>
+{include file="common/footer"}
+<script>
+    var win_index = '';
+    layui.use(['layer', 'form', 'table', 'upload','element'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , element = layui.element
+            , upload = layui.upload
+            , table = layui.table;
+
+        form.render(null,'component-form-element');
+        {if $gtype==1}
+        {volist name="info.goods_list.value" key="key" id="v"}
+        xmSelect.render({
+            el: '#value{$key}',
+            paging: true,
+            pageSize: 5,
+            height:300,
+            filterable: true,
+            prop: {
+                name: 'name',
+                value: 'id',
+            },
+            autoRow: true,
+            data: {$value},
+            name: "goods_list[value][{$key-1}]",
+            layVerify: 'required',
+            layVerType: 'msg',
+            initValue:[{$v}],
+            on:function(data){
+                let name = data.change[0]['name'];
+                let id = data.change[0]['id'];
+                if(data.isAdd==true){
+                    let html = '<div class="layui-form-item value_box'+id+'">\n' +
+                        '                                        <div class="layui-form-label" style="overflow: visible;white-space: pre-wrap;">'+name+'</div>\n' +
+                        '                                        <div class="layui-input-block">\n' +
+                        '                                            <input type="text" name="goods_list[value_desc][{$key-1}][]" class="layui-input" placeholder="该属性描述" value="">\n'+
+                        '                                        </div>\n' +
+                        '                                    </div>';
+
+                    $('.vbb{$key}').append(html);
+                }else{
+                    $('.vbb{$key}').find('.value_box'+id).remove();
+                }
+                form.render(null,'component-form-element');
+            }
+        });
+        {/volist}
+            {/if}
+
+                //货物清单-start
+                form.on('select(brand_type)',function(data){
+                    let val = data.value;
+                    if(val==3 || val==2){
+                        $(this).parent().parent().siblings('.brand_name').show();
+                        $(this).parent().parent().siblings('.select_brand_name').hide();
+                    }else if(val==4){
+                        $(this).parent().parent().siblings('.brand_name').hide();
+                        $(this).parent().parent().siblings('.select_brand_name').show();
+                    }else{
+                        $(this).parent().parent().siblings('.brand_name').hide();
+                        $(this).parent().parent().siblings('.select_brand_name').hide();
+                    }
+                });
+                form.on('select(unit)',function(data){
+                    let val = data.value;
+                    let unit = document.getElementsByClassName('unit');
+                    for(let i=0;i<unit.length;i++){
+                        document.getElementsByClassName('unit')[i].value=val;
+                    }
+                    form.render(null,'component-form-element');
+                });
+                //货物清单-end
+
+
+                form.on('submit(component-form-element2)', function(data){
+                    // JSON.stringify()
+                    // console.log(data.field);return false;
+                    if({$gtype}==1){
+                        data.field['pa'] = 1;
+                    }else if({$gtype}==2){
+                        data.field['pa'] = 2;
+                    }else if({$gtype}==3){
+                        data.field['pa'] = 3;
+                    }else if({$gtype}==4){
+                        data.field['pa'] = 4;
+                    }
+
+                    $.ajax({
+                        url:"/?s=index/goods_info",
+                        method:'post',
+                        data:data.field,
+                        dataType:'JSON',
+                        success:function(res){
+                            layer.msg(res.msg,{time:2000}, function () {
+                                if(res.code == 0)
+                                {
+                                    //跳转到感谢使用页
+                                    window.location.reload();
+                                }else if(res.code == -11){
+                                    layer.open({
+                                        type: 2,
+                                        title: '请先登录',
+                                        shadeClose: true,
+                                        shade: 0.3,
+                                        area: ['100%', '100%'],
+                                        content: "/?s=index/customer_login&open=1&inquiry_id="+res.inquiry_id,
+                                    });
+                                }else if(res.code==-2){
+
+                                }
+                            });
+                        },
+                        error:function (data) {
+                            layer.msg('系统错误',{time:2000});
+                        }
+                    });
+                    return false;
+                });
+
+                $('.sure').click(function(){
+                    layer.close(win_index);
+                });
+            });
+
+    //物流运单-start
+    function add_express_list(){
+        var layer = layui.layer
+            ,form  = layui.form
+            ,element = layui.element
+            ,$ = layui.jquery;
+        let now_num = parseInt($('#waybill_num').val());
+        let waybill_num = parseInt($('#waybill_num').val()) + 1;
+        $('#waybill_num').val(waybill_num);
+        let html = '<div class="layui-colla-item">'+
+            '<h2 class="layui-colla-title" style="display:flex;align-items:center;justify-content:space-between;">'+
+            '第'+waybill_num+'段'+
+            '<div>'+
+            // <div class="layui-btn layui-btn-danger del" onclick="del_express_list(this)">-</div>
+            '</div>'+
+            '</h2>'+
+            '<div class="layui-colla-content">'+
+            '<div class="layui-form-item">'+
+            '<div class="layui-form-label wrap">物流商名称</div>'+
+            '<div class="layui-input-block disf">'+
+            '<span class="white_color now_data">现数据：</span>'+
+            '<select name="logistics_waybill[express]['+now_num+']" lay-verify="required" lay-search>'+
+            '<option>请选择物流商</option>';
+        {volist name="express" key="key" id="vo"}
+        html += '<option value="{$vo[\'id\']}">{$vo[\'param3\']}</option>';
+        {/volist}
+            html += '</select>'+
+                '</div>'+
+                '</div>'+
+                '<div class="layui-form-item">'+
+                '<div class="layui-form-label">物流单号</div>'+
+                '<div class="layui-input-block disf">'+
+                '<span class="white_color now_data">现数据：</span>'+
+                '<input type="text" name="logistics_waybill[express_no]['+now_num+']" placeholder="" autocomplete="off" class="layui-input" value="">'+
+                '</div>'+
+                '</div>'+
+                '</div>'+
+                '</div>';
+            $('.layui-collapse').append(html);
+            form.render(null,'component-form-element');
+            element.render();
+        }
+        function del_express_list(t){
+            var layer = layui.layer
+                ,form  = layui.form
+                ,$ = layui.jquery;
+            layer.confirm('确认要删除吗？', {
+                btn: ['删除','取消']
+            }, function() {
+                let waybill_num = parseInt($('#waybill_num').val()) - 1;
+                $('#waybill_num').val(waybill_num);
+                $(t).parent().parent().remove();
+                form.render(null, 'component-form-element');
+                layer.closeAll();
+            },function(){
+                layer.closeAll();
+            });
+        }
+        //物流运单-end
+
+        //货物清单-start
+        function view_value(t){
+            var layer = layui.layer
+                ,form  = layui.form
+                ,$ = layui.jquery;
+            win_index = layer.open({
+                type: 1,
+                title: '查看属性',
+                area:['90%','50%'],
+                content: $(t).siblings('.value_box')
+            });
+        }
+        function del_goods_list(t){
+            var layer = layui.layer
+                ,form  = layui.form
+                ,$ = layui.jquery;
+            layer.confirm('确认要删除吗？', {
+                btn: ['删除','取消']
+            }, function() {
+                let goods_list_num = parseInt($('#goods_list_num').val()) - 1;
+                $('#goods_list_num').val(goods_list_num);
+                $(t).parent().parent().parent().remove();
+                form.render(null, 'component-form-element');
+                layer.closeAll();
+            }, function(){
+                layer.closeAll();
+            });
+        }
+        function add_goods_list(){
+            var layer = layui.layer
+                ,form  = layui.form
+                ,$ = layui.jquery
+                ,element = layui.element;
+            let now_num = parseInt($('#goods_list_num').val());
+            let goods_list_num = parseInt($('#goods_list_num').val()) + 1;
+            $('#goods_list_num').val(goods_list_num);
+            let html = '<div class="layui-colla-item">'+
+                '<h2 class="layui-colla-title" style="display:flex;align-items:center;justify-content:space-between;">'+
+                '货物'+goods_list_num+
+                '<div>'+
+                // '<div class="layui-btn layui-btn-danger del" onclick="del_goods_list(this)">-</div>'+
+                '</div>'+
+                '</h2>'+
+                '<div class="layui-colla-content layui-show">'+
+                '<div class="layui-form-item">'+
+                '<div class="layui-form-label">类别</div>'+
+                '<div class="layui-input-block disf">'+
+                '<select name="goods_list[cate]['+now_num+']" lay-verify="required" lay-search>'+
+                '<option>请选择类别</option>';
+            {volist name="category" key="key" id="vo"}
+            html += '<option value="{$vo[\'id\']}">{$vo[\'name\']}</option>';
+            {/volist}
+                html += '</select>'+
+                    '</div>'+
+                    '</div>'+
+                    '<div class="layui-form-item">'+
+                    '<div class="layui-form-label">属性</div>'+
+                    '<div class="layui-input-block disf">'+
+                    '<div class="layui-btn layui-btn-normal" onclick="view_value(this)">选择属性</div>'+
+                    '<div class="value_box" style="display: none;padding:15px 20px 15px 0;box-sizing: border-box;">'+
+                    '<div class="layui-form-item">'+
+                    '<div class="layui-form-label">选择属性</div>'+
+                    '<div class="layui-input-block">'+
+                    '<div id="value'+goods_list_num+'" class="xm-select-demo"></div>'+
+                    '</div>'+
+                    '</div>'+
+                    '<hr>'+
+                    '<div class="value_box_box vbb'+goods_list_num+'">'+
+                    '</div>'+
+                    '<div class="layui-btn layui-btn-normal sure" style="margin-left:50px;">确定</div>'+
+                    '</div>'+
+                    '</div>'+
+                    '</div>'+
+                    '<div class="layui-form-item">'+
+                    '<div class="layui-form-label">描述</div>'+
+                    '<div class="layui-input-block disf">'+
+                    '<input type="text" name="goods_list[desc]['+now_num+']" placeholder="描述" autocomplete="off" class="layui-input" value="">'+
+                    '</div>'+
+                    '</div>'+
+                    '<div class="layui-form-item">'+
+                    '<div class="layui-form-label">品牌</div>'+
+                    '<div class="layui-input-block disf">'+
+                    '<select name="goods_list[brand_type]['+now_num+']" lay-filter="brand_type">'+
+                    '<option value="1">无牌（无商标信息）</option>'+
+                    '<option value="2">仿牌（商品无注册）</option>'+
+                    '<option value="3">普通品牌（有注册非知名）</option>'+
+                    '<option value="4">奢侈品牌（有注册且知名）</option>'+
+                    '</select>'+
+                    '<input type="text" class="layui-input brand_name hide2" name="goods_list[brand_name]['+now_num+']" placeholder="品牌名称" style="margin:10px 0;" value="">'+
+                    '<div class="select_brand_name" style="display: none;">'+
+                    '<select name="goods_list[brand_name2]['+now_num+']" id="select_brand_name" lay-filter="brand_name" lay-search>'+
+                    '<option value="">请选择品牌名称</option>';
+                {volist name="brand" key="key" id="vo"}
+                html += '<option value="{$vo[\'name\']}">{$vo[\'name\']}</option>';
+                {/volist}
+                    html += '</select>'+
+                        '</div>'+
+                        '</div>'+
+                        '</div>'+
+                        '<div class="layui-form-item">'+
+                        '<div class="layui-form-label">数量</div>'+
+                        '<div class="layui-input-block disf">'+
+                        '<input type="text" name="goods_list[num]['+now_num+']" placeholder="数量" autocomplete="off" class="layui-input" value="">'+
+                        '</div>'+
+                        '</div>'+
+                        '<div class="layui-form-item">'+
+                        '<div class="layui-form-label">单位</div>'+
+                        '<div class="layui-input-block disf">'+
+                        '<select name="goods_list[unit]['+now_num+']" lay-search>'+
+                        '<option>请选择单位</option>';
+                    {volist name="unit" key="key" id="vo"}
+                    html += '<option value="{$vo[\'code_value\']}">{$vo[\'code_name\']}</option>';
+                    {/volist}
+                        html += '</select>'+
+                            '</div>'+
+                            '</div>'+
+                            '</div>'+
+                            '</div>';
+
+                        $('.layui-collapse').append(html);
+                        let value_num = parseInt(goods_list_num) - 1;
+                        xmSelect.render({
+                            el: '#value'+goods_list_num,
+                            paging: true,
+                            pageSize: 5,
+                            height:300,
+                            filterable: true,
+                            prop: {
+                                name: 'name',
+                                value: 'id',
+                            },
+                            autoRow: true,
+                            data: {$value},
+                            name: "goods_list[value]["+value_num+"]",
+                            layVerify: 'required',
+                            layVerType: 'msg',
+                            on:function(data){
+                                let name = data.change[0]['name'];
+                                let id = data.change[0]['id'];
+                                if(data.isAdd==true){
+                                    let html = '<div class="layui-form-item value_box'+id+'">\n' +
+                                        '                                        <div class="layui-form-label" style="overflow: visible;white-space: pre-wrap;">'+name+'</div>\n' +
+                                        '                                        <div class="layui-input-block">\n' +
+                                        '                                            <input type="text" name="goods_list[value_desc]['+value_num+'][]" class="layui-input" placeholder="该属性描述" value="">\n'+
+                                        '                                        </div>\n' +
+                                        '                                    </div>';
+
+                                    $('.vbb'+goods_list_num).append(html);
+                                }else{
+                                    $('.vbb'+goods_list_num).find('.value_box'+id).remove();
+                                }
+                                form.render(null,'component-form-element');
+                            }
+                        });
+                        $('.sure').click(function(){
+                            layer.close(win_index);
+                        });
+                        form.render(null,'component-form-element');
+                        element.render();
+                    }
+    //货物清单-end
+</script>

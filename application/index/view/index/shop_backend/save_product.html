@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>独立站平台 - website.gogo198.net</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="layui/css/layui.css">
+
+    <style>
+        html{height:100%;}
+        :root {--primary: #8a2be2;--primary-dark: #6a1cb9;--primary-light: #9b4de3;--secondary: #bb86fc;--accent: #e6d7f5;--text: #333333;--text-light: #f8f8f8;--background: #f9f5fd;--card-bg: #ffffff;--gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));--gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary));--shadow: 0 10px 30px rgba(138, 43, 226, 0.15);--shadow-hover: 0 15px 35px rgba(138, 43, 226, 0.25);}
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        body {color: var(--text);line-height: 1.6;overflow-x: hidden;}
+        h1, h2, h3, h4, h5, h6 {font-family: 'Montserrat', sans-serif;font-weight: 700;}
+
+        /* 导航栏样式 */
+        header {background: rgba(255, 255, 255, 0.95);color: var(--text);padding: 15px 0;box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);position: sticky;top: 0;z-index: 1000;backdrop-filter: blur(10px);}
+        nav {display: flex;justify-content: space-between;align-items: center;position: relative;}
+        .logo {font-size: 1.8rem;font-weight: 700;display: flex;align-items: center;background: var(--gradient);-webkit-background-clip: text;background-clip: text;color: transparent;z-index: 1001;}
+        .logo i {margin-right: 10px;color: var(--primary);}
+        .nav-links {display: flex;list-style: none;}
+        .nav-links li {margin-left: 25px;position: relative;}
+        .nav-links a {color: var(--text);text-decoration: none;font-weight: 500;transition: all 0.3s ease;padding: 8px 12px;border-radius: 4px;position: relative;display: flex;align-items: center;}
+        .nav-links a::after {content: '';position: absolute;bottom: 0;left: 50%;width: 0;height: 2px;background: var(--gradient);transition: all 0.3s ease;transform: translateX(-50%);}
+        .nav-links a:hover {color: var(--primary);}
+        .nav-links a:hover::after {width: 80%;}
+        .auth-buttons {display: flex;align-items: center;}
+        .btn {padding: 12px 25px;border-radius: 50px;text-decoration: none;font-weight: 600;transition: all 0.3s ease;cursor: pointer;display: inline-block;text-align: center;border: none;font-family: 'Montserrat', sans-serif;}
+        .btn-outline {border: 2px solid var(--primary);color: var(--primary);background: transparent;margin-right: 15px;}
+        .btn-outline:hover {background: var(--primary);color: white;transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-primary {background: var(--gradient);color: white;border: 2px solid transparent;}
+        .btn-primary:hover {background: transparent;border-color: var(--primary);color: var(--primary);transform: translateY(-3px);box-shadow: var(--shadow);}
+
+        /* 表单样式 */
+        .form-section {margin-bottom: 30px;}
+        .form-title {font-size: 1.3rem;margin-bottom: 20px;color: var(--primary-dark);display: flex;align-items: center}
+        .form-title i {margin-right: 10px;}
+        .form-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));gap: 20px;}
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select,
+        .form-group textarea {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;}
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {border-color: var(--primary);outline: none;}
+        .form-group textarea {min-height: 120px;resize: vertical;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
+
+
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}
+        .form-group input:focus,
+        .form-group select:focus {border-color: var(--primary);outline: none;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
+
+        .disf{display: flex;align-items: center;}
+        .layui-form-label{width: 100px;}
+
+        /* 动画 */
+        @keyframes fadeIn {
+            from {opacity: 0;transform: translateY(10px);}
+            to {opacity: 1;transform: translateY(0);}
+        }
+
+        @media (max-width: 576px) {
+            .btn {padding: 10px 20px;font-size: 0.9rem;}
+            /*.form-actions {flex-direction: column;}*/
+        }
+    </style>
+</head>
+<body>
+<form class="layui-form" id="siteForm" action="" method="post" lay-filter="component-form-rotate" style="padding:10px;">
+    <input type="hidden" name="company_id" value="{$company_id}">
+    <input type="hidden" name="company_type" value="{$company_type}">
+    <input type="hidden" name="id" value="{$id}">
+    <input type="hidden" name="type" value="{$type}">
+
+    <div class="form-group" style="padding:10px;">
+        {if $type==1 && $id==0}
+            <div class="layui-form-item">
+                <label class="layui-form-label">新增方式</label>
+                <div class="layui-input-block">
+                    <select name="add_method" id="add_method" lay-filter="add_method">
+                        <option value="1">另外新增库存赠品</option>
+                        <option value="2">在库存商品中选择</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item goods_list" style="display: none;">
+                <label class="layui-form-label">选择商品</label>
+                <div class="layui-input-block">
+                    <select name="select_goods" id="select_goods" lay-filter="select_goods" lay-search>
+                        <option value="">请选择商品</option>
+                        {volist name="goods_list" id="vo"}
+                            <option value="{$vo['id']}" data-name="{$vo['goods_name']}">{$vo['goods_name']}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+        {/if}
+        <div class="layui-form-item goods_info">
+            <label class="layui-form-label">商品分类</label>
+            <div class="layui-input-block">
+                <div class="disf">
+                    <div class="cat_div1 cat_div disf">
+                        <select name="cat_id1" id="cat_id1" lay-search lay-filter="cat_id1">
+                            <option value="">请选择</option>
+                            <option value="-1">自定义类别</option>
+                            {volist name="sale_cate" id="v"}
+                            <option value="{$v['cat_id']}" {if $id>0} {if $v['cat_id']==$data['cat_info']['cat_ids'][0]}selected{/if} {/if}>{$v['cat_name']}</option>
+                            {/volist}
+                        </select>
+                        <input type="text" class="layui-input diyname" name="diy_catname1" value="" style="display: none;" placeholder="多级用“、”分开">
+                    </div>
+
+                    <div class="cat_div2 cat_div disf">
+                        {if $id>0}
+                        {if !empty($data['cat_info']['cat_names'][1])}
+                        <select name="cat_id2" id="cat_id2" lay-search lay-verify="required" lay-filter="cat_id2">
+                            <option value="{$data['cat_info']['cat_ids'][1]}">{$data['cat_info']['cat_names'][1]}</option>
+                        </select>
+                        {/if}
+                        {/if}
+                    </div>
+
+                    <div class="cat_div3 cat_div disf">
+                        {if $id>0}
+                        {if !empty($data['cat_info']['cat_names'][2])}
+                        <select name="cat_id3" id="cat_id3" lay-search lay-verify="required" lay-filter="cat_id3">
+                            <option value="{$data['cat_info']['cat_ids'][2]}">{$data['cat_info']['cat_names'][2]}</option>
+                        </select>
+                        {/if}
+                        {/if}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item goods_info">
+            <label class="layui-form-label">商品品牌</label>
+            <div class="layui-input-block">
+                <div class="disf">
+                    <div class="brand_type">
+                        <select name="brand_type" id="brand_type" lay-search lay-verify="required" lay-filter="brand_type">
+                            <option value="0" {if $data['brand_type']==0}selected{/if}>白牌</option>
+                            <option value="1" {if $data['brand_type']==1}selected{/if}>有牌</option>
+                        </select>
+                    </div>
+                    <div class="brand_type2" style="display: {if $data['brand_type']==1}block{else}none{/if};">
+                        <select name="brand_type2" id="brand_type2" lay-search lay-verify="" lay-filter="brand_type2">
+                            <option value="">请选择</option>
+                            {if $id>0}
+                            <option value="0" {if $data['brand_type2']==0}selected{/if}>自有品牌</option>
+                            <option value="1" {if $data['brand_type2']==1}selected{/if}>知名品牌</option>
+                            {else}
+                            <option value="0" {if($data['brand_type2']==0 && $data['brand_type2']!='')}selected{/if}>自有品牌</option>
+                            <option value="1" {if $data['brand_type2']==1}selected{/if}>知名品牌</option>
+                            {/if}
+                        </select>
+                    </div>
+                    <div class="brand_id" style="display: {if $data['brand_type2']==1}block{else}none{/if};">
+                        <select name="brand_id" id="brand_id" lay-search lay-verify="">
+                            <option value="">请选择</option>
+                            {volist name="brand" id="vo"}
+                            <option value="{$vo['id']}" {if $data['brand_id']==$vo['id']}selected{/if}>{$vo['param1']}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                    {if $id>0}
+                        <div class="brand_name" style="display: {if $data['brand_type2']==0 && $data['brand_type']==1}block{else}none{/if};">
+                    {else}
+                        <div class="brand_name" style="display: {if($data['brand_type2']==0 && $data['brand_type2']!='')}block{else}none{/if};">
+                    {/if}
+                        <input type="text" class="layui-input" name="brand_name" placeholder="请输入品牌名称" value="{$data['brand_name']}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item goods_info">
+            <label class="layui-form-label">商品名称</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input goods_name" name="goods_name" placeholder="请输入商品名称" value="{$data['goods_name']}" lay-verify="required" style="max-width:736px;">
+            </div>
+        </div>
+        <div class="layui-form-item goods_info">
+            <label class="layui-form-label">商品主图(800*800)</label>
+            <div class="layui-input-block">
+                <div class="layui-upload" style="margin-top: 10px;">
+                    <button type="button" class="layui-btn" id="img_file-upload">上传主图(1张)</button>
+                    <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                        预览图：
+                        <div class="layui-upload-list" id="img_file-upload-list">
+                            {if !empty($data['goods_image'])}
+                            <div style="display: inline-block;">
+                                <img onclick="seePic(this);" src="{$data['goods_image']}" data-src2="{$data['goods_image']}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png" style="width:80px;height:80px;">
+                                <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
+                                <input type="hidden" name="goods_image" value="{$data['goods_image']}">
+                            </div>
+                            {/if}
+                        </div>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item goods_info">
+            <label class="layui-form-label">商品副图(800*800)</label>
+            <div class="layui-input-block">
+                <div class="layui-upload" style="margin-top: 10px;">
+                    <button type="button" class="layui-btn" id="img_file2-upload">上传副图(4张)</button>
+                    <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                        预览图：
+                        <div class="layui-upload-list" id="img_file2-upload-list">
+                            {if !empty($data['images_arr'])}
+                            {volist name="data['images_arr']" id="vo"}
+                            <div style="display: inline-block;">
+                                <img onclick="seePic(this);" src="{$vo['path']}" data-src2="{$vo['path']}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png" style="width:80px;height:80px;">
+                                <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
+                                <input type="hidden" name="images_arr[]" value="{$vo['path']}">
+                            </div>
+                            {/volist}
+                            {/if}
+                        </div>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item goods_info">
+            <label class="layui-form-label">商品视频(<=3M)</label>
+            <div class="layui-input-block">
+                <div class="layui-upload" style="margin-top: 10px;">
+                    <button type="button" class="layui-btn" id="video_file-upload">上传视频(1个)</button>
+                    <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                        预览图：
+                        <div class="layui-upload-list" id="video_file-upload-list">
+                            {if !empty($data['goods_video'])}
+                            <div style="display: inline-block;">
+                                <img onclick="seePic(this);" src="{$data['goods_video']}" data-src2="{$data['goods_video']}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png" style="width:80px;height:80px;">
+                                <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
+                                <input type="hidden" name="video" value="{$data['goods_video']}">
+                            </div>
+                            {/if}
+                        </div>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <!--        <button type="button" class="btn btn-outline" id="cancelBtn" style="background:transparent;border: 2px solid var(&#45;&#45;primary);color: var(&#45;&#45;primary);">取消</button>-->
+        <button type="submit" class="btn btn-primary" lay-submit lay-filter="component-form-rotate">立即保存</button>
+    </div>
+</form>
+
+</body>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    layui.use(['layer','form','laydate','upload','colorpicker'],function() {
+        var laydate = layui.laydate
+            ,layer = layui.layer
+            ,form = layui.form
+            ,$ = layui.jquery
+            ,upload = layui.upload
+            ,colorpicker = layui.colorpicker;
+
+        //新增赠品方式
+        form.on('select(add_method)',function(data){
+            let val = data.value;
+            if(val==1){
+                //新增赠品
+                $('.goods_list').hide();
+                $('.goods_info').show();
+                $('.goods_name').val("");
+            }
+            else if(val==2){
+                //选择商品
+                $('.goods_list').show();
+                $('.goods_info').hide();
+            }
+        });
+
+        //选择商品作为赠品
+        form.on('select(select_goods)',function(data){
+            let val = data.value;
+            let goods_name = $(data.elem).find('option:selected').data('name');
+            $('.goods_name').val(goods_name);
+        });
+
+        //销售分类======================================start
+        form.on('select(cat_id1)',function(data){
+            let val = data.value;
+            let t = this;
+            if(val==-1){
+                //自定义
+                $(t).parents(":eq(2)").find('.diyname').css('display','inline-block');
+                $('.cat_div2').html("");
+                $('.cat_div3').html("");
+            }
+            else{
+                //选择分类
+                $(t).parents(":eq(2)").find('.diyname').hide();
+                cate_id = val;
+
+                $.post('/?s=index/get_nextcate',{'parent_id':val},function(res){
+                    if(res.data.length>0){
+                        let html = '<select name="cat_id2" id="cat_id2" lay-search lay-verify="required" lay-filter="cat_id2">\n' +
+                            '               <option value="">请选择</option>\n';
+                        // '                                        <option value="-1">自定义类别</option>\n';
+                        for(let i=0;i<res.data.length;i++) {
+                            html += '       <option value="'+res.data[i].cat_id+'">'+res.data[i].cat_name+'</option>\n';
+                        }
+                        html += '</select>\n' +
+                            '<input type="text" class="form-control diyname" name="diy_catname2" value="" style="display: none;" placeholder="多层用“、”分开">\n';
+
+                        $('.cat_div2').html(html);
+
+                        form.render(null,'component-form-rotate');
+                    }
+                    else{
+                        $('.cat_div2').html("");
+                    }
+                });
+            }
+        });
+
+        form.on('select(cat_id2)',function(data){
+            let val = data.value;
+            let t = this;
+            if(val==-1){
+                //自定义
+                $(t).parents(":eq(2)").find('.diyname').css('display','inline-block');
+                $('.cat_div3').html("");
+            }
+            else{
+                //选择分类
+                $(t).parents(":eq(2)").find('.diyname').hide();
+                cate_id = val;
+
+                $.post('/?s=index/get_nextcate',{'parent_id':val},function(res){
+                    if(res.data.length>0){
+                        let html = '<select name="cat_id3" id="cat_id3" lay-search lay-verify="required" lay-filter="cat_id3">\n' +
+                            '               <option value="">请选择</option>\n';
+                        // '                                        <option value="-1">自定义类别</option>\n';
+                        for(let i=0;i<res.data.length;i++) {
+                            html += '       <option value="'+res.data[i].cat_id+'">'+res.data[i].cat_name+'</option>\n';
+                        }
+                        html += '</select>\n' +
+                            '<input type="text" class="form-control diyname" name="diy_catname3" value="" style="display: none;" placeholder="多层用“、”分开">\n';
+
+                        $('.cat_div3').html(html);
+
+                        form.render(null,'component-form-rotate');
+                    }
+                    else{
+                        $('.cat_div3').html("");
+                    }
+                });
+            }
+        });
+        //销售分类======================================end
+
+        //商品品牌======================================start
+        form.on('select(brand_type)',function(data){
+            let val = data.value;
+
+            if(val==0 || val==''){
+                //白牌
+                $('.brand_type2').hide();
+                $('.brand_id').hide();
+                $('.brand_name').hide();
+            }
+            else if(val==1){
+                //有牌
+                $('.brand_type2').show();
+                $('.brand_id').hide();
+                $('.brand_name').hide();
+            }
+        });
+
+        form.on('select(brand_type2)',function(data){
+            let val = data.value;
+
+            if(val==0 || val==''){
+                //自有品牌
+                $('.brand_id').hide();
+                $('.brand_name').show();
+            }
+            else if(val==1){
+                //知名品牌
+                $('.brand_id').show();
+                $('.brand_name').hide();
+            }
+        });
+        //商品品牌======================================end
+
+        //主图
+        upload.render({
+            elem: '#img_file-upload'
+            ,url: '/?s=index/upload_file'
+            ,accept: 'image'
+            ,data: { folder:'merch_file', type: 'goods_files'}
+            ,multiple: false
+            ,number:1
+            ,before: function(obj){
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                layer.msg(res.message, {time: 2000}, function () {
+                    if (res.error == 1) {
+
+                        $('#img_file-upload-list').append('<div style="display: inline-block;"><img onclick="seePic(this);" src="' + res.file_path + '" data-src2="' + res.file_path + '" class="layui-upload-img" style="width:80px;height:80px;" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="goods_image" value="' + res.file_path + '"></div>')
+                    }
+                });
+            }
+        });
+
+        //副图
+        upload.render({
+            elem: '#img_file2-upload'
+            ,url: '/?s=index/upload_file'
+            ,accept: 'image'
+            ,data: { folder:'merch_file', type: 'goods_files'}
+            ,multiple: true
+            ,before: function(obj){
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                layer.msg(res.message, {time: 2000}, function () {
+                    if (res.error == 1) {
+                        $('#img_file2-upload-list').append('<div style="display: inline-block;"><img onclick="seePic(this);" src="' + res.file_path + '" data-src2="' + res.file_path + '"  class="layui-upload-img" style="width:80px;height:80px;" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="images_arr[]" value="' + res.file_path + '"></div>')
+                    }
+                });
+            }
+        });
+
+        //视频
+        upload.render({
+            elem: '#video_file-upload'
+            ,url: '/?s=index/upload_file'
+            ,accept: 'video'
+            ,data: { folder:'merch_file', type:'goods_video_files'}
+            ,multiple: false
+            ,before: function(obj){
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                layer.msg(res.message, {time: 2000}, function () {
+                    if (res.error == 1) {
+                        $('#video_file-upload-list').append('<div style="display: inline-block;"><img onclick="seePic(this);" src="' + res.file_path + '" data-src2="' + res.file_path + '"  class="layui-upload-img" style="width:80px;height:80px;" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="video" value="' + res.file_path + '"></div>')
+                    }
+                });
+            }
+        });
+
+        form.on('submit(component-form-rotate)', function(data){
+            layer.load();
+            $.ajax({
+                url:"/?s=index/save_product",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.closeAll('loading');
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            if("{$type}"==0){
+                                layer.confirm('请选择你的下一步操作', {
+                                    btn: ['添加商品', '修改商品']
+                                }, function () {
+                                    window.location.href='/?s=index/save_product&company_id={$company_id}&company_type={$company_type}';
+                                }, function(){
+                                    window.location.href='/?s=index/save_product&company_id={$company_id}&company_type={$company_type}&id='+res.id;
+                                });
+                            }else{
+                                layer.confirm('请选择你的下一步操作', {
+                                    btn: ['添加赠品', '修改赠品']
+                                }, function () {
+                                    window.location.href='/?s=index/save_product&company_id={$company_id}&company_type={$company_type}&type={$type}';
+                                }, function(){
+                                    window.location.href='/?s=index/save_product&company_id={$company_id}&company_type={$company_type}&id='+res.id;
+                                });
+                            }
+
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+
+    function delPic(obj)
+    {
+        var layer = layui.layer,$ = layui.$;
+        layer.confirm('确认要删除该附件？', {
+            btn: ['删除','取消']
+        }, function(){
+            $(obj).parent().remove();
+            layer.closeAll();
+        }, function(){
+
+        });
+    }
+</script>
+</html>

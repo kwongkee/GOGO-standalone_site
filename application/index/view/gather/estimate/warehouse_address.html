@@ -1,0 +1,182 @@
+{include file="common/gather_header"}
+<meta name="viewport" content="width=device-width, initial-scale=0.5" />
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    .main-container {display: flex;flex-direction: column;flex: 1;background-color: unset;padding-bottom: 20px;border-radius: 5px;overflow: hidden;box-shadow: 0 0 14px rgba(0,0,0,.04);border:1px solid #fff;}
+    .operat-box {display: flex;align-items: center;justify-content: space-between;padding: 16px 30px;background-color: #0e2e68;color:#fff;}
+    .main-container-title {padding-right: 20px;}
+    .search-container {display: inline-block;width: 350px;}
+    .search-container .search-ipt {background-color: #fff;border-radius: 4px;}
+    .el-input {position: relative;font-size: 14px;display: inline-block;width: 100%;}
+    .el-input__inner {-webkit-appearance: none;background-color: #fff;background-image: none;border-radius: 4px;border: 1px solid #dcdfe6;box-sizing: border-box;color: #606266;display: inline-block;font-size: inherit;height: 40px;line-height: 40px;outline: none;padding: 0 15px;transition: border-color .2s cubic-bezier(.645,.045,.355,1);width: 100%;}
+    .el-input--suffix .el-input__inner {padding-right: 30px;}
+    .search-container .search-ipt .el-input__suffix {display: flex;align-items: center;}
+    .el-input__suffix {position: absolute;height: 100%;right: 5px;top: 0;text-align: center;color: #c0c4cc;transition: all .3s;pointer-events: none;}
+    .warehouse-container {color: #fff;}
+    .warehouse-container .warehouse-content {padding: 30px;}
+    .warehouse-container .warehouse-content .tips {padding: 10px 20px;background: unset;border-radius: 5px;border: 1px solid #fff;}
+    .warehouse-container .warehouse-content .warehouse-tabs {padding: 30px 0;}
+    .el-tabs__header {padding: 0;position: relative;margin: 0 0 15px;}
+    .el-tabs__nav-wrap {overflow: hidden;margin-bottom: -1px;position: relative;}
+    .el-tabs__nav-scroll {overflow: hidden;}
+    .el-tabs__nav-wrap:after {content: "";position: absolute;left: 0;bottom: 0;width: 100%;height: 2px;background-color: #e4e7ed;z-index: 1;}
+    .el-tabs__nav {white-space: nowrap;position: relative;transition: transform .3s;float: left;z-index: 2;}
+    .el-tabs__active-bar {position: absolute;bottom: 0;left: 0;height: 2px;background-color: #f1be83;z-index: 1;transition: transform .3s cubic-bezier(.645,.045,.355,1);list-style: none;}
+    .el-tabs__item {padding: 0 20px;height: 40px;box-sizing: border-box;line-height: 40px;display: inline-block;list-style: none;font-size: 14px;font-weight: 500;color: #fff;position: relative;}
+    .el-tabs--bottom .el-tabs__item.is-bottom:nth-child(2), .el-tabs--bottom .el-tabs__item.is-top:nth-child(2), .el-tabs--top .el-tabs__item.is-bottom:nth-child(2), .el-tabs--top .el-tabs__item.is-top:nth-child(2) {padding-left: 0;}
+    .el-tabs__item.is-active {color: #f1be83;}
+    .el-tabs--bottom .el-tabs__item.is-bottom:last-child, .el-tabs--bottom .el-tabs__item.is-top:last-child, .el-tabs--top .el-tabs__item.is-bottom:last-child, .el-tabs--top .el-tabs__item.is-top:last-child {padding-right: 0;}
+    .el-tabs__content {overflow: hidden;position: relative;}
+    .warehouse-container .warehouse-content .warehouse-tabs .tabs-content {padding: 20px 30px;}
+    .warehouse-container .warehouse-content .warehouse-tabs .tabs-content .warehouse-info {display: flex;gap: 40px;align-items: center;padding-bottom: 40px;}
+    .warehouse-container .warehouse-content .warehouse-tabs .tabs-content .warehouse-info .warehouse-details {display: flex;width: 80%;padding: 10px 0;border-bottom: 1px solid #eee;}
+    .warehouse-container .warehouse-content .warehouse-tabs .tabs-content .warehouse-info .warehouse-details .label {width: 115px;text-align: justify;-moz-text-align-last: justify;text-align-last: justify;}
+    .warehouse-container .warehouse-content .copy, .warehouse-container .warehouse-content .copy-btn {cursor: pointer;width: 60px;padding: 6px 0;text-align: center;color: #333;font-size: 14px;border-radius: 5px;background: unset;border:1px solid #fff;color:#fff;}
+    .warehouse-container .warehouse-content .copy {width: 128px;padding: 10px 0;}
+</style>
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="personalMain">
+            <div class="personal">
+                {include file="common/member_left"}
+                <div   class="warehouse-container main-container">
+                    <div  class="operat-box"><span  class="main-container-title">仓库地址</span>
+                        <div   class="search-container">
+                            <div  class="search-ipt el-input el-input--suffix"><!----><input
+                                    type="text" autocomplete="off" placeholder="请输入关键字" class="el-input__inner">
+                                <!----><span class="el-input__suffix"><span class="el-input__suffix-inner"><i
+                                         class="el-icon-search search-icon"></i><!----><!----><!---->
+                                    <!----></span><!----></span><!----><!----></div>
+                        </div>
+                    </div>
+                    <div  class="warehouse-content">
+                        <div  class="tips">温馨提示: 请完整复制收货地址及用户编码</div>
+                        <div  class="warehouse-tabs">
+                            <div  class="el-tabs el-tabs--top">
+                                <div class="el-tabs__header is-top">
+                                    <div class="el-tabs__nav-wrap is-top">
+                                        <div class="el-tabs__nav-scroll">
+                                            <div role="tablist" class="el-tabs__nav is-top"
+                                                 style="transform: translateX(0px);">
+                                                <div class="el-tabs__active-bar is-top"
+                                                     style="width: 56px; transform: translateX(0px);"></div>
+                                                <div id="tab-322" aria-controls="pane-322" role="tab" tabindex="0"
+                                                     class="el-tabs__item is-top is-active" aria-selected="true">上海仓库
+                                                </div>
+                                                <div id="tab-493" aria-controls="pane-493" role="tab" tabindex="-1"
+                                                     class="el-tabs__item is-top">东莞仓
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="el-tabs__content">
+                                    <div  role="tabpanel" id="pane-322" aria-labelledby="tab-322"
+                                         class="el-tab-pane" style="">
+                                        <div  class="tabs-content">
+                                            <div  class="warehouse-info">
+                                                <div  class="warehouse-details">
+                                                    <div  class="label">收件人</div>
+                                                    <div  style="padding-right: 40px;">:</div>
+                                                    <div >必购家(398249)</div>
+                                                </div>
+                                                <div  class="copy-btn">
+                                                    复制
+                                                </div>
+                                            </div>
+                                            <div  class="warehouse-info">
+                                                <div  class="warehouse-details">
+                                                    <div  class="label">电话</div>
+                                                    <div  style="padding-right: 40px;">:</div>
+                                                    <div >0086-18017143895</div>
+                                                </div>
+                                                <div  class="copy-btn">
+                                                    复制
+                                                </div>
+                                            </div>
+                                            <div  class="warehouse-info">
+                                                <div  class="warehouse-details">
+                                                    <div  class="label">邮编</div>
+                                                    <div  style="padding-right: 40px;">:</div>
+                                                    <div >201615</div>
+                                                </div>
+                                                <div  class="copy-btn">
+                                                    复制
+                                                </div>
+                                            </div>
+                                            <div  class="warehouse-info">
+                                                <div  class="warehouse-details">
+                                                    <div  class="label">详细地址</div>
+                                                    <div  style="padding-right: 40px;">:</div>
+                                                    <div >
+                                                        上海市松江区九亭镇九泾路1000号2号楼南侧1楼B102-3号右侧铁门(398249)
+                                                    </div>
+                                                </div>
+                                                <div  class="copy-btn">
+                                                    复制
+                                                </div>
+                                            </div>
+                                            <div  class="copy">
+                                                一键复制
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div  role="tabpanel" id="pane-493" aria-labelledby="tab-493"
+                                         class="el-tab-pane" aria-hidden="true" style="display: none;">
+                                        <div  class="tabs-content">
+                                            <div  class="warehouse-info">
+                                                <div  class="warehouse-details">
+                                                    <div  class="label">收件人</div>
+                                                    <div  style="padding-right: 40px;">:</div>
+                                                    <div >BG转运仓(398249)</div>
+                                                </div>
+                                                <div  class="copy-btn">
+                                                    复制
+                                                </div>
+                                            </div>
+                                            <div  class="warehouse-info">
+                                                <div  class="warehouse-details">
+                                                    <div  class="label">电话</div>
+                                                    <div  style="padding-right: 40px;">:</div>
+                                                    <div >0086-18017143895</div>
+                                                </div>
+                                                <div  class="copy-btn">
+                                                    复制
+                                                </div>
+                                            </div>
+                                            <div  class="warehouse-info">
+                                                <div  class="warehouse-details">
+                                                    <div  class="label">邮编</div>
+                                                    <div  style="padding-right: 40px;">:</div>
+                                                    <div >523650</div>
+                                                </div>
+                                                <div  class="copy-btn">
+                                                    复制
+                                                </div>
+                                            </div>
+                                            <div  class="warehouse-info">
+                                                <div  class="warehouse-details">
+                                                    <div  class="label">详细地址</div>
+                                                    <div  style="padding-right: 40px;">:</div>
+                                                    <div >东莞市清溪镇土桥兴业二街7号BG转运仓(398249)</div>
+                                                </div>
+                                                <div  class="copy-btn">
+                                                    复制
+                                                </div>
+                                            </div>
+                                            <div  class="copy">
+                                                一键复制
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{include file="common/gather_footer"}

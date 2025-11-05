@@ -1,0 +1,254 @@
+{include file="common/header"}
+<link rel="stylesheet" href="/layui/font/iconfont.woff?v=256">
+<link rel="stylesheet" href="layui/css/layui.css">
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;background:{$website['color_inner']};}
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+    .content .box_content{background:{$website['color']};color:{$website['color_word']};border:1px solid {$website['color_word']};font-size:25px;text-align:center;padding:30px;width:100%;}
+    .content .box_content img{width:40px;margin-right:5px;}
+    .inquiry_box{display:none;}
+    .navbar_menu{color: {$website['color_word']};font-size: 16px;margin-bottom:10px;}
+    .context,.navbar_menu a{color:{$website['color_word']};}
+    .context{margin-bottom:1cm;}
+    .layui-colla-title{color:{$website['color_word']};background-color:#0e2e68;}
+    .preamble_con,.layui-colla-content{color:{$website['color_word']};font-size:15px;}
+    .layui-colla-content p{margin-bottom:0.3cm;color:{$website['color_word']};}
+
+    /*.xm-select-demo .xm-label{overflow: hidden;}*/
+    /*.xm-select-demo .xm-label-block{white-space: nowrap;}*/
+    {if $watch==1}
+        .navbar,.navbar_menu,footer{display: none !important;}
+        .detail_topimg, .non_topimg {margin-top: 0;}
+        .content{padding:0;}
+        .topbar{display:none;}
+    {/if}
+</style>
+
+<!--<link rel="stylesheet" href="layui/css/zTreeStyle/zTreeStyle.css?v=<?php echo time();?>"/>-->
+<script src="layui/jquery-3.2.1.min.js"></script>
+<script src="layui/layui.js"></script>
+<!--<script src="layui/jquery.ztree.core.js?v=<?php echo time();?>"></script>-->
+<!--<script src="layui/jquery.ztree.excheck.min.js?v=<?php echo time();?>"></script>-->
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="content" >
+            <div class="layui-fluid" style="padding:0;">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md12" style="padding:0;">
+                        {if !empty($navbar_menu)}
+                        <p class="navbar_menu"><i class="fa fa-sign-in" style="margin-right:5px;display:none;"></i><a href="/">HOME</a>&nbsp;<span style="color:#d1a575;">\</span>&nbsp;{$navbar_menu}</p>
+                        {/if}
+                        <div class="row" style="width:100%;margin:0 auto;">
+                            <div class="col-md-12" style="border:1px solid {$website['color_word']};padding:0 10px;box-sizing:border-box;">
+                                <!--序言头部-->
+                                {if ($data['is_preamble']==1 && $data['position_display']==1)}
+                                    <div class="preamble_con" style="margin-top:0.5cm;">{$data['preamble_con']}</div>
+                                {/if}
+                                {if $data['type']==1}
+                                    <div class="layui-collapse" lay-accordion="now" style="margin:10px 0;">
+                                        {volist name="data.content2" key="key" id="vo"}
+                                        <div class="layui-colla-item">
+                                        <h2 class="layui-colla-title">{$vo.parag_num}&nbsp;{$vo.title}</h2>
+                                        <div class="layui-colla-content {if $key==1}layui-show{/if}">
+                                            <p>{$vo.content}</p>
+                                            {if !empty($vo['children'])}
+                                            {volist name="vo.children" key="key2" id="vo2"}
+                                            <div class="layui-collapse" lay-accordion="now" onclick="hide_sib(this)">
+                                                <div class="layui-colla-item">
+                                                    <h2 class="layui-colla-title">{$vo2.parag_num}&nbsp;{$vo2.title}</h2>
+                                                    <div class="layui-colla-content">
+                                                        <p>{$vo2.content}</p>
+                                                        {if !empty($vo2['children'])}
+                                                        {volist name="vo2.children" key="key3" id="vo3"}
+                                                        <div class="layui-collapse" lay-accordion="now" lay-filter="now" onclick="hide_sib(this)">
+                                                            <div class="layui-colla-item">
+                                                                <h2 class="layui-colla-title" data-parag_num="{$vo3.parag_num}">{$vo3.parag_num}&nbsp;{$vo3.title}</h2>
+                                                                <div class="layui-colla-content">
+                                                                    <p>{$vo3.content}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        {/volist}
+                                                        {/if}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {/volist}
+                                            {/if}
+                                        </div>
+                                        </div>
+                                        {/volist}
+                                    </div>
+                                {else}
+                                    <div style="padding-top:1cm;">
+                                    {volist name="data.content" id="vo"}
+                                        <div class="context">{$vo|htmlspecialchars_decode|stripslashes}</div>
+                                    {/volist}
+                                </div>
+                                {/if}
+                                <!--序言底部-->
+                                {if ($data['is_preamble']==1 && $data['position_display']==2)}
+                                    <div class="preamble_con" style="margin-bottom:0.5cm;">{$data['preamble_con']}</div>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    layui.use(['layer','element'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            // , form = layui.form
+            , element = layui.element;
+            // , upload = layui.upload
+            // , table = layui.table;
+
+        // form.render(null,'component-form-element');
+    
+        //渲染
+        {if $data['type']==1}
+            //记录点击值,已有则不重复请求
+            var history_click = '';
+            //监听折叠
+              element.on('collapse(now)', function(data){
+                // console.log(history_click.indexOf(data.title[0].dataset.parag_num));
+                if(history_click.indexOf(data.title[0].dataset.parag_num)==-1){
+                    history_click += data.title[0].dataset.parag_num+',';
+                    let t = $(this);
+                    $.ajax({
+                        type: "POST",
+                        dataType:"json",
+                        url: "/?s=index/rule", //ajax请求地址
+                        data:{'id':"{$data['id']}",'parag_num':data.title[0].dataset.parag_num},
+                        success: function (data) {
+                            if(data.data.length>0){
+                                let html = '';
+                                for(let i=0;i<data.data.length;i++){
+                                    html += '<div class="layui-collapse" lay-accordion="now" onclick="hide_sib(this)">'+
+                                        '<div class="layui-colla-item">'+
+                                        '<h2 class="layui-colla-title" data-parag_num="'+data.data[i].parag_num+'">'+data.data[i].parag_num+'&nbsp;'+data.data[i].title+'</h2>'+
+                                        '<div class="layui-colla-content">'+
+                                        '<p>'+data.data[i].content+'</p>';
+                                    if(data.data.children != ''){
+                                        for(let i2=0;i2<data.data[i].children.length;i2++){
+                                            html += '<div class="layui-collapse" lay-accordion="now" onclick="hide_sib(this)">'+
+                                                '<div class="layui-colla-item">'+
+                                                '<h2 class="layui-colla-title" data-parag_num="'+data.data[i].children[i2].parag_num+'">'+data.data[i].children[i2].parag_num+'&nbsp;'+data.data[i].children[i2].title+'</h2>'+
+                                                '<div class="layui-colla-content">'+
+                                                '<p>'+data.data[i].children[i2].content+'</p>';
+                                            if(data.data[i].children[i2].children != ''){
+                                                for(let i3=0;i3<data.data[i].children[i2].children.length;i3++){
+                                                    html += '<div class="layui-collapse" lay-accordion="now" lay-filter="now" onclick="hide_sib(this)">'+
+                                                        '<div class="layui-colla-item">'+
+                                                        '<h2 class="layui-colla-title" data-parag_num="'+data.data[i].children[i2].children[i3].parag_num+'">'+data.data[i].children[i2].children[i3].parag_num+'&nbsp;'+data.data[i].children[i2].children[i3].title+'</h2>'+
+                                                        '<div class="layui-colla-content">'+
+                                                        '<p>'+data.data[i].children[i2].children[i3].content+'</p>';
+                                                    html+='</div>'+
+                                                        '</div>'+
+                                                        '</div>';
+                                                }
+                                            }
+                                            html+='</div>'+
+                                                '</div>'+
+                                                '</div>';
+                                        }
+                                    }
+                                    html+='</div>'+
+                                        '</div>'+
+                                        '</div>';
+                                }
+                                $(t).parent().find('.layui-colla-content').append(html);
+                                // form.render(null,'component-form-element');
+                                element.render('collapse');
+                            }
+                        },
+                    });
+                }
+              });
+              element.render('collapse');
+            // var setting = {
+            //     view: {
+            //         selectedMulti: true, //设置是否能够同时选中多个节点
+            //         showIcon: false, //设置是否显示节点图标
+            //         showLine: true, //设置是否显示节点与节点之间的连线
+            //         showTitle: true, //设置是否显示节点的title提示信息
+            //     },
+            //     data: {
+            //         simpleData: {
+            //             enable: true, //设置是否启用简单数据格式（zTree支持标准数据格式跟简单数据格式，上面例子中是标准数据格式）
+            //             idKey: "parag_num", //设置启用简单数据格式时id对应的属性名称
+            //             pidKey: "pnum", //设置启用简单数据格式时parentId对应的属性名称,ztree根据id及pid层级关系构建树结构
+            //             rootPId:0
+            //         },
+            //         key:{
+            //             name:"title"
+            //         }
+            //     },
+            //     check:{
+            //         enable: false , //设置是否显示checkbox复选框
+            //         chkStyle:"checkbox"
+            //     },
+            // };
+
+            
+        {/if}
+    });
+
+    function hide_sib(t){
+        var $ = layui.$
+            , layer = layui.layer
+            , element = layui.element;
+
+        for(let i=0;i<$(t).siblings().length;i++){
+            $(t).siblings().eq(i).find('.layui-show').removeClass('layui-show');
+        }
+
+        // element.render('collapse');
+    }
+
+    function openWindow(id,typ,type_id){
+        let url = '';
+        if(typ==1){
+            window.location.href="/?s=index/rule&id="+id;
+        }else if(typ==2){
+            window.location.href="/?s=index/inquiry_quote&inquiry_id="+id;
+        }
+        else if(typ==3){
+            layer.confirm('确认删除该账号吗？',function(index){
+                $.ajax({
+                    url: "/?s=index/del_account",
+                    data:{'id':id},
+                    type:'post',
+                    cache:false,
+                    dataType:'json',
+                    success:function(data){
+                        if(data.code==1)
+                        {
+                            layer.msg(data.msg, {
+                                icon: 1,
+                                time: 2000
+                            }, function(){
+                                window.location.reload();
+                            });
+                            return true;
+                        }else {
+                            layer.msg(data.message, {icon:2, time:2000});
+                            return false;
+                        }
+                    },
+                    error:function() {
+                        layer.msg('系统出错,请重试',{icon:2,time:1000});
+                    }
+                });
+            });
+        }
+    }
+</script>
+{include file="common/footer"}

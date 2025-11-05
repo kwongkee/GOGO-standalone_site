@@ -1,0 +1,190 @@
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style>
+    .container{background:#a0a0a0;padding:15px;}
+    .layui-form-label{color:#fff;}
+    .disf{display:flex;align-items:center;}
+</style>
+<div class="container">
+    <form class="layui-form" action="" method="post" lay-filter="component-form-element">
+        <div class="layui-form-item">
+            <div class="layui-form-label">选择国地</div>
+            <div class="layui-input-block">
+                <div id="xmselect" class="xm-select-demo hinput" style="width:100%;"></div>
+            </div>
+        </div>
+        <div class="region">
+
+        </div>
+        <div class="layui-form-item" style="margin-top: 25px;text-align: center;">
+            <div>
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="component-form-element2">确认保存</button>
+                <!--                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
+            </div>
+        </div>
+    </form>
+</div>
+<script src="./layui/xm-select3.js?v=<?php echo time();?>"></script>
+<script>
+    var xmselect='';
+    layui.use(['layer', 'form', 'upload','element'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , element = layui.element
+            , upload = layui.upload;
+
+        form.render(null,'component-form-element');
+
+        form.on('select(province_sel)',function(data){
+            let val = data.value;
+            let t = this;
+            if(val==''){
+
+            }else if(val==-1){
+                let html = '<input class="layui-input" name="province_name" value="" placeholder="请输入省/州名称" lay-verify="required">';
+                $(t).parent().parent().parent().html(html);
+                form.render(null,'component-form-element');
+            }else if(val>0){
+                $.getJSON('/?s=index/get_region',{id:val,'type':2},function(res){
+                    let html = '<div class="layui-form-item">\n' +
+                        '            <div class="layui-form-label">选择市</div>\n' +
+                        '            <div class="layui-input-block">\n' +
+                        '                 <select name="city" lay-filter="city_sel" lay-search lay-verify="required">\n'+
+                        '                        <option value="">请选择</option>\n'+
+                        '                        <option value="-1">没有可选值，新增</option>\n';
+                    for(let i=0;i<res.data.length;i++){
+                        html += '                <option value="'+res.data[i].id+'">'+res.data[i].code_name+'</option>\n';
+                    }
+                    html += '             </select>\n'+
+                        '            </div>\n' +
+                        '        </div>';
+
+                    $('.region').append(html);
+                    form.render(null,'component-form-element');
+                });
+            }
+        });
+
+        form.on('select(city_sel)',function(data){
+            let val = data.value;
+            let t = this;
+            if(val==''){
+
+            }else if(val==-1){
+                let html = '<input class="layui-input" name="city_name" value="" placeholder="请输入市名称" lay-verify="required">';
+                $(t).parent().parent().parent().html(html);
+                form.render(null,'component-form-element');
+            }else if(val>0){
+                $.getJSON('/?s=index/get_region',{id:val,'type':2},function(res){
+                    let html = '<div class="layui-form-item">\n' +
+                        '            <div class="layui-form-label">选择区</div>\n' +
+                        '            <div class="layui-input-block">\n' +
+                        '                 <select name="area" lay-filter="area_sel" lay-search lay-verify="required">\n'+
+                        '                        <option value="">请选择</option>\n'+
+                        '                        <option value="-1">没有可选值，新增</option>\n';
+                    for(let i=0;i<res.data.length;i++){
+                        html += '                <option value="'+res.data[i].id+'">'+res.data[i].code_name+'</option>\n';
+                    }
+                    html += '             </select>\n'+
+                        '            </div>\n' +
+                        '        </div>';
+
+                    $('.region').append(html);
+                    form.render(null,'component-form-element');
+                });
+            }
+        });
+
+        form.on('select(area_sel)',function(data){
+            let val = data.value;
+            let t = this;
+            if(val==''){
+
+            }else if(val==-1){
+                let html = '<input class="layui-input" name="area_name" value="" placeholder="请输入区名称" lay-verify="required">';
+                $(t).parent().parent().parent().html(html);
+                form.render(null,'component-form-element');
+            }
+        });
+
+        xmselect = xmSelect.render({
+            el: "#xmselect",
+            name:'country',
+            autoRow: true, //自动换行
+            filterable: true, //可搜索
+            searchTips: '请选择',
+            radio: true,
+            direction:'down',
+            model: {
+                icon: 'hidden',//是否展示复选框或者单选框图标 show, hidden:变换背景色  ！！这句话是重点，不然会变成父节点也有单选框！！
+            },
+            tree: {
+                show: true, //用树显示
+                showFolderIcon: true, //是否显示节点前的三角图标
+                expandedKeys: false, //默认全部展开
+                showLine: true, //显示渐近线
+                indent: 20, //间距
+                strict: false, //重点！！设置成非严格父子模式，这样父节点被禁用，子节点依然可以点击
+                clickCheck: true,
+            },
+            toolbar: {
+                show: false, //显示工具条
+                list: ['ALL', 'REVERSE', 'CLEAR']
+            },
+            height: '300px', //最大下拉框高度
+            data: {$country},
+            layVerify: 'required',
+            on:function(data){
+                if(data.isAdd==true){
+                    //获取省/州
+                    $.getJSON('/?s=index/get_region',{id:data.arr[0]['id'],'type':1},function(res){
+                        let html = '<div class="layui-form-item">\n' +
+                            '            <div class="layui-form-label">选择省/州</div>\n' +
+                            '            <div class="layui-input-block">\n' +
+                            '                 <select name="province" lay-filter="province_sel" lay-search>\n'+
+                            '                        <option value="">请选择</option>\n'+
+                            '                        <option value="-1">没有可选值，新增</option>\n';
+                        for(let i=0;i<res.data.length;i++){
+                            html += '                <option value="'+res.data[i].id+'">'+res.data[i].code_name+'</option>\n';
+                        }
+                        html += '             </select>\n'+
+                            '            </div>\n' +
+                            '        </div>';
+
+                        $('.region').append(html);
+                        form.render(null,'component-form-element');
+                    });
+                }else{
+                    $('.region').html('');
+                    form.render(null,'component-form-element');
+                }
+                xmselect.closed();
+            }
+        });
+
+        //保存区域
+        form.on('submit(component-form-element2)', function(data){
+            layer.load();
+            $.ajax({
+                url:"/?s=index/save_newregion",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            layer.closeAll('loading');
+                            parent.location.reload();
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+</script>

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>独立站平台 - website.gogo198.net</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {--primary: #8a2be2;--primary-dark: #6a1cb9;--primary-light: #9b4de3;--secondary: #bb86fc;--accent: #e6d7f5;--text: #333333;--text-light: #f8f8f8;--background: #f9f5fd;--card-bg: #ffffff;--gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));--gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary));--shadow: 0 10px 30px rgba(138, 43, 226, 0.15);--shadow-hover: 0 15px 35px rgba(138, 43, 226, 0.25);}
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        body {color: var(--text);line-height: 1.6;overflow-x: hidden;}
+        h1, h2, h3, h4, h5, h6 {font-family: 'Montserrat', sans-serif;font-weight: 700;}
+
+        /* 导航栏样式 */
+        header {background: rgba(255, 255, 255, 0.95);color: var(--text);padding: 15px 0;box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);position: sticky;top: 0;z-index: 1000;backdrop-filter: blur(10px);}
+        nav {display: flex;justify-content: space-between;align-items: center;position: relative;}
+        .logo {font-size: 1.8rem;font-weight: 700;display: flex;align-items: center;background: var(--gradient);-webkit-background-clip: text;background-clip: text;color: transparent;z-index: 1001;}
+        .logo i {margin-right: 10px;color: var(--primary);}
+        .nav-links {display: flex;list-style: none;}
+        .nav-links li {margin-left: 25px;position: relative;}
+        .nav-links a {color: var(--text);text-decoration: none;font-weight: 500;transition: all 0.3s ease;padding: 8px 12px;border-radius: 4px;position: relative;display: flex;align-items: center;}
+        .nav-links a::after {content: '';position: absolute;bottom: 0;left: 50%;width: 0;height: 2px;background: var(--gradient);transition: all 0.3s ease;transform: translateX(-50%);}
+        .nav-links a:hover {color: var(--primary);}
+        .nav-links a:hover::after {width: 80%;}
+        .auth-buttons {display: flex;align-items: center;}
+        .btn {padding: 12px 25px;border-radius: 50px;text-decoration: none;font-weight: 600;transition: all 0.3s ease;cursor: pointer;display: inline-block;text-align: center;border: none;font-family: 'Montserrat', sans-serif;}
+        .btn-outline {border: 2px solid var(--primary);color: var(--primary);background: transparent;margin-right: 15px;}
+        .btn-outline:hover {background: var(--primary);color: white;transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-primary {background: var(--gradient);color: white;border: 2px solid transparent;}
+        .btn-primary:hover {background: transparent;border-color: var(--primary);color: var(--primary);transform: translateY(-3px);box-shadow: var(--shadow);}
+
+        /* 表单样式 */
+        .form-section {margin-bottom: 30px;}
+        .form-title {font-size: 1.3rem;margin-bottom: 20px;color: var(--primary-dark);display: flex;align-items: center}
+        .form-title i {margin-right: 10px;}
+        .form-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));gap: 20px;}
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select,
+        .form-group textarea {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;}
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {border-color: var(--primary);outline: none;}
+        .form-group textarea {min-height: 120px;resize: vertical;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
+
+
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}
+        .form-group input:focus,
+        .form-group select:focus {border-color: var(--primary);outline: none;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
+
+
+        /* 动画 */
+        @keyframes fadeIn {
+            from {opacity: 0;transform: translateY(10px);}
+            to {opacity: 1;transform: translateY(0);}
+        }
+
+
+        @media (max-width: 576px) {
+            .btn {padding: 10px 20px;font-size: 0.9rem;}
+            /*.form-actions {flex-direction: column;}*/
+        }
+
+        /*自定义颜色配置*/
+        .layui-colorpicker.layui-colorpicker-lg,.layui-colorpicker-trigger-i.layui-icon-close{line-height: 24px;}
+        .layui-colorpicker, .layui-colorpicker-trigger-span{border-color:#777;}
+        .layui-colorpicker-main-input .layui-btn-container .layui-btn {margin: 0 0 0 5px;}
+
+        .edui-editor{z-index: 1 !important;}
+    </style>
+    <link rel="stylesheet" href="layui/css/layui.css">
+
+    <!--百度富文本-->
+    <script type="text/javascript" src="cklein/plugins/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" src="cklein/plugins/ueditor/ueditor.all.min.js"> </script>
+    <script type="text/javascript" src="cklein/plugins/ueditor/lang/zh-cn/zh-cn.js"></script>
+</head>
+<body>
+
+<!-- 添加菜单·模态框 -->
+
+<form id="siteForm" class="layui-form" action="" method="post" lay-filter="component-form-menu">
+    <input type="hidden" name="company_id" value="{$company_id}">
+    <input type="hidden" name="company_type" value="{$company_type}">
+    <input type="hidden" name="id" value="{$menu_id}">
+    <input type="hidden" name="pid" value="{$pid}">
+
+    <div class="form-group" style="padding:0px;">
+        <div class="form-group">
+            <label for="displayorder">菜单排序</label>
+            <input type="number" id="displayorder" name="displayorder2" placeholder="" value="{$data['displayorder']}" lay-verify="required">
+        </div>
+        <div class="form-group">
+            <label for="name">菜单名称</label>
+            <input type="text" id="name" name="name[zh]" placeholder="" value="{$data['name']['zh']}"  lay-verify="required">
+        </div>
+        <div class="form-group">
+            <label for="desc">菜单描述</label>
+            <textarea name="desc[zh]" id="desc" placeholder="用于展示的描述">{$data['desc']['zh']}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="type">菜单类型</label>
+            <select name="type" id="type" lay-filter="type">
+                <option value="0" {if $data['type']==0}selected{/if}>下级卡片</option>
+                <option value="1" {if $data['type']==1}selected{/if}>详情内容</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="format">配图格式</label>
+            <select name="format" id="format" lay-filter="format">
+                <option value="">暂不选择</option>
+                <option value="1" {if $data['format']==1}selected{/if}>图片上传</option>
+                <option value="2" {if $data['format']==2}selected{/if}>色块设置</option>
+            </select>
+        </div>
+        <div class="format1" style="display:{if $data['format']==1}block{else}none{/if};">
+            <div class="form-group">
+                <label for="img_file-upload">导向图（大轮播：1200*600<br/>切换框：520*350）</label>
+                <div class="layui-upload" style="margin-top: 10px;">
+                    <button type="button" class="layui-btn" id="img_file-upload">上传图片(一张)</button>
+                    <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                        预览图：
+                        <div class="layui-upload-list" id="img_file-upload-list">
+                            {if !empty($data['thumb'])}
+                            <div style="display: inline-block;">
+                                <img onclick="seePic(this);" src="{$data['thumb']}" class="layui-upload-img" style="width:80px;height:80px;">
+                                <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
+                                <input type="hidden" name="thumb[]" value="{$data['thumb']}">
+                            </div>
+                            {/if}
+                        </div>
+                    </blockquote>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="avatar_location">摆放位置</label>
+                <select name="avatar_location" id="avatar_location">
+                    <option value="1" {if $data['avatar_location']==1}selected{/if}>图文上方</option>
+                    <option value="2" {if $data['avatar_location']==2}selected{/if}>图文下方</option>
+                    <option value="3" {if $data['avatar_location']==3}selected{/if}>默认</option>
+                </select>
+            </div>
+        </div>
+        <div class="format2" style="display:{if $data['format']==2}block{else}none{/if};">
+            <div class="form-group">
+                <label for="color">色块颜色</label>
+                <div id="color"></div>
+                <input type="hidden" name="color" value="{$data['color']}">
+            </div>
+            <div class="form-group">
+                <label for="color_word_zh">文字</label>
+                <textarea name="color_word_zh" id="color_word_zh" placeholder="色块文字">{$data['color_word']['zh']}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="word_color">文字颜色</label>
+                <div id="word_color"></div>
+                <input type="hidden" name="word_color" value="{$data['word_color']}">
+            </div>
+            <div class="form-group">
+                <label for="avatar_location2">摆放位置</label>
+                <select name="avatar_location2" id="avatar_location2">
+                    <option value="1" {if $data['avatar_location']==1}selected{/if}>图文上方</option>
+                    <option value="2" {if $data['avatar_location']==2}selected{/if}>图文下方</option>
+                    <option value="3" {if $data['avatar_location']==1}selected{/if}>默认</option>
+                </select>
+            </div>
+        </div>
+
+        <!--菜单详情页样式-->
+        <div class="detail_format" style="display:{if $data['type']==1}block{else}none{/if};">
+            <div class="form-group">
+                <label for="url">我要服务链接</label>
+                <input type="text" id="url" name="url" placeholder="请输入需要跳转的链接" value="{$data['url']}">
+            </div>
+            <div class="form-group">
+                <label for="go_other">跳转内容</label>
+                <select name="go_other" id="go_other" lay-filter="go_other">
+                    <option value="0">暂不选择</option>
+                    <option value="1" {if $data['go_other']==1}selected{/if}>跳转第三方链接</option>
+                    <option value="2" {if $data['go_other']==2}selected{/if}>跳转其它菜单</option>
+                </select>
+            </div>
+            <div class="form-group other_link" style="display: {if $data['go_other']==1}block{else}none{/if};">
+                <label for="other_link">跳转第三方链接</label>
+                <input type="text" id="other_link" name="other_link" placeholder="请输入第三方链接" value="{$data['other_link']}">
+            </div>
+            <div class="form-group other_navbar" style="display: {if $data['go_other']==2}block{else}none{/if};">
+                <label for="other_navbar">跳转其它菜单</label>
+                <select name="other_navbar" id="other_navbar" lay-search>
+                    <option value="">请选择菜单</option>
+                    {volist name="list" id="vo"}
+                        <option value="{$vo.id}" {if $data['other_navbar']==$vo.id}selected{/if}>{$vo.name}</option>
+                        {if !empty($vo.childMenu)}
+                            {volist name="vo.childMenu" id="vo2"}
+                                <option value="{$vo2.id}" {if $data['other_navbar']==$vo2.id}selected{/if}>--{$vo2.name}</option>
+                                {if !empty($vo2.childMenu)}
+                                    {volist name="vo2.childMenu" id="vo3"}
+                                        <option value="{$vo3.id}" {if $data['other_navbar']==$vo3.id}selected{/if}>----{$vo3.name}</option>
+                                        {if !empty($vo3.childMenu)}
+                                            {volist name="vo3.childMenu" id="vo4"}
+                                                <option value="{$vo4.id}" {if $data['other_navbar']==$vo4.id}selected{/if}>------{$vo4.name}</option>
+                                            {/volist}
+                                        {/if}
+                                    {/volist}
+                                {/if}
+                            {/volist}
+                        {/if}
+                    {/volist}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="seo_type">内页seo优化</label>
+                <select name="seo_type" id="seo_type" lay-filter="seo_type">
+                    <option value="1" {if $data['seo_type']==1}selected{/if}>暂不优化</option>
+                    <option value="2" {if $data['seo_type']==2}selected{/if}>马上优化</option>
+                </select>
+            </div>
+            <div class="seo_content" style="display:{if $data['seo_type']==2}block{else}none{/if};">
+                <div class="form-group">
+                    <label for="seo_title">内页标题</label>
+                    <input type="text" id="seo_title" name="seo_content[title][zh]" placeholder="内页标题" value="{$data['seo_content']['title']['zh']}">
+                </div>
+                <div class="form-group">
+                    <label for="seo_keywords">内页关键词</label>
+                    <input type="text" id="seo_keywords" name="seo_content[keywords][zh]" placeholder="内页关键词" value="{$data['seo_content']['keywords']['zh']}">
+                </div>
+                <div class="form-group">
+                    <label for="seo_desc">内页描述</label>
+                    <input type="text" id="seo_desc" name="seo_content[desc][zh]" placeholder="内页描述" value="{$data['seo_content']['desc']['zh']}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="content_zh">详情内容</label>
+                <script id="content_zh" name="content_zh" type="text/plain" style="width:100%;height:400px;">
+                    {if !empty($data['content']['zh'])}
+                        {$data['content']['zh']|htmlspecialchars_decode|stripslashes}
+                    {/if}
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="button" class="btn btn-outline" id="cancelBtnMenu" style="background:transparent;border: 2px solid var(--primary);color: var(--primary);">取消</button>
+        <button type="submit" class="btn btn-primary" lay-submit lay-filter="component-form-menu">立即保存</button>
+    </div>
+</form>
+
+</body>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    layui.use(['layer','form','laydate','upload','colorpicker'],function() {
+        laydate = layui.laydate;
+        layer = layui.layer;
+        var form = layui.form;
+        $ = layui.jquery;
+        var upload = layui.upload;
+        var colorpicker = layui.colorpicker;
+
+        //菜单类型
+        form.on('select(type)',function(data){
+            let val = data.value;
+            if(val==1){
+                $('.detail_format').show();
+                $('.list_format').hide();
+            }else if(val==2){
+                $('.detail_format').hide();
+                $('.list_format').show();
+            }else{
+                $('.detail_format').hide();
+                $('.list_format').hide();
+            }
+        });
+
+        {if !empty($data['color'])}
+            colorpicker.render({
+                elem:'#color',
+                alpha:true,
+                size:'lg',
+                predefine:true,
+                color:'{$data["color"]}',
+                done:function(color){
+                    $('input[name="color"]').val(color);
+                }
+            });
+            colorpicker.render({
+                elem:'#word_color',
+                alpha:true,
+                size:'lg',
+                predefine:true,
+                color:'{$data["word_color"]}',
+                done:function(color){
+                    $('input[name="word_color"]').val(color);
+                }
+            });
+        {else}
+            colorpicker.render({
+                elem:'#color',
+                alpha:true,
+                size:'lg',
+                done:function(color){
+                    $('input[name="color"]').val(color);
+                }
+            });
+            colorpicker.render({
+                elem:'#word_color',
+                alpha:true,
+                size:'lg',
+                done:function(color){
+                    $('input[name="word_color"]').val(color);
+                }
+            });
+        {/if}
+
+        //配图格式
+        form.on('select(format)',function(data){
+            let val = data.value;
+            if(val==1){
+                $('.format1').show();
+                $('.format2').hide();
+            }else if(val==2){
+                $('.format1').hide();
+                $('.format2').show();
+            }else{
+                $('.format1').hide();
+                $('.format2').hide();
+            }
+        });
+
+        form.on('select(go_other)',function(data){
+            let val = data.value;
+            if(val==0){
+                $('.other_link').hide();
+                $('.other_navbar').hide();
+            }else if(val==1){
+                $('.other_link').show();
+                $('.other_navbar').hide();
+            }else if(val==2){
+                $('.other_link').hide();
+                $('.other_navbar').show();
+            }else if(val==3){
+                $('.other_link').hide();
+                $('.other_navbar').hide();
+            }
+        });
+
+        form.on('select(seo_type)',function(data){
+            let val = data.value;
+
+            if(val==1){
+                $('.seo_content').hide();
+            }else if(val==2){
+                $('.seo_content').show();
+            }
+        });
+
+        let ue = UE.getEditor('content_zh', {
+            initialFrameHeight: 400,
+            serverUrl: 'cklein/plugins/ueditor/php/controller.php'
+        });
+        setTimeout(function(){
+            $('.edui-editor-iframeholder iframe').css('background','#666');
+            $('#edui1').find('body').css('background','#666');
+        },3000);
+
+        //菜单弹窗关闭事件
+        const modal = parent.document.getElementById('saveMenuModal');
+        const cancelBtn = document.getElementById('cancelBtnMenu');
+        // 关闭模态框
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+        cancelBtn.addEventListener('click', closeModal);
+
+        // 导向图
+        upload.render({
+            elem: '#img_file-upload'
+            ,url: '/?s=index/upload_file'
+            ,accept: 'image'
+            ,data: { folder: 'merch_file', type: 'website_detail'}
+            ,multiple: false
+            ,number:1
+            ,before: function(obj){
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                if(res.error == 1)
+                {
+
+                    $('#img_file-upload-list').append('<div style="display: inline-block;"><img onclick="seePic(this);" src="'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="thumb[]" value="'+res.file_path+'"></div>')
+                }
+            }
+        });
+
+        form.on('submit(component-form-menu)', function(data){
+            layer.load();
+            $.ajax({
+                url:"/?s=index/save_website_menu",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.closeAll('loading');
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            let currentUrl = new URL(parent.location.href);
+                            currentUrl.searchParams.set('tab', 'menu');
+                            parent.history.pushState({}, '', currentUrl.toString());
+                            parent.location.reload();
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+
+    function delPic(obj)
+    {
+        var layer = layui.layer,$ = layui.$;
+        layer.confirm('确认要删除该附件？', {
+            btn: ['删除','取消']
+        }, function(){
+            $(obj).parent().remove();
+            layer.closeAll();
+        }, function(){
+
+        });
+    }
+</script>
+</html>

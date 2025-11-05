@@ -1,0 +1,211 @@
+{include file="common/gather_header"}
+<link rel="stylesheet" href="layui/css/layui.css">
+<link rel="stylesheet" href="css/gather_appraise.css?v=21232">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;background:#444444;}
+    #content .container{width: 80%;max-width: 1200px;padding: 0px;margin: 30px auto 40px;border-radius: 5px;background-color: unset;box-shadow: 0 0 16px rgba(0,0,0,.04);color:#fff;}
+    .layui-card{background:unset;}
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+    .content .box_content{background:;color:;border:1px solid ;font-size:25px;text-align:center;padding:30px;width:100%;}
+    .content .box_content img{width:40px;margin-right:5px;}
+    .layui-elem-field legend,.layui-form-item .layui-form-label{color:;}
+    .word_color{color:;}
+    .layui-card{background:;}
+    .layui-fluid,.layui-card-body{padding:0;}
+    .layui-col-space15{margin:0;}
+    .layui-form-label{width:fit-content;}
+    .layui-input-block{line-height:38px;margin-left:100px;}
+    .layui-elem-field{margin-bottom: 0;}
+    .no-line{text-align: center;color:;}
+    .base .main-top {padding: 20px 0;text-align: center;background: #0e2e68;}
+    .base .main-top .package-search {display: flex;justify-content: center;background-color: #0e2e68;}
+    .base .main-top .package-search .search-input {display: flex;align-items: center;width: 880px;height: 50px;background-color: #fff;border-radius: 30px;margin: 0 10px;}
+    .base .main-top .package-search .search-input .order-number {flex: 12;margin: 0 10px;border: none;outline: none;}
+    .base .main-top .package-search .search-input .search-icon {flex: 1;cursor: pointer;margin-right: 10px;font-size: 25px;font-weight: 700;text-align: center;color: #ffd400;}
+    .base .main-top .package-search .search-input .search-icon img{width:30px;}
+    .express-content{display: flex;justify-content: center;padding: 50px;font-size: 14px;text-align: center;border: 1px solid #f2f2f2;}
+    .express-content .empty-box {margin: 39px 0;color: ;}
+    @media (max-width:992px){
+        .container_content{margin-top:15px;}
+        /**日期时间**/
+        .layui-laydate-range{left: 0 !important;width: fit-content;}
+        .layui-laydate-range .layui-laydate-main{display: block;width: 100%;}
+        .layui-laydate-range .layui-laydate-main .layui-laydate-content table{width: 100%;}
+        .layui-fluid,.layui-card-body{padding:0;}
+        #content .container {width: 90%;}
+    }
+</style>
+<section id="content" class="non_topimg">
+    <div class="container">
+        <!--        <div class="content" style="padding:0;">-->
+        <div class="layui-fluid">
+            <div class="layui-row layui-col-space15">
+                <form class="layui-form" action="" method="post" lay-filter="component-form-element" style="padding:0;">
+                    <div class="layui-col-md12">
+                        <div class="layui-card">
+                            <div class="layui-card-body">
+                                <div class="base">
+                                    <div class="main-top">
+                                        <div class="package-search">
+                                            <div class="search-input">
+                                                <input type="text" placeholder="请输入有效单号查询物流" class="order-number layui-input">
+                                                <div class="search-icon el-icon-search"><img src="/img/search.png"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="express-content">
+                                        <div class="empty-box">
+                                            <img src="/img/empty.png" alt="">
+                                            <div>请输入有效单号查询物流</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class=" appraise">
+            <div class="appraise-item">
+                <div class="user-info"><img
+                        src="https://thirdwx.qlogo.cn/mmopen/vi_32/9FN33ibbgKjHNdqL0HMwVwicqho6tIcmDTJzb3kegh4ZqhNOdcpllXmJUHU6icvPLdVYTicrZsh8LJ6bFibcj0pXzKA/132"
+                        alt="" class="avatar">
+                    <div class="flex-between">
+                        <div>Sussiezcy</div> <!----></div>
+                    <div role="slider" aria-valuenow="5" aria-valuetext="" aria-valuemin="0" aria-valuemax="5"
+                         tabindex="0" class="el-rate"><span class="el-rate__item" style="cursor: auto;"><i
+                            class="el-rate__icon el-icon-star-on"
+                            style="color: rgb(247, 186, 42);"><!----></i></span><span class="el-rate__item"
+                                                                                      style="cursor: auto;"><i
+                            class="el-rate__icon el-icon-star-on"
+                            style="color: rgb(247, 186, 42);"><!----></i></span><span class="el-rate__item"
+                                                                                      style="cursor: auto;"><i
+                            class="el-rate__icon el-icon-star-on"
+                            style="color: rgb(247, 186, 42);"><!----></i></span><span class="el-rate__item"
+                                                                                      style="cursor: auto;"><i
+                            class="el-rate__icon el-icon-star-on"
+                            style="color: rgb(247, 186, 42);"><!----></i></span><span class="el-rate__item"
+                                                                                      style="cursor: auto;"><i
+                            class="el-rate__icon el-icon-star-on" style="color: rgb(247, 186, 42);"><!----></i></span>
+                        <!----></div>
+                </div>
+                <div class="user-comment">
+                    <div>
+                        挺好的。很满意，8.9打包，8.15收到。DHL确实快很多。客服回复速度很快。挺好的。很满意，8.9打包，8.15收到。DHL确实快很多。客服回复速度很快。挺好的。很满意，8.9打包，8.15收到。DHL确实快很多。客服回复速度很快。
+                    </div>
+                    <div class="comment-image"><img
+                            src="https://api-jiyun.beegoplus.com/storage/client-images202308/20230828pNVGBFD1c1BeTTXLgfIHy6Qvy7E3XXHpSc4fxhGm.jpg"
+                            alt="" class="img-item" style="cursor: pointer;"><img
+                            src="https://api-jiyun.beegoplus.com/storage/client-images202308/20230828jnYgcRqF47hOtVcgO1sOW0HYAtf4wC9OsH9kVL5C.jpg"
+                            alt="" class="img-item" style="cursor: pointer;"><img
+                            src="https://api-jiyun.beegoplus.com/storage/client-images202308/20230828jXy1YpxDi1iXMCZx3Hb9AOvPk6Bp7uMeIx886cI3.jpg"
+                            alt="" class="img-item" style="cursor: pointer;"></div>
+                </div>
+                <div class="user-city">
+                    <div><i class="el-icon-location"></i> <span>德国</span></div>
+                    <div>2023-08-28 16:58:08</div>
+                </div>
+                <div class="comment"></div>
+            </div>
+            <div class="appraise-item">
+                <div class="user-info"><img src="https://api-jiyun-v2.haiouoms.com/storage/default_user_avatar.jpg"
+                                            alt="" class="avatar">
+                    <div class="flex-between">
+                        <div></div> <!----></div>
+                    <div role="slider" aria-valuenow="5" aria-valuetext="" aria-valuemin="0" aria-valuemax="5"
+                         tabindex="0" class="el-rate"><span class="el-rate__item" style="cursor: auto;"><i
+                            class="el-rate__icon el-icon-star-on"
+                            style="color: rgb(247, 186, 42);"><!----></i></span><span class="el-rate__item"
+                                                                                      style="cursor: auto;"><i
+                            class="el-rate__icon el-icon-star-on"
+                            style="color: rgb(247, 186, 42);"><!----></i></span><span class="el-rate__item"
+                                                                                      style="cursor: auto;"><i
+                            class="el-rate__icon el-icon-star-on"
+                            style="color: rgb(247, 186, 42);"><!----></i></span><span class="el-rate__item"
+                                                                                      style="cursor: auto;"><i
+                            class="el-rate__icon el-icon-star-on"
+                            style="color: rgb(247, 186, 42);"><!----></i></span><span class="el-rate__item"
+                                                                                      style="cursor: auto;"><i
+                            class="el-rate__icon el-icon-star-on" style="color: rgb(247, 186, 42);"><!----></i></span>
+                        <!----></div>
+                </div>
+                <div class="user-comment">
+                    <div>效果杠杠的，价钱合理。一直坚持使用，是小卖家的首选物流。希望以后能一直保持这个服务</div>
+                    <div class="comment-image"><img
+                            src="https://api-jiyun.beegoplus.com/storage/client-images202308/202308288z40RxH1SyjmBVVrFM07BlweZpgp21jHBqocBsvS.png"
+                            alt="" class="img-item" style="cursor: pointer;"><img
+                            src="https://api-jiyun.beegoplus.com/storage/client-images202308/202308287GG6CtciZbJpUBwiL2pasIJtaBYdPvrevH0ukRHm.png"
+                            alt="" class="img-item" style="cursor: pointer;"><img
+                            src="https://api-jiyun.beegoplus.com/storage/client-images202308/20230828Q5tAtFx6674Uk96dIiOmOdBcgmM5Fr0FvQ1Ommec.png"
+                            alt="" class="img-item" style="cursor: pointer;"></div>
+                </div>
+                <div class="user-city">
+                    <div><i class="el-icon-location"></i> <span>日本</span></div>
+                    <div>2023-08-28 16:23:17</div>
+                </div>
+                <div class="comment"></div>
+            </div>
+        </div>
+        <!--        </div>-->
+    </div>
+</section>
+<script src="./layui/xm-select.js"></script>
+<script type="text/javascript">
+    var label5_select = [];
+    layui.use(['layer','form','laydate','upload','element'],function(){
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , laydate = layui.laydate
+            , element = layui.element
+            , upload = layui.upload;
+
+        laydate.render({
+            elem: '#effecttime'
+            ,format: 'yyyy/MM/dd'
+            ,range: true
+            ,min: "<?php echo date('Y-m-d');?>"
+            ,max: "<?php echo date('Y-m-d',time()+63072000)?>"
+        });
+
+        form.render(null, 'component-form-element');
+
+        form.on('submit(component-form-element2)', function(data){
+            // JSON.stringify()
+            // console.log(data.field);return false;
+            $.ajax({
+                url:"/?s=index/save_upload",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            window.location.reload();
+                        }else if(res.code == -2){
+                            layer.open({
+                                type: 2,
+                                title: '请先登录',
+                                shadeClose: true,
+                                shade: 0.3,
+                                area: ['85%', '50%'],
+                                content: "/?s=index/customer_login&open=3",
+                            });
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+</script>
+{include file="common/gather_footer"}

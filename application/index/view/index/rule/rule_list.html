@@ -1,0 +1,156 @@
+{include file="common/header"}
+<link rel="stylesheet" href="https://www.gogo198.net/layui/font/iconfont.woff?v=256">
+<link rel="stylesheet" href="layui/css/layui.css">
+
+<style type="text/css" media="all">
+    .layui-colla-content{padding:5px;}
+    #content{padding-top:20px;padding-bottom:20px;background:{$website['color_inner']};}
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+    .content .box_content{background:{$website['color']};color:{$website['color_word']};border:1px solid {$website['color_word']};font-size:25px;text-align:center;padding:30px;width:100%;}
+    .content .box_content img{width:40px;margin-right:5px;}
+    .layui-card{background:{$website['color_inner']};}
+    .navbar_menu{color: {$website['color_word']};font-size: 16px;margin-bottom:10px;}
+    .navbar_menu a{color:{$website['color_word']};}
+    .layui-colla-title{color:{$website['color_word']};background-color:#0e2e68;}
+    .preamble_con,.layui-colla-content{color:{$website['color_word']};font-size:15px;}
+    .layui-colla-content p{margin-bottom:0.3cm;}
+    .rule_div{color: {$website['color_word']};background-color: #0e2e68;padding:10px 5px;justify-content: space-between;border-bottom: 1px solid {$website['color_word']};font-size:15px;}
+    .rule_div:last-child{border:0;}
+    .rule_div .left_title{width:80%;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 1;white-space: nowrap;}
+    @media (max-width: 992px){
+        .content{padding:20px 0;}
+    }
+</style>
+<script src="layui/layui.js"></script>
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="content" >
+            <div class="layui-fluid" style="padding:0;">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md12" style="padding:0;">
+                        {if !empty($navbar_menu)}
+                        <p class="navbar_menu"><i class="fa fa-sign-in" style="margin-right:5px;display:none;"></i><a href="/">HOME</a>&nbsp;<span style="color:#d1a575;">\</span>&nbsp;{$navbar_menu}</p>
+                        {/if}
+                        <div class="layui-card">
+                            <div class="layui-card-body">
+<!--                                <table class="layui-hide" id="mainTable"></table>-->
+                            {volist name="list" key="key" id="vo"}
+                                <div class="layui-collapse" lay-accordion>
+                                    <div class="layui-colla-item">
+                                        <h2 class="layui-colla-title">{$vo.name}</h2>
+                                        <div class="layui-colla-content">
+                                            {volist name="vo.children" key="key2" id="vo2"}
+                                            <div class="layui-collapse" lay-accordion>
+                                                <div class="layui-colla-item">
+                                                    <h2 class="layui-colla-title">{$vo2.name}</h2>
+                                                    <div class="layui-colla-content">
+                                                        {volist name="vo2.children" key="key3" id="vo3"}
+                                                            <div class="disf rule_div">
+                                                                <div class="left_title">{$vo3.rule_name}</div>
+                                                                <div class="right_btn"><div class="layui-btn layui-btn-primary layui-btn-xs" style="background:unset;border:1px solid {$website['color_word']};color:{$website['color_word']};" onclick="rule_history({$vo3['id']})">查看历史版本</div></div>
+                                                            </div>
+
+                                                        {/volist}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {/volist}
+                                        </div>
+                                    </div>
+                                </div>
+                            {/volist}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    layui.use(['layer', 'form', 'table', 'upload','element'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , element = layui.element
+            , upload = layui.upload
+            , table = layui.table;
+
+        form.render(null,'component-form-element');
+        element.on('collapse(now)', function(data){
+
+        });
+
+        // table.render({
+        //     elem: '#mainTable'
+        //     ,url: "/?s=index/rule_list&pa=1"
+        //     ,cellMinWidth: 200
+        //     ,cols: [[
+        //         // {field:'type_name', title: '规则类别'}
+        //         {field:'name', title: '规则名称'}
+        //         // {field:'createtime', title: '发布日期'}
+        //         // ,{field:'effecttime', title: '生效日期'}
+        //         // ,{field:'version', title: '版本编号'}
+        //         ,{align:'center',  title: '操作',fixed:'right',width:120, templet: function(d){
+        //                 return [
+        //                     '<a onclick="openWindow('+"'"+ d.id +"'" +','+"1"+ ','+"'"+ d.type_id +"'"+');" class="layui-btn layui-btn-primary layui-btn-xs">查看历史版本</a>',
+        //                 ].join('');
+        //             } }
+        //     ]]
+        //     ,page: true
+        // });
+    });
+
+    function rule_history(id){
+        var $ = layui.$
+            , layer = layui.layer;
+        window.location.href="/?s=index/version_list&pid="+id;
+    }
+    function rule_view(pid,id){
+        var $ = layui.$
+            , layer = layui.layer;
+        window.location.href="/?s=index/rule&pid="+pid+'&id='+id;
+    }
+
+    function openWindow(id,typ,type_id){
+        let url = '';
+        if(typ==1){
+            window.location.href="/?s=index/version_list&key_id="+id+"&type_id="+type_id;
+        }else if(typ==2){
+            window.location.href="/?s=index/inquiry_quote&inquiry_id="+id;
+        }
+        else if(typ==3){
+            layer.confirm('确认删除该账号吗？',function(index){
+                $.ajax({
+                    url: "/?s=index/del_account",
+                    data:{'id':id},
+                    type:'post',
+                    cache:false,
+                    dataType:'json',
+                    success:function(data){
+                        if(data.code==1)
+                        {
+                            layer.msg(data.msg, {
+                                icon: 1,
+                                time: 2000
+                            }, function(){
+                                window.location.reload();
+                            });
+                            return true;
+                        }else {
+                            layer.msg(data.message, {icon:2, time:2000});
+                            return false;
+                        }
+                    },
+                    error:function() {
+                        layer.msg('系统出错,请重试',{icon:2,time:1000});
+                    }
+                });
+            });
+        }
+    }
+</script>
+{include file="common/footer"}

@@ -1,0 +1,244 @@
+{include file="common/header"}
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;background:{$website['color_inner']};}
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+    .content .box_content{background:{$website['color']};color:{$website['color_word']};border:1px solid {$website['color_word']};font-size:25px;text-align:center;padding:30px;width:100%;}
+    .content .box_content img{width:40px;margin-right:5px;}
+    .layui-elem-field legend,.layui-form-item .layui-form-label{color:{$website['color_word']};}
+    .word_color{color:{$website['color_word']};}
+    .layui-card{background:{$website['color_inner']};}
+    .layui-fluid,.layui-card-body{padding:0;}
+
+    .layui-form-label{width:100px;}
+    .layui-input-block{line-height:38px;}
+    legend{width:unset;border-bottom:0;}
+    .ordertype2,.type1_h,.type1,.type2,.create_user,.type2_h,.type3,.sms{display:none;}
+    .back_btn{display:flex;align-items:center;border: 1px solid #fff;width: fit-content;padding: 10px 20px;border-radius: 15px;background: #8f8b8b;margin-bottom:15px;color:#fff;}
+    @media (max-width: 992px){
+        .back_btn{margin-top:15px;}
+    }
+    .main_template{padding:0 15px;}
+    .main_template .layui-input-block{line-height: 24px !important;margin-left:90px;color:{$website['color_word']};}
+    .main_template .layui-form-label{width:80px;}
+    @media (max-width: 992px) {
+        .layui-laydate-range{left: 0 !important;width: fit-content;}
+        .layui-laydate-range .layui-laydate-main{display: block;width: 100%;}
+        .layui-laydate-range .layui-laydate-main .layui-laydate-content table{width: 100%;}
+    }
+    .layui-form-select{width:150px;}
+    .right{text-align: right;}
+
+    @media (max-width:992px){
+        .input31{width: 95%;}
+        .input30{width: 100%;}
+        .input20{width: 56%;}
+        .input15{width: 50%;}
+        .container_content{margin-top:15px;}
+        .common50,.date_box{width:100%;}
+        .baojia{align-items: flex-start;}
+        .country_type,.value_type{width:100%;}
+        .disf_legend{width: 90% !important;}
+        .template_remark{width: 100%;}
+    }
+</style>
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="content" style="padding:0;">
+            <div class="layui-fluid">
+                <div class="layui-row layui-col-space15">
+                    <form class="layui-form" action="" method="post" lay-filter="component-form-element">
+                        <div class="layui-col-md12">
+                            <a href="javascript:history.back(-1);">
+                                <div class="back_btn">
+                                    <img class="" src="./img/account/back.png" alt="" style="width: 18px;margin-right: 10px;"/>
+                                    返回
+                                </div>
+                            </a>
+                            <div class="layui-card">
+                                <div class="layui-card-body">
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">选择业务</div>
+<!--                                        word_color-->
+                                        <div class="layui-input-block">
+                                            <select name="buss_pid" id="buss_pid" lay-filter="buss_pid">
+                                                <option value="">请选择业务</option>
+                                                {volist name="buss" id="vo"}
+                                                <option value="{$vo.id}">{$vo.name}</option>
+                                                {/volist}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="child_buss">
+
+                                    </div>
+                                    <div class="share_qrcode">
+
+                                    </div>
+                                </div>
+                                <div class="layui-form-item" style="margin-top: 25px;text-align: center;display: none;">
+                                    <div>
+                                        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="component-form-element2">生成二维码</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    layui.use(['layer','form','laydate','upload','element'],function(){
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , laydate = layui.laydate
+            , element = layui.element
+            , upload = layui.upload;
+
+        form.render(null, 'component-form-element');
+
+        form.on('select(buss_pid)',function(data){
+            let val = data.value;
+            $.ajax({
+                url:"/?s=index/share_inquiry",
+                method:'post',
+                data:{'pid':val,'pa':1},
+                dataType:'JSON',
+                success:function(res){
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            let html = '<div class="layui-form-item">\n' +
+                                '                                        <div class="layui-form-label">询价模板</div>\n' +
+                                '                                        <div class="layui-input-block">\n' +
+                                '                                            <select name="buss_id" id="buss_id" lay-filter="buss_id">\n' +
+                                '                                                <option value="">请选择询价模板</option>\n';
+                            if(res.data.length>0){
+                                for(let i=0;i<res.data.length;i++){
+                                    html += '                                <option value="'+res.data[i].id+'">'+res.data[i].name+'</option>\n';
+                                }
+                            }
+                            html += '                                    </select>\n' +
+                            '                                        </div>\n' +
+                            '                                    </div>';
+                            $('.child_buss').html(html);
+                            form.render(null, 'component-form-element');
+                        }else if(res.code == -1){
+                            layer.open({
+                                type: 2,
+                                title: '请先登录',
+                                shadeClose: true,
+                                shade: 0.3,
+                                area: ['85%', '50%'],
+                                content: "/?s=index/customer_login&open=3",
+                            });
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+        });
+
+        form.on('select(buss_id)',function(data){
+            let val = data.value;
+
+            $.ajax({
+                url:"/?s=index/share_inquiry",
+                method:'post',
+                data:{'pa':2,'buss_pid':$('#buss_pid').val(),'buss_id':val},
+                dataType:'JSON',
+                success:function(res){
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            let html = '<div class="layui-form-item">\n' +
+                                '                                        <div class="layui-form-label">分享码</div>\n' +
+                                '                                        <div class="layui-input-block">\n' +
+                                '                                            <img src="'+res.img+'" style="width:150px;height:150px;">\n'+
+                                '                                        </div>\n' +
+                                '                                    </div>';
+                            $('.share_qrcode').html(html);
+                        }else if(res.code == -1){
+                            layer.open({
+                                type: 2,
+                                title: '请先登录',
+                                shadeClose: true,
+                                shade: 0.3,
+                                area: ['85%', '50%'],
+                                content: "/?s=index/customer_login&open=3",
+                            });
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+        })
+
+        form.on('submit(component-form-element2)', function(data){
+            // JSON.stringify()
+            // console.log(data.field);return false;
+            data.field['pa'] = 2;
+            $.ajax({
+                url:"/?s=index/share_inquiry",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            let html = '<div class="layui-form-item">\n' +
+                                '                                        <div class="layui-form-label">分享码</div>\n' +
+                                '                                        <div class="layui-input-block">\n' +
+                                '                                            <img src="'+res.img+'" style="width:150px;height:150px;">\n'+
+                                '                                        </div>\n' +
+                                '                                    </div>';
+                            $('.share_qrcode').html(html);
+                        }else if(res.code == -1){
+                            layer.open({
+                                type: 2,
+                                title: '请先登录',
+                                shadeClose: true,
+                                shade: 0.3,
+                                area: ['85%', '50%'],
+                                content: "/?s=index/customer_login&open=3",
+                            });
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+
+
+    function add_template(){
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form;
+        layer.open({
+            type: 2,
+            title: '添加模板',
+            shadeClose: true,
+            shade: 0.3,
+            area: ['100%', '100%'],
+            content: "/?s=index/save_template",
+        });
+    }
+
+</script>
+{include file="common/footer"}

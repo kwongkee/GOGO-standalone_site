@@ -1,0 +1,84 @@
+{include file="common/header"}
+<!--<meta name="viewport" content="width=device-width, initial-scale=0.5" />-->
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    .main-container{background:unset;min-height:720px;padding:15px;box-sizing:border-box;border-radius: 5px;box-shadow: 0 0 14px rgba(0,0,0,.04);border:2px solid {$website['color_word']};}
+    .main-container .layui-elem-field legend,.main-container .layui-form-label{color:{$website['color_word']};}
+    .guide{cursor:pointer;color:{$website['color_word']};display:none;}
+    #cs{display:none;}
+    .know{color:#f1be83;}
+
+    .layui-form-label {width: 80px;}
+    .layui-form-item .layui-input-inline {margin: 0 0 10px 2px;}
+    @media (max-width: 448px){
+        .layui-form-label {width: 90px;}
+        .layui-form-item .layui-input-inline {margin: 0 0 10px 92px;}
+    }
+</style>
+
+<section id="content" class="non_topimg">
+    <div class="container">
+        {include file="common/member_header"}
+        <div class="personalMain">
+            <div class="personal">
+                {include file="common/member_left"}
+                <div class="personal_right">
+                    <div class="main-container">
+                        {include file="common/new_domestic_top"}
+                        <div style="padding:20px 0;">
+                            <form class="layui-form" action="" lay-filter="component-form-group">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">订仓编号</label>
+                                    <div class="layui-input-inline layui-select-fscon">
+                                        <select name="order_id" id="order_id" lay-filter="order_id" lay-verify="required" lay-search>
+                                            <option value="">选择订仓编号</option>
+                                            {volist name="order" id="vo"}
+                                            <option value="{$vo['id']}">{$vo['ordersn']}</option>
+                                            {/volist}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="layui-form-item layui-layout-admin">
+                                    <div class="layui-input-block">
+                                        <div class="" style="left: 0;">
+                                            <button class="layui-btn" lay-submit="" lay-filter="component-form-demo1" style="background:#1E9FFF;color:{$website['color_word']};border:1px solid {$website['color_word']};width: 190px;">进入预报</button>
+                                            <!--                                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{include file="common/footer"}
+<script>
+    var time_name = '';
+    layui.use(['layer', 'form', 'table', 'upload'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , element = layui.element
+            , upload = layui.upload
+            , table = layui.table;
+
+        form.render(null,'component-form-group');
+
+        /* 监听提交 */
+        form.on('submit(component-form-demo1)', function (data) {
+            window.location.href='/?s=index/order_info&id='+data.field['order_id']+"&process1={$process_ids['process1']}&process2={$process_ids['process2']}&process3={$process_ids['process3']}";
+            // var index2 = layer.open({
+            //     type: 2,
+            //     title: "包裹预报",
+            //     content: '/?s=gather/order_info&id='+data.field['order_id'],
+            //     area:['100%','100%']
+            // });
+            return false;
+        });
+    });
+</script>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>订购信息</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <script src="layui/layui.js"></script>
+    <style>
+        .layui-fluid{padding-top:15px;}
+        .layui-form-item{margin-bottom: 10px;}
+        .inline{line-height: 38px;}
+        .disf{display:flex;align-items: center;}
+        .link{text-decoration: underline;color:#1790FF;}
+        .head{padding-bottom: 5px;padding-left: 5px;border-bottom: 1px solid #666;margin-bottom: 10px;}
+        .f15{font-size:15px;}
+
+        .edit_sku,.edit_services,.edit_num{display: none;padding:10px 0;}
+        .origin_data{background: #bebebe;margin-bottom:5px;}
+        .origin_data .origin{background: #fff;}
+        .layui-form-label {padding: 9px 10px;width: 90px;}
+    </style>
+</head>
+<body style="background: #eee;">
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <form class="layui-form" action="" id="bill" method="post" lay-filter="component-form-element">
+                <input type="text" style="display:none;" name="id" id="id" value="{$id}">
+                <input type="text" style="display:none;" name="pa" value="1">
+
+                <div class="layui-card">
+                    <div class="layui-form-item">
+                        <div class="layui-form-label">收货地址</div>
+                        <div class="layui-input-block">
+                            <textarea name="address" id="address" class="layui-textarea" lay-verify="required" placeholder="收货地址详细信息">{$address['address']}</textarea>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-form-label">邮政编码</div>
+                        <div class="layui-input-block">
+                            <input type="text" class="layui-input" name="postal" lay-verify="required" value="{$address['postal']}" placeholder="邮政编码">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-form-label">收件人</div>
+                        <div class="layui-input-block">
+                            <input type="text" class="layui-input" name="user_name" lay-verify="required" value="{$address['user_name']}" placeholder="收件人名称">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-form-label">联系号码</div>
+                        <div class="layui-input-block disf">
+                            <input type="text" class="layui-input" name="area_mobile" lay-verify="required" value="{$address['area_mobile']}" placeholder="区号">
+                            <input type="text" class="layui-input" name="mobile" lay-verify="" value="{$address['mobile']}" placeholder="联系电话1">
+                            <input type="text" class="layui-input" name="mobile2" lay-verify="" value="{$address['mobile2']}" placeholder="联系电话2">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-form-label">电子邮箱</div>
+                        <div class="layui-input-block disf">
+                            <input type="text" class="layui-input" name="email" lay-verify="" value="{$address['email']}" placeholder="电子邮箱">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item" style="margin-top: 25px;text-align: center;">
+                    <div>
+                        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="component-form-element2">保存信息</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    layui.use(['layer', 'form', 'table', 'upload'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , upload = layui.upload
+            , table = layui.table;
+
+        form.on('submit(component-form-element2)',function(data){
+            layer.load();
+            $.ajax({
+                url:"/?s=shop/shunt_addr",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.closeAll('loading');
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            parent.location.reload();
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+</script>

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能服务体验</title>
+    <link rel="stylesheet" href="./css/all.min.css">
+    <style>
+        :root {--primary: {$website['color']};--secondary: #3a0ca3;--accent: {$website['color']};--light: #f8f9fa;--dark: #212529;--success: #4cc9f0;--warning: #f72585;--gray: #6c757d;--card-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);--transition: all 0.3s ease;}
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        body {background: #c3c4c6;color: var(--dark);line-height: 1.6;min-height: 100vh;padding: 40px;}
+        .container {max-width: 1400px;margin: 0 auto;}
+        header {text-align: center;margin-bottom: 40px;padding: 20px;background: rgba(255, 255, 255, 0.8);border-radius: 16px;box-shadow: var(--card-shadow);backdrop-filter: blur(5px);}
+        header h1 {font-size: 2.5rem;background: linear-gradient(to right, var(--primary), var(--accent));-webkit-background-clip: text;background-clip: text;color: transparent;margin-bottom: 10px;}
+        header p {color: var(--gray);font-size: 1.1rem;}
+        .main-content {display: grid;grid-template-columns: 1fr;gap: 30px;}
+
+        @media (min-width: 992px) {
+            .main-content {grid-template-columns: 1fr 2fr;}
+        }
+
+        .menu-section {background: white;border-radius: 16px;padding: 25px;box-shadow: var(--card-shadow);}
+        .menu-category {margin-bottom: 25px;}
+        .menu-category h2 {font-size: 1.5rem;color: var(--primary);margin-bottom: 15px;padding-bottom: 10px;border-bottom: 2px solid var(--light);}
+        .menu-items {display: grid;grid-template-columns: 1fr;gap: 15px;}
+
+        @media (min-width: 768px) {
+            .menu-items {grid-template-columns: 1fr 1fr;}
+        }
+
+        .menu-item {background: var(--light);padding: 15px;border-radius: 12px;transition: var(--transition);cursor: pointer;display: flex;align-items: center;gap: 15px;}
+        .menu-item:hover {transform: translateY(-5px);box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);background: linear-gradient(to right, var(--primary), var(--accent));color: white;}
+        .menu-item i {font-size: 1.5rem;width: 40px;height: 40px;display: flex;align-items: center;justify-content: center;background: rgba(67, 97, 238, 0.1);border-radius: 10px;color: var(--primary);transition: var(--transition);}
+        .menu-item:hover i {background: rgba(255, 255, 255, 0.2);color: white;}
+        .menu-item h3 {font-size: 1.1rem;margin-bottom: 5px;}
+        .menu-item p {font-size: 0.9rem;opacity: 0.8;}
+        .content-section {background: white;border-radius: 16px;padding: 25px;box-shadow: var(--card-shadow);display: flex;flex-direction: column;}
+        .content-header {margin-bottom: 20px;display: flex;justify-content: space-between;align-items: center;}
+        .content-header h2 {font-size: 1.8rem;color: var(--primary);}
+        .iframe-container {flex: 1;border: none;background: var(--light);border-radius: 12px;overflow: hidden;min-height: 500px;position: relative;}
+        .iframe-container iframe {width: 100%;height: 100%;border: none;min-height: 500px;}
+        .placeholder-content {display: flex;flex-direction: column;align-items: center;justify-content: center;height: 100%;text-align: center;padding: 20px;color: var(--gray);}
+        .placeholder-content i {font-size: 4rem;margin-bottom: 20px;color: var(--primary);opacity: 0.5;}
+        .placeholder-content h3 {font-size: 1.5rem;margin-bottom: 10px;}
+
+        /* 模态框样式 */
+        .modal-overlay {position: fixed;top: 0;left: 0;right: 0;bottom: 0;background: rgba(0, 0, 0, 0.7);display: flex;align-items: center;justify-content: center;z-index: 1000;opacity: 0;visibility: hidden;transition: var(--transition);}
+        .modal-overlay.active {opacity: 1;visibility: visible;}
+        .modal {background: white;border-radius: 16px;padding: 30px;max-width: 500px;width: 90%;box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);transform: translateY(50px);transition: var(--transition);}
+        .modal-overlay.active .modal {transform: translateY(0);}
+        .modal-header {display: flex;align-items: center;margin-bottom: 20px;}
+        .modal-header i {font-size: 2rem;color: var(--warning);margin-right: 15px;}
+        .modal-header h3 {font-size: 1.5rem;color: var(--dark);}
+        .modal-body {margin-bottom: 25px;}
+        .modal-body p {line-height: 1.6;color: var(--gray);}
+        .modal-footer {display: flex;justify-content: flex-end;gap: 15px;}
+        .btn {padding: 12px 25px;border-radius: 8px;border: none;cursor: pointer;font-weight: 600;transition: var(--transition);}
+        .btn-primary {background: var(--primary);color: white;}
+        .btn-primary:hover {background: var(--secondary);}
+        .btn-outline {background: transparent;color: var(--gray);border: 1px solid var(--gray);}
+        .btn-outline:hover {background: var(--light);}
+        footer {text-align: center;margin-top: 50px;padding: 20px;color: var(--gray);font-size: 0.9rem;}
+
+        /* 移动设备适配 */
+        @media (max-width: 767px) {
+            header h1 {font-size: 2rem;}
+            .menu-items {grid-template-columns: 1fr;}
+            .content-header h2 {font-size: 1.5rem;}
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>智能服务体验</h1>
+        <p>一站式解决方案，助力企业数字化转型</p>
+    </header>
+
+    <div class="main-content">
+        <div class="menu-section">
+            <div class="menu-category">
+                <h2>构建知识</h2>
+                <div class="menu-items">
+                    <div class="menu-item" data-target="multi-doc">
+                        <i class="fas fa-file-alt"></i>
+                        <div>
+                            <h3>多语文档</h3>
+                            <p>多语言文档管理与协作</p>
+                        </div>
+                    </div>
+                    <div class="menu-item" data-target="product-gallery">
+                        <i class="fas fa-images"></i>
+                        <div>
+                            <h3>商品图库</h3>
+                            <p>商品图片管理与展示</p>
+                        </div>
+                    </div>
+                    <div class="menu-item" data-target="audio-video">
+                        <i class="fas fa-play-circle"></i>
+                        <div>
+                            <h3>音频视频</h3>
+                            <p>多媒体资源管理</p>
+                        </div>
+                    </div>
+                    <div class="menu-item" data-target="database">
+                        <i class="fas fa-database"></i>
+                        <div>
+                            <h3>数据库表</h3>
+                            <p>数据结构管理与维护</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="menu-category">
+                <h2>智能服务</h2>
+                <div class="menu-items">
+                    <div class="menu-item" data-target="smart-service">
+                        <i class="fas fa-headset"></i>
+                        <div>
+                            <h3>智能客服</h3>
+                            <p>AI驱动的客户服务</p>
+                        </div>
+                    </div>
+                    <div class="menu-item" data-target="smart-operations">
+                        <i class="fas fa-chart-line"></i>
+                        <div>
+                            <h3>智能运营</h3>
+                            <p>数据驱动的运营优化</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <div class="content-header">
+                <h2>功能预览</h2>
+            </div>
+            <div class="iframe-container">
+                <div class="placeholder-content">
+                    <i class="fas fa-lightbulb"></i>
+                    <h3>选择左侧菜单开始体验</h3>
+                    <p>点击左侧功能菜单查看详细内容和服务</p>
+                </div>
+                <iframe id="contentFrame" style="display: none;" src="about:blank"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <footer style="display: none;">
+        <p>© 2025 佛山市钜铭商务资讯服务有限公司 - 版权所有</p>
+    </footer>
+</div>
+
+<!-- 模态框 -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <div class="modal-header">
+            <i class="fas fa-exclamation-circle"></i>
+            <h3>功能体验提示</h3>
+        </div>
+        <div class="modal-body">
+            <p>该功能暂未提供体验，若需体验，可关联企业成为商户免费试用。</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" id="modalCancel">取消</button>
+            <button class="btn btn-primary" id="modalConfirm">确认关联</button>
+        </div>
+    </div>
+</div>
+
+<script src="./js/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // 当前激活的菜单项
+        let activeMenuItem = null;
+
+        // 需要显示提示的功能列表
+        const restrictedFeatures = ['product-gallery', 'audio-video', 'database', 'smart-operations'];
+
+        let $multi_doc = '<iframe id="boss_iframe" src="/?s=index/knowledge_list" frameborder="0" style="width: 100%;height:100%;">';
+        let $smart_service = '<iframe id="boss_iframe" src="https://boss.gogo198.cn/?s=memberc/member_center&identify={$identify}&outsideUrl='+"'https://ai.gogo198.net/?s=index/panel'"+'&mid=<?php echo base64_encode($mid);?>" frameborder="0" style="width: 100%;height:100%;" ></iframe>';
+
+        // iframe内容（实际使用时替换为真实URL）
+        const iframeContents = {
+            'multi-doc': $multi_doc,
+            'smart-service': $smart_service
+        };
+
+        // 菜单项点击事件
+        $('.menu-item').click(function() {
+            const target = $(this).data('target');
+
+            // 移除之前激活的菜单项
+            $('.menu-item').removeClass('active');
+            $(this).addClass('active');
+
+            // 如果是受限功能，显示提示模态框
+            if (restrictedFeatures.includes(target) && "{$identify}"==0) {
+                // 普通用户
+                $('#modalOverlay').addClass('active');
+                activeMenuItem = target;
+                return;
+            }else{
+                //商户，显示相关界面
+
+            }
+
+            // 显示iframe内容
+            showContent(target);
+        });
+
+        // 显示内容函数
+        function showContent(target) {
+            const $iframeContainer = $('.iframe-container');
+            const $placeholder = $iframeContainer.find('.placeholder-content');
+            const $iframe = $('#contentFrame');
+
+            // 隐藏占位内容，显示iframe
+            $placeholder.hide();
+            $iframe.show();
+
+            // 根据目标加载内容
+            if (iframeContents[target]) {
+                // 在实际应用中，这里应该设置iframe的src属性
+                // $iframe.attr('src', iframeContents[target]);
+
+                // 仅用于演示，直接写入内容
+                $iframe.contents().find('body').html(iframeContents[target]);
+            }
+        }
+
+        // 模态框确认按钮
+        $('#modalConfirm').click(function() {
+            $('#modalOverlay').removeClass('active');
+            // 在实际应用中，这里应该跳转到企业关联页面
+            window.open('https://boss.gogo198.cn/?s=members/member_center&mid={$mid}&first_idx=10&second_idx=13', '_blank');
+        });
+
+        // 模态框取消按钮
+        $('#modalCancel').click(function() {
+            $('#modalOverlay').removeClass('active');
+            // 取消后移除激活状态
+            if (activeMenuItem) {
+                $(`.menu-item[data-target="${activeMenuItem}"]`).removeClass('active');
+                activeMenuItem = null;
+            }
+        });
+    });
+</script>
+</body>
+</html>

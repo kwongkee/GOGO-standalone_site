@@ -1,0 +1,326 @@
+{include file="common/header1"}
+<link href="css/gallery-1.css" rel="stylesheet">
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    .fa, .far, .fas{font-family: FontAwesome !important;}
+    body{background:linear-gradient(135deg, #f5f7fa, #e4edf9);}
+    /**轮播图修改样式**/
+    .swiper-button-prev, .swiper-button-next{color: #fff;background: #5e5f5e;}
+    .swiper-button-prev:after, .swiper-button-next:after {font-size: 16px;}
+    .swiper-pagination-bullet {width: 6px;height: 6px;background-color: #FFFFFF;opacity: 1;}
+    .swiper-pagination-bullet-active {width: 14px;height: 6px;border-radius: 3px;opacity: 1;background-color: #FFFFFF;}
+
+    #gallery-1 .active a{color:#D2A778;}
+    .isotope-hidden{display:none;}
+    #content{padding-top:130px;background:unset;}
+    #content .color_word{font-size:16px;padding: 15px 10px;box-sizing:border-box;}
+    .filter li:before{color:{$website['color_word']};}
+    .filter li a{color:{$website['color_word']};}
+    .filter li a:hover, .filter li a:focus, .filter li a.active{color:#d1a575;}
+    h3, h4, h5, h6{color:{$website['color']};}
+    .about-logo img{width:100%;}
+    @media (min-width: 993px) {
+        .about-logo img{width:500px;}
+    }
+
+    .navbar_menu{color:{$website['color_word']};font-size:16px;margin-bottom:10px;}
+    .navbar_menu a{color:#000;}
+    .navbar_menu a:last-child{color:{$website['color']};font-weight:700;}
+    .filter li a{font-size:16px;}
+    .gallery-thumb{box-shadow:1px 1px 10px #000;border-radius:6px;}
+    .gallery-item .gallery-thumb img{width:100%;height:200px;}
+    .gallery-item .gallery-details h5{font-size:16px;}
+    .gallery-item .gallery-details{background:unset;}
+
+    .content-card{transition: transform 0.3s, box-shadow 0.3s;}
+    .content-card:hover {transform: translateY(-5px);box-shadow: 0 12px 40px rgba(31, 38, 135, 0.2);}
+
+    @media (min-width: 1000px){
+        /*.need_service_box{margin-top: 180px;margin-left: 180px;}*/
+        .main_img,.color_word{width:400px;height:280px;text-align:center;margin:20px auto;}
+    }
+    @media (max-width: 992px){
+        .main_img,.color_word{width:100%;height:250px;text-align:center;margin:20px auto;}
+        .color_word{padding:30px;box-sizing:border-box;}
+    }
+    .carousel-image{height:450px;width: 100%;}
+    .detail_container .row .about-logo *{background:{$website['color_inner']} !important;font-size:16px;}
+    .detail_container .row .about-logo img{box-shadow:1px 1px 15px #000;}
+
+    footer{display:block !important;}
+
+    @media (max-width: 992px){
+        .carousel-image{height:150px;}
+
+        /**小程序打开隐藏事项**/
+        {if session('miniprogram')==1}
+            #banner{margin-top: 0px;}
+        {/if}
+    }
+</style>
+    {if !empty($isrotate)}
+        <div class="topimg" style="position:relative;display:none;">
+            <img class="detail_topimg" src="https://dtc.gogo198.net{if !empty($navbar_menu)}{$website['inpic']}{else}{$data['thumb']}{/if}" alt="" style="max-width:100%;width:100%;">
+            <div class="topimg_frame" style="border:1px solid {$website['color_word']};position:absolute;width:100%;height:100%;position:absolute;left:0;top:0;">
+                
+            </div>
+        </div>
+    {else}
+        <section id="banner" style="display: none;">
+        	<!-- 轮播图开始 -->
+            <div class="swiper-container"  id="carousel-container">
+                <!--轮播内容-->
+                <div class="swiper-wrapper">
+                    {volist name="rotate" id="vo"}
+            	        {if $vo.go_other==1}
+                            <div class="swiper-slide"><a href="{$vo.other_link}" target="_blank">
+                                <div style="background: url(https://dtc.gogo198.net{$vo.thumb});background-repeat: no-repeat;background-size:cover;background-position:top center;" class="carousel-image"></div>
+                                <!--                                <img src="https://website.gogo198.net{$vo.thumb}" alt="" style="width:100%;" class="carousel-image"/>-->
+                            </a></div>
+            	        {elseif($vo.go_other==2)}
+<!--            	            <div class="swiper-slide"><a href="?s=index/detail&company_id={$company_id}&company_type={$company_type}&id={$vo.other_navbar}"><img src="https://website.gogo198.net{$vo.thumb}" alt="" style="width:100%;" class="carousel-image"/></a></div>-->
+                            <div class="swiper-slide"><a href="{$vo.other_link}">
+                                <div style="background: url(https://dtc.gogo198.net{$vo.thumb});background-repeat: no-repeat;background-size:cover;background-position:top center;" class="carousel-image"></div>
+                            </a></div>
+            	        {else}
+<!--            	            <div class="swiper-slide"><a href="javascript:;"><img src="https://website.gogo198.net{$vo.thumb}" alt="" style="width:100%;" class="carousel-image"/></a></div>-->
+                            <div class="swiper-slide"><a href="javascript:;">
+                                <div style="background: url(https://dtc.gogo198.net{$vo.thumb});background-repeat: no-repeat;background-size:cover;background-position:top center;" class="carousel-image"></div>
+                            </a></div>
+            	        {/if}
+        	        {/volist}
+                </div> 
+                <!--左右切换-->
+                <!--<div class="swiper-button-next sn1"></div>-->
+                <!--<div class="swiper-button-prev sp1"></div>-->
+                <!--分页器-->
+                <div class="swiper-pagination"></div>
+            </div>
+        	<!-- 轮播图结束 -->
+    	</section>
+	{/if}
+
+    <section id="content" style="background:{$website['color_inner']};">
+        <div class="container detail_container">
+            {if !empty($navbar_menu)}
+                <p class="navbar_menu"><i class="fa fa-sign-in" style="margin-right:5px;display:none;"></i><a href="/">HOME</a>&nbsp;<span style="color:#d1a575;">\</span>&nbsp;{$navbar_menu}</p>
+            {/if}
+            {if empty($data['type']) && !empty($next_menu)}
+                <section id="gallery-1" class="content-block section-wrapper gallery-1">
+            	 	<div class="container" style="font-size:16px;">
+            			<div class="editContent" style="display:none;">
+            	            <ul class="filter" style="margin-bottom:20px;">
+            	                <li class="active"><a href="#" data-filter="*">全部</a></li>
+            	                {volist name="next_menu" key="k" id="vo"}
+            	                    <li><a href="#" data-filter=".dd{$vo.id}">{$vo.name}</a></li>
+            	                {/volist}
+            	            </ul>
+            			</div>
+            			
+            			<!--以下板块-->
+            			<div class="swiper-container2"  id="carousel-container2" style="overflow:hidden;">
+                            <!--轮播内容-->
+                            <div class="swiper-wrapper">
+                                {volist name="next_menu" key="k" id="vo"}
+                                    {if !empty($vo.children)}
+                                        {volist name="vo.children" id="vo2"}
+                                            <div class="swiper-slide">
+                                                <a href="{if $vo2.go_other==1}{$vo2.other_link}{elseif($vo2.go_other==2)}?s=index/detail&company_id={$company_id}&company_type={$company_type}&id={$vo2.other_navbar}{else}?s=index/detail&company_id={$company_id}&company_type={$company_type}&id={$vo2.id}{/if}">
+                                                    <div class="gallery-item">
+                                                        <div class="gallery-thumb">
+                                                            {if $vo2.format==1}
+                                                                <img src="https://dtc.gogo198.net{$vo2.thumb}" class="img-responsive" alt="1st gallery Thumb">
+                                                            {elseif($vo2.format==2)}
+                                                                <div class="color_word" style="background:{$vo2['color']};color:{$vo2['word_color']};margin:0;width:100%;height:200px;">{$vo2['color_word']}</div>
+                                                            {/if}
+                                                            <!--<div class="image-overlay"></div>-->
+                                                            <!--<a href="img/works/1.jpg" class="gallery-zoom"><i class="fa fa-eye"></i></a>-->
+                                                            <!--<a href="#" class="gallery-link"><i class="fa fa-link"></i></a>-->
+                                                        </div>
+                                                        <div class="gallery-details">
+                                                        	<div class="editContent">
+                            	                                <h5>{$vo2.name}</h5>
+                                                        	</div>
+                                                        	<!--<div class="editContent">-->
+                            	                            <!--    <p>Nullam id dolor id nibh ultricies vehicula.</p>-->
+                                                        	<!--</div>-->
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        {/volist}
+                                    {else}
+                                        <div class="swiper-slide">
+                                            <a href="{if $vo.go_other==1}{$vo.other_link}{elseif($vo.go_other==2)}?s=index/detail&company_id={$company_id}&company_type={$company_type}&id={$vo.other_navbar}{else}?s=index/detail&company_id={$company_id}&company_type={$company_type}&id={$vo.id}{/if}">
+                                                <div class="gallery-item">
+                                                    <div class="gallery-thumb">
+                                                        {if $vo.format==1}
+                                                            <img src="https://dtc.gogo198.net{$vo.thumb}" class="img-responsive" alt="1st gallery Thumb">
+                                                        {elseif($vo.format==2)}
+                                                            <div class="color_word" style="background:{$vo['color']};color:{$vo['word_color']};margin:0;width:100%;height:200px;">{$vo['color_word']}</div>
+                                                        {/if}
+                                                    </div>
+                                                    <div class="gallery-details">
+                                                    	<div class="editContent">
+                        	                                <h5>{$vo.name}</h5>
+                                                    	</div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    {/if}
+                    	        {/volist}
+                            </div> 
+                            <!--左右切换-->
+                            <!--<div class="swiper-button-next sn1"></div>-->
+                            <!--<div class="swiper-button-prev sp1"></div>-->
+                            <!--分页器-->
+                            <div class="swiper-pagination2" style="text-align:center;margin-bottom:10px;"></div>
+                        </div>
+            		</div>
+                </section>
+            {/if}
+            
+            {if !empty($data['content'])}
+                <div class="row content-card" style="width:100%;margin:0 auto;transform: translateY(0px);background:{$website['color']};color:{$website['color_word']};border-radius:24px;">
+                    <div class="col-md-12" style="padding:25px;box-sizing:border-box;">
+                        <div class="about-logo" style="margin-bottom:10px;">
+                            {if $data['avatar_location']==1}
+                                <div class="" style="text-align:center;">
+                                    {if $data['format']==1 && isset($data['thumb'])}
+                                        <img class="main_img" src="https://dtc.gogo198.net{$data['thumb']}" alt="" />
+                                    {elseif($data['format']==2 && isset($data['color']))}
+                                        <div class="color_word" style="background:{$data['color']} !important;color:{$data['word_color']};width:500px;height:280px;">{$data['color_word']}</div>
+                                    {/if}
+                                </div>
+                            {/if}
+                            {$data['content']}
+                            {if $data['avatar_location']==2}
+                                <div class="" style="text-align:center;">
+                                    {if $data['format']==1 && isset($data['thumb'])}
+                                        <img class="main_img" src="https://dtc.gogo198.net{$data['thumb']}" alt="" />
+                                    {elseif($data['format']==2 && isset($data['color']))}
+                                        <div class="color_word" style="background:{$data['color']} !important;color:{$data['word_color']};font-size:16px;width:500px;height:280px;">{$data['color_word']}</div>
+                                    {/if}
+                                </div>
+                            {/if}
+                        </div>
+                        {include file="common/like"}
+                        <div class="like">
+                            <div class="disf">
+                                <div class="like_box disf" onclick="like_num()">
+                                    <img src="./img/like.png" alt="">
+                                    <div class="like_num upd_num">&nbsp;{$news['like_num']}</div>
+                                </div>
+                                <div class="like_box disf" onclick="comment()">
+                                    <img src="./img/comment.png" alt="">
+                                    <div class="like_num upd_comment_num">&nbsp;{$news['comment_num']}</div>
+                                </div>
+                                <div class="like_box disf" onclick="show_share()">
+                                    <i class="fa fa-share-square-o" style="color:{$website['color_word']};font-size:15px;margin-right:3px;"></i>
+                                    <div class="like_num upd_share_num">&nbsp;{$news['share_num']}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        {include file="common/advice"}
+                    </div>
+                </div>
+                <div class="row comment_box" style="border:1px solid {$website['color']};background:{$website['color']};border-radius: 24px;overflow-y:auto;margin:0;margin-bottom:60px;">
+                    {if !empty($all_comment)}
+                        {volist name="all_comment" id="vo"}
+                            <div class="comment_div">
+                                <div class="disf" style="justify-content: space-between;">
+                                    <div class="name f15">游客:{$vo['ip']}</div>
+                                    <div class="time f15"><?php echo date('Y-m-d H:i',$vo['createtime']);?></div>
+                                </div>
+                                <div class="comment_content f15">{$vo.text}</div>
+                            </div>
+                        {/volist}
+                    {else}
+                        <div class="f15 no_comment" style="text-align: center;color:{$website['color_word']};">——暂无评论——</div>
+                    {/if}
+                </div>
+            {/if}
+        </div>
+    </section>
+    <div class="comment" style="display: none;padding:20px;box-sizing: border-box;text-align: center;">
+        <textarea name="comment_content" id="comment_content" class="layui-textarea" placeholder="请留下您的评论..."></textarea>
+        <div class="layui-btn layui-btn-md submit_comment" style="margin-top:15px;">立即评论</div>
+    </div>
+{include file="common/footer"}
+<script type="text/javascript" charset="utf-8">
+    $(function(){
+        // 卡片悬停效果增强
+        $('.content-card').hover(
+            function() {
+                $(this).css('transform', 'translateY(-10px)');
+            },
+            function() {
+                $(this).css('transform', 'translateY(0)');
+            }
+        );
+    });
+    //轮播图开始
+    var mySwiper = new Swiper ('.swiper-container', {
+        // direction: 'vertical', // 垂直切换选项（不设置默认是水平切换）
+        loop: true, // 循环模式选项
+        autoplay: true,
+        // 如果需要分页器
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        
+        // 如果需要前进后退按钮
+        // navigation: {
+        //   nextEl: '.sn1',
+        //   prevEl: '.sp1',
+        // },
+    });
+    
+    //板块开始
+    if(window.screen.width < 992){
+        var mySwiper = new Swiper ('.swiper-container2', {
+            // direction: 'vertical', // 垂直切换选项（不设置默认是水平切换）
+            loop: true, // 循环模式选项
+            autoplay: true,
+            // 如果需要分页器
+            pagination: {
+              el: '.swiper-pagination2',
+            },
+            
+            // 如果需要前进后退按钮
+            // navigation: {
+            //   nextEl: '.sn1',
+            //   prevEl: '.sp1',
+            // },
+        });
+    }
+    else{
+        var mySwiper = new Swiper ('.swiper-container2', {
+            // direction: 'vertical', // 垂直切换选项（不设置默认是水平切换）
+            loop: true, // 循环模式选项
+            autoplay: true,
+            // 如果需要分页器
+            pagination: {
+              el: '.swiper-pagination2',
+            },
+            slidesPerView: 3,
+            paginationClickable: true,
+            spaceBetween: 60,
+            
+            // 如果需要前进后退按钮
+            // navigation: {
+            //   nextEl: '.sn1',
+            //   prevEl: '.sp1',
+            // },
+        });
+    }
+</script>
+
+ 

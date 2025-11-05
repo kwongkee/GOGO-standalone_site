@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>独立站平台 - website.gogo198.net</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style>
+        :root {--primary: #8a2be2;--primary-dark: #6a1cb9;--primary-light: #9b4de3;--secondary: #bb86fc;--accent: #e6d7f5;--text: #333333;--text-light: #f8f8f8;--background: #f9f5fd;--card-bg: #ffffff;--gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));--gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary));--shadow: 0 10px 30px rgba(138, 43, 226, 0.15);--shadow-hover: 0 15px 35px rgba(138, 43, 226, 0.25);}
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        body {color: var(--text);line-height: 1.6;overflow-x: hidden;}
+        h1, h2, h3, h4, h5, h6 {font-family: 'Montserrat', sans-serif;font-weight: 700;}
+        .disf{display:flex;align-items: center;}
+
+        .btn {padding: 12px 25px;border-radius: 50px;text-decoration: none;font-weight: 600;transition: all 0.3s ease;cursor: pointer;display: inline-block;text-align: center;border: none;font-family: 'Montserrat', sans-serif;}
+        .btn-outline {border: 2px solid var(--primary);color: var(--primary);background: transparent;margin-right: 15px;}
+        .btn-outline:hover {background: var(--primary);color: white;transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-primary {background: var(--gradient);color: white;border: 2px solid transparent;}
+        .btn-primary:hover {background: transparent;border-color: var(--primary);color: var(--primary);transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-default{padding:padding:10px 10px;background: var(--primary);}
+
+        /* 模态框样式 */
+        .modal {display: none;position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.5);backdrop-filter: blur(5px);z-index: 2000;align-items: center;justify-content: center;}
+        .modal-content {background: white;border-radius: 20px;padding: 30px;width: 90%;max-width: 90%;box-shadow: var(--shadow-hover);position: relative;}
+        .close-modal {position: absolute;top: 20px;right: 20px;font-size: 1.5rem;color: #999;cursor: pointer;transition: color 0.3s ease;}
+        .close-modal:hover {color: var(--primary);}
+        .modal-title {font-size: 1.5rem;margin-bottom: 20px;color: var(--primary);}
+
+        /* 表单样式 */
+        .form-section {margin-bottom: 30px;}
+        .form-title {font-size: 1.3rem;margin-bottom: 20px;color: var(--primary-dark);display: flex;align-items: center}
+        .form-title i {margin-right: 10px;}
+        .form-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));gap: 20px;}
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select,
+        .form-group textarea {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;}
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {border-color: var(--primary);outline: none;}
+        .form-group textarea {min-height: 120px;resize: vertical;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
+
+        .sel_container .sel_line{margin-bottom:5px;}
+        .trush_box{display:none;}
+        .trush_box .trush{padding: 6px 6px;border: 1px solid #efefef;color: #6d6d6d;cursor: pointer;}
+        .currency_symbol{font-size: 15px;}
+        .amount{margin-left:5px;font-size: 15px;}
+
+        /* 动画 */
+        @keyframes fadeIn {
+            from {opacity: 0;transform: translateY(10px);}
+            to {opacity: 1;transform: translateY(0);}
+        }
+
+
+        @media (max-width: 576px) {
+            .btn {padding: 10px 20px;font-size: 0.9rem;}
+            /*.form-actions {flex-direction: column;}*/
+        }
+
+        /*自定义颜色配置*/
+        .layui-colorpicker.layui-colorpicker-lg,.layui-colorpicker-trigger-i.layui-icon-close{line-height: 24px;}
+        .layui-colorpicker, .layui-colorpicker-trigger-span{border-color:#777;}
+        .layui-colorpicker-main-input .layui-btn-container .layui-btn {margin: 0 0 0 5px;}
+        .layui-form-item .layui-form-label{width:100px;}
+
+        .edui-editor{z-index: 1 !important;}
+
+        .disf{display:flex;align-items: center;}
+        .format1,.format2,.url,.seo_content,.other_link,.other_navbar{display:none;}
+        .input15{width:50%;}
+        .input30{width:50%;}
+        .input40{width:100%;}
+        .input50{width:100%;}
+        .type2_box{margin-bottom:10px;}
+        /**解决富文本滚动页面时闪烁问题**/
+        div.edui-box{vertical-align: unset !important;}
+        .copy_all{cursor:pointer;}
+        .layui-input, .layui-select, .layui-textarea{border:1px solid #000;}
+        /*.edui-default{position: unset !important;}*/
+        .layui-colla-title{background:#0e2e68;color:#fff;padding:10px 10px 10px 30px;overflow: visible;height:60px;}
+        .layui-colla-icon{left: 10px;top: 8px;}
+        .layui-colla-title .layui-form-select{
+            display:none;
+            /*width: 100%;color:#000;*/
+        }
+        .edui-editor{width: 100% !important;}
+        .layui-colla-title .layui-btn{margin-left:5px;}
+        .layui-colla-title .parag_num{width:80px;}
+        .layui-colla-content{border:1px solid #000;}
+        /*#edui1_toolbarbox*/
+        .ctitle .title{display:block !important;}
+        .edui-editor-toolbarbox{position: unset !important;}
+        .collapse{transition:transform 250ms linear;}
+        .goup{width:12px;height:12px;border:1px solid #fff;border-bottom:0;border-left:0;transform:rotate(45deg);margin-top:12px;}
+        .godown{width:12px;height:12px;border:1px solid #fff;border-bottom:0;border-left:0;transform:rotate(135deg);margin-top:10px;}
+        .regular_box{max-height:400px;width:100%;overflow:scroll;}
+        .layui-field-box{margin-bottom:100px;}
+    </style>
+
+    <!--百度富文本-->
+    <script type="text/javascript" src="cklein/plugins/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" src="cklein/plugins/ueditor/ueditor.all.min.js"> </script>
+    <script type="text/javascript" src="cklein/plugins/ueditor/lang/zh-cn/zh-cn.js"></script>
+</head>
+<body>
+<form id="siteForm" class="layui-form" action="" method="post" lay-filter="component-form-menu" style="padding:10px;margin-bottom:0px;">
+    <input type="hidden" name="company_id" value="{$company_id}">
+    <input type="hidden" name="company_type" value="{$company_type}">
+    <input type="hidden" name="id" value="{$id}">
+    <input type="text" style="display:none;" name="key_id" id="key_id" value="{$key_id}">
+
+    <input type="text" id="cs" style="display: none;" value="">
+    <div class="layui-form-item">
+        <div class="layui-form-label">规则名称</div>
+        <div class="layui-input-block">
+            <div class="input15">
+                <input type="text" class="layui-input" name="rule_name" placeholder="请输入规则名称" value="{$data['rule_name']}">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-form-label"></div>
+        <div class="layui-input-block">
+            <div class="input15">
+                <select name="method" id="method" lay-filter="method">
+                    <option value="1">选择已有规则</option>
+                    <option value="2">新增新的规则</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-form-label no_label1"></div>
+        <div class="layui-input-block no_label">
+            <div class="disf input30">
+                <div class="input30 select_type">
+                    <select name="type_id1" id="type_id1" lay-filter="type_id1">
+                        <option value="">请选择已有类别</option>
+                        {volist name="type" id="vo"}
+                        <option value="{$vo['id']}" {if $data['type_id']==$vo['id']}selected{/if}>{$vo['name']}</option>
+                        {/volist}
+                    </select>
+                </div>
+                <div class="key_box input30 method1">
+                    {if $id>0}
+                    <select name="key_id1" id="key_id1" lay-filter="key_id1">
+                        {volist name="keywords" id="vo"}
+                        <option value="{$vo['id']}" {if $data['key_id']==$vo['id']}selected{/if}>{$vo['name']}</option>
+                        {/volist}
+                    </select>
+                    <!--                                            <input type="text" name="key_id1" value="{$data['key_id']}" style="display: none;">-->
+                    {else}
+                    <select name="key_id1" id="key_id1" lay-filter="key_id1">
+                        {volist name="keywords" id="vo"}
+                        <option value="{$vo['id']}" {if $data['key_id']==$vo['id']}selected{/if}>{$vo['name']}</option>
+                        {/volist}
+                    </select>
+                    {/if}
+                </div>
+                <div class="method2 disf" style="display: none;">
+                    <div class="layui-btn layui-btn-pnormal add_type" onclick="add_type(this)">新增类别</div>
+                    <div class="add_type_input input30" style="display: none;">
+                        <input type="text" class="layui-input" name="add_type_name" placeholder="请输入类别名称">
+                    </div>
+                    <input type="text" class="layui-input input30" name="add_keyword" placeholder="请输入关键字">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-form-label">填写序言</div>
+        <div class="layui-input-block">
+            <div class="input15">
+                <select name="is_preamble" id="is_preamble" lay-filter="is_preamble">
+                    <option value="0" {if $data['is_preamble']==0}selected{/if}>不需填写</option>
+                    <option value="1" {if $data['is_preamble']==1}selected{/if}>需要填写</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="preamble_div" {if $data['is_preamble']==0}style="display: none;"{/if}>
+        <div class="layui-form-item">
+            <div class="layui-form-label">位置展示</div>
+            <div class="layui-input-block">
+                <div class="input15">
+                    <select name="position_display" id="position_display">
+                        <option value="1" {if $data['position_display']==1}selected{/if}>页头</option>
+                        <option value="2" {if $data['position_display']==2}selected{/if}>页尾</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-form-label">序言内容</div>
+            <div class="layui-input-block">
+                <script id="preamble_con" name="preamble_con" class="input50" type="text/plain" style="height:400px;">
+                    {if !empty($data['preamble_con'])}
+                        {$data['preamble_con']|htmlspecialchars_decode|stripslashes}
+                    {/if}
+                </script>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-form-label">规则文本</div>
+        <div class="layui-input-block">
+            <div class="input15">
+                <select name="type" id="type" lay-filter="type">
+                    <option value="1" {if $data['type']==1}selected{/if}>分段</option>
+                    <option value="2" {if $data['type']==2}selected{/if}>整篇</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <fieldset class="layui-elem-field type1" {if $data['type']==2}style="display:none;"{/if}>
+        <legend>分段内容</legend>
+        <div class="layui-field-box">
+            <div class="input40">
+                {if $data['type']==2 || $data['id']==0}
+                    <input type="hidden" id="big_parag_num" value="1">
+                    <div class="regular_box" style="display:none;"></div>
+                    <div class="layui-form-item type1_box">
+                        <div class="layui-form-label"><input type="text" name="parag_num[]" class="layui-input parag_num" value="1." readonly></div>
+                        <div class="layui-input-block">
+                            <div class="disf">
+                                <div class="disf">
+                                    <input type="hidden" class="layui-input" name="pnum[]" value="0">
+                                    <input type="hidden" class="layui-input" name="is_title[]" value="1">
+                                    <input type="text" class="layui-input" name="title[]" placeholder="输入标题" value="" onkeyup="keyup(this)">
+                                </div>
+                                <div class="disf">
+                                    <div class="layui-btn layui-btn-success" onclick="add_common_grade(this)">新增同级</div>
+                                    <div class="layui-btn layui-btn-success" onclick="add_next_grade(this)">新增下级</div>
+                                </div>
+                            </div>
+                            <div class="textarea_div">
+                                <textarea name="content[]" class="layui-textarea" placeholder="输入内容" value="" onkeyup="keyup2(this)"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                {elseif($data['type']==1 && !empty($data['id']))}
+                    <input type="hidden" id="big_parag_num" value="<?php echo $data['big_parag_num'];?>">
+                    <div class="regular_box">
+                        {volist name="data.content" key="key" id="vo"}
+                        <!--手风琴-->
+                        <div class="layui-form-item type1_box">
+                            <div class="layui-collapse" lay-accordion="">
+                                <div class="layui-colla-item">
+                                    <h2 class="layui-colla-title">
+                                        <div class="disf">
+                                            <input type="text" name="parag_num[]" class="layui-input parag_num" value="{$vo['parag_num']}" readonly>
+                                            <input type="hidden" class="layui-input" name="pnum[]" value="{$vo['pnum']}">
+                                            {if $vo['is_title']==1}
+                                            <!--                                                                    <select name="is_title[]" lay-filter="is_title">-->
+                                            <!--                                                                        <option value="-1" >不需要标题</option>-->
+                                            <!--                                                                        <option value="1" selected>需要标题</option>-->
+                                            <!--                                                                    </select>-->
+                                            <input type="hidden" class="layui-input" name="is_title[]" value="1">
+                                            <input type="text" class="layui-input" name="title[]" placeholder="输入标题" value="{$vo['title']}">
+                                            {elseif($vo['is_title']==-1)}
+                                            <select name="is_title[]" lay-filter="is_title">
+                                                <option value="-1" selected>不需要标题</option>
+                                                <option value="1">需要标题</option>
+                                            </select>
+                                            <input type="text" class="layui-input title" name="title[]" placeholder="输入标题" value="{$vo['title']}">
+                                            {/if}
+                                            <div class="layui-btn layui-btn-success" onclick="add_common_grade(this)">新增同级</div>
+                                            <div class="layui-btn layui-btn-success" onclick="add_next_grade(this)">新增下级</div>
+                                            <div class="layui-btn layui-btn-normal" onclick="save_new_rule(this)">保存</div>
+                                            <div class="layui-btn layui-btn-danger" onclick="del_parag(this)">删除</div>
+                                        </div>
+                                    </h2>
+                                    <div class="layui-colla-content">
+                                        <textarea name="content[]" class="layui-textarea" placeholder="输入内容" onkeyup="keyup2(this)">{$vo['content']}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/volist}
+                    </div>
+                {/if}
+            </div>
+        </div>
+    </fieldset>
+    <fieldset class="layui-elem-field type2"  {if $data['type']==1}style="display:none;"{/if}>
+        <legend>整篇内容</legend>
+        <div class="layui-field-box">
+            {if $data['type']==1}
+                <div class="type2_box">
+                    <!--                    if !empty($data['content']['zh'])-->
+                    <!--                    $data['content']['zh']|htmlspecialchars_decode|stripslashes-->
+                    <!--                    /if-->
+                    <script id="content0" name="content2[]" class="input50" type="text/plain" style="height:400px;">
+
+                    </script>
+                    <div class="clearfix"></div>
+                    <div class="disf">
+                        <div class="layui-btn layui-btn-success" onclick="add_content2(this)">新增</div>
+                    </div>
+                </div>
+            {elseif($data['type']==2)}
+                {volist name="data.content" key="key" id="vo"}
+                    <div class="type2_box">
+                        <script id="content{$key}" name="content2[]"class="input50" type="text/plain" style="height:400px;">
+                                                                {$vo|htmlspecialchars_decode|stripslashes}
+                                                            </script>
+                        <div class="clearfix"></div>
+                        <div class="disf">
+                            <div class="layui-btn layui-btn-normal" onclick="save_new_rule(this)">保存</div>
+                            <div class="layui-btn layui-btn-success" onclick="add_content2(this)">新增</div>
+                            <div class="layui-btn layui-btn-danger" onclick="del_content2(this,{$key})">删除</div>
+                        </div>
+                    </div>
+                {/volist}
+            {/if}
+        </div>
+    </fieldset>
+    <div class="effecttime" style="display:none;padding:15px;text-align:center;">
+        <div class="layui-form-item">
+            <div class="layui-form-label">生效日期</div>
+            <div class="layui-input-block">
+                <div class="input15">
+                    <input type="text" class="layui-input" id="effecttime" lay-verify="required" name="effecttime" value="{$data['effecttime']}">
+                </div>
+            </div>
+        </div>
+<!--        <button class="layui-btn layui-btn-normal tj" lay-submit lay-filter="component-form-group2">生成规则</button>-->
+    </div>
+    <div class="history" style="display: none;"></div>
+
+    <div class="form-actions">
+        <button type="button" class="btn btn-outline" id="cancelBtnMenu" style="background:transparent;border: 2px solid var(--primary);color: var(--primary);display:none;">取消</button>
+        <button type="submit" class="btn btn-primary" lay-submit lay-filter="component-form-menu2">立即保存</button>
+    </div>
+</form>
+
+<!-- 添加轮播图·模态框 -->
+<div class="modal" id="saveMenuModal">
+    <div class="modal-content" style="/**min-height:600px;max-height:600px;**/overflow-y:auto;">
+        <span class="close-modal close-modal-menu">&times;</span>
+        <h2 class="modal-title">保存信息</h2>
+        <iframe src="" class="menu_iframe" frameborder="0" style="width: 100%;height:400px;"></iframe>
+    </div>
+</div>
+</body>
+<script src="./layui/xm-select.js"></script>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    layui.use(['layer','form','laydate','upload','colorpicker','element'],function() {
+        var laydate = layui.laydate
+            ,layer = layui.layer
+            ,form = layui.form
+            ,$ = layui.jquery
+            ,upload = layui.upload
+            ,element = layui.element
+            ,colorpicker = layui.colorpicker;
+
+        //菜单弹窗关闭事件===start
+        const menu_modal = document.getElementById('saveMenuModal');
+        const menu_closeBtn = document.querySelector('.close-modal-menu');
+        const cancelBtn = document.getElementById('cancelBtnMenu');
+
+        // 关闭模态框
+        function closeModalMenu() {
+            menu_modal.style.display = 'none';
+        }
+        menu_closeBtn.addEventListener('click', closeModalMenu);
+        cancelBtn.addEventListener('click', closeModalMenu);
+        // 点击模态框外部关闭
+        window.addEventListener('click', function(event) {
+            if (event.target === menu_modal) {
+                closeModalMenu();
+            }
+        });
+        //菜单弹窗关闭事件===end
+
+        form.render(null, 'component-form-menu');
+        element.render('collapse');
+
+        UE.getEditor('preamble_con', {
+            initialFrameHeight: 200,
+            serverUrl: 'cklein/plugins/ueditor/php/controller.php'
+        });
+
+        {if $data['type']==2}
+            {volist name="data.content" key="key" id="vo"}
+                UE.getEditor('content{$key}', {
+                    initialFrameHeight: 200,
+                    serverUrl: 'cklein/plugins/ueditor/php/controller.php'
+                });
+            {/volist}
+        {elseif($data['type']==1)}
+            UE.getEditor('content0', {
+                initialFrameHeight: 200,
+                serverUrl: 'cklein/plugins/ueditor/php/controller.php'
+            });
+        {/if}
+
+        setTimeout(function(){
+            $('.edui-editor-iframeholder iframe').css('background','#666');
+            $('#edui1').find('body').css('background','#666');
+        },3000);
+
+        laydate.render({
+            elem: '#effecttime'
+            ,format: 'yyyy/MM/dd'
+        });
+
+        form.on('select(is_preamble)',function(data){
+            let val = data.value;
+            if(val==0){
+                $('.preamble_div').hide();
+            }else if(val==1){
+                $('.preamble_div').show();
+            }
+        });
+
+        form.on('select(method)',function(data){
+            let val = data.value;
+            if(val==1){
+                $('.select_type').show();
+                $('.method1').show();
+                $('.method2').hide();
+            }else if(val==2){
+                $('.method2').show();
+                $('.select_type').show();
+                $('.method1').hide();
+            }
+        });
+
+        form.on('select(type_id1)',function(data){
+            let val = data.value;
+            let method = $('#method').val();
+            if(val==''){
+                $('.key_box').hide();
+            }else{
+                if(method==1){
+                    $.ajax({
+                        url:"/?s=index/get_keywords",
+                        method:'post',
+                        data:{'type_id':val,'company_id':"{$company_id}"},
+                        dataType:'JSON',
+                        success:function(res){
+                            if(res.code == 0)
+                            {
+                                let html = '<select name="key_id1" id="key_id1" lay-filter="key_id1">';
+                                for(let i=0;i<res.data.length;i++){
+                                    html += '<option value="'+res.data[i].id+'">'+res.data[i].name+'</option>';
+                                }
+                                html += '</select>';
+                                $('.key_box').html(html);
+                                $('.key_box').show();
+                                form.render(null,'component-form-menu');
+                            }
+                        },
+                        error:function (data) {
+                            layer.msg('系统错误',{time:2000});
+                        }
+                    });
+                }
+            }
+        });
+
+        form.on('select(type)',function(data){
+            let val = data.value;
+            if(val==1){
+                $('.type2').hide();
+                $('.type1').show();
+            }else if(val==2){
+                $('.type2').show();
+                $('.type1').hide();
+            }
+        });
+
+        form.on('select(is_title)',function(data){
+            let val = data.value;
+            let t = $(this);
+            $(this).parent().parent().parent().find('select').val(val);
+            for(let i=0;i<$(this).parent().parent().parent().find('select').find('option').length;i++){
+                // console.log($(this).parent().parent().parent().find('select').find('option').eq(i)[0].attributes[0].nodeValue);
+                if($(this).parent().parent().parent().find('select').find('option').eq(i)[0].attributes[0].nodeValue==val){
+                    $(this).parent().parent().parent().find('select').find('option').eq(i).attr('selected',true);
+                }
+            }
+            if(val==-1){
+                $(t).parent().parent().parent().find('.title').hide();
+            }else if(val==1){
+                $(t).parent().parent().parent().find('.title').show();
+            }
+            form.render(null,'component-form-menu');
+        });
+
+        form.on('submit(component-form-menu2)', function(data){
+            layer.load();
+            $.ajax({
+                url:"/?s=index/save_rule",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.closeAll('loading');
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            // let currentUrl = new URL(parent.location.href);
+                            // currentUrl.searchParams.set('tab', 'shop_head_menu');
+                            // parent.history.pushState({}, '', currentUrl.toString());
+
+                            parent.location.reload();
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+
+    //新增类别
+    function add_type(t){
+        let $ = layui.jquery
+            ,form  = layui.form;
+        $('.add_type_input').show();
+        $('.select_type').hide();
+        $(t).hide();
+        form.render(null,'component-form-menu');
+    }
+
+    function xs_all(this1){
+        let $ = layui.jquery
+            ,layer = layui.layer;
+
+        var link = $(this1).attr('data-link');
+        document.getElementById("cs").innerHTML=link;
+
+        //開始複製
+        var oInput = document.createElement('textarea');
+        // oInput.value = document.getElementById("cs").innerText;
+        oInput.value = link;
+        document.body.appendChild(oInput);
+        oInput.select(); // 选择对象
+        document.execCommand("Copy"); // 执行浏览器复制命令
+        oInput.remove();
+        layer.msg("复制成功");
+    }
+
+    String.prototype.trim = function (char, type) {
+        if (char) {
+            if (type == 'left') {
+                return this.replace(new RegExp('^\\'+char+'+', 'g'), '');
+            } else if (type == 'right') {
+                return this.replace(new RegExp('\\'+char+'+$', 'g'), '');
+            }
+            return this.replace(new RegExp('^\\'+char+'+|\\'+char+'+$', 'g'), '');
+        }
+        return this.replace(/^\s+|\s+$/g, '');
+    };
+
+    //保存生成新的版本
+    function save_new_rule(t){
+        let $ = layui.jquery
+            ,form  = layui.form;
+        //隐藏折叠框
+        $(t).parent().parent().click();
+
+        layer.confirm('确认保存修改并生成新版本吗？', {
+            btn: ['确认','取消']
+        }, function(){
+            $('.tj').click();
+        }, function(){
+
+        });
+    }
+
+    //新增同级
+    function add_common_grade(t) {
+        let $ = layui.jquery
+            ,form = layui.form
+            ,element = layui.element;
+
+        var param_num = $(t).parent().parent().parent().parent().find('.layui-form-label').find('.layui-input').val();
+        var origin_param_num = param_num;
+        if(typeof(param_num)=='undefined') {
+            param_num = $(t).parent().find('.parag_num').val();
+        }
+        param_num = param_num.trim('.', 'right');
+        let true_param_num = param_num;//1.1
+        param_num = param_num.split('.');
+        let big_parag_num = 0;
+        let typ = 1;
+        let tpn = '';
+        if (param_num.length > 1) {
+            true_param_num = true_param_num.split('.');//1.10.10
+            true_param_num.pop();
+            for (let i = 0; i < true_param_num.length; i++) {
+                tpn += true_param_num[i] + '.';
+            }
+            let num = parseInt(param_num[param_num.length - 1]) + 1;
+            big_parag_num = tpn + '' + num;
+        } else {
+            big_parag_num = parseInt($('#big_parag_num').val()) + 1;
+            $('#big_parag_num').val(big_parag_num);
+            typ = 2;
+        }
+        //判断有无重复
+        let parag_num = $('.parag_num');
+        for(let i=0;i<parag_num.length;i++){
+            if(parag_num[i].value==big_parag_num+'.'){
+                if(typ==2){
+                    //撤回
+                    big_parag_num = parseInt($('#big_parag_num').val())-1;
+                    $('#big_parag_num').val(big_parag_num);
+                    form.render(null,'component-form-group');
+                }
+                layer.alert('已有重复段落：'+parag_num[i].value);
+                return false;
+            }
+        }
+
+        if(typeof(origin_param_num)!='undefined') {
+            //改变当前的样式
+            let parag_num_div = $(t).parent().parent().parent().parent().find('.layui-form-label').clone();
+            let parag_title = $(t).parent().parent().find('.disf').eq(0).clone();
+            let parag_btn = $(t).parent().clone();
+            let parag_textarea = $(t).parent().parent().parent().find('.textarea_div').clone();
+            let this_html = '<div class="layui-collapse type1_box" lay-accordion>\n' +
+                '  <div class="layui-colla-item">\n' +
+                '    <h2 class="layui-colla-title ctitle"><div class="disf">' + parag_num_div[0].innerHTML + parag_title[0].innerHTML + parag_btn[0].innerHTML + '</div></h2>\n' +
+                '    <div class="layui-colla-content">' + parag_textarea[0].innerHTML + '</div>\n' +
+                '  </div>\n' +
+                '</div>';
+            $(t).parent().parent().parent().parent().parent().find('.regular_box').append(this_html);
+            $(t).parent().parent().parent().parent().remove();
+            $('.regular_box').show();
+            // let isa = parseInt($('.regular_box').find('.type1_box').length)*62;
+            // document.getElementsByClassName('.regular_box')[0].scrollTop=60;
+        }
+        //获取当前有多少个type1_box
+        let len = $('.type1').find('.layui-field-box').find('.input40').find('.type1_box').length;
+        //添加同级
+        let html = '<div class="layui-form-item type1_box">\n' +
+            '                                    <div class="layui-form-label"><input type="text" name="parag_num['+len+']" class="layui-input parag_num" value="'+big_parag_num+'." readonly></div>\n' +
+            '                                    <div class="layui-input-block">\n'+
+            '                                        <div class="disf">\n';
+        if(typ==1){
+            html += '                                <div class="disf">\n'+
+                '                                             <input type="hidden" class="layui-input" name="pnum['+len+']" value="'+tpn+'">\n'+
+                '                                             <select name="is_title['+len+']" lay-filter="is_title">\n'+
+                '                                                <option value="-1">不需要标题</option>\n'+
+                '                                                <option value="1">需要标题</option>\n'+
+                '                                             </select>\n'+
+                '                                             <input type="text" class="layui-input title" name="title['+len+']" placeholder="输入标题" style="display:none;" value="" onkeyup="keyup(this)">\n' +
+                '                                        </div>\n';
+        }else if(typ==2){
+            html += '                                <div class="disf">\n'+
+                '                                   <input type="hidden" class="layui-input" name="pnum['+len+']" value="0">\n'+
+                '                                   <input type="text" class="layui-input" name="title['+len+']" placeholder="输入标题" value="" onkeyup="keyup(this)">\n'+
+                '                                   <input type="hidden" class="layui-input" name="is_title['+len+']" value="1">\n'+
+                '                                </div>';
+        }
+        html += '                                    <div class="disf">\n' +
+            '                                            <div class="layui-btn layui-btn-success" onclick="add_common_grade(this)">新增同级</div>\n' +
+            '                                            <div class="layui-btn layui-btn-success" onclick="add_next_grade(this)">新增下级</div>\n' +
+            '                                            <div class="layui-btn layui-btn-normal" onclick="queren(this)"><div class="goup collapse"></div></div>\n' +
+            '                                            <div class="layui-btn layui-btn-danger" onclick="del_parag(this)">删除</div>\n' +
+            '                                        </div>\n' +
+            '                                    </div>\n'+
+            '                                    <div class="textarea_div"><textarea name="content['+len+']" class="layui-textarea" placeholder="输入内容" onkeyup="keyup2(this)"></textarea></div>\n' +
+            '                                 </div>\n' +
+            '                             </div>';
+        $('.type1').find('.layui-field-box').find('.input40').append(html);
+        form.render(null,'component-form-menu');
+        element.render('collapse');
+
+        //隐藏折叠框
+        if(typeof(origin_param_num)=='undefined') {
+            $(t).parent().parent().click();
+        }
+    }
+
+    //新增下级
+    function add_next_grade(t) {
+        let $ = layui.jquery
+            ,form = layui.form
+            ,element = layui.element;
+        var param_num = $(t).parent().parent().parent().parent().find('.layui-form-label').find('.layui-input').val();
+        var origin_param_num = param_num;
+        if(typeof(param_num)=='undefined'){
+            param_num = $(t).parent().find('.parag_num').val();
+        }
+        let param_num2 = param_num + '1.';
+
+        //判断有无重复
+        let parag_num = $('.parag_num');
+        for(let i=0;i<parag_num.length;i++){
+            if(parag_num[i].value==param_num2){
+                layer.alert('已有重复段落：'+parag_num[i].value);
+                return false;
+            }
+        }
+
+        //改变当前的样式
+        if(typeof(origin_param_num)!='undefined') {
+            let parag_num_div = $(t).parent().parent().parent().parent().find('.layui-form-label').clone();
+            let parag_title = $(t).parent().parent().find('.disf').eq(0).clone();
+            let parag_btn = $(t).parent().clone();
+            let parag_textarea = $(t).parent().parent().parent().find('.textarea_div').clone();
+            let this_html = '<div class="layui-collapse type1_box" lay-accordion>\n' +
+                '  <div class="layui-colla-item">\n' +
+                '    <h2 class="layui-colla-title ctitle"><div class="disf">' + parag_num_div[0].innerHTML + parag_title[0].innerHTML + parag_btn[0].innerHTML + '</div></h2>\n' +
+                '    <div class="layui-colla-content">' + parag_textarea[0].innerHTML + '</div>\n' +
+                '  </div>\n' +
+                '</div>';
+            // $(t).parent().parent().parent().parent().html(this_html);
+            $(t).parent().parent().parent().parent().parent().find('.regular_box').append(this_html);
+            $(t).parent().parent().parent().parent().remove();
+            $('.regular_box').show();
+        }
+        //获取当前有多少个type1_box
+        let len = $('.type1').find('.layui-field-box').find('.input40').find('.type1_box').length;
+        // console.log(len);
+        let html = '<div class="layui-form-item type1_box">\n' +
+            '                                    <div class="layui-form-label"><input type="text" name="parag_num['+len+']" class="layui-input parag_num" value="'+param_num2+'" readonly></div>\n' +
+            '                                    <div class="layui-input-block">\n' +
+            '                                       <div class="disf">\n'+
+            '                                        <div class="disf">\n'+
+            '                                             <input type="hidden" class="layui-input" name="pnum['+len+']" value="'+param_num+'">\n'+
+            '                                             <select name="is_title['+len+']" lay-filter="is_title">\n'+
+            '                                                <option value="-1">不需要标题</option>\n'+
+            '                                                <option value="1">需要标题</option>\n'+
+            '                                             </select>\n'+
+            '                                             <input type="text" class="layui-input title" name="title['+len+']" placeholder="输入标题" style="display:none;" onkeyup="keyup(this)">\n' +
+            '                                        </div>\n'+
+            '                                        <div class="disf">\n' +
+            '                                            <div class="layui-btn layui-btn-success" onclick="add_common_grade(this)">新增同级</div>\n' +
+            '                                            <div class="layui-btn layui-btn-success" onclick="add_next_grade(this)">新增下级</div>\n' +
+            '                                            <div class="layui-btn layui-btn-normal" onclick="queren(this)"><div class="goup collapse"></div></div>\n' +
+            '                                            <div class="layui-btn layui-btn-danger" onclick="del_parag(this)">删除</div>\n' +
+            '                                        </div>\n' +
+            '                                       </div>\n'+
+            '                                        <div class="textarea_div"><textarea name="content['+len+']" class="layui-textarea" placeholder="输入内容" onkeyup="keyup2(this)"></textarea></div>\n' +
+            '                                    </div>\n' +
+            '                                </div>';
+        $('.type1').find('.layui-field-box').find('.input40').append(html);
+        form.render(null,'component-form-menu');
+        element.render('collapse');
+        //隐藏折叠框
+        if(typeof(origin_param_num)=='undefined') {
+            $(t).parent().parent().click();
+        }
+    }
+
+    //复制input框
+    function keyup(obj){
+        let $ = layui.jquery
+            ,form  = layui.form;
+        $(obj).attr('value',$(obj).val());
+    }
+
+    //复制textarea框
+    function keyup2(obj){
+        let $ = layui.jquery
+            ,form  = layui.form;
+        $(obj).text($(obj).val());
+    }
+
+    //确认生成
+    function queren(t){
+        let $ = layui.jquery
+            ,form = layui.form
+            ,element = layui.element;
+
+        if($(t).parent().parent().parent().parent().find('.layui-colla-title').length>0){
+            if($(t).find('.goup').length>0){
+                $(t).find('.goup').removeClass('goup').addClass('godown');
+            }else{
+                $(t).find('.godown').removeClass('godown').addClass('goup');
+            }
+        }
+
+        let parag_num_div = $(t).parent().parent().parent().parent().find('.layui-form-label').clone();
+        // if(typeof(parag_num_div[0].innerHTML) != 'undefined'){
+        //
+        // }
+        let parag_title = $(t).parent().parent().find('.disf').eq(0).clone();
+        let parag_btn = $(t).parent().clone();
+        let parag_textarea = $(t).parent().parent().parent().find('.textarea_div').clone();
+        let this_html = '<div class="layui-collapse type1_box" lay-accordion>\n' +
+            '  <div class="layui-colla-item">\n' +
+            '    <h2 class="layui-colla-title ctitle"><div class="disf">' + parag_num_div[0].innerHTML + parag_title[0].innerHTML + parag_btn[0].innerHTML + '</div></h2>\n' +
+            '    <div class="layui-colla-content">' + parag_textarea[0].innerHTML + '</div>\n' +
+            '  </div>\n' +
+            '</div>';
+        $(t).parent().parent().parent().parent().parent().find('.regular_box').append(this_html);
+        $(t).parent().parent().parent().parent().remove();
+        // $('.type1').find('.layui-field-box').find('.input40').append(html);
+        form.render(null,'component-form-menu');
+        element.render('collapse');
+    }
+
+    //删除当前段落
+    function del_parag(t){
+        let $ = layui.jquery
+            ,form  = layui.form
+            ,layer = layui.layer;
+        let is_big = $(t).parent().parent().parent().parent().find('.layui-form-label').find('.parag_num').val();
+        console.log(is_big);
+        layer.confirm('确认要删除该段落？', {
+            btn: ['确认','取消']
+        }, function(){
+            if(typeof(is_big)=='undefined'){
+                let is_big = $(t).parent().find('.parag_num').val();
+                is_big = is_big.split('.');
+                if (is_big.length == 2) {
+                    let big_parag_num = parseInt($('#big_parag_num').val()) - 1;
+                    $('#big_parag_num').val(big_parag_num);
+                }
+                $(t).parent().parent().parent().parent().remove();
+                form.render(null,'component-form-menu');
+            }else {
+                is_big = is_big.split('.');
+                if (is_big.length == 2) {
+                    let big_parag_num = parseInt($('#big_parag_num').val()) - 1;
+                    $('#big_parag_num').val(big_parag_num);
+                }
+
+                $(t).parent().parent().parent().parent().remove();
+                form.render(null, 'component-form-menu');
+            }
+            layer.closeAll();
+        }, function(){
+
+        });
+    }
+
+    //删除整篇
+    function del_content2(t,id_num){
+        let $ = layui.jquery
+            ,form  = layui.form;
+        // let len = $('.type2').find('.layui-field-box').find('.type2_box').length;
+        // console.log(len);return false;
+        UE.delEditor("content"+id_num);
+        $(t).parent().parent().remove();
+        {if $data['type']==2}
+        $('#content'+id_num).remove();
+        {/if}
+            form.render(null,'component-form-menu');
+        }
+
+    //添加整篇-富文本
+    function add_content2(t){
+        let $ = layui.jquery
+            ,form  = layui.form;
+        let len = $('.type2').find('.layui-field-box').find('.type2_box').length;
+        if({$data['type']}==2){len+=1;}
+        let html = '                         <div class="type2_box">\n' +
+            '                                    <div id="con'+len+'" class="input50"></div>\n'+
+            // '                                            <div id="content'+len+'" name="content2[]" type="text/plain" style="width:100%;height:400px;"></div>\n'+
+            '                                    <div class="clearfix"></div>\n'+
+            '                                    <div class="disf">\n'+
+            '                                        <div class="layui-btn layui-btn-success" onclick="add_content2(this)">新增</div>\n'+
+            '                                        <div class="layui-btn layui-btn-danger" onclick="del_content2(this,'+len+')">删除</div>\n'+
+            '                                    </div>\n'+
+            '                                </div>';
+        $('.type2').find('.layui-field-box').append(html);
+
+        var script = document.createElement('script');
+        script.id="content"+len;
+        script.type='text/plain';
+        document.getElementById('con'+len).append(script);
+
+        UE.getEditor("content"+len, {
+            initialFrameHeight: 200,
+            serverUrl: 'cklein/plugins/ueditor/php/controller.php'
+        });
+        let num = parseInt(len);
+        // console.log(num);
+        var cc = setInterval(function(){
+            let i = document.getElementById('ueditor_textarea_editorValue').setAttribute('name','content2['+num+']');
+            document.getElementById('ueditor_textarea_editorValue').setAttribute('id','ueditor_textarea_editorValue'+len);
+            if(typeof(i)=='undefined'){
+                clearInterval(cc);
+            }
+        },1000);
+        form.render(null,'component-form-menu');
+    }
+</script>
+</html>

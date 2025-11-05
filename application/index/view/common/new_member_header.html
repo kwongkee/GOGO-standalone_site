@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <link rel="icon" href="//shop.gogo198.cn/{$website['sico']}" type="image/x-icon" />
+    <title>{$website['title']}</title>
+    <meta name="description" content="{$website['description']}" />
+    <meta name="keywords" content="{$website['keywords']}" />
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+    <link rel="stylesheet" href="/layuiadmin/layui/css/mobile_layui.css" media="all">
+    <link rel="stylesheet" href="/layuiadmin/style/mobile_admin.css" media="all">
+    <link rel="stylesheet" href="/layuiadmin/style/font-awesome.min.css" media="all">
+
+    <style>
+        .disf{display: flex;align-items: center;}
+        .layui-table td, .layui-table th{ text-align: center;}
+        .layui-table th{ background-color: #ecf6fc; }
+        .required{color: red;font-size: 1.3rem;right: 3px;position: relative;top: 7px;}
+        .icon-right{font-size: 20px;line-height: 20px;padding-right: 10px;vertical-align: middle;}
+        .layui-layer-adminRight{top : 0px !important;}
+        .layui-layer-btn .layui-layer-btn0{border-color: #F7931E!important;background-color: #F7931E!important;}
+
+        .f32{font-size: 32px !important;}
+        .f26{font-size:26px !important;}
+        .f22{font-size:22px !important;}
+        .f20{font-size:20px !important;}
+        .f18{font-size:18px !important;}
+        .f16{font-size:16px !important;}
+        .f15{font-size:15px !important;}
+        .f13{font-size:13px !important;}
+        .f12{font-size:12px !important;}
+        .fweight{font-weight: 800;}
+
+        /*按钮颜色*/
+        .layui-btn-normal,.layui-btn,.layui-laypage .layui-laypage-curr .layui-laypage-em,.layui-form-select dl dd.layui-this{background:{$website['color']} !important;}
+        .layui-layer-btn .layui-layer-btn0{background:{$website['color']} !important;border-color:{$website['color']} !important;}
+        .layui-btn-danger{background:#e60000 !important;}
+    </style>
+
+    <script>
+
+        function closes (index) {
+            layer.close(index);
+        }
+
+        function IsPhone() {
+            var info = navigator.userAgent;
+            var isPhone = /Mobi|Android|iPhone/i.test(info);
+            return isPhone;
+        }
+    </script>

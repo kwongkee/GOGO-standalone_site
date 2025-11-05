@@ -1,0 +1,426 @@
+{include file="common/header2"}
+<link rel="stylesheet" href="layui/css/layui.css">
+<style>
+    /* 主内容区域 */
+    .main-content {padding: 40px 0;min-height: calc(100vh - 200px);}
+    .dashboard {margin-top: 30px;}
+
+    /* 侧边栏样式 */
+    .sidebar {background: var(--card-bg);border-radius: 20px;padding: 30px;box-shadow: var(--shadow);height: fit-content;}
+    .sidebar-title {font-size: 1.5rem;margin-bottom: 25px;color: var(--primary);display: flex;align-items: center;}
+    .sidebar-title i {margin-right: 10px;}
+    .enterprise-list {list-style: none;margin-bottom: 30px;}
+    .enterprise-item {padding: 15px;border-radius: 10px;margin-bottom: 10px;cursor: pointer;transition: all 0.3s ease;border: 2px solid var(--accent);}
+    .enterprise-item:hover {background: var(--accent);}
+    .enterprise-item.active {background: var(--accent);border-color: var(--primary);}
+    .enterprise-name {font-weight: 600;margin-bottom: 5px;}
+    .enterprise-desc {font-size: 0.9rem;color: #666;}
+    .add-enterprise {display: flex;align-items: center;justify-content: center;padding: 15px;border: 2px dashed var(--primary-light);border-radius: 10px;color: var(--primary);font-weight: 600;cursor: pointer;transition: all 0.3s ease;}
+    .add-enterprise:hover {background: var(--accent);border-color: var(--primary);background: var(--accent);border-color: var(--primary);}
+    .add-enterprise i {margin-right: 10px;}
+
+    /* 网站管理区域 */
+    .website-management {background: var(--card-bg);border-radius: 20px;padding: 30px;box-shadow: var(--shadow);}
+    .management-header {display: flex;justify-content: space-between;align-items: center;margin-bottom: 30px;padding-bottom: 20px;border-bottom: 2px solid var(--accent);}
+    .management-title {font-size: 1.8rem;color: var(--primary);}
+    .site-url {color: var(--primary);font-weight: 500;display: flex;align-items: center;background: var(--accent);padding: 8px 15px;border-radius: 8px;}
+    .site-url i {margin-right: 8px;}
+
+    /* 选项卡样式 */
+    .tabs {display: flex;margin-bottom: 30px;border-bottom: 2px solid var(--accent);}
+    .tab {padding: 12px 25px;cursor: pointer;font-weight: 600;color: var(--text);transition: all 0.3s ease;position: relative;}
+    .tab:hover {color: var(--primary);}
+    .tab.active {color: var(--primary);}
+    .tab.active::after {content: '';position: absolute;bottom: -2px;left: 0;width: 100%;height: 3px;background: var(--gradient);border-radius: 3px;}
+    .tab-content {display: none;}
+    .tab-content.active {display: block;animation: fadeIn 0.5s ease;}
+
+    /* 表单样式 */
+    .form-section {margin-bottom: 30px;}
+    .form-title {font-size: 1.3rem;margin-bottom: 20px;color: var(--primary-dark);display: flex;align-items: center}
+    .form-title i {margin-right: 10px;}
+    .form-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));gap: 20px;}
+    .form-group {margin-bottom: 20px;}
+    .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+    .form-group input,
+    .form-group select,
+    .form-group textarea {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;}
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {border-color: var(--primary);outline: none;}
+    .form-group textarea {min-height: 120px;resize: vertical;}
+    .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
+
+    /* 频道管理样式 */
+    .channel-list {list-style: none;}
+    .channel-item {background: var(--background);border-radius: 10px;padding: 20px;margin-bottom: 15px;display: flex;justify-content: space-between;align-items: center;transition: all 0.3s ease;}
+    .channel-item:hover {transform: translateX(5px);box-shadow: var(--shadow);}
+    .channel-info {flex: 1;}
+    .channel-name {font-weight: 600;margin-bottom: 5px;color: var(--primary-dark);}
+    .channel-desc {color: #666;font-size: 0.9rem;}
+    .channel-actions {display: flex;gap: 10px;}
+    .channel-btn {padding: 8px 15px;border-radius: 8px;font-size: 0.9rem;font-weight: 500;cursor: pointer;transition: all 0.3s ease;display: flex;align-items: center;}
+    .channel-btn i {margin-right: 5px;}
+    .btn{background:var(--primary-light);color: white;border: none;}
+    .btn-warning{background:#f8ac59;color:#fff;border:none;}
+    .btn-edit {background: var(--primary-light);color: white;border: none;}
+    .btn-edit:hover {background: var(--primary);}
+    .btn-delete {background: transparent;color: #ff4757;border: 2px solid #ff4757;}
+    .btn-delete:hover {background: #ff4757;color: white;}
+    .add-channel {display: flex;align-items: center;justify-content: center;padding: 15px;border: 2px dashed var(--primary-light);border-radius: 10px;color: var(--primary);font-weight: 600;cursor: pointer;transition: all 0.3s ease;margin-top: 20px;}
+    .add-channel:hover {background: var(--accent);border-color: var(--primary);}
+    .add-channel i {margin-right: 10px;}
+
+    /* 会员管理样式 */
+    .member-table {width: 100%;border-collapse: collapse;margin-top: 20px;}
+    .layui-table th,
+    .layui-table td,
+    .member-table th,
+    .member-table td {padding: 15px;text-align: left;border-bottom: 1px solid var(--accent);}
+    .layui-table th,
+    .member-table th {background: var(--accent);color: var(--primary-dark);font-weight: 600;}
+    .member-table tr:hover {background: rgba(187, 134, 252, 0.1);}
+    .member-status {padding: 5px 10px;border-radius: 20px;font-size: 0.8rem;font-weight: 500;}
+    .status-active {background: #2ed573;color: white;}
+    .status-inactive {background: #ffa502;color: white;}
+    .status-banned {background: #ff4757;color: white;}
+
+    /* 模态框样式 */
+    .modal {display: none;position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.5);backdrop-filter: blur(5px);z-index: 2000;align-items: center;justify-content: center;}
+    .modal-content {background: white;border-radius: 20px;padding: 30px;width: 90%;max-width: 500px;box-shadow: var(--shadow-hover);position: relative;}
+    .close-modal {position: absolute;top: 20px;right: 20px;font-size: 1.5rem;color: #999;cursor: pointer;transition: color 0.3s ease;}
+    .close-modal:hover {color: var(--primary);}
+    .modal-title {font-size: 1.5rem;margin-bottom: 20px;color: var(--primary);}
+    .form-group {margin-bottom: 20px;}
+    .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+    .form-group input,
+    .form-group select {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}
+    .form-group input:focus,
+    .form-group select:focus {border-color: var(--primary);outline: none;}
+    .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
+
+    /*自定义颜色配置*/
+    .layui-colorpicker.layui-colorpicker-lg{line-height: 24px;}
+    .layui-colorpicker, .layui-colorpicker-trigger-span{border-color:#777;}
+    .layui-colorpicker-main-input .layui-btn-container .layui-btn {margin: 0 0 0 5px;}
+
+
+    /* 动画 */
+    @keyframes fadeIn {
+        from {opacity: 0;transform: translateY(10px);}
+        to {opacity: 1;transform: translateY(0);}
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 992px) {
+        .dashboard {grid-template-columns: 1fr;}
+        .sidebar {order: 2;}
+        .website-management {order: 1;}
+        .nav-links {display: none;}
+        .mobile-menu-btn {display: block;}
+        .tabs {flex-wrap: wrap;}
+        .tab {flex: 1;min-width: 120px;text-align: center;}
+        .form-grid {grid-template-columns: 1fr;}
+    }
+
+    @media (max-width: 768px) {
+        .management-header {flex-direction: column;align-items: flex-start;gap: 15px;}
+        .channel-item {flex-direction: column;align-items: flex-start;gap: 15px;}
+        .channel-actions {width: 100%;justify-content: flex-end;}
+        .member-table {display: block;overflow-x: auto;}
+    }
+
+    @media (max-width: 576px) {
+        .btn {padding: 10px 20px;font-size: 0.9rem;}
+        .logo {font-size: 1.5rem;}
+        .form-actions {flex-direction: column;}
+    }
+
+    /* 移动菜单按钮 */
+    .mobile-menu-btn {display: none;background: none;border: none;font-size: 1.5rem;color: var(--primary);cursor: pointer;}
+
+    @media (max-width: 992px) {
+        .mobile-menu-btn {display: block;}
+    }
+</style>
+
+<!-- 主内容区域 -->
+<div class="container main-content">
+    <h1>智能运营管理平台</h1>
+    <p>管理您的企业服务知识管理等</p>
+
+    <div class="dashboard">
+        <!-- 网站管理区域 -->
+        <div class="website-management">
+            <div class="management-header">
+                <h2 class="management-title">企业知识管理</h2>
+
+            </div>
+
+            <!-- 选项卡导航 -->
+            <div class="tabs">
+                <div class="tab active knowledge" data-tab="knowledge">知识库</div>
+                <div class="tab hot_product" data-tab="hot_product">热门商品</div>
+                <div class="tab chat_history" data-tab="chat_history">历史聊天</div>
+            </div>
+            
+            <!-- 知识库管理 -->
+            <div class="tab-content active" id="knowledge">
+                <h3 class="form-title"><i class="fas fa-images"></i> 知识库管理</h3>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="ibox float-e-margins">
+                            <div class="ibox-content">
+                                <div id="toolbar" class="btn-group" style="margin-top: 10px;margin-bottom: 10px;line-height: 34px;">
+                                    <button type="button" onclick="save(1);" class="btn btn-default">
+                                        <i class="fas fa-add"></i>
+                                        添加知识
+                                    </button>
+                                    <button type="button" onclick="save(2);" class="btn btn-warning">
+                                        <i class="fas fa-add"></i>
+                                        添加知识至平台
+                                    </button>
+                                </div>
+                                <table class="layui-hide" id="mainTable"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 热门商品 -->
+            <div class="tab-content " id="hot_product">
+                <h3 class="form-title"><i class="fas fa-images"></i> 热门商品</h3>
+                <iframe src="/?s=index/hot_product&company_id={$company_id}" frameborder="0" style="width:100%;min-height:400px;"></iframe>
+            </div>
+
+            <!-- 聊天历史 -->
+            <div class="tab-content " id="chat_history">
+                <h3 class="form-title"><i class="fas fa-history"></i> 历史聊天</h3>
+                <iframe src="/?s=index/chat_history&company_id={$company_id}" frameborder="0" style="width:100%;min-height:600px;"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 添加轮播图·模态框 -->
+<div class="modal" id="saveRotateModal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 class="modal-title">保存知识</h2>
+        <iframe src="" class="rotate_iframe" frameborder="0" style="width: 100%;height:400px;"></iframe>
+    </div>
+</div>
+
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="layui/layui.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 选项卡切换
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+
+                // 移除所有active类
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(tc => tc.classList.remove('active'));
+
+                // 添加active类到当前选项卡和内容
+                this.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // 移动菜单切换
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenuBtn.addEventListener('click', function() {
+            navLinks.style.display = navLinks.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        //知识弹窗关闭事件===start
+        const modal = document.getElementById('saveRotateModal');
+        const closeBtn = document.querySelector('.close-modal');
+        // const cancelBtn = document.getElementById('cancelBtn');
+        // 关闭模态框
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+        closeBtn.addEventListener('click', closeModal);
+        // cancelBtn.addEventListener('click', closeModal);
+       
+
+        // 点击模态框外部关闭
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+    });
+
+    var table;
+
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+        treetable: 'treetable-lay/treetable'
+    }).use(['index', 'form','upload','table', 'colorpicker','treetable'], function() {
+        var $ = layui.$
+            , admin = layui.admin
+            , element = layui.element
+            , layer = layui.layer
+            , form = layui.form
+            , colorpicker = layui.colorpicker
+            , upload = layui.upload
+            , table = layui.table
+            , treetable = layui.treetable;
+
+        //页面跳转进来跳转到指定tab框
+        $(".{$tab}").click();
+
+        //知识库管理=================start
+        table.render({
+            elem: '#mainTable'
+            ,url: "/?s=index/knowledge_list&company_id={$company_id}&pa=1"
+            ,cellMinWidth: 200
+            ,cols: [[
+                {field:'id', width:80, title: '编号'}
+                ,{field:'type_name', width:200, title: '知识类型'}
+                ,{field:'status_name', width:200, title: '状态'}
+                ,{field:'createtime', title: '创建时间'}
+                ,{ align:'center', fixed: 'right', title: '操作', templet: function(d){
+                    if(d.status==0){
+                        return [
+                            '<a onclick="edit('+d.id+');" class="layui-btn layui-btn-xs btn-edit"><i class="fas fa-edit"></i>  编辑</a>',
+                            '<a onclick="del('+ "'"+d.id+"'" +');" class="layui-btn layui-btn-xs btn-delete"><i class="fas fa-trash"></i> 删除</a>'
+                        ].join('');
+                    }
+                    else{
+                        return [].join('');
+                    }
+                }}
+            ]]
+            ,page: true
+        });
+
+        var $ = layui.$, active = {
+            reload: function(){
+                //执行重载
+                table.reload('mainTable', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                        keywords: $("#keywords").val()
+                    }
+                });
+            }
+        };
+
+        $('.main-table-reload-btn .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+        //知识库管理=================end
+
+    });
+    
+    //轮播图编辑
+    function edit(id,name=''){
+        var modal = document.getElementById('saveRotateModal');
+        modal.style.display = 'flex';
+
+        $('#saveRotateModal .rotate_iframe').attr('src','/?s=index/save_knowledge&company_id={$company_id}&company_type=0&id='+id);
+    }
+
+    //轮播图删除
+    function del(id,name=''){
+        var layer = layui.layer,$ = layui.$;
+        layer.confirm('确认要删除该知识条吗？', {
+            btn: ['删除','取消']
+        }, function(){
+            $.ajax({
+                url:"/?s=index/del_knowledge",
+                type:"GET",
+                dataType:"json",
+                data:{id:id},
+                success:function (res) {
+                    layer.msg(res.msg);
+                    if (res.code==0){
+                        setTimeout(function () {
+                            window.location.reload();
+                        },2000);
+                    }
+                },
+                error:function (xhr) {
+                    layer.msg('连接服务器错误！');
+                }
+            });
+            layer.closeAll();
+        }, function(){
+
+        });
+    }
+
+    //添加知识&添加知识至平台
+    function save(type) {
+        var layer = layui.layer,$ = layui.$;
+        if(type==1){
+            //添加知识
+            var modal = document.getElementById('saveRotateModal');
+            modal.style.display = 'flex';
+
+            $('#saveRotateModal .rotate_iframe').attr('src','/?s=index/save_knowledge&company_id={$company_id}&company_type=0');
+        }
+        else if(type==2){
+            //添加知识至平台
+            layer.confirm('确认添加所有“未提交”的知识条至平台吗？', {
+                btn: ['确认','取消']
+            }, function(){
+                layer.load();
+                $.ajax({
+                    url:"/?s=index/active_knowledge",
+                    type:"GET",
+                    dataType:"json",
+                    data:{company_id:"{$company_id}"},
+                    success:function (res) {
+                        layer.closeAll('loading');
+                        layer.msg(res.msg);
+                        if (res.code==0){
+                            setTimeout(function () {
+                                window.location.reload();
+                            },2000);
+                        }
+                    },
+                    error:function (xhr) {
+                        layer.msg('连接服务器错误！');
+                    }
+                });
+                console.log(1);
+            }, function(){
+                console.log(2);
+            });
+        }
+    }
+
+    function delPic(obj)
+    {
+        var layer = layui.layer,$ = layui.$;
+        layer.confirm('确认要删除该附件？', {
+            btn: ['删除','取消']
+        }, function(){
+            $(obj).parent().remove();
+            layer.closeAll();
+        }, function(){
+
+        });
+    }
+</script>
+
+{include file="common/footer2"}

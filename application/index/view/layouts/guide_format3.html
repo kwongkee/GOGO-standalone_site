@@ -1,0 +1,72 @@
+<style>
+    /*触发搜索版式*/
+    .festivalDiv {width: 100%;margin: 50px 0px 0px;padding: 20px;position: relative;border: 2px solid {$data['websites']['info']['color']};box-sizing: border-box;border-radius: 5px;border-top-left-radius: 0;}
+    .festivalDiv .storeTitle {position: absolute;top: -36px;left: -2px;background: #1761b7;color: {$data['websites']['info']['color_word']};padding: 5px 10px;border: 2px solid {$data['websites']['info']['color']};z-index: 9;border-bottom: 0;border-radius: 5px;border-bottom-right-radius: 0;border-bottom-left-radius: 0;font-weight: 800;}
+    .festivalDiv .hsColumn {display: grid;grid-template-columns: repeat(3, 1fr);-moz-column-gap: 20px;column-gap: 20px;row-gap: 20px;margin-bottom: 20px;}
+    .festivalDiv .hsColumn:nth-of-type(2){margin-bottom: 0;}
+    .festivalDiv .hsDiv {height: 220px;position: relative;box-shadow: 0px 0px 8px 0px #797777;}
+    .festivalDiv .hs2 {border: 3px solid #fff;border-radius: 8px;width: 100%;}
+    .festivalDiv .hsDiv .guide2_country_img {width: 100%;max-width: 100%;height: -webkit-fill-available;}
+    .festivalDiv .hsMask {width: 100%;height: 35%;position: absolute;bottom: 0;background: #000;opacity: 0.5;z-index: 8;border-radius: 6px;}
+    .festivalDiv .hsDiv .hsContent {opacity: 1;color: #fff;z-index: 10;position: absolute;width: 100%;top: 50%;transform: translate(0, -50%);bottom: 3%;transform: unset;top: unset;}
+    .festivalDiv .hsDiv .hsContent .title {font-size: 18px;font-weight: 800;text-align: center;padding: 0;font-size: 15px;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;margin-bottom:10px;}
+    .festivalDiv .hsDiv .hsContent .moreBtn {width: 100%;text-align: center;/*position: absolute;right: -30%;bottom: -1%;*/}
+    .festivalDiv .hsDiv .hsContent .moreBtn a {color: {$data['websites']['info']['color_word']};font-size: 15px;background: {$data['websites']['info']['color']};padding: 2px 10px;border-radius: 15px;border: 2px solid {$data['websites']['info']['color_word']};}
+
+    @media (max-width: 992px){
+        .festivalDiv .hsColumn {grid-template-columns: repeat(1, 1fr);margin-bottom:0;}
+        .festivalDiv .hs2{height:320px;}
+        .festivalDiv .hsMask{height:25%;}
+    }
+</style>
+
+<div class="festivalDiv">
+    <div class="storeTitle f15">
+        {$v['title']}
+    </div>
+    <div class="swiper-container guide2_content{$k}">
+        <div class="swiper-wrapper">
+            {volist name="v['children']" key="k2" id="v2"}
+            <div class="swiper-slide">
+                {volist name="v2" key="k3" id="v3"}
+                <div class="hsColumn">
+                    {volist name="v3" key="k4" id="v4"}
+                    <div class="hsBox disf">
+                        <div class="hs2 hsDiv" style="position:relative;">
+                            <!--当前节日，所有的国家循环-->
+                            <img src="{$data['source_link']}{$v4['back_content']}" alt="" class="guide2_country_img">
+                            <div class="hsMask"></div>
+                            <div class="hsContent">
+                                <div class="title" title="{$v4['name']}">{$v4['name']}</div>
+                                <div class="moreBtn">
+                                    {if $v4['go_other']==1 || $v4['go_other']==6 || $v4['go_other']==7}
+                                    <!--分享&我要咨询&去找客服-->
+                                    <a href="javascript:common_operation({$v4['go_other']},this);">查看详情&gt;</a>
+                                    {elseif($v4['go_other']==2)}
+                                    <!--商品链接-->
+                                    <a href="/?s=merch/goods&id={$v4['other_goods']}" target="_blank">查看详情&gt;</a>
+                                    {elseif($v4['go_other']==3)}
+                                    <!--菜单链接-->
+                                    <a href="/?s=index/detail&id={$v4['other_navbar']}" target="_blank">查看详情&gt;</a>
+                                    {elseif($v4['go_other']==4)}
+                                    <!--第三方链接-->
+                                    <a href="{$v4['link']}" target="_blank">查看详情&gt;</a>
+                                    {elseif($v4['go_other']==5)}
+                                    <!--搜索关键字-->
+                                    <a href="/?s=merch/goods_list&frame_id=1&hotsearchId={$v4['id']}&searchTitle={$v4['gkeywords']}&company_id={$company_id}&company_type={$company_type}" target="_blank">查看详情&gt;</a>
+                                    {/if}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/volist}
+                </div>
+                {/volist}
+            </div>
+            {/volist}
+        </div>
+        <!--左右切换-->
+        <div class="swiper-button-next sn-festival{$k}"></div>
+        <div class="swiper-button-prev sp-festival{$k}"></div>
+    </div>
+</div>

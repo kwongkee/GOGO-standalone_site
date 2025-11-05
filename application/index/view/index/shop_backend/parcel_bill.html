@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>独立站平台 - website.gogo198.net</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="layui/css/layui.css">
+
+    <style>
+        html{height:100%;}
+        :root {--primary: #8a2be2;--primary-dark: #6a1cb9;--primary-light: #9b4de3;--secondary: #bb86fc;--accent: #e6d7f5;--text: #333333;--text-light: #f8f8f8;--background: #f9f5fd;--card-bg: #ffffff;--gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));--gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary));--shadow: 0 10px 30px rgba(138, 43, 226, 0.15);--shadow-hover: 0 15px 35px rgba(138, 43, 226, 0.25);}
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        body {background-color: var(--background);color: var(--text);line-height: 1.6;overflow-x: hidden;background-image: radial-gradient(circle at 5% 10%, rgba(187, 134, 252, 0.1) 0%, transparent 20%), radial-gradient(circle at 95% 5%, rgba(187, 134, 252, 0.1) 0%, transparent 20%), radial-gradient(circle at 50% 90%, rgba(187, 134, 252, 0.1) 0%, transparent 20%);}
+        h1, h2, h3, h4, h5, h6 {font-family: 'Montserrat', sans-serif;font-weight: 700;}
+
+        /* 导航栏样式 */
+        header {background: rgba(255, 255, 255, 0.95);color: var(--text);padding: 15px 0;box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);position: sticky;top: 0;z-index: 1000;backdrop-filter: blur(10px);}
+        nav {display: flex;justify-content: space-between;align-items: center;position: relative;}
+        .logo {font-size: 1.8rem;font-weight: 700;display: flex;align-items: center;background: var(--gradient);-webkit-background-clip: text;background-clip: text;color: transparent;z-index: 1001;}
+        .logo i {margin-right: 10px;color: var(--primary);}
+        .nav-links {display: flex;list-style: none;}
+        .nav-links li {margin-left: 25px;position: relative;}
+        .nav-links a {color: var(--text);text-decoration: none;font-weight: 500;transition: all 0.3s ease;padding: 8px 12px;border-radius: 4px;position: relative;display: flex;align-items: center;}
+        .nav-links a::after {content: '';position: absolute;bottom: 0;left: 50%;width: 0;height: 2px;background: var(--gradient);transition: all 0.3s ease;transform: translateX(-50%);}
+        .nav-links a:hover {color: var(--primary);}
+        .nav-links a:hover::after {width: 80%;}
+        .auth-buttons {display: flex;align-items: center;}
+        .btn {padding: 12px 25px;border-radius: 50px;text-decoration: none;font-weight: 600;transition: all 0.3s ease;cursor: pointer;display: inline-block;text-align: center;border: none;font-family: 'Montserrat', sans-serif;}
+        .btn-outline {border: 2px solid var(--primary);color: var(--primary);background: transparent;margin-right: 15px;}
+        .btn-outline:hover {background: var(--primary);color: white;transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-primary {background: var(--gradient);color: white;border: 2px solid transparent;}
+        .btn-primary:hover {background: transparent;border-color: var(--primary);color: var(--primary);transform: translateY(-3px);box-shadow: var(--shadow);}
+
+        /* 表单样式 */
+        .form-section {margin-bottom: 30px;}
+        .form-title {font-size: 1.3rem;margin-bottom: 20px;color: var(--primary-dark);display: flex;align-items: center}
+        .form-title i {margin-right: 10px;}
+        .form-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));gap: 20px;}
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select,
+        .form-group textarea {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;}
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {border-color: var(--primary);outline: none;}
+        .form-group textarea {min-height: 120px;resize: vertical;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
+
+
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}
+        .form-group input:focus,
+        .form-group select:focus {border-color: var(--primary);outline: none;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
+
+        .disf{display: flex;align-items: center;}
+        .layui-form-label{width: 100px;}
+
+        /*自定义多选框样式======START*/
+        .xm-label-block,xm-select > .xm-body .xm-option.selected{background-color:{$website['color']} !important;color:{$website['color_word']} !important;}
+        xm-select .diy_search.active{border-color:{$website['color']} !important;color: {$website['color_word']} !important;background:{$website['color']} !important;}
+        /*自定义多选框样式======END*/
+        xm-select > .xm-body .xm-search > i{right:15px;}
+
+        /* 模态框样式 */
+        .modal {display: none;position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.5);backdrop-filter: blur(5px);z-index: 2000;align-items: center;justify-content: center;}
+        .modal-content {background: white;border-radius: 20px;padding: 30px;width: 90%;max-width: 90%;box-shadow: var(--shadow-hover);position: relative;}
+        .close-modal {position: absolute;top: 20px;right: 20px;font-size: 1.5rem;color: #999;cursor: pointer;transition: color 0.3s ease;}
+        .close-modal:hover {color: var(--primary);}
+        .modal-title {font-size: 1.5rem;margin-bottom: 20px;color: var(--primary);}
+
+        /**历史**/
+        .layui-timeline .layui-timeline-item:first-child p{color:#ff2222;font-weight: 600;}
+        .layui-timeline .layui-timeline-item:first-child .fire{display:block;}
+        .layui-timeline .layui-timeline-item:first-child .circle{display:none;}
+        .layui-timeline .layui-timeline-item:not(:first-child) .fire{display:none;}
+        .layui-timeline .layui-timeline-item:not(:first-child) .circle{width:15px;height:15px;left:-3px;top:3px;}
+
+        .layui-border-red{border:1px solid #ff2222;color:#ff2222;margin:10px auto;}
+        .layui-colla-title{background:#1790FF;color:#fff;}
+        .layui-colla-icon{color:#fff;}
+
+        /* 动画 */
+        @keyframes fadeIn {
+            from {opacity: 0;transform: translateY(10px);}
+            to {opacity: 1;transform: translateY(0);}
+        }
+
+        @media (max-width: 576px) {
+            .btn {padding: 10px 20px;font-size: 0.9rem;}
+            /*.form-actions {flex-direction: column;}*/
+        }
+    </style>
+</head>
+<body>
+    <div class="form-group" style="padding:10px;">
+        <ul class="layui-timeline">
+            {if(!empty($order)}
+            {volist name="order" key="k" id="v"}
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis fire"></i>
+                <i class="layui-icon layui-anim layui-anim-rotate layui-anim-loop layui-timeline-axis circle" style="border:1px solid;"></i>
+                <div class="layui-timeline-content layui-text">
+                    <div class="layui-timeline-title">
+                        <p>
+                            订单编号：{$v['ordersn']}
+                            {$v['status_name']}
+                        </p>
+                        <p style="font-size:14px;color:#777;"><div class="layui-btn layui-btn-xs" onclick="javascript:view({$v['id']});">查看详情</div>({$v['createtime']})</p>
+                    </div>
+                </div>
+            </li>
+            {/volist}
+            {else}
+            暂无记录
+            {/if}
+        </ul>
+    </div>
+</body>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    layui.use(['layer','form','laydate','upload','colorpicker'],function() {
+        laydate = layui.laydate;
+        layer = layui.layer;
+        var form = layui.form;
+        $ = layui.jquery;
+        var upload = layui.upload;
+        var colorpicker = layui.colorpicker;
+
+
+    });
+
+    function view(id){
+        var layer = layui.layer;
+        layer.open({
+            type: 2,
+            title:"订单详情",
+            skin: 'layui-layer-rtim', //加上边框
+            area: ['100%', '100%'], //宽高
+            shadeClose: true, //开启遮罩关闭
+            end: function (index, layero) {
+                return false;
+            },
+            content: "/?s=index/parcel_billinfo&id="+id
+        });
+    }
+</script>
+</html>

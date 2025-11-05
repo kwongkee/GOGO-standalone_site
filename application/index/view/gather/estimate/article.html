@@ -1,0 +1,78 @@
+{include file="common/gather_header"}
+<link rel="stylesheet" href="layui/css/layui.css">
+<link rel="stylesheet" href="css/gather_base.css">
+<link rel="stylesheet" href="css/gather_app.css">
+<link rel="stylesheet" href="css/gather_article.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;background:#444444;}
+    #content .container{width: 80%;max-width: 1200px;padding: 0px;margin: 30px auto 40px;border-radius: 5px;background-color: unset;box-shadow: 0 0 16px rgba(0,0,0,.04);box-shadow: unset;}
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+    .content .box_content{background:;color:;border:1px solid ;font-size:25px;text-align:center;padding:30px;width:100%;}
+    .content .box_content img{width:40px;margin-right:5px;}
+    .layui-elem-field legend,.layui-form-item .layui-form-label{color:;}
+    .word_color{color:;}
+    .layui-card{background:;}
+    .layui-fluid,.layui-card-body{padding:0;}
+
+    .layui-form-label{width:fit-content;}
+    .layui-input-block{line-height:38px;margin-left:100px;}
+    .layui-elem-field{margin-bottom: 0;}
+    .no-line{text-align: center;color:;}
+    .base{background:#444444;padding:0;}
+    .base .main-top {padding: 20px 0;text-align: center;background: #444444;}
+    .base .main-top .package-search {display: flex;justify-content: center;background-color: #ffd400;}
+    .base .main-top .package-search .search-input {display: flex;align-items: center;width: 880px;height: 50px;background-color: #fff;border-radius: 30px;margin: 0 10px;}
+    .base .main-top .package-search .search-input .order-number {flex: 12;margin: 0 10px;border: none;outline: none;}
+    .base .main-top .package-search .search-input .search-icon {flex: 1;cursor: pointer;margin-right: 10px;font-size: 25px;font-weight: 700;text-align: center;color: #ffd400;}
+    .base .main-top .package-search .search-input .search-icon img{width:30px;}
+    .express-content{display: flex;justify-content: center;padding: 50px;font-size: 14px;text-align: center;border: 1px solid #f2f2f2;}
+    .express-content .empty-box {margin: 39px 0;color: ;}
+    @media (max-width:992px){
+        .container_content{margin-top:15px;}
+        /**日期时间**/
+        .layui-laydate-range{left: 0 !important;width: fit-content;}
+        .layui-laydate-range .layui-laydate-main{display: block;width: 100%;}
+        .layui-laydate-range .layui-laydate-main .layui-laydate-content table{width: 100%;}
+        .layui-fluid,.layui-card-body{padding:0;}
+        #content .container {width: 90%;}
+    }
+    @media (max-width: 1024px) {
+        .base {width: 100% !important;}
+    }
+</style>
+<div id="app">
+    <div>
+        <img src="https://api-jiyun.beegoplus.com/storage/admin/20211021-IBdewTZAt1S5Xly0.png" alt="" class="top-img">
+    </div>
+</div>
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="base">
+            <div class="main">
+                <div class="main-left">
+                    <ul>
+                        <li><a href="/zh_CN/article-421-637" class="column-title select">拖车中转</a></li>
+                        <li><a href="/zh_CN/article-636-1054" class="column-title">整柜订舱</a></li>
+                        <li><a href="/zh_CN/article-429-645" class="column-title">散货拼箱</a></li>
+                        <li><a href="/zh_CN/article-429-645" class="column-title">海外仓储</a></li>
+                    </ul>
+                </div>
+                <div class="main-right">
+                    <div class="main-right-main"><p><span style="font-weight: bold;">集运教程</span></p>
+                        <p><br> 1、小程序及官网首页均有仓库地址可直接黏贴复制；把需要寄的包裹收货地址填写为仓库地址。（请严格按照我们所给出的信息填写，请勿随意修改）<br>2、进入转运页面，点击“开始转运”，在提交转运清单页输入商品名称或商品网址链接、填写商品类目、商品金额，选择所寄往的仓库（上海仓或深圳仓）后点击“添加包裹”。<br>3、当所有包裹到达仓库后，即可在PC后台或小程序首页内-已到库中选中本次所有要寄的包裹后点击“合并包裹”。在等待仓库打包称重的过程中您可以在PC端后台或小程序内添加您的国外收货地址。<br>4、仓库打包好后会回传包裹的重量及体积，您此时即可选择包裹内物品属性的对应渠道
+                            进行付款。（如对渠道选择问题有疑惑，请联系我们的客服进行咨询） 在等待仓库打包称重的过程中您可以在PC端后台或小程序内添加您的国外收货地址。<br>5、当物品发出后即可在小程序-我的-订单详情内查询具体的物流轨迹或者通过<a
+                                    href="http://www.ydhex.com" target="_blank"
+                                    style="">http://www.ydhex.com</a>或<a
+                                    href="https://www.17track.net/zh-cn" target="_blank"
+                                    style="">https://www.17track.net/zh-cn</a><span
+                                    style="">输入单号，物流承运商选择YDH进行查询。在等待仓库打包称重的过程中您可以在PC端后台或小程序内添加您的国外收货地址。</span>
+                        </p><a href="http://www.ydhex.com" target="_blank"></a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{include file="common/gather_footer"}

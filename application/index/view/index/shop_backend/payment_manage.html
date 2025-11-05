@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>独立站平台 - website.gogo198.net</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style>
+        :root {--primary: #8B5FBF;--primary-light: #9B7BC6;--primary-dark: #6A4A9C;--accent: #F0E6FF;--background: #f8f9fa;--card-bg: #ffffff;--text: #333333;--text-light: #666666;--shadow: 0 5px 15px rgba(0, 0, 0, 0.08);--shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.12);--gradient: linear-gradient(135deg, #8B5FBF 0%, #6A4A9C 100%);--border-radius: 12px;}
+
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        .action-buttons {display: flex;justify-content:end;gap: 15px;}
+        .btn {padding: 10px 20px;border-radius: 50px;font-weight: 600;cursor: pointer;transition: all 0.3s ease;display: flex;align-items: center;gap: 8px;border: none;}
+        .btn-primary {background: var(--gradient);color: white;}
+        .btn-primary:hover {transform: translateY(-3px);box-shadow: var(--shadow-hover);}
+        .btn-outline {background: transparent;color: var(--primary);border: 2px solid var(--primary-light);}
+        .btn-outline:hover {background: var(--primary-light);color: white;}
+        /* 表单样式 */
+        .form-container {max-width: 800px;}
+        .form-group {margin-bottom: 20px;}
+        .form-label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-control {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;}
+        .form-control:focus {border-color: var(--primary);outline: none;}
+        .form-row {display: grid;grid-template-columns: repeat(2, 1fr);gap: 20px;}
+
+        .content-header {display: flex;justify-content: space-between;align-items: center;margin-bottom: 25px;padding-bottom: 15px;border-bottom: 1px solid #eee;}
+        .content-title {font-size: 1.5rem;color: var(--primary-dark);}
+
+        .disf{display:flex;align-items: center;}
+
+        .layui-form-label{width:100px;}
+        .layui-colorpicker-trigger-span{line-height: 24px;}
+        .layui-btn-container{display: flex;}
+    </style>
+</head>
+<body>
+<form class="layui-form" action="" lay-filter="component-form-group">
+    <input type="hidden" name="company_id" value="{$company_id}">
+    <input type="hidden" name="company_type" value="{$company_type}">
+
+    <div class="layui-form-item">
+        <div class="layui-form-label">支付配置</div>
+        <div class="layui-input-block">
+            <select name="pay_method" lay-verify="required" lay-filter="pay_method">
+                <option value="">请选择支付方式</option>
+                <option value="1" {if $data['pay_method']==1}selected{/if}>平台支付</option>
+                <option value="2" {if $data['pay_method']==2}selected{/if}>自主支付</option>
+            </select>
+        </div>
+    </div>
+    <div class="pay_div" style="display: {if $data['pay_method']==2}block{else}none{/if};">
+        <div class="layui-form-item">
+            <div class="layui-form-label">PayPal</div>
+            <div class="layui-input-block">
+                <div class="disf">
+                    <input type="hidden" name="paypal[is_through]" value="{$data['paypal']['is_through']}" class="layui-input is_through">
+                    <input type="text" name="paypal[client_id]" class="client_id layui-input" value="{$data['paypal']['client_id']}" placeholder="client_id" {if $data['paypal']['is_through']==1}readonly style="background:#D2D2D2;"{/if}>
+                    <input type="text" name="paypal[client_secret]" class="client_secret layui-input" value="{$data['paypal']['client_secret']}" placeholder="client_secret" {if $data['paypal']['is_through']==1}readonly style="background:#D2D2D2;"{/if}>
+                    <div class="check_paypal_btn layui-btn {if $data['paypal']['is_through']==1}althrough{else}nothrough{/if}" onclick="check_through(this,{$data['paypal']['is_through']},'paypal')">接入</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-form-label">货到付款</div>
+        <div class="layui-input-block">
+            <select name="cash_on_delivery" lay-filter="cash_on_delivery">
+                <option value="1" {if $data['cash_on_delivery']==1}selected{/if}>不支持</option>
+                <option value="2" {if $data['cash_on_delivery']==2}selected{/if}>支持</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item down_payment" style="display:{if $data['cash_on_delivery']==2}block{else}none{/if};">
+        <div class="layui-form-label">预付定金</div>
+        <div class="layui-input-block">
+            <select name="down_payment" lay-filter="down_payment">
+                <option value="1" {if $data['down_payment']==1}selected{/if}>不支持</option>
+                <option value="2" {if $data['down_payment']==2}selected{/if}>支持</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item prepaid_amount" style="display:{if $data['down_payment']==2}block{else}none{/if};">
+        <div class="layui-form-label">预付金额</div>
+        <div class="layui-input-block">
+            <div class="disf">
+                <div>
+                    <select name="prepaid_method" lay-filter="prepaid_method">
+                        <option value="1" {if $data['prepaid_method']==1}selected{/if}>按比例</option>
+                        <option value="2" {if $data['prepaid_method']==2}selected{/if}>按定额</option>
+                    </select>
+                </div>
+                <div class="disf">
+                    <div class="prepaid_method1" style="display:{if $data['prepaid_method']==1}block{else}none{/if};">
+                        <input type="number" class="layui-input" name="prepaid_percent" value="{$data['prepaid_percent']}" placeholder="请输入采购金额的 X %/订单">
+                    </div>
+                    <div class="prepaid_method2" style="display:{if $data['prepaid_method']==2}block{else}none{/if};">
+                        <div class="disf">
+                            <div>
+                                <select name="prepaid_currency" lay-search>
+                                    {volist name="currency" id="vo"}
+                                    <option value="{$vo['id']}" {if $data['prepaid_currency']==$vo['id']}selected{/if}>{$vo['currency_symbol_standard']}</option>
+                                    {/volist}
+                                </select>
+                            </div>
+                            <input type="number" class="layui-input" name="prepaid_amount" value="{$data['prepaid_amount']}" placeholder="请输入金额的 X /订单">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <button class="btn btn-primary" lay-submit lay-filter="formDemo">
+            <i class="fas fa-save"></i> 立即保存
+        </button>
+    </div>
+    </div>
+</form>
+</body>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    layui.use(['layer','form','laydate','upload','colorpicker'],function() {
+        laydate = layui.laydate;
+        layer = layui.layer;
+        var form = layui.form;
+        $ = layui.jquery;
+        var upload = layui.upload;
+        var colorpicker = layui.colorpicker;
+
+        //付款配置
+        form.on('select(pay_method)',function(data){
+            let val = data.value;
+
+            if(val==1){
+                $('.pay_div').hide();
+            }
+            else if(val==2){
+                $('.pay_div').show();
+            }
+        });
+
+        //货到付款
+        form.on('select(cash_on_delivery)',function(data){
+            let val = data.value;
+
+            if(val==1){
+                //不支持
+                $('.down_payment,.prepaid_amount').hide();
+            }
+            else{
+                //支持
+                $('.down_payment').show();
+                $('.prepaid_amount').hide();
+            }
+        });
+
+        //预付定金
+        form.on('select(down_payment)',function(data){
+            let val = data.value;
+
+            if(val==1) {
+                //不支持
+                $('.prepaid_amount').hide();
+            }
+            else{
+                //支持
+                $('.prepaid_amount').show();
+            }
+        });
+
+        //预付金额
+        form.on('select(prepaid_method)',function(data){
+            let val = data.value;
+
+            if(val==1){
+                //按比例
+                $('.prepaid_method1').show();
+                $('.prepaid_method2').hide();
+            }
+            else if(val==2) {
+                //按金额
+                $('.prepaid_method1').hide();
+                $('.prepaid_method2').show();
+            }
+        });
+
+        form.on('submit(formDemo)', function(data){
+            layer.load();
+            $.ajax({
+                url:"/?s=index/payment_manage",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.closeAll('loading');
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            // let currentUrl = new URL(window.location.href);
+                            // currentUrl.searchParams.set('tab', 'website_basic');
+                            // window.history.pushState({}, '', currentUrl.toString());
+                            window.location.reload();
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

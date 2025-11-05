@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>独立站平台 - website.gogo198.net</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style>
+        :root {--primary: #8a2be2;--primary-dark: #6a1cb9;--primary-light: #9b4de3;--secondary: #bb86fc;--accent: #e6d7f5;--text: #333333;--text-light: #f8f8f8;--background: #f9f5fd;--card-bg: #ffffff;--gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));--gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary));--shadow: 0 10px 30px rgba(138, 43, 226, 0.15);--shadow-hover: 0 15px 35px rgba(138, 43, 226, 0.25);}
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        body {color: var(--text);line-height: 1.6;overflow-x: hidden;}
+        h1, h2, h3, h4, h5, h6 {font-family: 'Montserrat', sans-serif;font-weight: 700;}
+
+        /* 导航栏样式 */
+        header {background: rgba(255, 255, 255, 0.95);color: var(--text);padding: 15px 0;box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);position: sticky;top: 0;z-index: 1000;backdrop-filter: blur(10px);}
+        nav {display: flex;justify-content: space-between;align-items: center;position: relative;}
+        .logo {font-size: 1.8rem;font-weight: 700;display: flex;align-items: center;background: var(--gradient);-webkit-background-clip: text;background-clip: text;color: transparent;z-index: 1001;}
+        .logo i {margin-right: 10px;color: var(--primary);}
+        .nav-links {display: flex;list-style: none;}
+        .nav-links li {margin-left: 25px;position: relative;}
+        .nav-links a {color: var(--text);text-decoration: none;font-weight: 500;transition: all 0.3s ease;padding: 8px 12px;border-radius: 4px;position: relative;display: flex;align-items: center;}
+        .nav-links a::after {content: '';position: absolute;bottom: 0;left: 50%;width: 0;height: 2px;background: var(--gradient);transition: all 0.3s ease;transform: translateX(-50%);}
+        .nav-links a:hover {color: var(--primary);}
+        .nav-links a:hover::after {width: 80%;}
+        .auth-buttons {display: flex;align-items: center;}
+        .btn {padding: 12px 25px;border-radius: 50px;text-decoration: none;font-weight: 600;transition: all 0.3s ease;cursor: pointer;display: inline-block;text-align: center;border: none;font-family: 'Montserrat', sans-serif;}
+        .btn-outline {border: 2px solid var(--primary);color: var(--primary);background: transparent;margin-right: 15px;}
+        .btn-outline:hover {background: var(--primary);color: white;transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-primary {background: var(--gradient);color: white;border: 2px solid transparent;}
+        .btn-primary:hover {background: transparent;border-color: var(--primary);color: var(--primary);transform: translateY(-3px);box-shadow: var(--shadow);}
+
+        /* 表单样式 */
+        .form-section {margin-bottom: 30px;}
+        .form-title {font-size: 1.3rem;margin-bottom: 20px;color: var(--primary-dark);display: flex;align-items: center}
+        .form-title i {margin-right: 10px;}
+        .form-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));gap: 20px;}
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select,
+        .form-group textarea {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;}
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {border-color: var(--primary);outline: none;}
+        .form-group textarea {min-height: 120px;resize: vertical;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
+
+        /* 模态框样式 */
+        .modal {display: none;position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.5);backdrop-filter: blur(5px);z-index: 2000;align-items: center;justify-content: center;}
+        .modal-content {background: white;border-radius: 20px;padding: 30px;width: 90%;max-width: 500px;box-shadow: var(--shadow-hover);position: relative;}
+        .close-modal {position: absolute;top: 20px;right: 20px;font-size: 1.5rem;color: #999;cursor: pointer;transition: color 0.3s ease;}
+        .close-modal:hover {color: var(--primary);}
+        .modal-title {font-size: 1.5rem;margin-bottom: 20px;color: var(--primary);}
+
+        .btn {padding: 10px 20px;border-radius: 50px;font-weight: 600;cursor: pointer;transition: all 0.3s ease;display: flex;align-items: center;gap: 8px;border: none;}
+        .btn-edit {background: var(--primary-light);color: white;border: none;}
+        .btn-edit:hover {background: var(--primary);}
+        .btn-delete {background: transparent;color: #ff4757;border: 2px solid #ff4757;}
+        .btn-delete:hover {background: #ff4757;color: white;}
+        .btn-primary {background: var(--gradient);color: white;}
+        .btn-primary:hover {transform: translateY(-3px);box-shadow: var(--shadow-hover);}
+        .btn-outline {background: transparent;color: var(--primary);border: 2px solid var(--primary-light);}
+        .btn-outline:hover {background: var(--primary-light);color: white;}
+
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}
+        .form-group input:focus,
+        .form-group select:focus {border-color: var(--primary);outline: none;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
+
+        .layui-form-item .layui-form-label{width:100px;}
+        .layui-table th,
+        .member-table th {background: var(--accent);color: var(--primary-dark);font-weight: 600;}
+
+        /* 动画 */
+        @keyframes fadeIn {
+            from {opacity: 0;transform: translateY(10px);}
+            to {opacity: 1;transform: translateY(0);}
+        }
+
+        @media (max-width: 576px) {
+            .btn {padding: 10px 20px;font-size: 0.9rem;}
+            /*.form-actions {flex-direction: column;}*/
+        }
+    </style>
+
+</head>
+<body>
+<div class="row" style="padding:0px;">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <div id="toolbar" class="btn-group" style="margin-top: 10px;margin-bottom: 10px;line-height: 34px;">
+                    <button type="button" onclick="save(0,1);" class="btn btn-primary">
+                        <i class="fas fa-add"></i>
+                        添加角色
+                    </button>
+                </div>
+                <table class="layui-hide" id="mainTable"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 添加场景·模态框 -->
+<div class="modal" id="saveRotateModal">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2 class="modal-title">保存角色</h2>
+        <iframe src="" class="rotate_iframe" frameborder="0" style="width: 100%;height:400px;"></iframe>
+    </div>
+</div>
+
+</body>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="layui/layui.js"></script>
+<script src="./layui/xm-select.js"></script>
+<script>
+    layui.use(['layer','form','laydate','upload','table'],function() {
+        laydate = layui.laydate;
+        layer = layui.layer;
+        var form = layui.form;
+        $ = layui.jquery;
+        var upload = layui.upload;
+        var table = layui.table;
+
+        const modal = document.getElementById('saveRotateModal');
+        const closeBtn = document.querySelector('.close-modal');
+        // const cancelBtn = document.getElementById('cancelBtn');
+        // 关闭模态框
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+        closeBtn.addEventListener('click', closeModal);
+        // cancelBtn.addEventListener('click', closeModal);
+
+        // 点击模态框外部关闭
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        table.render({
+            elem: '#mainTable'
+            ,url: "/?s=index/group_member_role&pa=1&company_id={$company_id}&company_type={$company_type}"
+            ,cellMinWidth: 200
+            ,cols: [[
+                {field:'id', width:80, title: '编号'}
+                ,{field:'name', title: '角色名称'}
+                ,{field:'desc', title: '角色描述'}
+                ,{width:180,align:'center', fixed: 'right', title: '操作', templet: function(d){
+                        var result = "";
+
+                        result += '<a onclick="save('+d.id+',1);" class="layui-btn layui-btn-xs btn-edit"><i class="fas fa-edit"></i> 编辑</a>';
+                        result += '<a onclick="del_component('+ "'"+d.id+"'" +');" class="layui-btn layui-btn-xs btn-delete"><i class="fas fa-trash"></i> 删除</a>';
+
+                        return [
+                            result
+                        ].join('');
+
+                        return result;
+                    }}
+            ]]
+            ,page: true
+        });
+
+        var $ = layui.$, active = {
+            reload: function(){
+                //执行重载
+                table.reload('mainTable', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                        keywords: $("#keywords").val()
+                    }
+                });
+            }
+        };
+
+        $('.main-table-reload-btn .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+
+    //场景删除
+    function del_component(id){
+        var layer = layui.layer,$ = layui.$;
+        layer.confirm('确认要删除该角色？', {
+            btn: ['删除','取消']
+        }, function(){
+            $.ajax({
+                url:"/?s=index/del_group_member_role",
+                type:"GET",
+                dataType:"json",
+                data:{id:id,company_id:"{$company_id}"},
+                success:function (res) {
+                    layer.msg(res.msg);
+                    if (res.code==0){
+                        setTimeout(function () {
+                            let currentUrl = new URL(parent.location.href);
+                            currentUrl.searchParams.set('tab', 'group_member_role');
+                            parent.history.pushState({}, '', currentUrl.toString());
+
+                            parent.location.reload();
+                        },2000);
+                    }
+                },
+                error:function (xhr) {
+                    layer.msg('连接服务器错误！');
+                }
+            });
+            layer.closeAll();
+        }, function(){
+
+        });
+    }
+
+    //添加角色&编辑角色
+    function save(id,type) {
+        var layer = layui.layer,$ = layui.$;
+        if(type==1){
+            //保存场景用语
+            var modal = document.getElementById('saveRotateModal');
+            modal.style.display = 'flex';
+
+            $('#saveRotateModal .rotate_iframe').attr('src','/?s=index/save_group_member_role&company_id={$company_id}&company_type=0&id='+id);
+        }
+    }
+
+    function delPic(obj)
+    {
+        var layer = layui.layer,$ = layui.$;
+        layer.confirm('确认要删除该附件？', {
+            btn: ['删除','取消']
+        }, function(){
+            $(obj).parent().remove();
+            layer.closeAll();
+        }, function(){
+
+        });
+    }
+</script>
+</html>

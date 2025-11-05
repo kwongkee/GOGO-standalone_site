@@ -1,0 +1,751 @@
+{if !isset($goods))
+<script src="layui/layui.js"></script>
+<script src="js/jquery.chosen.js?v=1.3"></script>
+{/if}
+<style type="text/css" media="all">
+    /**弹窗样式**/
+    .layer_frame .layui-layer-title{background:#bebebe;color:#fff;}
+    .layer_frame .layui-layer-content{overflow:unset !important;}
+    .layer_frame .layui-layer-setwin{top:12px !important;}
+    .layer_frame .layui-layer-title .disf{height:100%;}
+    .layer_frame .exclamation-circle {position: relative;margin-right:8px;}
+    .layer_frame .exclamation-circle span{font-size: 14px;font-weight:900;color: #fff;font-family: PingFang SC, Hiragino Sans GB, Heiti SC, Microsoft YaHei, Helvetica, Tahoma, Arial, SimHei, WenQuanYi Micro Hei !important;}
+    .layer_frame .exclamation-circle::after {content: '';position: absolute;left: 50%;top: 50%;transform: translate(-50%, -50%);width: 14px;height: 14px;background-color: {$data['websites']['info']['color_word']};border-radius: 50%;opacity:0.5;}
+    .layer_frame .page_innerhead{width:100%;border-bottom:1px solid {$data['websites']['info']['color']};}
+    .layer_frame .page_innerhead .pageBack{width:15%;text-align: center;padding:10px 0;font-size:15px;color:#000;font-weight:600;background:#bebebe;cursor:pointer;position:relative;}
+    .layer_frame .page_innerhead .pageSel{width:42.5%;text-align: center;padding:10px 0;font-size:15px;color:#000;font-weight:600;background:{$data['websites']['info']['color_word']};cursor:pointer;position:relative;}
+    .layer_frame .page_innerhead .pageSel:first-child{border-right:1px solid {$data['websites']['info']['color_word']};}
+    .layer_frame .page_innerhead .pageAct{background:{$data['websites']['info']['color']};color:{$data['websites']['info']['color_word']};}
+    .layer_frame .page_innerhead .pageAct:after {content: '';position: absolute;top: 15px;right: 35px;width: 8px;height: 8px;border-top: 2px solid {$data['websites']['info']['color_word']};border-right: 2px solid {$data['websites']['info']['color_word']};transform: rotate(135deg);}
+    .layer_frame .layui-layer-content .rightBox .page_content{height:88%;overflow-y: auto;}
+    .layer_frame .layui-layer-content .rightBox .page_content .rightContent{height:100%;}
+
+    /*客服样式*/
+    .m-gotop .a {position: relative;display: block;width: 55px;height: 55px;background-color:{$data['websites']['info']['color']};color: {$data['websites']['info']['color_word']};margin-bottom: 0px;text-align: center;cursor: pointer;outline: none;}
+    .m-gotop .a>img {width: 30px;margin-top: 22%;}
+    .m-mod img {max-width: 100%;border: 0;vertical-align: middle;}
+
+
+    /*页脚样式*/
+    footer .container{width:1200px;padding:0;}
+    footer .contact_contain{width: 40%;position: relative;left:10%}
+    footer a:link,footer a:hover,footer ul.link-list li a:hover{color:{$data['websites']['info']['color_word']};}
+    footer h1, footer h2, footer h3, footer h4, footer h5, footer h6{color:{$data['websites']['info']['color_word']};}
+    @media (max-width: 992px) {
+        footer .contact_contain{width: 80%;position: relative;left:10%}
+    }
+    footer .contact_contain .box{width: 100%;position: relative;overflow: hidden;height:34px;}
+    footer .contact_contain .box_wheel{height: 500px;position: absolute;overflow: hidden;}
+    footer .contact_contain .box_wheel li{width: 1040px;height: 500px;background: pink;text-align: center;line-height: 500px;float: left;}
+    footer .contact_contain .contact_btn{width: 30px;height: 30px;line-height: 30px;text-align: center;color: #f1be83;font-size: 30px;cursor: pointer;display:none;}
+    footer .contact_contain .btn_left{position: absolute;left: -50px;top: 0%;}
+    footer .contact_contain .btn_right{position: absolute;right: -50px;top: 0%;}
+    footer ul.social-network li{border:1px solid {$data['websites']['info']['color_word']};}
+    footer .copyright p span:first-child{display:none;}
+    footer .trademark{width: 50px;border-radius:50px;margin-bottom:10px;}
+    footer .widgetheading{font-weight:800;}
+    footer .row{margin-bottom:20px;}
+
+    @media (max-width: 992px){
+        footer{width: 100%;padding: 10px 15px;}
+        footer .container{width:100%;}
+        footer .contact_contain{width:100%;}
+        footer .contact_contain .box{height: 40px;padding-bottom:0;}
+        footer .row{margin-bottom: 10px;}
+        footer #sub-footer{padding-top:10px !important;}
+        footer .foot-menu{display:block !important;}
+        footer .foot-menu .col-md-4{float:left;}
+    }
+</style>
+<!--导流显示-->
+{include file="layouts/advice"}
+{if !isset($goods)}
+    {include file="layouts/share"}
+{/if}
+{include file="layouts/common_function"}
+{if !empty($data['websites']['customer'])}
+<div class="m-gotop">
+    <div class="m-gotop-box" style="background:{$data['websites']['info']['color']};color:{$data['websites']['info']['color_word']};position:fixed;top:{if $data['websites']['customer']['direction']==1} 20% {elseif($data['websites']['customer']['direction']==2)} 50% {elseif($data['websites']['customer']['direction']==2)} 80% {/if};right:0;z-index: 11;">
+        <a href="javascript:common_operation(7,this);" class="a a-top" style="right:0;z-index:9;box-shadow: rgb(102, 102, 102) 0px 0px 10px;">
+            <img src="{$data['source_link']}/shop/img/kefu.png" alt="" style="margin-top:22%;">
+        </a>
+    </div>
+</div>
+{/if}
+<!--页脚-->
+<footer style="background: {$data['websites']['info']['color']};">
+    <div class="container" style="font-size:16px;">
+        <div class="row">
+
+            <div class="col-md-3 col-sm-3">
+                <div class="widget">
+                    <img src="{$data['source_link']}{$data['websites']['info']['slogo']}" class="trademark">
+                    <h4 class="widgetheading f18" style="margin-bottom:5px;">联系信息</h4>
+                    <p>
+                        {if !empty($data['websites']['info']['mobile'])}
+                        <img src="/shop/img/tel.png" alt="" style="width:18px;"/> <a href="tel:{$data['websites']['info']['mobile']}">{$data['websites']['info']['mobile']}</a> <br>
+                        {/if}
+                        {if !empty($data['websites']['info']['email'])}
+                        <img src="/shop/img/email.png" alt="" style="width:18px;"/> <a href="mailto:{$data['websites']['info']['email']}">{$data['websites']['info']['email']}</a> <br>
+                        {/if}
+                        {if !empty($data['websites']['info']['address'])}
+                        <img src="/shop/img/address.png" alt="" style="width:18px;"/> <a href="javascript:void(0);">{$data['websites']['info']['address']}</a>
+                        {/if}
+                    </p>
+                </div>
+            </div>
+            <div class="disf col-md-9 col-sm-9 foot-menu" style="justify-content: space-between;align-items:baseline;">
+                {if !empty($data['websites']['footer_menu'])}
+                {volist name="data['websites']['footer_menu']" key="k" id="v"}
+                <div class="col-md-4 col-sm-4">
+                    <div class="widget">
+                        <h4 class="widgetheading f18" style="margin-bottom:5px;text-align:center;">{$v['name']}</h4>
+                        <ul class="link-list" style="text-align:center;">
+                            {volist name="v['children']" key="k2" id="v2"}
+                            {if $v2['type']==0}
+                            <!--下级卡片-->
+                            <li><a href="javascript:void(0);" class="f18">&nbsp;&nbsp;{$v2['name']}</a></li>
+                            {elseif($v2['type']==1)}
+                            <!--详情内容-->
+                            <li><a href="/?s=index/detail&id={$v2['id']}&is_footer=1" class="f18" target="_blank">&nbsp;&nbsp;{$v2['name']}</a></li>
+                            {elseif($v2['type']==2)}
+                            <!--跳转其它-->
+                            {if $v2['go_other']==0}
+                            <!--不选择跳转-->
+                            <li><a href="javascript:void(0);" class="f18">&nbsp;&nbsp;{$v2['name']}</a></li>
+                            {elseif($v2['go_other']==1)}
+                            <!--跳转第三方-->
+                            <li><a href="{$v2['other_link']}" class="f18" target="_blank">&nbsp;&nbsp;{$v2['name']}</a></li>
+                            {elseif($v2['go_other']==2)}
+                            <!--跳转其它菜单-->
+                            <li><a href="/?s=index/detail&id={$v2['other_navbar']}&is_footer=1" class="f18" target="_blank">&nbsp;&nbsp;{$v2['name']}</a></li>
+                            {/if}
+                            {/if}
+                            {/volist}
+                        </ul>
+                    </div>
+                </div>
+                {/volist}
+                {/if}
+            </div>
+        </div>
+    </div>
+    <div id="sub-footer" style="padding-top:0;margin-top:0;font-size:16px;background:{$data['websites']['info']['color']};">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-5">
+                    <div style="color:{$data['websites']['info']['color_word']};font-weight:unset;font-size:18px;white-space: nowrap;margin-bottom:10px;font-weight:800;" class="f18">
+                        社媒跟踪
+                    </div>
+                    <div class="contact_contain">
+                        <div class="box" style="">
+                            <ul class="social-network" style="overflow-x:unset;position:absolute;">
+                                {if !empty($data['websites']['website_contact'])}
+                                {volist name="data['websites']['website_contact']" key="key" id="vo"}
+                                {if $vo['type']==1}
+                                <li style="margin-left:0;"><a href="{$vo['link']}" data-placement="top" title="{$vo['name']}" target="_blank"><img src="{$data['source_link']}{$vo['ico']}" alt="" style="width:18px;margin-bottom: 3px;"/></a></li>
+                                {else}
+                                <li style="margin-left:0;"><a href="/?s=index/social_detail&id={$vo['id']}" data-placement="top" title="{$vo['name']}"><img src="{$data['source_link']}{$vo['ico']}" alt="" style="width:18px;margin-bottom: 3px;"/></a></li>
+                                {/if}
+                                {/volist}
+                                {/if}
+                            </ul>
+                        </div>
+                        <div class="contact_btn btn_left"><</div>
+                        <div class="contact_btn btn_right">></div>
+                    </div>
+                </div>
+                <div class="col-lg-7">
+                    <div class="copyright" style="white-space:normal; word-break:break-all;">
+                        <div style="color:{$data['websites']['info']['color_word']};font-weight:unset;font-size:18px;white-space: nowrap;margin-bottom:10px;text-align:center;font-weight:800;" class="f18">
+                            网站信息
+                        </div>
+                        <p style="text-align:center;" class="f16">
+                            {if !empty($data['websites']['website_qualification'])}
+                            {volist name="data['websites']['website_qualification']" key="k" id="v"}
+                            {if $k!=0} <span>|</span> {/if} &nbsp;<a href="/?s=index/qualific&id={$v['id']}" class="f16" target="_blank">{$v['name']}</a>&nbsp;
+                            {/volist}
+                            {/if}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="row copyright2" style="margin-bottom:0;">
+                <div class="col-lg-12">
+                    <div style="text-align:center;">
+                        {if !empty($data['websites']['info']['publicity_info'])}
+                        {volist name="data['websites']['info']['publicity_info']" key="k" id="v"}
+                        {if $k!=0} <span>|</span> {/if} &nbsp;<a href="{$v['link']}" class="f16" target="_blank">{$v['name']}</a>&nbsp;
+                        {/volist}
+                        {/if}
+                        <br>
+                        {$data['websites']['info']['copyright']}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+<script type="text/javascript" charset="utf-8">
+    //监控页面超过头部高度
+    window.addEventListener('scroll', function() {
+        var scrollPosition = window.scrollY;
+        // console.log(scrollPosition,$(window).height()-200);
+        if (scrollPosition > 90) {
+        {if isset($data['page_type'])}
+            {if $data['page_type']==1}
+                $('header').css({'position':'fixed','top':'35px','left':0,'width':'100%'});
+            {/if}
+        {else}
+            $('header').css({'position':'fixed','top':'0','left':0,'width':'100%'});
+        {/if}
+
+            $('.rotateBox').css({'position':'fixed','top':0,'left':0,'width':'100%'});
+        }else{
+            $('header').css({'position':'relative','top':'unset','left':'unset','width':'100%'});
+            $('.rotateBox').css({'position':'relative','top':'unset','left':'unset','width':'100%'});
+        }
+    });
+
+    function IsPhone() {
+        var info = navigator.userAgent;
+        var isPhone = /Mobi|Android|iPhone/i.test(info);
+        return isPhone;
+    }
+
+    //microsoft edge样式
+    function isMicrosoftEdge() {
+        var userAgent = navigator.userAgent;
+        return userAgent.indexOf("Edg") > -1 || userAgent.indexOf("EdgA") > -1;
+    }
+
+    layui.use(['layer','element','upload','form'],function() {
+        var $ = layui.$
+            , layer = layui.layer
+            , element = layui.element
+            , form = layui.form
+            , upload = layui.upload;
+
+        //我要咨询关闭
+        // $('.advice .cancel').click(function(){
+        //     $('.mask').fadeOut('slow');
+        //     $('.advice').fadeOut('slow');
+        // });
+
+        //头部菜单第三层
+        $('.haschild').click(function(){
+            $(this).parent().find('.dropdown').addClass('open');
+            $(this).parent().parent().parent('.dd_parent').addClass('open2');
+
+            if(IsPhone()){
+                $('.navbar-collapse').stop().animate({
+                    scrollTop: 500
+                }, 1000);
+            }
+        });
+    });
+
+    //公用导流样式
+    var layer_frame_div = '';
+    function common_operation(go_other,t){
+        var $ = layui.$
+            , layer = layui.layer;
+
+        if(go_other==1){
+            //我要分享
+            let area = ['300px', '200px'];
+
+            layer_frame_div = layer.open({
+                skin:'layer_frame',
+                type: 1,
+                title: '<div class="disf"><div class="exclamation-circle"><span>!</span></div>我要分享</div>',
+                area: area,
+                content: $('.bdsharebuttonbox'),
+                end:function(res){
+                    //刷新页面
+                    layer.close(layer_frame_div);
+                }
+            });
+        }
+        else if(go_other==6){
+            //我要咨询
+            // $('.mask').fadeIn('slow');
+            //
+            // //出现的部分
+            // $('.advice').fadeIn('slow');
+            // $('.advice').css('bottom',0);
+
+            let area = ['350px', '490px'];
+
+            layer_frame_div = layer.open({
+                skin:'layer_frame',
+                type: 1,
+                title: '<div class="disf"><div class="exclamation-circle"><span>!</span></div>我要咨询</div>',
+                area: area,
+                content: $('.advice'),
+                end:function(res){
+                    //刷新页面
+                    layer.close(layer_frame_div);
+                }
+            });
+        }
+        else if(go_other==7){
+            //客服
+            connect_kefu();
+        }
+    }
+
+    function close_layer_frame_div(t){
+        var $ = layui.$
+            , layer = layui.layer;
+
+        layer.close(layer_frame_div);
+    }
+
+    //将颜色变成rgb格式1
+    function calculateRgba(baseColor, opacity) {
+        const r = baseColor.substring(1, 3);
+        const g = baseColor.substring(3, 5);
+        const b = baseColor.substring(5, 7);
+        return `rgba(${parseInt(r, 16)}, ${parseInt(g, 16)}, ${parseInt(b, 16)}, ${opacity})`;
+    }
+    //将颜色变成rgb格式2
+    $(function(){
+        let calcrgba = calculateRgba('{$data['websites']['info']['color']}',0.8);
+        $('.rotateBox,.recommendBox,.storeDiv,.cardDiv,.festivalDiv,.industryDiv,.rate_content,.loginContainer,.common_inner_background').css('background-color',calcrgba);
+    });
+
+    //头部滚动内容
+    {if isset($data['websites']['rotate_info'])}
+    {if !empty($data['websites']['rotate_info'])}
+    if(IsPhone()){
+        new Swiper ('#mobileNewsBox-container', {
+            loop: true, // 循环模式选项
+            direction:'vertical',
+            autoplay: {
+                delay:15000,
+            },
+            // 如果需要分页器
+            // pagination: {
+            //     el: '.swiper-pagination',
+            // },
+        });
+    }
+
+    {volist name="data['websites']['rotate_info']['content_id']" key="k" id="v"}
+    {if $v==1}
+    <!--新闻内容-->
+    //新闻轮播
+    var newsSwiper = new Swiper('.news', {
+        direction:'vertical',
+        loop: true, // 循环模式选项
+        autoplay: {
+            delay:5000
+        },
+        spaceBetween: 1,
+        // 如果需要分页器
+        // pagination: {
+        //     el: '.swiper-pagination',
+        // },
+    });
+    {elseif($v==2)}
+    <!--时间内容-->
+    $('.city-select').chosen();
+    var auto_time = '';
+    $(function(){
+        //获取北京时间
+        auto_time = setInterval(function getTime(){
+            // 创建一个 Date 对象
+            var date = new Date();
+
+            // 使用 toLocaleString() 方法将 Date 对象转换为所需的格式
+            var formatted_date = date.toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+            formatted_date = formatted_date.split(', ');
+            $('.beijing-time .beijing_sec').html(formatted_date[1]);
+        },1000);
+
+        if(IsPhone()){
+            $('.contentBox').css({'-webkit-transform':'translate(-50%, -0.2%)'});
+            $('.wapNavContent').show();
+            $('.mobile_news_box').show();
+            $('.pcNavContent').hide();
+        }else{
+            if (isMicrosoftEdge()) {
+                $('.contentBox').css({'-webkit-transform':'translate(-50%, 0.2%)'});
+            }
+        }
+    });
+
+    //获取城市时间
+    function selectCity(t){
+        let val = $(t).val();
+
+        $.post('//shop.gogo198.cn/collect_website/public/?s=api/getgoods/get_worldcity_time', {'city':val}, function(data) {
+            // setInterval(function getWorldTime(){
+            formatTime(data.data.result.datetime_1);
+            // }, 1000);
+        }, 'json');
+    }
+
+    function formatTime(times='') {
+        clearInterval(auto_time);
+
+        const time = new Date(times);
+
+        function update() {
+            // 更新时间
+            const hours = time.getHours().toString().padStart(2, '0');
+            const minutes = time.getMinutes().toString().padStart(2, '0');
+            const seconds = time.getSeconds().toString().padStart(2, '0');
+            $('.beijing-time .beijing_sec').html(`${hours}:${minutes}:${seconds}`);
+
+            // 更新日期
+            const year = time.getFullYear();
+            const month = (time.getMonth() + 1).toString().padStart(2, '0');
+            const day = time.getDate().toString().padStart(2, '0');
+            $('.beijing-time .beijing_date').html(`${year}/${month}/${day}`);
+
+            // 递增秒数，模拟时间流逝
+            time.setSeconds(time.getSeconds() + 1);
+        }
+        // 首次更新时间和日期
+        update();
+
+        // 每秒更新时间和日期
+        auto_time = setInterval(update, 1000);
+    }
+    {elseif($v==3)}
+    <!--汇率内容-->
+
+    if(IsPhone()){
+        //汇率
+        var mrate_swiper = new Swiper ('.mrate_swiper', {
+            loop: true,
+            direction:'vertical',
+            spaceBetween:0,
+            autoplay:{
+                delay:5000,
+                disableOnInteraction:false,
+            },
+        });
+    }
+    else{
+        var rate = new Swiper ('.rate_swiper', {
+            loop: true,
+            direction:'vertical',
+            spaceBetween:0,
+            autoplay:{
+                delay:5000,
+                disableOnInteraction:false,
+            },
+        });
+    }
+    {/if}
+    {/volist}
+    {/if}
+    {/if}
+
+    //菜单
+    function removeclass(t){
+        $(t).siblings().removeClass('open2');
+    }
+
+    //首页轮播图
+    {if isset($data['websites']['rotate_info'])}
+    {if !empty($data['websites']['rotate_info'])}
+    new Swiper ('#carousel-container', {
+        // direction: 'vertical', // 垂直切换选项（不设置默认是水平切换）
+        loop: true, // 循环模式选项
+        autoplay: true,
+        // 如果需要分页器
+        pagination: {
+            el: '#carousel-pagination',
+        },
+
+        // 如果需要前进后退按钮
+        // navigation: {
+        //   nextEl: '.sn1',
+        //   prevEl: '.sp1',
+        // },
+    });
+    //轮播图结束
+    {/if}
+    {/if}
+
+    //推荐区A
+    {if isset($data['websites']['recommendA'])}
+    {if !empty($data['websites']['recommendA'])}
+    // 发现页轮播图开始
+    new Swiper ('#discovery-container', {
+        loop: true, // 循环模式选项
+        autoplay: {
+            delay:10000,
+        },
+        // 如果需要分页器
+        pagination: {
+            el: '.discovery-pagination',
+        },
+        speed:500,
+        navigation: {
+            nextEl: '.sn1',
+            prevEl: '.sp1',
+        },
+    });
+    {/if}
+    {/if}
+
+    //推荐区B
+    {if isset($data['websites']['recommendB'])}
+    {if !empty($data['websites']['recommendB'])}
+    {volist name="data['websites']['recommendB']" key="k2" id="v2"}
+    new Swiper ('.news{$k2}', {
+        direction:'vertical',
+        loop: true, // 循环模式选项
+        autoplay: {
+            delay:6000,
+        },
+        slidesPerView: 5,
+        setWrapperSize: true,
+        centeredSlides: true,
+        spaceBetween: 0,
+    });
+    {/volist}
+
+    //切换新闻/疾病
+    function change_news(type,keys,t){
+        if(type==2){
+            <!--热卖-->
+            $(t).addClass('newsAct');
+            $(t).siblings().removeClass('newsAct');
+        }else if(type==7){
+            <!--客服-->
+        {if !empty(session('account'))}
+            $(t).addClass('newsAct');
+            $(t).siblings().removeClass('newsAct');
+            let width = $('.newsCont').width();
+            let height = $('.newsCont').height();
+            $('#aichat').css({'width':width,'height':height});
+        {else}
+            window.location.href="/?s=index/customer_login&company_id={$company_id}&company_type={$company_type}";
+        {/if}
+        }
+        $('.news'+keys).css({'opacity':1,'z-index':11,'display':'block'});
+        $('.news'+keys).siblings().css({'opacity':0,'z-index':10,'display':'none'});
+    }
+    {/if}
+    {/if}
+
+    //导流区
+    {if isset($data['websites']['guide'])}
+    {if !empty($data['websites']['guide'])}
+    {volist name="data['websites']['guide']" key="k" id="v"}
+    {if $v['format_info']['id']==1}
+    <!--店铺展示版式-->
+    if(IsPhone()){
+        new Swiper ('.factorySwiper{$k}', {
+            direction:'horizontal',
+            loop: true, // 循环模式选项
+            autoplay: {
+                delay:5000,
+            },
+            slidesPerView: 1,
+            // setWrapperSize: true,
+            // centeredSlides: true,
+            spaceBetween: 20,
+            speed:500,
+            preventDefaultEvents:true,
+            navigation: {
+                nextEl: '.sn-factory{$k}',
+                prevEl: '.sp-factory{$k}',
+            },
+        });
+    }
+    else{
+        new Swiper ('.factorySwiper{$k}', {
+            direction:'horizontal',
+            loop: true, // 循环模式选项
+            autoplay: {
+                delay:5000,
+            },
+            slidesPerView: 2,
+            // setWrapperSize: true,
+            // centeredSlides: true,
+            spaceBetween: 20,
+            speed:500,
+            preventDefaultEvents:true,
+            navigation: {
+                nextEl: '.sn-factory{$k}',
+                prevEl: '.sp-factory{$k}',
+            },
+        });
+    }
+    {elseif($v['format_info']['id']==2 || $v['format_info']['id']==5)}
+    <!--卡片导航展示版式-->
+    if(IsPhone()){
+        new Swiper('.cardSwiper{$k}', {
+            loop: true, // 循环模式选项
+            autoplay: {
+                delay: 5000,
+            },
+            slidesPerView: 1,
+            paginationClickable: true,
+            spaceBetween: 20,
+        });
+    }
+    else {
+        new Swiper('.cardSwiper{$k}', {
+            loop: true, // 循环模式选项
+            autoplay: {
+                delay: 5000,
+            },
+            slidesPerView: 3,
+            paginationClickable: true,
+            spaceBetween: 20,
+            // 如果需要前进后退按钮
+            // navigation: {
+            //   nextEl: '.sn{$k+1}',
+            //   prevEl: '.sprv{$k+1}',
+            // },
+        });
+    }
+    {elseif($v['format_info']['id']==3)}
+    <!--节日好物版式-->
+    // if(IsPhone()){
+    //
+    // }
+    // else {
+    new Swiper('.guide2_content{$k}', {
+        direction: 'horizontal',
+        loop: true, // 循环模式选项
+        autoplay: {
+            delay: 10000,
+        },
+        slidesPerView: 1,
+        setWrapperSize: true,
+        centeredSlides: true,
+        spaceBetween: 20,
+        speed: 500,
+        navigation: {
+            nextEl: '.sn-festival{$k}',
+            prevEl: '.sp-festival{$k}',
+        },
+    });
+    // }
+    {elseif($v['format_info']['id']==4)}
+    //产业集聚-大卡片
+    new Swiper ('.cont6-{$k}', {
+        loop: false,
+        autoplay:false,
+        snap: false,
+        navigation: {
+            nextEl: '.sn-cont6-{$k}',
+            prevEl: '.sp-cont6-{$k}',
+        },
+        on: {
+            slideChange: function () {
+                // 获取当前索引
+                var aidx = this.activeIndex;
+                $('.industryDiv').find('.rightBox').find('.serviceContent').find('.guide_content_pc').css('display','none');
+                $('.industryDiv').find('.rightBox').find('.serviceContent').find('.guide_content_pc').eq(aidx).css('display','block');
+                // console.log(aidx,$('.industryDiv').find('.serviceContent').find('.swiper-container').eq(aidx).css('display'));
+                {volist name="v['big_children']" key="k2" id="v2"}
+                if ({$k2}==aidx){
+                    new Swiper('.guide_content{$v2['id']}', {
+                        direction: 'horizontal',
+                        loop: false,
+                        autoplay: {
+                            delay: 6000,
+                            disableOnInteraction: true,
+                        },
+                        setWrapperSize: true,
+                        centeredSlides: true,
+                        speed: 500,
+                        navigation: {
+                            nextEl: ".sn-industry{$v2['id']}",
+                            prevEl: ".sp-industry{$v2['id']}",
+                        },
+                    });
+                }
+                {/volist}
+            }
+        }
+    });
+
+    //产业集聚-小卡片
+    {volist name="v['big_children']" key="k2" id="v2"}
+    var guide_content{$v2['id']} = new Swiper ('.guide_content{$v2['id']}', {
+        direction:'horizontal',
+        loop: false,
+        autoplay:{
+            delay:5000,
+            disableOnInteraction:true,
+        },
+        setWrapperSize: true,
+        centeredSlides: true,
+        speed:500,
+        navigation: {
+            nextEl: ".sn-industry{$v2['id']}",
+            prevEl: ".sp-industry{$v2['id']}",
+        },
+    });
+    {/volist}
+
+    //手机版循环滚动小卡片
+    {volist name="v['big_children']"  key="k2" id="v2"}
+    new Swiper ('.cont6_children_content{$v2['id']}', {
+        direction:'horizontal',
+        loop: true,
+        autoplay:{
+            delay:5000,
+            disableOnInteraction:true,
+        },
+        slidesPerView: 1,
+        setWrapperSize: true,
+        centeredSlides: true,
+        speed:500,
+    });
+    {/volist}
+    {/if}
+    {/volist}
+    {/if}
+    {/if}
+
+    //社媒跟踪
+    $(function(){
+        //控制联系方式
+        var liW = $(".social-network li").width()+12;
+        //获取li元素的长度(个数)
+        var len = $(".social-network li").length;
+
+        //计算ul的总宽度
+        var ulW = len*liW;
+        //设置ul的宽度
+        $(".social-network").css("width",ulW);
+        if($(".social-network").css("width")>$(".contact_contain").css('width')){
+            $('.contact_btn').show();
+            $('.contact_contain').css('left','10%');
+        }else{
+            $('.contact_btn').hide();
+            $('.contact_contain').css('left','0%');
+        }
+        var idx = 0;
+        $(".btn_left").click(function(){
+            idx --;  //索引自加
+            if(idx == -1){
+                idx = len - 1;
+            }
+            changeLi(idx);
+        });
+        $(".btn_right").click(function(){
+            idx ++;  //索引自减
+            if(idx == len){
+                idx = 0;
+            }
+            changeLi(idx);
+        });
+        function changeLi(idx){
+            var move = -idx * liW;
+            $(".social-network").stop().animate({"left":move},300);
+        }
+    });
+</script>

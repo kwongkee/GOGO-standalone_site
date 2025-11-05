@@ -1,0 +1,324 @@
+{include file="common/header"}
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;}
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+    .content .box_content{background:{$website['color']};color:{$website['color_word']};border:1px solid {$website['color_word']};font-size:25px;text-align:center;padding:30px;width:100%;}
+    .content .box_content img{width:40px;margin-right:5px;}
+    
+    .layui-form-label{width:100px;}
+    .ordertype2,.type1_h,.type1,.type2,.create_user,.type2_h,.type3,.sms{display:none;}
+</style>
+
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="content" style="padding:0;">
+            <div class="layui-fluid">
+                <div class="layui-row layui-col-space15">
+                    <a href="javascript:history.back(-1);">
+                            <div style="display:flex;align-items:center;border: 1px solid #fff;width: fit-content;padding: 10px 20px;border-radius: 15px;background: #8f8b8b;margin-bottom:0px;color:#fff;">
+                                <img class="" src="./img/account/back.png" alt="" style="width: 18px;margin-right: 10px;"/>
+                                返回
+                            </div>
+                        </a>
+                    <form class="layui-form" action="" method="post" lay-filter="component-form-element">
+                        <input type="text" style="display:none;" name="id" id="id" value="{$id}">
+                        <div class="layui-col-md12">
+                            <div class="layui-card">
+                                <div class="layui-card-body">
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">关联交易</div>
+                                        <div class="layui-input-block">
+                                            <select name="order_type" id="order_type" lay-filter="order_type" lay-search>
+                                                <option value="1">订单</option>
+                                                <option value="2">账单</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="ordertype1">
+                                        <div class="layui-form-item">
+                                            <div class="layui-form-label">选择订单</div>
+                                            <div class="layui-input-block">
+                                                <select name="ordersn" lay-filter="ordersn" lay-search>
+                                                    <option value="">请选择订单</option>
+                                                    {volist name="ordersn" id="vo"}
+                                                    <option value="{$vo.ordersn_flow}" title="{$vo.totalmoney}">{$vo.id}：{$vo.ordersn_flow}</option>
+                                                    {/volist}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ordertype2">
+                                        <div class="layui-form-item">
+                                            <div class="layui-form-label">选择账单</div>
+                                            <div class="layui-input-block">
+                                                <select name="ordersn2" lay-filter="ordersn2" lay-search>
+                                                    <option value="">请选择账单</option>
+                                                    {volist name="billsn" id="vo"}
+                                                    <option value="{$vo.ordersn_flow}" title="{$vo.finalmoney}">{$vo.id}：{$vo.ordersn_flow}</option>
+                                                    {/volist}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">输入金额</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="total_money" id="totalmoney" placeholder="请输入输入金额（如实填写）" autocomplete="off" class="layui-input" value="">
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">收款账户</div>
+                                        <div class="layui-input-block">
+                                            <select name="type" id="type" lay-filter="type">
+                                                <option value="">请选择收款账户类型</option>
+                                                <option value="1">选有自用账户收款</option>
+                                                <option value="2">委托平台账户收款</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!--自有账户-->
+                                    <div class="layui-form-item type1_h">
+                                        <div class="layui-form-label">自有账户</div>
+                                        <div class="layui-input-block">
+                                            <select name="type2" id="type2" lay-filter="type2">
+                                                <option value="">请选择自有账户收款</option>
+                                                <option value="1">银行账户</option>
+                                                <option value="2">支付账户</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item type1">
+                                        <div class="layui-form-label">选择账户</div>
+                                        <div class="layui-input-block">
+                                            <select name="account_id" lay-search>
+                                                {volist name="account_bank" id="vo"}
+                                                    <option value="{$vo.id}">{$vo.bank_name}:{$vo.bank_account}</option>
+                                                {/volist}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item type2">
+                                        <div class="layui-form-label">选择账户</div>
+                                        <div class="layui-input-block">
+                                            <select name="account_id2" lay-search>
+                                                {volist name="account_plat" id="vo"}
+                                                <option value="{$vo.id}">{$vo.id}:{$vo.platform_name}</option>
+                                                {/volist}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!--购购网账户-->
+                                    <div class="layui-form-item type2_h">
+                                        <div class="layui-form-label">委托平台账户</div>
+                                        <div class="layui-input-block">
+                                            <select name="type3" id="type3" lay-filter="type3">
+                                                <option value="">请选择委托平台账户</option>
+                                                <option value="1">银行账户</option>
+                                                <option value="2">在线支付账户</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item type3">
+                                        <div class="layui-form-label">委托平台账户</div>
+                                        <div class="layui-input-block">
+                                            <select name="account_id3" id="account_id3">
+                                                <option value="">平台银行账户</option>
+                                                {volist name="platform_bank" id="vo"}
+                                                <option value="{$vo.id}">{$vo.bank_account}:{$vo.name}</option>
+                                                {/volist}
+                                            </select>
+                                        </div>
+                                    </div>
+                                   <div class="layui-form-item">
+                                        <div class="layui-form-label">通知方式</div>
+                                        <div class="layui-input-block">
+                                            <select name="notice_type" id="notice_type" lay-filter="notice_type">
+                                                <option value="1">电邮通知</option>
+                                                <option value="2">短讯通知</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">付款人名称</div>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="nickname" id="nickname" placeholder="请输入付款人名称" autocomplete="off" class="layui-input" value="">
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item email">
+                                        <div class="layui-form-label">电邮通知</div>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="email" id="email" placeholder="请输入付款人邮箱" autocomplete="off" class="layui-input" value="">
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item sms">
+                                        <div class="layui-form-label">短讯通知</div>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="phone" id="phone" placeholder="请输入付款人手机" autocomplete="off" class="layui-input" value="">
+                                        </div>
+                                    </div>
+            
+                                </div>
+                                <div class="layui-form-item" style="margin-top: 25px;text-align: center;">
+                                    <div>
+                                        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="component-form-element2">立即提交</button>
+                                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                    </div>
+                                </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script type="text/javascript">
+    layui.use(['layer','form','laydate','upload'],function(){
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , laydate = layui.laydate
+            , upload = layui.upload;
+
+        form.render(null, 'component-form-element');
+
+        form.on('select(order_type)',function(data){
+            let val = data.value;
+            if(val==1){
+                $('.ordertype1').show();
+                $('.ordertype2').hide();
+            }else if(val==2){
+                $('.ordertype1').hide();
+                $('.ordertype2').show();
+            }
+            $('#totalmoney').val('');
+        });
+
+        form.on('select(ordersn)',function(data){
+            let val = data.value;
+            if(val!='' && typeof(val)!='undefined'){
+                let money = data.elem[data.elem.selectedIndex].title;
+                $('#totalmoney').val(money);
+            }
+        });
+
+        form.on('select(ordersn2)',function(data){
+            let val = data.value;
+            if(val!='' && typeof(val)!='undefined'){
+                let money = data.elem[data.elem.selectedIndex].title;
+                $('#totalmoney').val(money);
+            }
+        });
+
+        form.on('select(type)',function(data){
+            let val = data.value;
+            if(val==1){
+                $('.type1_h').show();
+                $('.type2').hide();
+                $('.type1').hide();
+                $('.type2_h').hide();
+                $('.type3').hide();
+            }else if(val==2){
+                $('.type1_h').hide();
+                $('.type2').hide();
+                $('.type1').hide();
+                $('.type2_h').show();
+            }else if(val==''){
+                $('.type1_h').hide();
+                $('.type2').hide();
+                $('.type1').hide();
+                $('.type2_h').hide();
+                $('.type3').hide();
+            }
+        });
+
+        form.on('select(type2)',function(data){
+            let val = data.value;
+            if(val==1){
+                $('.type1').show();
+                $('.type2').hide();
+            }else if(val==2){
+                $('.type1').hide();
+                $('.type2').show();
+            }else if(val==''){
+                $('.type1').hide();
+                $('.type2').hide();
+            }
+        });
+
+        form.on('select(type3)',function(data){
+            let val = data.value;
+            if(val==1){
+                $('.type3').show();
+            }else if(val==2){
+                $('.type3').hide();
+            }else if(val==''){
+                $('.type3').hide();
+            }
+        });
+        
+        form.on('select(notice_type)',function(data){
+            let val = data.value;
+            if(val==1){
+                $('.email').show();
+                $('.sms').hide();
+            }else if(val==2){
+                $('.email').hide();
+                $('.sms').show();
+            }
+        });
+
+        form.on('select(pay_userid)',function(data){
+            let val = data.value;
+            if(val==-1){
+                $('.create_user').show();
+                $('input[name="nickname"]').val("");
+                $('input[name="email"]').val("");
+                $('input[name="phone"]').val("");
+            }
+            else if(val!=''){
+                let arr = data.elem[data.elem.selectedIndex].title.split('@@');
+                $('.create_user').show();
+                if(arr[0]!='' && typeof(arr[0]) != 'undefined'){
+                    $('#nickname').val(arr[0]);
+                }else if(arr[1]!='' && typeof(arr[1]) != 'undefined'){
+                    $('#nickname').val(arr[1]);
+                }
+                if(arr[2]!='' && typeof(arr[2]) != 'undefined'){
+                    $('#email').val(arr[2]);
+                }else if(arr[3]!='' && typeof(arr[3]) != 'undefined'){
+                    $('#phone').val(arr[3]);
+                }
+            }
+            else if(val==-1){
+                $('.create_user').hide();
+            }
+        });
+
+        form.on('submit(component-form-element2)', function(data){
+            // JSON.stringify()
+            // console.log(data.field);return false;
+            $.ajax({
+                url:"/?s=index/save_collect",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            window.location.reload();
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+</script>
+{include file="common/footer"}

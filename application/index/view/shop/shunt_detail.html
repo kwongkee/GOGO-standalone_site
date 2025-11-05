@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>订购信息</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <script src="layui/layui.js"></script>
+    <style>
+        .layui-fluid{padding-top:15px;}
+        .layui-form-item{margin-bottom: 10px;}
+        .inline{line-height: 38px;}
+        .disf{display:flex;align-items: center;}
+        .link{text-decoration: underline;color:#1790FF;}
+        .head{padding-bottom: 5px;padding-left: 5px;border-bottom: 1px solid #666;margin-bottom: 10px;}
+        .f15{font-size:15px;}
+        .layui-form-item .layui-form-label{text-align: left;}
+
+        /*订购清单表格*/
+        .buy_list{padding:10px;box-sizing: border-box;}
+        .buy_list .list_title{font-size:15px;text-align: center;margin-bottom:5px;}
+        .fix-table{table-layout: fixed;}
+        .fix-table td {white-space: nowrap; /* 自适应宽度*/overflow:hidden;text-overflow:ellipsis;/*省略号显示*/}
+        .layui-layer-content{height:fit-content !important;}
+        .layui-table td, .layui-table th{padding:5px;}
+        .layui-fluid{padding-left:5px;padding-right:5px;}
+        .layui-table thead tr{background:#1E9FFF;color:#fff;}
+
+        /*合计*/
+        .unit_div{white-space: nowrap;}
+        .totalPrice_div{color:#db1d18;font-weight: 800;white-space: nowrap;}
+        .split_line{margin:0 20px;}
+
+        /*分流方式*/
+        .shuntMethod{padding:10px;box-sizing: border-box;}
+    </style>
+</head>
+<body style="background: #eee;">
+<div class="layui-fluid">
+    <div class="head">
+        <a href="javascript:history.back(-1);" class="f15">&lt; 返回</a>
+    </div>
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <form class="layui-form" action="" id="bill" method="post" lay-filter="component-form-element">
+                <input type="text" style="display:none;" name="id" id="id" value="{$id}">
+                <input type="text" style="display:none;" name="pa" id="pa" value="1">
+                <div class="layui-card">
+                    <div class="buy_list">
+                        <p class="list_title">订购清单【{$order['ordersn']}】</p>
+                        <table class="layui-table fix-table">
+                            <thead align="center">
+<!--                                <th class="ltd" width="5%"></th>-->
+                                <th class="ltd" width="25%">品名</th>
+                                <th class="ltd" width="25%">规格</th>
+                                <th class="ltd" width="20%">数量</th>
+                                <th class="ltd" width="20%">总价</th>
+                                {if $order['status']==-2}
+                                <th class="ltd" width="10%">操作</th>
+                                {/if}
+                            </thead>
+                            <tbody id="tbody">
+                                <?php $num=1;?>
+                                <?php $goods_num=0;?>
+                                <?php $goods_key=0;?>
+                                {volist name="goods" key="key" id="vo"}
+                                    {volist name="vo.sku_info" key="k" id="vo2"}
+                                        <tr>
+<!--                                            <td class="ltd" width="5%">{$num}</td>-->
+                                            <td class="ltd" width="25%">{$vo['goods_info']['goods_name']}</td>
+                                            <td class="ltd" width="25%">{$vo2['sku_info']['spec_names']}</td>
+                                            <td class="ltd" width="20%">{$vo2['goods_num']}</td>
+                                            <td class="ltd" width="20%">{$vo2['price']}</td>
+                                            {if $order['status']==-2}
+                                            <td class="ltd" width="10%">
+                                                <div class="layui-btn layui-btn-warm layui-btn-xs" onclick="edit_sku({$vo['good_id']},{$goods_key},{$k},{$vo2['sku_id']},{$vo2['cart_id']})">修改</div>
+                                            </td>
+                                            {/if}
+                                        </tr>
+                                        <?php $num+=1;?>
+                                        <?php $goods_num=$goods_num + $vo2['goods_num'];?>
+                                    {/volist}
+                                    <?php $goods_key+=1;?>
+                                {/volist}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="layui-card">
+                    <div class="layui-form-item">
+                        <div class="layui-form-label">合计：</div>
+                        <div class="layui-input-block disf" style="box-sizing:border-box;padding:0 10px;justify-content: right;">
+                            <div class="unit_div">{$goods_num}件</div>
+                            <span class="split_line">/</span>
+                            <div class="totalPrice_div"><span class="currency">CNY</span>&nbsp;<span class="price">{$order['true_money']}</span>（含服务费用）</div>
+                        </div>
+                    </div>
+                </div>
+<!--                <div class="layui-card">-->
+<!--                    <div class="layui-form-item">-->
+<!--                        <div class="layui-form-label">收货信息</div>-->
+<!--                        <div class="layui-input-block">-->
+<!--                            <div>收货地址: $address['address']}</div>-->
+<!--                            <div>邮编: $address['postal']}</div>-->
+<!--                            <div>收件人: $address['user_name']}</div>-->
+<!--                            <div>电话: $address['area_mobile']} $address['mobile']} $address['mobile2']}</div>-->
+<!--                            <div>电邮: $address['email']}</div>-->
+<!--                            if $order['status']==-2}-->
+<!--                            <div>-->
+<!--                                <div class="layui-btn layui-btn-warm layui-btn-xs" onclick="edit_addr()">修改</div>-->
+<!--                            </div>-->
+<!--                            /if}-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+                {if($order['status']==-2 && $order['type']==0 && $order['issend']==0)}
+                    <!--清单待确认有/无货-->
+                    <div class="layui-card shuntMethod">
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">清单确认</div>
+                            <div class="layui-input-block inline">
+                                <select name="status" id="status" lay-verify="required">
+                                    {if(empty($order['odd_money']) && empty($order['edit_address']))}
+                                        <option value="1">确认有货（无修改）</option>
+                                    {else}
+                                        <option value="-9">确认有货（有修改）</option>
+                                    {/if}
+                                    <option value="-4">确认无货</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item" style="margin-top: 25px;text-align: center;">
+                        <div>
+                            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="component-form-element2">保存信息</button>
+                        </div>
+                    </div>
+                {/if}
+
+                {if($order['status']==1)}
+                <!--已付款，待采购-->
+                    <div class="layui-card">
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">商品状态</div>
+                            <div class="layui-input-block inline">
+                                <select name="status" id="status" lay-verify="required" lay-filter="status">
+                                    <option value="">请选择状态</option>
+                                    <option value="3">已采购</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="already_purchase" style="display: none;">
+                            <div class="layui-form-item">
+                                <div class="layui-form-label">快递企业</div>
+                                <div class="layui-input-block inline disf">
+                                    <select name="express_id" id="express_id" lay-verify="required" lay-search>
+                                        <option value="">请选择</option>
+                                        {volist name="express" id="vo"}
+                                        <option value="{$vo['id']}">{$vo['param3']}</option>
+                                        {/volist}
+                                    </select>
+                                    <input type="text" class="layui-input" name="express_no" placeholder="物流运单" lay-verify="required">
+                                </div>
+                            </div>
+                            <div class="goods_info">
+                                <div class="layui-form-item">
+                                    <div class="layui-form-label">物品属性</div>
+                                    <div class="layui-input-block inline disf">
+                                        <div id="valueid1" class="xm-select-demo" style="width: 100%;"></div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-form-label">物品名称</div>
+                                    <div class="layui-input-block inline disf">
+                                        <div>
+                                            <select name="goods_select_desc" class="goods_select_desc" lay-search lay-filter="goods_select_desc">
+
+                                            </select>
+                                        </div>
+                                        <input type="text" name="goods_desc" placeholder="输入新的物品" class="layui-input goods_input_desc" style="display: none;">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-form-label">物品数量</div>
+                                    <div class="layui-input-block inline disf">
+                                        <input type="number" name="goods_num" placeholder="物品数量" class="layui-input goods_item" value="">
+                                        <div class="goods_unit goods_item">
+                                            <select name="goods_unit" lay-search lay-filter="goods_unit" lay-verify="required">
+                                                <option value="">请选择单位</option>
+                                                {volist name="unit" id="vo"}
+                                                <option value="{$vo['code_value']}" data-title="{$vo['code_name']}">{$vo['code_name']}</option>
+                                                {/volist}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-form-label">物品金额</div>
+                                    <div class="layui-input-block inline disf">
+                                        <select name="goods_currency" class="goods_currency_select" lay-search lay-filter="currency" lay-verify="required">
+                                            <option value="">请选择币种</option>
+                                            {volist name="currency" id="vo"}
+                                            <option value="{$vo['id']}" {if $vo['id']==5}selected{/if}>{$vo['code_zhname']}：{$vo['currency_symbol_standard']}</option>
+                                            {/volist}
+                                        </select>
+<!--                                        php echo round($order['content']['good_num']*$order['content']['good_price'],2)-->
+                                        <input type="number" name="goods_price" placeholder="物品价值" class="layui-input goods_price goods_item" lay-verify="required" value="">
+                                        <div class="tax_relate" style="display: none;">
+                                            <div class="layui-btn layui-btn-xs layui-btn-primary2 layui-border-red" onclick="tax_relate()">是否涉税</div>
+                                        </div>
+
+                                        <div class="equal_usd" style="display: none;">
+                                            <div class="equal_usd_symbol"></div>
+                                            <input type="hidden" name="goods_usdprice" placeholder="物品价值" class="layui-input">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-form-label">包装材质</div>
+                                    <div class="layui-input-block inline disf">
+                                        <select name="goods_package" lay-search lay-verify="">
+                                            <option value="">请选择包装材质</option>
+                                            {volist name="package" id="v"}
+                                            <option value="{$v['code_value']}">{$v['code_name']}</option>
+                                            {/volist}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-form-label">物品品牌</div>
+                                    <div class="layui-input-block inline disf">
+                                        <div class="goods_brand brand_div">
+                                            <select name="goods_brand" lay-filter="brand_type">
+                                                <option value="">请选择物品品牌</option>
+                                                <option value="1">无牌（无商标信息）</option>
+                                                <option value="2">仿牌（商品无注册）</option>
+                                                <option value="3">普通品牌（有注册非知名）</option>
+                                                <option value="4">奢侈品牌（有注册且知名）</option>
+                                            </select>
+                                        </div>
+                                        <div class="brand_name brand_div" style="display: none;">
+                                            <input type="text" class="layui-input" name="goods_brand_name" placeholder="请输入品牌名称">
+                                        </div>
+                                        <div class="copy_brand brand_div" style="display: none;">
+                                            <select name="goods_brand_name2" lay-search>
+                                                <option value="">请选择仿牌名称</option>
+                                                {volist name="brand" id="v"}
+                                                <option value="仿{$v['param1']}">仿{$v['param1']}</option>
+                                                {/volist}
+                                            </select>
+                                        </div>
+                                        <div class="select_brand_name brand_div" style="display: none;">
+                                            <select name="goods_brand_name3" lay-filter="brand_name" lay-search>
+                                                <option value="">请选择品牌名称</option>
+                                                {volist name="brand" id="v"}
+                                                <option value="{$v['param1']}">{$v['param1']}</option>
+                                                {/volist}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-form-label">物品备注</div>
+                                    <div class="layui-input-block inline disf">
+                                        <input type="text" class="layui-input" name="goods_remark" placeholder="请输入物品备注">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-form-label">包装材质</div>
+                                    <div class="layui-input-block inline disf">
+                                        <div style="width: 100%;">
+                                            <select name="package" id="package" lay-filter="package">
+                                                <option value="">请选择包装材质</option>
+                                                <option value="裸装">裸装</option>
+                                                <option value="包装">包装</option>
+                                            </select>
+                                        </div>
+                                        <input type="text" class="layui-input package_name" name="package_name" placeholder="请输入包裹包装材质" style="display:none;">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-form-label">包裹毛重</div>
+                                    <div class="layui-input-block inline disf">
+                                        <input type="number" class="layui-input" name="grosswt" placeholder="请输入包裹毛重kg">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-form-label">包裹体积</div>
+                                    <div class="layui-input-block inline disf">
+                                        <input type="number" class="layui-input" name="long" placeholder="长cm" style="width:33%;">X<input  style="width:33%;" type="number" class="layui-input" name="width" placeholder="宽cm">X<input type="number" class="layui-input" name="height" placeholder="高cm" style="width:33%;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item" style="margin-top: 25px;text-align: center;">
+                        <div>
+                            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="component-form-element2">保存信息</button>
+                        </div>
+                    </div>
+                {/if}
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+
+<script src="./layui/xm-select3.js?v=<?php echo time();?>"></script>
+<script>
+    layui.use(['layer', 'form', 'table', 'upload'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , upload = layui.upload
+            , table = layui.table;
+
+        showAndHideMsg();
+
+        form.on('select(status)',function(data){
+            let val = data.value;
+            if(val==3){
+                $('.already_purchase').show();
+            }else{
+                $('.already_purchase').hide();
+            }
+        });
+
+        //物品预报-start===============================
+        valueid=xmSelect.render({
+            el: '#valueid1',
+            autoRow: true, //自动换行
+            filterable: true, //可搜索
+            searchTips: '请搜索',
+            radio:true,//单选
+            name:"valueid",
+            tips:'请选择物品属性',
+            direction:'down',
+            model: {
+                icon: 'hidden',//是否展示复选框或者单选框图标 show, hidden:变换背景色  ！！这句话是重点，不然会变成父节点也有单选框！！
+            },
+            tree: {
+                show: true, //用树显示
+                showFolderIcon: true, //是否显示节点前的三角图标
+                expandedKeys: true, //默认全部展开
+                showLine: true, //显示渐近线
+                indent: 20, //间距
+                strict: false, //重点！！设置成非严格父子模式，这样父节点被禁用，子节点依然可以点击
+                clickCheck:true,
+                vaguaSearch:1,//开启模糊搜索
+                nowElement:'valueid1'
+            },
+            toolbar: {
+                show: false, //显示工具条
+                list: ['ALL', 'REVERSE', 'CLEAR']
+            },
+            height: '300px', //最大下拉框高度
+            data: {$value},
+            on:function(data){
+                //1、选择了属性后，记录当前属性最上级的类名。
+                //2、添加物品后，选择了其他的最上级类名则按原逻辑提示。
+                $('.value_selected0').val(data['change'][0]['top_id']);
+                if(data['change'][0]['top_id']==17){
+                    $('#package0').val('普货');
+                }else if(data['change'][0]['top_id']==19){
+                    $('#package0').val('敏感货');
+                }else if(data['change'][0]['top_id']==20){
+                    $('#package0').val('特殊货');
+                }
+                var keywords = data['change'][0]['keywords'];
+                keywords = keywords.split('、');
+                let html = '<option value="">请选择物品</option>\n' +
+                    '<option value="-1">没有可选物品，另外添加</option>';
+                for(let i=0;i<keywords.length;i++){
+                    html+='<option value="'+keywords[i]+'">'+keywords[i]+'</option>';
+                }
+                $('#valueid1').parents(":eq(2)").find('.goods_select_desc').html(html);
+                //隐藏并清空输入新的物品框
+                $('#valueid1').parents(":eq(2)").find('.goods_input_desc').val('');
+                $('#valueid1').parents(":eq(2)").find('.goods_input_desc').hide();
+                form.render(null,'component-form-element');
+                valueid.closed();
+            }
+        });
+
+        //物品描述
+        form.on('select(goods_select_desc)',function(data){
+            let val = data.value;
+            if(val==-1){
+                $(this).parents(":eq(4)").find('.goods_input_desc').show();
+                $(this).parents(":eq(1)").hide();
+            }else{
+                // $(this).parent().parent().parent().parent().parent().parent().find('.layui-colla-title h4 .goods_desc').html(val+' ');
+            }
+        });
+
+        //包裹材质
+        form.on('select(package)',function(data){
+            let val = data.value;
+            if(val=='裸装'){
+                $(this).parents(":eq(3)").find('.package_name').hide();
+            }else if(val=='包装'){
+                $(this).parents(":eq(3)").find('.package_name').show();
+            }else{
+                $(this).parents(":eq(3)").find('.package_name').hide();
+            }
+        });
+        //物品预报-end=================================
+
+        form.on('submit(component-form-element2)',function(data){
+            layer.load();
+            $.ajax({
+                url:"/?s=shop/shunt_detail",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.closeAll('loading');
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            window.location.reload();
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+
+    var tip_index;
+    /**
+     * 页面表格内容超出宽度显示...
+     * 鼠标放上去之后回显具体内容
+     * 移开鼠标内容消失
+     */
+    function showAndHideMsg(){
+        var $ = layui.$
+            , layer = layui.layer;
+
+        $(document).on("mouseenter","td",function(){
+            if (this.offsetWidth < this.scrollWidth) {
+                let that = this;
+                let text = $(this).text();
+                let wid;
+
+                if(text.length>1000){
+                    wid = '900px';
+                }else if(text.length>600){
+                    wid = '700px';
+                }else if(text.length>150){
+                    wid = '500px';
+                }else if(text.length>100){
+                    wid = '250px';
+                }else if(text.length>50){
+                    wid = '150px';
+                }
+                layui.use('layer', function(layer) {
+                    tip_index = layer.tips('<span style="word-wrap: break-word;">'+text+'</span>', that, {
+                        tips: [4, "#000000"],
+                        time: 0,
+                        area: [wid, 'auto']
+                    });
+                });
+            }
+        });
+        $(document).on("mouseout","td",function(){
+            layui.use('layer', function(layer) {
+                layer.close(tip_index);
+            });
+        });
+    }
+
+    function edit_addr(){
+        var $ = layui.$
+            , layer = layui.layer;
+
+        layer.open({
+            type: 2,
+            title: '修改地址',
+            shadeClose: true,
+            shade: 0.3,
+            area: ['100%', '100%'],
+            content: "/?s=shop/shunt_addr&id={$id}",
+        });
+    }
+
+    function edit_sku(gid,gkey,skey,sku_id,cart_id){
+        var $ = layui.$
+            , layer = layui.layer;
+
+        let arr = "{$id},"+gid+','+gkey+','+skey+','+sku_id+','+cart_id;
+
+        layer.open({
+            type: 2,
+            title: '修改内容',
+            shadeClose: true,
+            shade: 0.3,
+            area: ['100%', '100%'],
+            content: "/?s=shop/shunt_edit&is_manage=0&arr="+arr,
+        });
+    }
+    function openWindow(ip,typ) {
+        let url = '';
+        if (typ == 1) {
+            window.location.href = "/?s=log_detail&ip=" + ip;
+        }
+    }
+</script>
+</html>

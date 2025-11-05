@@ -1,0 +1,24 @@
+{include file="common/header"}
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;}
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+    .content .box_content{background:{$website['color']};color:{$website['color_word']};border:1px solid {$website['color_word']};font-size:25px;text-align:center;padding:30px;width:100%;}
+    .content .box_content img{width:40px;margin-right:5px;}
+    .f18{color:{$website['color_word']};}
+</style>
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="content" style="padding:0;">
+            <div class="box_content">
+                <p class="f18">感谢使用GOGO，如需管理或跟踪和使用询价，请扫描以下公众号或小程序登录查看。</p>
+                <p style="margin:15px 0;"><img src="https://shop.gogo198.cn/app/img/qrcode_for_gogo.jpg" alt="公众号" style="width:200px;height:200px;"/></p>
+                <p><img src="" alt="小程序" style="width:200px;height:200px;"/></p>
+            </div>
+        </div>
+    </div>
+</section>
+{include file="common/footer"}

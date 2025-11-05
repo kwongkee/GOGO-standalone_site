@@ -1,0 +1,3756 @@
+{include file="common/header"}
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style>
+    *,:after,:before {
+        box-sizing: content-box
+    }
+
+    table {
+        border-collapse: collapse;
+        border-spacing: 0
+    }
+
+    img {
+        border: none;
+        max-width: 100%;
+        vertical-align: middle
+    }
+
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0
+    }
+
+    .clear {
+        clear: both;
+        height: 0px
+    }
+
+    .rp_main {
+        width: 1000px;
+        padding: 23px 85px;
+        margin: 0 auto;
+        background-color: #ffffff
+    }
+
+    .fc_r {
+        color: #d02b21
+    }
+
+    .fc_r2 {
+        color: #fa523e
+    }
+
+    .fc_g {
+        color: #05a352
+    }
+
+    .tb_w5 {
+        width: 5%
+    }
+
+    .tb_w7 {
+        width: 7%
+    }
+
+    .tb_w8 {
+        width: 8%
+    }
+
+    .tb_w10 {
+        width: 10%
+    }
+
+    .tb_w13 {
+        width: 13%
+    }
+
+    .tb_w15 {
+        width: 15%
+    }
+
+    .tb_w18 {
+        width: 18%
+    }
+
+    .tb_w20 {
+        width: 20%
+    }
+
+    .tb_w22 {
+        width: 22%
+    }
+
+    .tb_w25 {
+        width: 25%
+    }
+
+    .tb_w28 {
+        width: 28%
+    }
+
+    .tb_w30 {
+        width: 30%
+    }
+
+    .tb_w35 {
+        width: 35%
+    }
+
+    .tb_w40 {
+        width: 40%
+    }
+
+    .tb_w45 {
+        width: 45%
+    }
+
+    .tb_w50 {
+        width: 50%
+    }
+
+    .tb_h30 {
+        height: 20px
+    }
+
+    .tb_mlt {
+        vertical-align: top;
+        padding-top: 6px;
+        line-height: 24px
+    }
+
+    .rp_logo {
+        height: 50px
+    }
+
+    .tb_br {
+        border-right: 1px solid #e9e9e9
+    }
+
+    .logo_img {
+        float: right;
+        width: 165px
+    }
+
+    .rp_c_name_t {
+        margin-top: 80px
+    }
+
+    .rp_c_name_t2 {
+        margin-top: 10px
+    }
+
+    .rp_c_name {
+        margin-top: 25px;
+        font-size: 68px;
+        margin-bottom: 20px
+    }
+
+    .rp_c_cont {
+        line-height: 28px
+    }
+
+    .rp_customer {
+        margin-top: 30px
+    }
+
+    .rp_c_cont span,.rp_customer span {
+        margin-right: 15px
+    }
+
+    .rp_rat {
+        overflow: hidden
+    }
+
+    .rp_rating {
+        height: 550px
+    }
+
+    .rp_rating_t {
+        margin-top: 100px;
+        line-height: 50px
+    }
+
+    .rp_rating_t {
+        overflow: hidden
+    }
+
+    .rp_rating_box {
+        height: 140px;
+        width: 140px;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+        float: left;
+        text-align: center
+    }
+
+    .rp_level {
+        font-size: 78px;
+        margin-top: 30px;
+        height: 50px;
+        text-shadow: #666666 0px 1px 5px
+    }
+
+    .rp_l_a {
+        margin-top: 5px;
+        height: 18px;
+        text-shadow: #666666 0px 1px 5px
+    }
+
+    .rp_l_btm {
+        height: 35px;
+        width: 130px;
+        margin: 10px auto 0 auto;
+        overflow: hidden
+    }
+
+    .rp_l_btm>div {
+        float: left;
+        width: 64px;
+        text-align: center;
+        height: 29px
+    }
+
+    .rp_l_flag {
+        border-right: 1px solid #fff;
+        text-shadow: #666666 0px 1px 5px;
+        line-height: 29px
+    }
+
+    .rp_l_sco {
+        text-shadow: #666666 0px 1px 5px;
+        margin: 10px 0px 3px 0px
+    }
+
+    .rp_rating_de {
+        float: left;
+        margin-top: 4px
+    }
+
+    .rp_rating_list {
+        overflow: hidden;
+        margin-left: 3px
+    }
+
+    .rp_rating_list>li {
+        height: 100px;
+        width: 100px;
+        float: left;
+        text-align: center;
+        margin-left: 15px;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+        overflow: hidden
+    }
+
+    .rp_r_list_t {
+        height: 40px;
+        line-height: 40px
+    }
+
+    .rp_r_list_t.t_line {
+        line-height: 20px
+    }
+
+    .rp_r_list_b {
+        height: 60px;
+        line-height: 60px;
+        text-shadow: #666666 0px 1px 5px;
+        overflow: hidden
+    }
+
+    .rp_r_list_b>div {
+        line-height: 20px
+    }
+
+    .rp_l_b_t1 {
+        margin-top: 12px;
+        word-break: break-all;
+        padding: 0px 3px
+    }
+
+    .rp_level_bar {
+        position: relative;
+        margin-top: 10px;
+        background: url("/img/customers/level_bar.png") no-repeat;
+        height: 17px;
+        width: 463px
+    }
+
+    .rp_level_point {
+        position: absolute;
+        height: 27px;
+        width: 27px;
+        top: -5px;
+        left: 395px;
+        background: url("/img/customers/level_point.png") no-repeat
+    }
+
+    .rp_rating_mes {
+        margin-top: 15px
+    }
+
+    .statement_tit {
+        margin-top: 35px;
+        color: #6b6b6b
+    }
+
+    .statement_cont {
+        color: #6b6b6b;
+        margin-top: 10px;
+        width: 620px;
+        line-height: 20px
+    }
+
+    .statement_cont>p {
+        margin: 0;
+        padding: 0;
+        line-height: 25px
+    }
+
+    .rp_s_title {
+        margin-top: 30px;
+        overflow: hidden
+    }
+
+    .rp_s_t_l {
+        height: 25px;
+        width: 6px;
+        float: left;
+        background-color: #fa523e
+    }
+
+    .rp_s_t_r {
+        float: left;
+        margin-left: 15px;
+        font-size: 24px;
+        line-height: 25px
+    }
+
+    .rp_s_content {
+        width: 100%;
+        overflow: hidden
+    }
+
+    .rp_s_content_bg {
+        width: 1000px;
+        height: 95px;
+        -webkit-border-radius: 8px;
+        -moz-border-radius: 8px;
+        border-radius: 8px;
+        margin-top: 8px;
+        background: #f5f5f5;
+        background: -moz-linear-gradient(top, #f5f5f5 0%, #fff 100%);
+        background: -webkit-gradient(linear, top top, bottom bottom, color-stop(0%, #f5f5f5), color-stop(100%, #fff));
+        background: -webkit-linear-gradient(top, #eff5f8 0%, #fff 100%);
+        background: -o-linear-gradient(top, #f5f5f5 0%, #fff 100%);
+        background: -ms-linear-gradient(top, #f5f5f5 0%, #fff 100%);
+        background: linear-gradient(to bottom, #f5f5f5 0%, #fff 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f5f5f5', endColorstr='#ffffff', GradientType=0)
+    }
+
+    .rp_s_content_holder {
+        width: 1000px;
+        height: 50px
+    }
+
+    .tb_f {
+        margin: -90px 25px 40px 25px;
+        float: left;
+        position: relative
+    }
+
+    .tb_f2 {
+        margin: -90px 25px 0px 25px;
+        float: left;
+        position: relative
+    }
+
+    .tb_f3 {
+        margin: 0px 25px 40px 25px;
+        position: relative
+    }
+
+    .tb_f4 {
+        margin: -85px 25px 0px 25px;
+        position: relative
+    }
+
+    .tb_header {
+        text-align: left;
+        font-size: 20px;
+        height: 30px;
+        line-height: 30px;
+        font-weight: bold
+    }
+
+    .rp_c_table,.rating_lim_tb,.sign_table,.key_fin_table,.share_table,.liab_table,.fina_items_tb {
+        width: 950px;
+        word-break: break-all;
+        word-wrap: break-all
+    }
+
+    .rp_c_table th,.rating_lim_tb th,.sign_table th,.key_fin_table th,.share_table th {
+        text-align: left;
+        font-size: 20px;
+        height: 30px
+    }
+
+    .rp_c_table td {
+        line-height: 18px;
+        padding: 8px 10px 8px 0px;
+        vertical-align: top
+    }
+
+    .rp_c_table .td1 {
+        width: 220px
+    }
+
+    .rp_c_table .td2 {
+        width: 265px;
+        font-weight: bold
+    }
+
+    .rp_c_table .td3 {
+        font-weight: bold
+    }
+
+    .rp_c_table .td4 {
+        width: 250px;
+        padding: 0;
+        border-bottom: 1px solid #e9e9e9
+    }
+
+    .rp_c_table .td5 {
+        width: 200px;
+        padding: 0;
+        border-bottom: 1px solid #e9e9e9
+    }
+
+    .rp_c_table .th1 {
+        font-size: 14px
+    }
+
+    .rp_c_table .td6 {
+        width: 100px;
+        height: 28px;
+        line-height: 28px;
+        padding: 0;
+        border-bottom: 1px solid #e9e9e9
+    }
+
+    .rp_c_table .td7 {
+        width: 360px;
+        height: 28px;
+        line-height: 28px;
+        padding: 0;
+        border-bottom: 1px solid #e9e9e9
+    }
+
+    .rp_c_table span {
+        margin-right: 15px
+    }
+
+    .rp_c_table span img {
+        width: 13px;
+        height: 13px
+    }
+
+    .rp_int_score_l {
+        width: 465px;
+        float: left
+    }
+
+    .rp_sco_title {
+        font-size: 20px;
+        font-weight: bold;
+        margin-top: 10px
+    }
+
+    .rp_sco_s {
+        float: left;
+        text-align: center;
+        width: 82px;
+        height: 82px;
+        margin-top: 15px;
+        line-height: 82px;
+        font-size: 46px;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px
+    }
+
+    .rp_credit_sco_list {
+        float: left;
+        margin-top: 10px;
+        margin-left: 25px;
+        margin-bottom: 5px
+    }
+
+    .rp_credit_sco_list>li {
+        border-bottom: 1px solid #eaeaea;
+        height: 29px;
+        width: 335px;
+        line-height: 29px
+    }
+
+    .rp_credit_sco_list>li>span {
+        font-weight: bold;
+        float: right;
+        margin-right: 10px
+    }
+
+    .rp_int_s_tit {
+        margin-top: 10px
+    }
+
+    .rp_int_s {
+        float: left;
+        text-align: center;
+        width: 82px;
+        height: 82px;
+        margin-top: 15px;
+        line-height: 82px;
+        font-size: 59px;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px
+    }
+
+    .rp_int_s_des {
+        float: left;
+        margin-top: 15px;
+        margin-left: 15px;
+        width: 360px
+    }
+
+    .rp_int_s_des_d {
+        line-height: 30px
+    }
+
+    .rp_int_s_des_t {
+        margin-top: 10px;
+        line-height: 20px
+    }
+
+    .rp_int_score_r {
+        float: left;
+        margin-left: 15px
+    }
+
+    .rp_int_score_des_t {
+        margin-top: 15px
+    }
+
+    .tb_score_des {
+        margin-top: 5px;
+        margin-left: 5px;
+        width: 430px
+    }
+
+    .tb_score_des .td1 {
+        width: 20%;
+        height: 25px;
+        font-weight: bold;
+        text-indent: 15px;
+        border-bottom: 1px solid #e9e9e9
+    }
+
+    .tb_score_des .td2 {
+        width: 80%;
+        border-bottom: 1px solid #e9e9e9
+    }
+
+    .rating_his_pic {
+        margin-top: 25px;
+        margin-left: 10px
+    }
+
+    .rating_his_tb {
+        width: 950px;
+        margin-top: 20px
+    }
+
+    .rating_his_tb td,.sign_table td,.share_table td,.liab_table td {
+        border-bottom: 1px solid #e9e9e9;
+        text-align: center;
+        line-height: 20px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        vertical-align: top
+    }
+
+    .rating_his_tb th {
+        height: 27px;
+        border-bottom: 1px solid #e9e9e9;
+        font-weight: normal
+    }
+
+    .rating_lim_tb td {
+        border-bottom: 1px solid #e9e9e9;
+        line-height: 20px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        vertical-align: top;
+        text-align: center
+    }
+
+    .com_cont {
+        line-height: 20px;
+        margin-top: 10px
+    }
+
+    .com_list {
+        margin-top: 10px;
+        width: 950px
+    }
+
+    .com_list>li {
+        text-indent: -28px;
+        border-bottom: 1px solid #e9e9e9;
+        line-height: 20px;
+        padding: 3px 0px 3px 28px
+    }
+
+    .com_list span {
+        margin-right: 15px
+    }
+
+    .com_list span img {
+        height: 13px;
+        width: 13px
+    }
+
+    .key_fin_table td {
+        line-height: 20px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        vertical-align: top
+    }
+
+    .share_table .tb_t_l {
+        text-align: left
+    }
+
+    .share_table td span {
+        margin-right: 5px
+    }
+
+    .t_ind15 {
+        text-indent: 15px
+    }
+
+    .t_ind30 {
+        text-indent: 30px
+    }
+
+    .rp_wf_info_pic {
+        margin-top: 20px;
+        text-align: center;
+        margin-bottom: 100px
+    }
+
+    .liab_table td {
+        font-weight: bold
+    }
+
+    .liab_table .th_l {
+        text-align: left
+    }
+
+    .liab_table th {
+        height: 30px;
+        font-weight: normal;
+        border-bottom: 1px solid #e9e9e9
+    }
+
+    .liab_table .th_title {
+        font-weight: bold;
+        font-size: 20px;
+        text-align: left;
+        background-color: transparent
+    }
+
+    .payment {
+        width: 950px;
+        overflow: hidden
+    }
+
+    .payment_pic {
+        float: left;
+        width: 475px;
+        height: 150px;
+        text-align: center
+    }
+
+    .pay_list {
+        float: left;
+        margin-top: 38px;
+        margin-left: 20px
+    }
+
+    .rating_lim_tb .tb_pay_pic {
+        text-align: center;
+        border: none
+    }
+
+    .rating_lim_tb .tb_pay_pic>img {
+        margin-top: 20px;
+        margin-bottom: 10px
+    }
+
+    .rating_lim_tb .th_s {
+        font-size: 14px;
+        font-weight: normal;
+        border-bottom: none
+    }
+
+    .rating_lim_tb .tb_ind_pic {
+        text-align: center;
+        border: none;
+        padding: 0
+    }
+
+    .rating_lim_tb .tb_ind_pic>img {
+        margin-top: 5px
+    }
+
+    .fina_items_tb th {
+        font-weight: normal
+    }
+
+    .rating_lim_tb.t_a_l td {
+        text-align: left
+    }
+
+    .rating_lim_tb .tb_t_l {
+        text-align: left
+    }
+
+    .rating_lim_tb td.noData,.sign_table td.noData,.share_table td.noData,.rating_his_tb td.noData,.liab_table td.noData,.key_fin_table td.noData {
+        text-align: left;
+        border: none
+    }
+    @CHARSET "UTF-8";.head2 {
+                         width: 100%;
+                         height: 60px;
+                         float: left
+                     }
+
+    *,:after,:before {
+        box-sizing: border-box;
+        list-style: none
+    }
+
+    a {
+        text-decoration: none
+    }
+
+    a,body,button,html,input,select,textarea {
+        margin: 0px;
+        padding: 0px;
+        color: #333333;
+        border: 0 none;
+        font-size: 14px;
+        font-family: arial, 'Microsoft Yahei', '微软雅黑', 'Pingfang SC', STHeitiSC-Light, STHeiti, SimSun, '宋体', 'Lantinghei SC', Helvetica, 'Hiragino Sans GB', 'Source Han Sans SC', 'WenQuanYi Micro Hei', sans-serif;
+        font-weight: 400;
+        -webkit-font-smoothing: antialiased;
+        -webkit-tap-highlight-color: transparent
+    }
+
+    body {
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+        background-color: #f2f4f7;
+        min-width: 1140px
+    }
+
+    input {
+        margin: 0px;
+        padding: 0px;
+        border: 0 none;
+        outline: none
+    }
+
+    img {
+        border: none
+    }
+
+    label {
+        cursor: inherit
+    }
+
+    .f_h1 {
+        font-size: 32px
+    }
+
+    .f_h15 {
+        font-size: 29px
+    }
+
+    .f_h2 {
+        font-size: 26px
+    }
+
+    .f_h25 {
+        font-size: 24px
+    }
+
+    .f_h3 {
+        font-size: 22px
+    }
+
+    .f_h35 {
+        font-size: 20px
+    }
+
+    .f_h355 {
+        font-size: 19px
+    }
+
+    .f_h4 {
+        font-size: 18px
+    }
+
+    .f_h45 {
+        font-size: 16px
+    }
+
+    .f_h5 {
+        font-size: 15px
+    }
+
+    .f_h55 {
+        font-size: 14px
+    }
+
+    .f_h6 {
+        font-size: 13px
+    }
+
+    .f_h7 {
+        font-size: 12px
+    }
+
+    .f_h8 {
+        -webkit-text-size-adjust: none;
+        font-size: 10px
+    }
+
+    .f_g1 {
+        color: #333333
+    }
+
+    .f_g2 {
+        color: #666666
+    }
+
+    .f_g3 {
+        color: #999999
+    }
+
+    .f_g4 {
+        color: #aaaaaa
+    }
+
+    .f_g5 {
+        color: #bbbbbb
+    }
+
+    .f_g6 {
+        color: #cccccc
+    }
+
+    .f_g7 {
+        color: #dddddd
+    }
+
+    .f_g8 {
+        color: #eeeeee
+    }
+
+    .f_g9 {
+        color: #ffffff
+    }
+
+    .f_c1 {
+        color: #1da1f2
+    }
+
+    .f_c_r {
+        color: #ff5e39
+    }
+
+    .f_c_r2 {
+        color: #cd4a34
+    }
+
+    .f_c2 {
+        color: #a8cfe5
+    }
+
+    .f_c3 {
+        color: #a3bfd6
+    }
+
+    .f_c4 {
+        color: #78808a
+    }
+
+    .f_c5 {
+        color: #4f5b6a
+    }
+
+    .f_c6 {
+        color: #999999
+    }
+
+    .f_c7 {
+        color: #989ba0
+    }
+
+    .f_c8 {
+        color: #9da8d1
+    }
+
+    .f_c9 {
+        color: #34495e
+    }
+
+    .f_c10 {
+        color: #a47e6b
+    }
+
+    .f_c11 {
+        color: #FA523E
+    }
+
+    .f_c12 {
+        color: #525558
+    }
+
+    .f_c13 {
+        color: #05a352
+    }
+
+    .f_c_or {
+        color: #f4af12
+    }
+
+    .f_c_g2 {
+        color: #05a352
+    }
+
+    .f_c_g {
+        color: #05a352
+    }
+
+    .f_l {
+        text-decoration: underline
+    }
+
+    .f_w_b {
+        font-weight: 600
+    }
+
+    .t_a_c {
+        text-align: center
+    }
+
+    .t_a_l {
+        text-align: left
+    }
+
+    .t_a_r {
+        text-align: right
+    }
+
+    .b_r3 {
+        border-radius: 3px
+    }
+
+    .b_r5 {
+        border-radius: 5px
+    }
+
+    .bg_c_bu {
+        background-color: #1da1f2
+    }
+
+    .bg_c_g {
+        background-color: #f2f4f7
+    }
+
+    .bg_c_w {
+        background-color: #ffffff
+    }
+
+    .bg_c_r {
+        background-color: #ff5e39
+    }
+
+    .bg_c_gn {
+        background-color: #02b879
+    }
+
+    .bg_c_p {
+        background-color: #a67dc2
+    }
+
+    .bg_c_gy {
+        background-color: #737f89
+    }
+
+    .bg_c_gy2 {
+        background-color: #fafafa
+    }
+
+    .bg_c_gy3 {
+        background-color: #33383e
+    }
+
+    .bg_c_gy4 {
+        background-color: #2c3238
+    }
+
+    .bg_c_gy5 {
+        background-color: #f8f9fb
+    }
+
+    .bg_c_gy6 {
+        background-color: #eeeeee
+    }
+
+    .bg_c_gy7 {
+        background-color: #a67dc1
+    }
+
+    .bg_c_gy8 {
+        background-color: #f2f2f2
+    }
+
+    .bg_c_b {
+        background-color: #222222
+    }
+
+    .bg_r {
+        background-color: #d02b21
+    }
+
+    .bg_r2 {
+        background-color: #e6510a
+    }
+
+    .bg_or {
+        background-color: #f4af12
+    }
+
+    .bg_g {
+        background-color: #05a352
+    }
+
+    .bg_g2 {
+        background-color: #29bc0e
+    }
+
+    .c_p {
+        cursor: pointer
+    }
+
+    .c_a {
+        cursor: auto
+    }
+
+    .hover:hover {
+        color: #ff5e39;
+        text-decoration: underline
+    }
+
+    .hover2:hover {
+        color: #1da1f2;
+        text-decoration: underline
+    }
+
+    .hover2:hover>em {
+        color: #1da1f2 !important
+    }
+
+    .cont {
+        width: 100%;
+        height: auto;
+        float: left
+    }
+
+    .cent {
+        float: none;
+        margin-left: auto;
+        margin-right: auto
+    }
+
+    .single_l {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis
+    }
+
+    .cont_footer {
+        position: relative;
+        height: 150px;
+        margin-top: -150px;
+        width: 100%
+    }
+
+    .cont.footer {
+        position: relative;
+        width: 100%
+    }
+
+    .cont.footer .foo_cont {
+        width: 1170px;
+        height: 115px
+    }
+
+    .float_bar {
+        position: absolute;
+        right: 34px;
+        bottom: 155px
+    }
+
+    .float_bar_fixed {
+        position: fixed;
+        bottom: 20px
+    }
+
+    .float_bar_absolute {
+        position: absolute
+    }
+
+    .float_list {
+        list-style: none;
+        margin: 0px;
+        padding: 0px;
+        background: #fff
+    }
+
+    .float_list>li {
+        box-sizing: content-box;
+        width: 52px;
+        height: 48px;
+        margin-top: 2px;
+        padding-top: 4px;
+        letter-spacing: 2px;
+        text-align: center;
+        font-size: 16px;
+        color: #529fcc;
+        border: 1px solid #d2d2d2
+    }
+
+    .float_list>li:hover {
+        cursor: pointer;
+        border: 1px solid #529fcc;
+        background: #fff
+    }
+
+    .float_list>li:hover:after {
+        content: attr(data-content)
+    }
+
+    .fl_li_bg1 {
+        position: relative;
+        background: url(../images/contact_ico.png) no-repeat
+    }
+
+    .fl_li_bg2 {
+        background: url(../images/contact_ico.png) -52px 0px no-repeat
+    }
+
+    .fl_li_bg3 {
+        background: url(../images/contact_ico.png) -104px 0px no-repeat
+    }
+
+    .fl_qq {
+        display: none;
+        position: absolute;
+        width: 185px;
+        height: 39px;
+        top: 7px;
+        right: 50px;
+        background: url(../images/contact_ico.png) 0px -52px no-repeat;
+        line-height: 39px;
+        font-size: 14px;
+        text-indent: -15px;
+        letter-spacing: 0px;
+        color: #fff
+    }
+
+    .cont.footer .foo_cont .foo_item {
+        width: 100%;
+        height: 25px;
+        float: left
+    }
+
+    .cont.footer .foo_cont .foo_item.top {
+        margin-top: 25px
+    }
+
+    .cont.footer .foo_cont .foo_item .nav_item {
+        height: 15px;
+        min-width: 50px;
+        padding-left: 15px;
+        padding-right: 15px;
+        float: left;
+        margin-top: 2px;
+        border-right: 1px solid #63686e;
+        line-height: 15px
+    }
+
+    .cont.footer.copy .foo_cont .foo_item .nav_item {
+        line-height: 35px
+    }
+
+    .cont.footer .foo_cont .foo_item .nav_item.right {
+        border: none
+    }
+
+    .cont.footer.copy {
+        height: 35px
+    }
+
+    .cont.footer.copy .foo_cont {
+        height: 100%
+    }
+
+    .feedback_back {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        left: 0px;
+        top: 0px;
+        z-index: 1000;
+        opacity: 0.5;
+        filter: progid:DXImageTransform.Microsoft.Alpha(opacity=50);
+        background-color: #000000
+    }
+
+    .feedback_box_cont {
+        position: fixed;
+        width: 0px;
+        height: 0px;
+        left: 50%;
+        top: 40%;
+        z-index: 1001
+    }
+
+    .feedback_box {
+        width: 448px;
+        height: 275px;
+        float: left;
+        margin-left: -224px;
+        margin-top: -137px;
+        box-shadow: 0px 0px 10px 2px #666666;
+        padding: 13px;
+        overflow: hidden
+    }
+
+    .feedback_cont {
+        margin-top: 10px
+    }
+
+    .feedback_tit {
+        width: 100px;
+        float: left
+    }
+
+    .feedback_cont .feedback_text {
+        resize: none;
+        border: 1px #e0e0e0 solid;
+        padding: 10px;
+        width: 100%
+    }
+
+    .feedback_cont .t1 {
+        height: 126px;
+        outline: none
+    }
+
+    .feedback_cont .t2 {
+        height: 40px;
+        margin-top: 10px
+    }
+
+    .feedback_l {
+        margin-top: 22px
+    }
+
+    .feedback_submit {
+        width: 113px;
+        height: 33px;
+        float: right;
+        margin-top: 11px
+    }
+
+    .feedback_submit:hover {
+        background-color: #50b3f1
+    }
+
+    .feedback_submit:active {
+        background-color: #0a8bdb
+    }
+
+    #blackBg {
+        position: fixed;
+        z-index: 1000;
+        height: 100%;
+        width: 100%;
+        opacity: 0.5;
+        filter: progid:DXImageTransform.Microsoft.Alpha(opacity=50);
+        background-color: #000000
+    }
+
+    .feedback_close {
+        cursor: pointer;
+        position: absolute;
+        top: -125px;
+        right: -210px
+    }
+
+    .feedback_close img {
+        width: 9px;
+        height: 9px
+    }
+
+    .cont_min {
+        min-height: 810px
+    }
+
+    .t {
+        background-color: chocolate
+    }
+
+</style>
+</div>
+<div class="rp_main f_g1 bg_c_w">
+    <div class="rp_logo">
+        <div class="logo_img">
+            <a href="https://www.gogo198.net" target="_self"> <img src="https://www.gogo198.net/img/logo.png?v=2312"></a>
+        </div>
+    </div>
+    <div class="rp_c_name_t f_h1 f_w_b">KYB-信用概览报告</div>
+    <div class="rp_customer f_h25 f_w_b fc_r2">
+        国家：样本国家</div>
+    <div class="rp_c_name_t2 f_h25 f_w_b">企业名称</div>
+    <div class="rp_c_name f_w_b">R*********E PLC</div>
+    <div class="rp_c_cont">
+        注册号 : <span> 01003*** </span> Company Status: <span> Active </span>
+        订单编号 : <span> 2021082014464509922122352 </span>
+    </div>
+    <div class="rp_c_cont">
+        下单日期: <span> 20/08/2021 </span>
+    </div>
+    <div class="rp_customer f_h5 f_w_b">
+        客服电话: <span> 400-800-7975 </span>
+    </div>
+    <div class="rp_rating">
+        <div class="rp_rating_t f_h25 f_w_b">评级</div>
+        <div class="rp_rat">
+            <div class="rp_rating_box f_g9 bg_g">
+                <div class="rp_level f_w_b">A</div>
+                <div class="rp_l_a f_h55 f_w_b">A - E (N)</div>
+            </div>
+            <div class="rp_rating_de">
+                <ul class="rp_rating_list">
+                    <li>
+                        <div class="rp_r_list_t t_line f_h55">当前供应商信用评分</div>
+                        <div class="rp_r_list_b f_h45 f_w_b f_g9 bg_g">
+                            <div>
+                                <div class="rp_l_sco f_h5 f_w_b">86</div>
+                                <div class="f_h7">(0-100)</div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="rp_r_list_t f_h55">信用额度</div>
+                        <div class="rp_r_list_b f_h5 f_w_b f_g9 bg_g">
+                            <div class="rp_l_b_t1">￡100,000,000.00</div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="rp_r_list_t f_h55">货币单位</div>
+                        <div class="rp_r_list_b f_h45 f_w_b f_g9 bg_g">GBP</div>
+                    </li>
+                    <li>
+                        <div class="rp_r_list_t f_h55">状态</div>
+                        <div class="rp_r_list_b f_h45 f_w_b f_g9 bg_g">Active</div>
+                    </li>
+                </ul>
+                <div class="rp_level_bar">
+                    <div class="rp_level_point" style="left: 378.4px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="rp_rating_mes f_h55">Very Low Risk</div>
+        <div class="statement_tit f_h35 f_w_b">声明：</div>
+        <div class="statement_cont">
+            <p>未经信用视界书面同意，本报告不得以任何形式或部分提供给第三人。</p>
+            <p>本报告仅供客户作为信用、保险、营销及其他商业决策时的参考因素之一，不能用于其它用途。</p>
+            <p>信用视界提供本报告并不意味着为客户的商业风险提供担保,在任何情况下，对于客户的商业决策所造成的损失，无论该商业决策的做出是否参考了本报告所载信息， 信用视界不承担使用者的任何商业风险，
+                也不承担由于非控因素和疏忽而引起的相应的损失和损害。</p>
+        </div>
+    </div>
+    <!--公司概况-->
+    <div class="rp_s_title">
+        <div class="rp_s_t_l"></div>
+        <div class="rp_s_t_r f_w_b">公司概况</div>
+    </div>
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <table class="rp_c_table tb_f">
+            <tbody><tr>
+                <th>企业信息概要</th>
+            </tr>
+            </tbody></table>
+        <table class="rp_c_table tb_f nr">
+            <tbody>
+            <tr>
+                <td class="tb_w22 tb_mlt">企业名称</td>
+                <td class="tb_w28 f_w_b tb_mlt">R*********E PLC</td>
+                <td class="tb_w22 tb_mlt">注册名称</td>
+                <td class="tb_w28 f_w_b tb_mlt">R*********E PLC</td>
+            </tr>
+            <tr>
+                <td>注册号</td>
+                <td class="f_w_b">01003***</td>
+                <td>所有者类型</td>
+                <td class="f_w_b">-</td>
+            </tr>
+            <tr>
+                <td class="tb_mlt">地址</td>
+                <!-- 地址 -->
+                <td class="f_w_b tb_mlt" colspan="3">** ********** ****,
+                    LONDON SW1E 6AT</td>
+            </tr>
+            <tr>
+                <td>企业现状</td>
+                <td class="f_w_b">Active - Accounts Filed</td>
+                <td>税号</td>
+                <td class="f_w_b">-</td>
+            </tr>
+            <tr>
+                <td>税号注册日期</td>
+                <td class="f_w_b">-</td>
+                <td>企业注册日期</td>
+                <td class="f_w_b">23/02/1971</td>
+            </tr>
+            <tr>
+                <td>企业类型</td>
+                <td class="f_w_b">Public limited with Share Capital</td>
+                <td>通用代码</td>
+                <td class="f_w_b">-</td>
+            </tr>
+            <tr>
+                <td>提供者代码</td>
+                <td class="f_w_b">-</td>
+                <td>电话</td>
+                <td class="f_w_b">02072229***</td>
+            </tr>
+            <tr>
+                <td>邮箱地址</td>
+                <td class="f_w_b">-</td>
+                <td>网址</td>
+                <td class="f_w_b">R*********E.COM</td>
+            </tr>
+            <tr>
+                <td>主要经营活动行业代码</td>
+                <td class="f_w_b">2830</td>
+            </tr>
+            <tr>
+                <td class="tb_mlt">活动描述</td>
+                <td class="f_w_b tb_mlt" colspan="3">Manufacture steam
+                    generators, not boilers</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--公司概况-->
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <table class="rp_c_table tb_f">
+            <tbody><tr>
+                <th>联系信息</th>
+            </tr>
+            </tbody></table>
+        <table class="rp_c_table tb_f nr">
+            <tbody>
+            <tr>
+                <td class="td1">联系地址</td>
+                <td class="td3">** ********** ****, LONDON SW1E 6AT <br>
+                </td>
+            </tr>
+            <tr>
+                <td class="td1">其他地址</td>
+                <td class="td3">** ********** ****, London SW1E 6AT <br>
+                    *****, Coventry, West Midlands CV7 9JR <br>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--评分评级-->
+    <div class="rp_s_title">
+        <div class="rp_s_t_l"></div>
+        <div class="rp_s_t_r f_w_b">评分评级</div>
+    </div>
+    <!--Credit Score-->
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <div class="rp_int_score_l tb_f2">
+            <div class="rp_sco_title">信用评分</div>
+            <div class="rp_sco_s f_g9 bg_g">86</div>
+            <ul class="rp_credit_sco_list">
+                <li>当前供应商信用评分(0-100) <span> 86 </span>
+                </li>
+                <li>历史信用额度 <span> ￡15,000,000.00 </span>
+                </li>
+                <li>历史供应商信用评分 <span> 95 </span>
+                </li>
+            </ul>
+        </div>
+        <table class="rp_c_table tb_f" style="margin-top: 0px;margin-bottom: 0px;">
+            <tbody><tr>
+                <th class="th1" style="width:460px;">评分参考</th>
+                <th class="th1">新成立企业评分参考</th>
+            </tr>
+            </tbody></table>
+        <table class="rp_c_table tb_f3">
+            <tbody>
+            <tr>
+                <td class="td6"><span> <img src="https://cdn.www.x315.cn/img/customers/tb_p_g.png">
+                            </span> 71-100</td>
+                <td class="td7">风险极低</td>
+                <td class="td6"><span> <img src="https://cdn.www.x315.cn/img/customers/tb_p_g.png">
+                            </span> 50-100</td>
+                <td class="td7">风险低</td>
+            </tr>
+            <tr>
+                <td class="td6"><span> <img src="https://cdn.www.x315.cn/img/customers/tb_p_g2.png">
+                            </span> 51-70</td>
+                <td class="td7">风险低</td>
+                <td class="td6"><span> <img src="https://cdn.www.x315.cn/img/customers/tb_p_or.png">
+                            </span> 30-50</td>
+                <td class="td7">风险中等</td>
+            </tr>
+            <tr>
+                <td class="td6"><span> <img src="https://cdn.www.x315.cn/img/customers/tb_p_or.png">
+                            </span> 30-50</td>
+                <td class="td7">风险中等</td>
+                <td class="td6"><span> <img src="https://cdn.www.x315.cn/img/customers/tb_p_r.png">
+                            </span> 1-29</td>
+                <td class="td7">风险较高</td>
+            </tr>
+            <tr>
+                <td class="td6"><span> <img src="https://cdn.www.x315.cn/img/customers/tb_p_r2.png">
+                            </span> 21-29</td>
+                <td class="td7">风险高</td>
+                <td class="td6">无评分</td>
+                <td class="td7">请参阅报告描述</td>
+            </tr>
+            <tr>
+                <td class="td6"><span> <img src="https://cdn.www.x315.cn/img/customers/tb_p_r.png">
+                            </span> 1-20</td>
+                <td class="td7" colspan="3">风险很高</td>
+            </tr>
+            <tr>
+                <td class="td6">无评分</td>
+                <td class="td7" colspan="3">请参阅报告描述</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--Credit Score-->
+    <!--International Score-->
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <div class="tb_f">
+            <div class="rp_int_score_l">
+                <div class="rp_int_s_tit f_h35 f_w_b">信用评级</div>
+                <div class="rp_int_s f_g9 bg_g">A</div>
+                <div class="rp_int_s_des">
+                    <div>信用评级描述:</div>
+                    <div class="rp_int_s_des_d f_c_g">风险极低</div>
+                    <div class="rp_int_s_des_t">信用评级是一种将企业在国际基础上进行比较的通用风险评级标准</div>
+                </div>
+            </div>
+            <div class="rp_int_score_r">
+                <div class="rp_int_score_des_t f_h45 f_w_b">评级描述</div>
+                <table class="tb_score_des">
+                    <tbody>
+                    <tr>
+                        <td class="td1 f_c_g">A</td>
+                        <td class="td2">风险极低</td>
+                    </tr>
+                    <tr>
+                        <td class="td1 f_c_g2">B</td>
+                        <td class="td2">风险低</td>
+                    </tr>
+                    <tr>
+                        <td class="td1 f_c_or">C</td>
+                        <td class="td2">风险中等</td>
+                    </tr>
+                    <tr>
+                        <td class="td1 f_c_r2">D</td>
+                        <td class="td2">风险高</td>
+                    </tr>
+                    <tr>
+                        <td class="td1 f_c_r">E</td>
+                        <td class="td2">风险很高</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!--International Score-->
+    <!--Commentary -->
+    <!--Commentary -->
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <div class="tb_f">
+            <div class="rp_int_s_tit f_h35 f_w_b">评述</div>
+            <div class="com_cont">本综述为通过对比目标公司以及与其规模或行业对等的企业的各项数据而统计得出，对于一家企业来说可能是正面的影响，而对于另外一家企业来说可能是负面的影响。</div>
+            <ul class="com_list">
+                <li><span> <img width="13" src="https://cdn.www.x315.cn/img/customers/tb_p_y.png">
+                        </span> This company has been treated as a Large company in respect of the
+                    rating/limit generated.</li>
+                <li><span> <img width="13" src="https://cdn.www.x315.cn/img/customers/tb_p_g.png">
+                        </span> This is a very large company with total assets in excess of £5
+                    billion and shareholders' funds greater than £50 million.</li>
+                <li><span> <img width="13" src="https://cdn.www.x315.cn/img/customers/tb_p_y.png">
+                        </span> This company's return on total assets employed ratio indicates a
+                    relatively efficient use of assets.</li>
+                <li><span> <img width="13" src="https://cdn.www.x315.cn/img/customers/tb_p_y.png">
+                        </span> This company has made late payments on a medium percentage of
+                    invoices.</li>
+                <li><span> <img width="13" src="https://cdn.www.x315.cn/img/customers/tb_p_y.png">
+                        </span> This company's ratio of total liabilities to total assets
+                    indicates the presence of moderate equity funding.</li>
+                <li><span> <img width="13" src="https://cdn.www.x315.cn/img/customers/tb_p_g.png">
+                        </span> The company has more cash than short term bank borrowings.</li>
+                <li><span> <img width="13" src="https://cdn.www.x315.cn/img/customers/tb_p_r.png">
+                        </span> This company trades in an industry with a higher level of
+                    corporate failures.</li>
+            </ul>
+        </div>
+    </div>
+    <!--Commentary -->
+    <!--Commentary -->
+    <!--评分评级-->
+    <!--财务总览-->
+    <div class="rp_s_title">
+        <div class="rp_s_t_l"></div>
+        <div class="rp_s_t_r f_w_b">财务总览</div>
+    </div>
+    <!--Key Financial-->
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <table class="rp_c_table tb_f">
+            <tbody><tr>
+                <th>主要财务数据</th>
+            </tr>
+            </tbody></table>
+        <table class="key_fin_table tb_f nr">
+            <tbody>
+            <tr>
+                <td class="tb_w28">最新财务收入</td>
+                <td class="tb_w22 f_w_b">￡13,736,000,000.00</td>
+                <td class="tb_w28">最新所有者权益总额</td>
+                <td class="tb_w22 f_w_b">￡6,826,000,000.00</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--Key Financial-->
+    <!--财务总览-->
+    <!--股权结构-->
+    <div class="rp_s_title">
+        <div class="rp_s_t_l"></div>
+        <div class="rp_s_t_r f_w_b">股权结构</div>
+    </div>
+    <!--Share Capital Structure-->
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <div class="tb_header tb_f4">股权结构</div>
+        <table class="rating_lim_tb tb_f3">
+            <tbody>
+            <tr>
+                <td class="tb_w50" colspan="2">注册资本</td>
+                <td class="tb_w50" colspan="2">实收资本</td>
+            </tr>
+            <tr>
+                <td class="tb_w50 f_w_b" colspan="2">-</td>
+                <td class="tb_w50 f_w_b" colspan="2">￡326,199,301.60</td>
+            </tr>
+            <tr>
+                <td colspan="4" class="tb_h30"></td>
+            </tr>
+            <tr class="t_a_l">
+                <td class="tb_w25">名称</td>
+                <td class="tb_w50" colspan="2">地址</td>
+                <!-- <td class="tb_w22">注册资本</td> -->
+                <!-- <td class="tb_w15">实收资本</td> -->
+                <td class="tb_w25">持股比例</td>
+            </tr>
+            <tr class="f_w_b">
+                <td class="tb_t_l"><span> <img src="https://cdn.www.x315.cn/img/customers/share_td3.png">
+                            </span> R**** ****E GROUP PLC (1630996507 shares of 1630996508)</td>
+                <td colspan="2">-</td>
+                <td>%</td>
+            </tr>
+            <tr class="f_w_b">
+                <td class="tb_t_l"><span> <img src="https://cdn.www.x315.cn/img/customers/share_td3.png">
+                            </span> M*******D HOLDINGS LTD (1 shares of 1630996508)</td>
+                <td colspan="2">-</td>
+                <td>%</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--Share Capital Structure-->
+    <!--股权结构-->
+    <!--集团结构-->
+    <div class="rp_s_title">
+        <div class="rp_s_t_l"></div>
+        <div class="rp_s_t_r f_w_b">集团结构</div>
+    </div>
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <div class="tb_header tb_f4">集团结构延伸信息</div>
+        <table class="rating_lim_tb t_a_l tb_f3">
+            <tbody>
+            <tr>
+                <td class="tb_w20">国家</td>
+                <td class="tb_w30 f_w_b">United Kingdom</td>
+                <td class="tb_w20">结构等级</td>
+                <td class="tb_w30 f_w_b">0</td>
+            </tr>
+            <tr>
+                <td>名称</td>
+                <td class="f_w_b">R*********E HOLDINGS PLC</td>
+                <td>注册号</td>
+                <td class="f_w_b">07524***</td>
+            </tr>
+            <tr>
+                <td>最新年报日期</td>
+                <td class="f_w_b" olspan="3">31/12/2020</td>
+            </tr>
+            <tr>
+                <td>状态</td>
+                <td class="f_w_b f_c_g" colspan="3">活跃</td>
+            </tr>
+            </tbody>
+        </table>
+        <table class="rating_lim_tb t_a_l tb_f3">
+            <tbody>
+            <tr>
+                <td class="tb_w20">国家</td>
+                <td class="tb_w30 f_w_b">Norway</td>
+                <td class="tb_w20">结构等级</td>
+                <td class="tb_w30 f_w_b">1</td>
+            </tr>
+            <tr>
+                <td>名称</td>
+                <td class="f_w_b">B***** ******S AS</td>
+                <td>注册号</td>
+                <td class="f_w_b">-</td>
+            </tr>
+            <tr>
+                <td>最新年报日期</td>
+                <td class="f_w_b" olspan="3">-</td>
+            </tr>
+            <tr>
+                <td>状态</td>
+                <td class="f_w_b f_c_r" colspan="3">其他</td>
+            </tr>
+            </tbody>
+        </table>
+        <table class="rating_lim_tb t_a_l tb_f3">
+            <tbody>
+            <tr>
+                <td class="tb_w20">国家</td>
+                <td class="tb_w30 f_w_b">United Kingdom</td>
+                <td class="tb_w20">结构等级</td>
+                <td class="tb_w30 f_w_b">2</td>
+            </tr>
+            <tr>
+                <td>名称</td>
+                <td class="f_w_b">B***** ******S LIMITED</td>
+                <td>注册号</td>
+                <td class="f_w_b">07680***</td>
+            </tr>
+            <tr>
+                <td>最新年报日期</td>
+                <td class="f_w_b" olspan="3">31/12/2020</td>
+            </tr>
+            <tr>
+                <td>状态</td>
+                <td class="f_w_b f_c_g" colspan="3">活跃</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--Parent Companies-Immediate Holding Company-->
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <table class="rp_c_table tb_f">
+            <tbody><tr>
+                <th>母公司-最终母公司</th>
+            </tr>
+            </tbody></table>
+        <table class="share_table tb_f nr">
+            <tbody>
+            <tr>
+                <td class="tb_w40 tb_t_l">名称</td>
+                <td>国家</td>
+            </tr>
+            <tr class="f_w_b">
+                <td class="tb_t_l">R********** *******S PLC</td>
+                <td>United Kingdom</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <table class="rp_c_table tb_f">
+            <tbody><tr>
+                <th>母公司-直接控股公司</th>
+            </tr>
+            </tbody></table>
+        <table class="share_table tb_f nr">
+            <tbody>
+            <tr>
+                <td class="tb_w40 tb_t_l">名称</td>
+                <td>国家</td>
+            </tr>
+            <tr class="f_w_b">
+                <td class="tb_t_l">R********** ****P PLC</td>
+                <td>United Kingdom</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <table class="rp_c_table tb_f">
+            <tbody><tr>
+                <th>子公司</th>
+            </tr>
+            </tbody></table>
+        <table class="share_table tb_f nr">
+            <tbody>
+            <tr>
+                <td class="tb_w40 tb_t_l">名称</td>
+                <td>国家</td>
+            </tr>
+            <tr class="f_w_b">
+                <td class="tb_t_l">R********** ****R DEVELOPMENT LIMITED</td>
+                <td>United Kingdom</td>
+            </tr>
+            <tr class="f_w_b">
+                <td class="tb_t_l">B***** ******** ******S LIMITED</td>
+                <td>United Kingdom</td>
+            </tr>
+            <tr class="f_w_b">
+                <td class="tb_t_l">C******** ********** **D APPLICATIONS
+                    LIMITED</td>
+                <td>United Kingdom</td>
+            </tr>
+            <tr class="f_w_b">
+                <td class="tb_t_l">D****** *******M LIMITED</td>
+                <td>United Kingdom</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <table class="share_table tb_f">
+            <tbody>
+            <tr>
+                <th colspan="4">关联公司</th>
+            </tr>
+            </tbody>
+            <tbody>
+            <tr>
+                <td class="noData">该企业暂无相关数据</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--Parent Companies-Immediate Holding Company-->
+    <!--集团结构-->
+    <!--人员信息-->
+    <div class="rp_s_title">
+        <div class="rp_s_t_l"></div>
+        <div class="rp_s_t_r f_w_b">人员信息</div>
+    </div>
+    <!--Current Directors / Managers-->
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <table class="rp_c_table tb_f">
+            <tbody><tr>
+                <th>现任董事/管理人员</th>
+            </tr>
+            </tbody></table>
+        <table class="share_table tb_f nr">
+            <tbody>
+            <tr>
+                <td class="tb_w10">名称</td>
+                <td class="tb_w10">性别</td>
+                <td class="tb_w35">地址</td>
+                <td class="tb_w15">出生日期</td>
+                <td class="tb_w15">职位</td>
+                <td class="tb_w15">任职日期</td>
+            </tr>
+            <tr class="f_w_b">
+                <td class="tb_t_r">Ms Helen Alexander</td>
+                <td class="tb_t_r">Female</td>
+                <td class="tb_t_r">** ********** ****, London SW1E 6AT</td>
+                <td class="tb_t_r">10/02/1957</td>
+                <td class="tb_t_r">Director</td>
+                <td class="tb_t_r">01/09/2007</td>
+            </tr>
+            <tr class="f_w_b">
+                <td class="tb_t_r">Mr Frank Joseph Chapman</td>
+                <td class="tb_t_r">Male</td>
+                <td class="tb_t_r">*** ****** ****** **** *****, Reading RG6
+                    1PT</td>
+                <td class="tb_t_r">17/06/1953</td>
+                <td class="tb_t_r">Director</td>
+                <td class="tb_t_r">10/11/2011</td>
+            </tr>
+            <tr class="f_w_b">
+                <td class="tb_t_r">Mr David Warren Arthur East</td>
+                <td class="tb_t_r">Male</td>
+                <td class="tb_t_r">** ********** ****, London SW1E 6AT</td>
+                <td class="tb_t_r">27/10/1961</td>
+                <td class="tb_t_r">Director</td>
+                <td class="tb_t_r">01/01/2014</td>
+            </tr>
+            <tr class="f_w_b">
+                <td class="tb_t_r">Dr John David Gibson McAdam</td>
+                <td class="tb_t_r">-</td>
+                <td class="tb_t_r">** ********** ******, London W1U 3AN</td>
+                <td class="tb_t_r">30/04/1948</td>
+                <td class="tb_t_r">Director</td>
+                <td class="tb_t_r">19/02/2008</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--Current Directors / Managers-->
+    <!--Previous Directors / Managers-->
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <table class="rp_c_table tb_f">
+            <tbody><tr>
+                <th>往任董事/管理人员</th>
+            </tr>
+            </tbody></table>
+        <table class="share_table tb_f nr">
+            <tbody>
+            <tr>
+                <td class="noData">该企业暂无相关数据</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--Previous Directors / Managers-->
+    <!--Employee Information-->
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <table class="rp_c_table tb_f">
+            <tbody><tr>
+                <th>员工信息</th>
+            </tr>
+            </tbody></table>
+        <table class="rating_lim_tb t_a_l tb_f nr">
+            <tbody>
+            <tr>
+                <td class="tb_w20">年份</td>
+                <td class="tb_w30 f_w_b">2014</td>
+                <td class="tb_w20">员工人数</td>
+                <td class="tb_w30 f_w_b">54100</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--Employee Information-->
+    <!--人员信息-->
+    <!--负面信息-->
+    <div class="rp_s_title">
+        <div class="rp_s_t_l"></div>
+        <div class="rp_s_t_r f_w_b">负面信息</div>
+    </div>
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <table class="rp_c_table tb_f">
+            <tbody><tr>
+                <th>已注册法院判决 - 精确查找</th>
+            </tr>
+            </tbody></table>
+        <table class="share_table tb_f nr">
+            <tbody>
+            <tr>
+                <td class="tb_w10">日期</td>
+                <td class="tb_w10">法院</td>
+                <td class="tb_w10">金额</td>
+                <td class="tb_w15">编号</td>
+                <td class="tb_w10">状态</td>
+                <td class="tb_w15">付款日期</td>
+                <td class="tb_w30">详细信息</td>
+            </tr>
+            <tr class="f_w_b">
+                <td>24/05/2013</td>
+                <td>NORTHAMPTON CCMCC</td>
+                <td>￡17619</td>
+                <td>3YL16910</td>
+                <td>SS</td>
+                <td>12/08/2013</td>
+                <td>R********** **C, *** ** ********** GATE, LONDON, SW1E
+                    6AT, SW1E 6AT, SW1E 6AT</td>
+            </tr>
+            <tr class="f_w_b">
+                <td>15/04/2011</td>
+                <td>BRISTOL</td>
+                <td>￡23650</td>
+                <td>0BS08097</td>
+                <td>JG</td>
+                <td>-</td>
+                <td>R**** ****E PLC, ** ********** ****, LONDON, SW1E 6AT,
+                    SW1E 6AT, SW1E 6AT</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <table class="rp_c_table tb_f">
+            <tbody><tr>
+                <th>已注册法院判决 - 模糊查找</th>
+            </tr>
+            </tbody></table>
+        <table class="share_table tb_f nr">
+            <tbody>
+            <tr>
+                <td class="noData">该企业暂无相关数据</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <table class="rp_c_table tb_f">
+            <tbody><tr>
+                <th>破产记录(无限责任公司)</th>
+            </tr>
+            </tbody></table>
+        <table class="share_table tb_f nr">
+            <tbody>
+            <tr>
+                <td class="noData">该企业暂无相关数据</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--负面信息（英国）-->
+    <div class="rp_s_title">
+        <div class="rp_s_t_l"></div>
+        <div class="rp_s_t_r f_w_b">公司历史</div>
+    </div>
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <div class="tb_header tb_f4">状态历史</div>
+    </div>
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <div class="tb_header tb_f4">公司历史</div>
+        <table class="rating_lim_tb t_a_l tb_f3">
+            <tbody>
+            <tr>
+                <td class="tb_w20">日期</td>
+                <td class="tb_w30 f_w_b">19/11/2015</td>
+                <td class="tb_w30">事项描述</td>
+                <td class="tb_w20 f_w_b">New Board Member Mr A.J. Davies
+                    appointed</td>
+            </tr>
+            </tbody>
+        </table>
+        <table class="rating_lim_tb t_a_l tb_f3">
+            <tbody>
+            <tr>
+                <td class="tb_w20">日期</td>
+                <td class="tb_w30 f_w_b">18/11/2015</td>
+                <td class="tb_w30">事项描述</td>
+                <td class="tb_w20 f_w_b">New Board Member Sir K. Smith
+                    appointed</td>
+            </tr>
+            </tbody>
+        </table>
+        <table class="rating_lim_tb t_a_l tb_f3">
+            <tbody>
+            <tr>
+                <td class="tb_w20">日期</td>
+                <td class="tb_w30 f_w_b">29/07/2015</td>
+                <td class="tb_w30">事项描述</td>
+                <td class="tb_w20 f_w_b">New Board Member Ms I.M. Dorner
+                    appointed</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="rp_s_title">
+        <div class="rp_s_t_l"></div>
+        <div class="rp_s_t_r f_w_b">抵押信息</div>
+    </div>
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <table class="rp_c_table tb_f">
+            <tbody><tr>
+                <th>抵押信息概况</th>
+            </tr>
+            </tbody></table>
+        <table class="rating_lim_tb tb_f nr">
+            <tbody>
+            <tr>
+                <td class="tb_w50">未偿付抵押</td>
+                <td class="tb_w50">已偿付抵押</td>
+            </tr>
+            <tr class="f_w_b">
+                <td>5</td>
+                <td>5</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <div class="tb_header tb_f4">详细抵押信息</div>
+        <table class="rating_lim_tb tb_f3">
+            <tbody>
+            <tr>
+                <td class="tb_w20">抵押类型</td>
+                <td class="tb_w30 f_w_b">opco group direct agreement</td>
+                <td class="tb_w20">抵押日期</td>
+                <td class="tb_w30 f_w_b">27/03/2008</td>
+            </tr>
+            <tr>
+                <td>注册日期</td>
+                <td class="f_w_b">03/04/2008</td>
+                <td class="">偿付日期</td>
+                <td class=" f_w_b">-</td>
+            </tr>
+            <tr>
+                <td class="">状态</td>
+                <td class=" f_w_b">未偿付抵押</td>
+                <td class="">有权收取抵押方</td>
+                <td class=" f_w_b">airtanker limited as projectco</td>
+            </tr>
+            <tr>
+                <td class="">抵押金额</td>
+                <td class=" f_w_b" colspan="3">all monies due or to become
+                    due from the company in its capacity as opco shareholder under
+                    the terms of the aforementioned instrument creating or evidencing
+                    the charge</td>
+            </tr>
+            <tr>
+                <td class="">详细信息</td>
+                <td class=" f_w_b" colspan="3">all of the chargor\s right
+                    title and interest from time to time in the r*********e
+                    termination cash collateral account see image for full details</td>
+            </tr>
+            </tbody>
+        </table>
+        <table class="rating_lim_tb tb_f3">
+            <tbody>
+            <tr>
+                <td class="tb_w20">抵押类型</td>
+                <td class="tb_w30 f_w_b">opco group direct agreement</td>
+                <td class="tb_w20">抵押日期</td>
+                <td class="tb_w30 f_w_b">27/03/2008</td>
+            </tr>
+            <tr>
+                <td>注册日期</td>
+                <td class="f_w_b">03/04/2008</td>
+                <td class="">偿付日期</td>
+                <td class=" f_w_b">-</td>
+            </tr>
+            <tr>
+                <td class="">状态</td>
+                <td class=" f_w_b">未偿付抵押</td>
+                <td class="">有权收取抵押方</td>
+                <td class=" f_w_b">airtanker services limited as opco</td>
+            </tr>
+            <tr>
+                <td class="">抵押金额</td>
+                <td class=" f_w_b" colspan="3">all monies due or to become
+                    due from the company in its capacity as opco lenderand in its
+                    capacity as opco shareholderunder the terms of the aforementioned
+                    instrument creating or evidencing the charge</td>
+            </tr>
+            <tr>
+                <td class="">详细信息</td>
+                <td class=" f_w_b" colspan="3">all of the chargor\s right
+                    title and interst from time to time in the r*********e liquidity
+                    cash collateral account seeimage for full details</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--变更记录-->
+    <div class="rp_s_title">
+        <div class="rp_s_t_l"></div>
+        <div class="rp_s_t_r f_w_b">变更记录</div>
+    </div>
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <table class="rating_lim_tb tb_f">
+            <tbody>
+            <tr>
+                <th colspan="4">变更记录</th>
+            </tr>
+            </tbody>
+            <tbody>
+            <tr>
+                <td class="noData">该企业暂无相关数据</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <table class="rp_c_table tb_f">
+            <tbody><tr>
+                <th>曾用名称</th>
+            </tr>
+            </tbody></table>
+        <table class="rating_lim_tb tb_f nr">
+            <tbody>
+            <tr>
+                <td class="tb_w20">曾用名</td>
+                <td class="tb_w30 f_w_b">R*********E (1971) LIMITED</td>
+                <td class="tb_w30">变更日期</td>
+                <td class="tb_w20 f_w_b">21/03/1977</td>
+            </tr>
+            <tr class="tb_h30">
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--变更记录-->
+    <!--付款信息-->
+    <div class="rp_s_title">
+        <div class="rp_s_t_l"></div>
+        <div class="rp_s_t_r f_w_b">付款信息</div>
+    </div>
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <table class="rp_c_table tb_f">
+            <tbody><tr>
+                <th>付款数据</th>
+            </tr>
+            </tbody></table>
+        <table class="rating_lim_tb tb_f2 nr">
+            <tbody>
+            <tr>
+                <td class="tb_w50">可获得的总发票数</td>
+                <td class="f_w_b">￡1,458.00</td>
+            </tr>
+            <tr>
+                <td class="tb_w50">付款的发票总数</td>
+                <td class="f_w_b">-</td>
+            </tr>
+            <tr>
+                <td class="tb_w50">已超期仍未支付的发票数</td>
+                <td class="tb_w22 f_w_b">-</td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="payment tb_f3">
+            <div id="payment_pic_PaymentData_1" class="payment_pic" _echarts_instance_="ec_1689149277612" style="-webkit-tap-highlight-color: transparent; -webkit-user-select: none; background-color: transparent;"><div style="position: relative; width: 475px; height: 150px; padding: 0px; margin: 0px; border-width: 0px;"><canvas data-zr-dom-id="zr_0" width="475" height="150" style="position: absolute; left: 0px; top: 0px; width: 475px; height: 150px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); padding: 0px; margin: 0px; border-width: 0px;"></canvas></div></div>
+            <div class="pay_list">
+                <ul class="rp_rating_list">
+                    <li>
+                        <div class="rp_r_list_t f_h55">付款平均逾期天数</div>
+                        <div class="rp_r_list_b f_h45 f_w_b f_g9 bg_r">-</div>
+                    </li>
+                    <li>
+                        <div class="rp_r_list_t f_h55">行业付款平均逾期天数</div>
+                        <div class="rp_r_list_b f_h45 f_w_b f_g9 bg_g">-</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        //基于准备好的dom，初始化echarts实例
+        var gladChart = echarts.init(document.getElementById('payment_pic_PaymentData_1'));
+        // 指定图表的配置项和数据
+        var option = {
+            legend: {
+                data: ['Before Due Date', 'Before 30 Days Due', 'After 30 Days Due'],
+                x: 'right',
+                y: 'center',
+                orient: 'vertical'
+            },
+            grid: {
+                left: '10%',
+                right: '50%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                data: ["Paid"],
+                show: true,
+                axisLabel: {
+                    show: true
+                },
+                axisLine: {
+                    show: true
+                },
+                axisTick: {
+                    show: false
+                },
+                splitLine: {
+                    show: false
+                }
+            },
+            yAxis: {
+                show: false,
+                axisLabel: {
+                    show: false
+                },
+                axisLine: {
+                    show: false
+                },
+                splitLine: {
+                    show: false
+                }
+            },
+            series: [{
+                name: 'Before Due Date',
+                type: 'bar',
+                data: ['0'],
+                itemStyle: {
+                    normal: {
+                        color: '#05a352',
+                        label: {
+                            show: true,
+                            position: 'top',
+                            textStyle: {
+                                color: '#333333'
+                            }
+                        }
+                    }
+                }
+            }, {
+                name: 'Before 30 Days Due',
+                type: 'bar',
+                data: ['871'],
+                itemStyle: {
+                    normal: {
+                        color: '#f4af12',
+                        label: {
+                            show: true,
+                            position: 'top',
+                            textStyle: {
+                                color: '#333333'
+                            }
+                        }
+                    }
+                }
+            }, {
+                name: 'After 30 Days Due',
+                type: 'bar',
+                data: ['513'],
+                itemStyle: {
+                    normal: {
+                        color: '#d02b21',
+                        label: {
+                            show: true,
+                            position: 'top',
+                            textStyle: {
+                                color: '#333333'
+                            }
+                        }
+                    }
+                }
+            }, ]
+        };
+        // 使用刚指定的配置项和数据显示图表。
+        gladChart.setOption(option);
+    </script>
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <table class="rp_c_table tb_f">
+            <tbody><tr>
+                <th>付款趋势</th>
+            </tr>
+            </tbody></table>
+        <table class="rating_lim_tb tb_f nr">
+            <tbody>
+            <tr>
+                <td colspan="2" class="tb_pay_pic">
+                    <div id="Payment_Trend_1" style="width: 370px; height: 170px; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; background-color: transparent;" _echarts_instance_="ec_1689149277613"><div style="position: relative; width: 370px; height: 170px; padding: 0px; margin: 0px; border-width: 0px;"><canvas data-zr-dom-id="zr_0" width="370" height="170" style="position: absolute; left: 0px; top: 0px; width: 370px; height: 170px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); padding: 0px; margin: 0px; border-width: 0px;"></canvas></div></div>
+                </td>
+                <td colspan="2" class="tb_pay_pic">
+                    <div id="Payment_Trend_2" style="width: 570px; height: 170px; -webkit-tap-highlight-color: transparent; -webkit-user-select: none; background-color: transparent;" _echarts_instance_="ec_1689149277614"><div style="position: relative; width: 570px; height: 170px; padding: 0px; margin: 0px; border-width: 0px;"><canvas data-zr-dom-id="zr_0" width="570" height="170" style="position: absolute; left: 0px; top: 0px; width: 570px; height: 170px; user-select: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); padding: 0px; margin: 0px; border-width: 0px;"></canvas></div></div>
+                </td>
+            </tr>
+            <tr>
+                <td class="tb_w25">余额</td>
+                <td class="tb_w25 f_w_b">-</td>
+                <td class="tb_w45">过去3-12个月内付款发票数</td>
+                <td class="tb_w5 f_w_b">-</td>
+            </tr>
+            <tr>
+                <td colspan="2"></td>
+                <td class="tb_w45">过去3个月内付款的发票数</td>
+                <td class="tb_w5 f_w_b">-</td>
+            </tr>
+            <tr>
+                <td class="tb_w25">平均每月余额</td>
+                <td class="tb_w25 f_w_b">-</td>
+                <td class="tb_w45">到期前付款的发票数</td>
+                <td class="tb_w5 f_w_b">-</td>
+            </tr>
+            <tr>
+                <td class="tb_w25">近12个月内最高余额</td>
+                <td class="tb_w25 f_w_b">-</td>
+                <td class="tb_w45">未支付的贸易笔数</td>
+                <td class="tb_w5 f_w_b">-</td>
+            </tr>
+            <tr>
+                <td class="tb_w25">贸易总笔数</td>
+                <td class="tb_w25 f_w_b">-</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <script type="text/javascript">
+        //基于准备好的dom，初始化echarts实例
+        var gladChart = echarts.init(document.getElementById('Payment_Trend_1'));
+        // 指定图表的配置项和数据
+        var option = {
+            legend: {
+                data: ['Balance Within Terms', 'Balance P1', 'Balance P2', 'Balance P3', 'Balance P4'],
+                x: 'right',
+                y: 'center',
+                orient: 'vertical'
+            },
+            grid: {
+                left: '0%',
+                right: '50%',
+                bottom: '2%',
+                containLabel: true
+            },
+            xAxis: {
+                data: ["Balance"],
+                show: true,
+                axisLabel: {
+                    show: true
+                },
+                axisLine: {
+                    show: true
+                },
+                axisTick: {
+                    show: false
+                },
+                splitLine: {
+                    show: false
+                }
+            },
+            yAxis: {
+                show: false,
+                axisLabel: {
+                    show: false
+                },
+                axisLine: {
+                    show: false
+                },
+                splitLine: {
+                    show: false
+                }
+            },
+            series: [{
+                name: 'Balance Within Terms',
+                type: 'bar',
+                data: ['0'],
+                itemStyle: {
+                    normal: {
+                        color: '#05a352',
+                        label: {
+                            show: true,
+                            position: 'top',
+                            textStyle: {
+                                color: '#333333'
+                            }
+                        }
+                    }
+                }
+            }, {
+                name: 'Balance P1',
+                type: 'bar',
+                data: ['0'],
+                itemStyle: {
+                    normal: {
+                        color: '#29bc0e',
+                        label: {
+                            show: true,
+                            position: 'top',
+                            textStyle: {
+                                color: '#333333'
+                            }
+                        }
+                    }
+                }
+            }, {
+                name: 'Balance P2',
+                type: 'bar',
+                data: ['0'],
+                itemStyle: {
+                    normal: {
+                        color: '#f4af12',
+                        label: {
+                            show: true,
+                            position: 'top',
+                            textStyle: {
+                                color: '#333333'
+                            }
+                        }
+                    }
+                }
+            }, {
+                name: 'Balance P3',
+                type: 'bar',
+                data: ['0'],
+                itemStyle: {
+                    normal: {
+                        color: '#e6510a',
+                        label: {
+                            show: true,
+                            position: 'top',
+                            textStyle: {
+                                color: '#333333'
+                            }
+                        }
+                    }
+                }
+            }, {
+                name: 'Balance P4',
+                type: 'bar',
+                data: ['0'],
+                itemStyle: {
+                    normal: {
+                        color: '#d02b21',
+                        label: {
+                            show: true,
+                            position: 'top',
+                            textStyle: {
+                                color: '#333333'
+                            }
+                        }
+                    }
+                }
+            }]
+        };
+        // 使用刚指定的配置项和数据显示图表。
+        gladChart.setOption(option);
+    </script>
+    <script type="text/javascript">
+        //基于准备好的dom，初始化echarts实例
+        var gladChart_2 = echarts.init(document.getElementById('Payment_Trend_2'));
+        // 指定图表的配置项和数据
+        var option_2 = {
+            legend: {
+                data: ['Paid In Terms', 'Paid P1', 'Paid P2', 'Paid P3', 'Paid P4'],
+                x: 'right',
+                y: 'center',
+                orient: 'vertical'
+            },
+            grid: {
+                left: '0%',
+                right: '20%',
+                bottom: '2%',
+                containLabel: true
+            },
+            xAxis: {
+                data: ["between 3 and 12 months", "last 3 months"],
+                show: true,
+                axisLabel: {
+                    show: true
+                },
+                axisLine: {
+                    show: true
+                },
+                axisTick: {
+                    show: false
+                },
+                splitLine: {
+                    show: false
+                }
+            },
+            yAxis: {
+                show: false,
+                axisLabel: {
+                    show: false
+                },
+                axisLine: {
+                    show: false
+                },
+                splitLine: {
+                    show: false
+                }
+            },
+            series: [{
+                name: 'Paid In Terms',
+                type: 'bar',
+                data: ['0', '0'],
+                itemStyle: {
+                    normal: {
+                        color: '#d02b21',
+                        label: {
+                            show: true,
+                            position: 'top',
+                            textStyle: {
+                                color: '#333333'
+                            }
+                        }
+                    }
+                }
+            }, {
+                name: 'Paid P1',
+                type: 'bar',
+                data: ['0', '0'],
+                itemStyle: {
+                    normal: {
+                        color: '#29bc0e',
+                        label: {
+                            show: true,
+                            position: 'top',
+                            textStyle: {
+                                color: '#333333'
+                            }
+                        }
+                    }
+                }
+            }, {
+                name: 'Paid P2',
+                type: 'bar',
+                data: ['0', '0'],
+                itemStyle: {
+                    normal: {
+                        color: '#f4af12',
+                        label: {
+                            show: true,
+                            position: 'top',
+                            textStyle: {
+                                color: '#333333'
+                            }
+                        }
+                    }
+                }
+            }, {
+                name: 'Paid P3',
+                type: 'bar',
+                data: ['0', '0'],
+                itemStyle: {
+                    normal: {
+                        color: '#e6510a',
+                        label: {
+                            show: true,
+                            position: 'top',
+                            textStyle: {
+                                color: '#333333'
+                            }
+                        }
+                    }
+                }
+            }, {
+                name: 'Paid P4',
+                type: 'bar',
+                data: ['0', '0'],
+                itemStyle: {
+                    normal: {
+                        color: '#d02b21',
+                        label: {
+                            show: true,
+                            position: 'top',
+                            textStyle: {
+                                color: '#333333'
+                            }
+                        }
+                    }
+                }
+            }]
+        };
+        // 使用刚指定的配置项和数据显示图表。
+        gladChart_2.setOption(option_2);
+    </script>
+    <!--付款信息-->
+    <!--财务详情-->
+    <div class="rp_s_title">
+        <div class="rp_s_t_l"></div>
+        <div class="rp_s_t_r f_w_b">财务详情</div>
+        <div class="rp_s_content">
+            <div class="rp_s_content_bg"></div>
+            <table class="rp_c_table tb_f">
+                <tbody><tr>
+                    <th>损益表</th>
+                </tr>
+                </tbody></table>
+            <table class="share_table tb_f nr">
+                <tbody>
+                <tr>
+                    <td class="tb_w30 tb_t_l">财务年度</td>
+                    <td class="tb_w10">31/12/2020</td>
+                    <td class="tb_w10">(%)</td>
+                    <td class="tb_w10">31/12/2019</td>
+                    <td class="tb_w10">(%)</td>
+                    <td class="tb_w10">31/12/2018</td>
+                    <td class="tb_w10">(%)</td>
+                    <td class="tb_w10">-</td>
+                </tr>
+                <tr class="f_w_b f_c6">
+                    <td class="tb_t_l">周数</td>
+                    <td>52</td>
+                    <td></td>
+                    <td>52</td>
+                    <td></td>
+                    <td>52</td>
+                    <td></td>
+                    <td>-</td>
+                </tr>
+                <tr class="f_w_b f_c6">
+                    <td class="tb_t_l">货币单位</td>
+                    <td>GBP</td>
+                    <td></td>
+                    <td>GBP</td>
+                    <td></td>
+                    <td>GBP</td>
+                    <td></td>
+                    <td>-</td>
+                </tr>
+                <tr class="f_w_b f_c6">
+                    <td class="tb_t_l">是否合并</td>
+                    <td>Y</td>
+                    <td></td>
+                    <td>Y</td>
+                    <td></td>
+                    <td>Y</td>
+                    <td></td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">收入</td>
+                    <td>￡13,736,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-6.2%</td>
+                    <td>￡14,642,000,000.00</td>
+                    <td class="
+              fc_g
+              ">20.4%</td>
+                    <td>￡12,161,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">营业成本</td>
+                    <td>￡12,346,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-6.2%</td>
+                    <td>￡13,162,000,000.00</td>
+                    <td class="
+              fc_g
+              ">22.1%</td>
+                    <td>￡10,783,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">营业利润</td>
+                    <td>￡1,390,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-6.1%</td>
+                    <td>￡1,480,000,000.00</td>
+                    <td class="
+              fc_g
+              ">7.4%</td>
+                    <td>￡1,378,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">薪资福利</td>
+                    <td>￡2,646,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-6.9%</td>
+                    <td>￡2,843,000,000.00</td>
+                    <td class="
+              fc_g
+              ">31.4%</td>
+                    <td>￡2,163,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">抚恤金</td>
+                    <td>￡328,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-22.1%</td>
+                    <td>￡421,000,000.00</td>
+                    <td class="
+              fc_g
+              ">71.8%</td>
+                    <td>￡245,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">贬值损失</td>
+                    <td>￡374,000,000.00</td>
+                    <td class="
+              fc_g
+              ">0.5%</td>
+                    <td>￡372,000,000.00</td>
+                    <td class="
+              fc_g
+              ">45.9%</td>
+                    <td>￡255,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">摊销</td>
+                    <td>￡366,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-9.4%</td>
+                    <td>￡404,000,000.00</td>
+                    <td class="
+              fc_g
+              ">93.3%</td>
+                    <td>￡209,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">财务支出</td>
+                    <td>￡1,284,000,000.00</td>
+                    <td class="
+              fc_g
+              ">605.5%</td>
+                    <td>￡182,000,000.00</td>
+                    <td class="
+              fc_g
+              ">256.9%</td>
+                    <td>￡51,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">税前利润</td>
+                    <td>￡146,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-92.6%</td>
+                    <td>￡1,960,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-29.1%</td>
+                    <td>￡2,766,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">税额</td>
+                    <td>-￡151,000,000.00</td>
+                    <td class="
+              fc_g
+              ">59.9%</td>
+                    <td>-￡377,000,000.00</td>
+                    <td class="
+              fc_g
+              ">12.5%</td>
+                    <td>-￡431,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">税后利润</td>
+                    <td>-￡5,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-100.3%</td>
+                    <td>￡1,583,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-32.2%</td>
+                    <td>￡2,335,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">股利</td>
+                    <td>￡0</td>
+                    <td class="
+              ">-</td>
+                    <td>￡0</td>
+                    <td class="
+              ">-</td>
+                    <td>￡0</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">少数股东权益</td>
+                    <td>￡0</td>
+                    <td class="
+              ">-</td>
+                    <td>￡0</td>
+                    <td class="
+              ">-</td>
+                    <td>￡0</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">其他支出</td>
+                    <td>￡0</td>
+                    <td class="
+              ">-</td>
+                    <td>￡0</td>
+                    <td class="
+              ">-</td>
+                    <td>￡0</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">留存利润</td>
+                    <td>-￡5,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-100.3%</td>
+                    <td>￡1,583,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-32.2%</td>
+                    <td>￡2,335,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="rp_s_content">
+            <div class="rp_s_content_bg"></div>
+            <table class="rp_c_table tb_f">
+                <tbody><tr>
+                    <th>资产负债表</th>
+                </tr>
+                </tbody></table>
+            <table class="share_table tb_f nr">
+                <tbody>
+                <tr>
+                    <td class="tb_w30 tb_t_l">财务年度</td>
+                    <td class="tb_w10">31/12/2020</td>
+                    <td class="tb_w10">(%)</td>
+                    <td class="tb_w10">31/12/2019</td>
+                    <td class="tb_w10">(%)</td>
+                    <td class="tb_w10">31/12/2018</td>
+                    <td class="tb_w10">(%)</td>
+                    <td class="tb_w10">-</td>
+                </tr>
+                <tr class="f_w_b f_c6">
+                    <td class="tb_t_l">周数</td>
+                    <td>52</td>
+                    <td></td>
+                    <td>52</td>
+                    <td></td>
+                    <td>52</td>
+                    <td></td>
+                    <td>-</td>
+                </tr>
+                <tr class="f_w_b f_c6">
+                    <td class="tb_t_l">货币单位</td>
+                    <td>GBP</td>
+                    <td></td>
+                    <td>GBP</td>
+                    <td></td>
+                    <td>GBP</td>
+                    <td></td>
+                    <td>-</td>
+                </tr>
+                <tr class="f_w_b f_c6">
+                    <td class="tb_t_l">是否合并</td>
+                    <td>Y</td>
+                    <td></td>
+                    <td>Y</td>
+                    <td></td>
+                    <td>Y</td>
+                    <td></td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">有形资产总额</td>
+                    <td>￡3,446,000,000.00</td>
+                    <td class="
+              fc_g
+              ">1.6%</td>
+                    <td>￡3,392,000,000.00</td>
+                    <td class="
+              fc_g
+              ">32.3%</td>
+                    <td>￡2,564,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">其他无形资产</td>
+                    <td>￡4,804,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-3.7%</td>
+                    <td>￡4,987,000,000.00</td>
+                    <td class="
+              fc_g
+              ">71.9%</td>
+                    <td>￡2,901,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">其他固定资产总额</td>
+                    <td>￡2,786,000,000.00</td>
+                    <td class="
+              fc_g
+              ">49.3%</td>
+                    <td>￡1,866,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-39.6%</td>
+                    <td>￡3,088,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">固定资产总额</td>
+                    <td>￡11,036,000,000.00</td>
+                    <td class="
+              fc_g
+              ">7.7%</td>
+                    <td>￡10,245,000,000.00</td>
+                    <td class="
+              fc_g
+              ">19.8%</td>
+                    <td>￡8,553,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">存货总额</td>
+                    <td>￡2,768,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-16.6%</td>
+                    <td>￡3,319,000,000.00</td>
+                    <td class="
+              fc_g
+              ">21.8%</td>
+                    <td>￡2,726,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">贸易应收款</td>
+                    <td>￡4,215,000,000.00</td>
+                    <td class="
+              fc_g
+              ">9.8%</td>
+                    <td>￡3,840,000,000.00</td>
+                    <td class="
+              fc_g
+              ">24.5%</td>
+                    <td>￡3,084,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">杂项应收款</td>
+                    <td>￡2,605,000,000.00</td>
+                    <td class="
+              fc_g
+              ">24.0%</td>
+                    <td>￡2,100,000,000.00</td>
+                    <td class="
+              fc_g
+              ">32.8%</td>
+                    <td>￡1,581,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">应收账款总额</td>
+                    <td>￡6,820,000,000.00</td>
+                    <td class="
+              fc_g
+              ">14.8%</td>
+                    <td>￡5,940,000,000.00</td>
+                    <td class="
+              fc_g
+              ">27.3%</td>
+                    <td>￡4,665,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">现金资产</td>
+                    <td>￡2,862,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-28.3%</td>
+                    <td>￡3,990,000,000.00</td>
+                    <td class="
+              fc_g
+              ">54.4%</td>
+                    <td>￡2,584,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">其他流动资产</td>
+                    <td>￡49,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-88.2%</td>
+                    <td>￡417,000,000.00</td>
+                    <td class="
+              fc_g
+              ">155.8%</td>
+                    <td>￡163,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">贸易应付款</td>
+                    <td>￡1,348,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-1.6%</td>
+                    <td>￡1,370,000,000.00</td>
+                    <td class="
+              fc_g
+              ">23.5%</td>
+                    <td>￡1,109,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">银行负债</td>
+                    <td>￡12,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-94.2%</td>
+                    <td>￡207,000,000.00</td>
+                    <td class="
+              fc_g
+              ">38.9%</td>
+                    <td>￡149,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">其他贷款</td>
+                    <td>￡1,367,000,000.00</td>
+                    <td class="
+              fc_g
+              ">15.5%</td>
+                    <td>￡1,184,000,000.00</td>
+                    <td class="
+              fc_g
+              ">249.3%</td>
+                    <td>￡339,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">流动负债总额</td>
+                    <td>￡8,552,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-2.8%</td>
+                    <td>￡8,797,000,000.00</td>
+                    <td class="
+              fc_g
+              ">25.1%</td>
+                    <td>￡7,033,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">1年以后到期的银行负债</td>
+                    <td>￡2,149,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-0.6%</td>
+                    <td>￡2,163,000,000.00</td>
+                    <td class="
+              fc_g
+              ">435.4%</td>
+                    <td>￡404,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">1年以后到期的其他贷款</td>
+                    <td>￡765,000,000.00</td>
+                    <td class="
+              fc_g
+              ">111.9%</td>
+                    <td>￡361,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-71.1%</td>
+                    <td>￡1,249,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">1年以后到期的杂项负债</td>
+                    <td>￡5,243,000,000.00</td>
+                    <td class="
+              fc_g
+              ">1.7%</td>
+                    <td>￡5,154,000,000.00</td>
+                    <td class="
+              fc_g
+              ">53.8%</td>
+                    <td>￡3,352,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">长期负债总额</td>
+                    <td>￡8,157,000,000.00</td>
+                    <td class="
+              fc_g
+              ">6.2%</td>
+                    <td>￡7,678,000,000.00</td>
+                    <td class="
+              fc_g
+              ">53.4%</td>
+                    <td>￡5,005,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">负债总额</td>
+                    <td>￡16,709,000,000.00</td>
+                    <td class="
+              fc_g
+              ">1.4%</td>
+                    <td>￡16,475,000,000.00</td>
+                    <td class="
+              fc_g
+              ">36.9%</td>
+                    <td>￡12,038,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">实收资本</td>
+                    <td>￡326,000,000.00</td>
+                    <td class="
+              fc_g
+              ">0.0%</td>
+                    <td>￡326,000,000.00</td>
+                    <td class="
+              fc_g
+              ">0.0%</td>
+                    <td>￡326,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">盈余公积</td>
+                    <td>￡5,875,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-6.7%</td>
+                    <td>￡6,300,000,000.00</td>
+                    <td class="
+              fc_g
+              ">15.6%</td>
+                    <td>￡5,449,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">其他公积</td>
+                    <td>￡625,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-22.8%</td>
+                    <td>￡810,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-7.7%</td>
+                    <td>￡878,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">所有者权益总额</td>
+                    <td>￡6,826,000,000.00</td>
+                    <td class="
+              fc_r
+              ">-8.2%</td>
+                    <td>￡7,436,000,000.00</td>
+                    <td class="
+              fc_g
+              ">11.8%</td>
+                    <td>￡6,653,000,000.00</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="rp_s_content">
+            <div class="rp_s_content_bg"></div>
+            <table class="rp_c_table tb_f">
+                <tbody><tr>
+                    <th>财务比率</th>
+                </tr>
+                </tbody></table>
+            <table class="share_table tb_f nr">
+                <tbody>
+                <tr>
+                    <td class="tb_w30 tb_t_l">财务年度</td>
+                    <td class="tb_w10">31/12/2020</td>
+                    <td class="tb_w10">(%)</td>
+                    <td class="tb_w10">31/12/2019</td>
+                    <td class="tb_w10">(%)</td>
+                    <td class="tb_w10">31/12/2018</td>
+                    <td class="tb_w10">(%)</td>
+                    <td class="tb_w10">-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">税前利润</td>
+                    <td>1.06</td>
+                    <td class="
+              fc_r
+              ">-92.1%</td>
+                    <td>13.39</td>
+                    <td class="
+              fc_r
+              ">-41.1%</td>
+                    <td>22.74</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">投资回报率</td>
+                    <td>0.97</td>
+                    <td class="
+              fc_r
+              ">-92.5%</td>
+                    <td>12.96</td>
+                    <td class="
+              fc_r
+              ">-45.4%</td>
+                    <td>23.72</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">总资产回报率</td>
+                    <td>0.62</td>
+                    <td class="
+              fc_r
+              ">-92.4%</td>
+                    <td>8.19</td>
+                    <td class="
+              fc_r
+              ">-44.6%</td>
+                    <td>14.79</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">净资产回报率</td>
+                    <td>2.13</td>
+                    <td class="
+              fc_r
+              ">-91.9%</td>
+                    <td>26.35</td>
+                    <td class="
+              fc_r
+              ">-36.6%</td>
+                    <td>41.57</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">销售收入/营运净资本</td>
+                    <td>3.48</td>
+                    <td class="
+              fc_g
+              ">15.6%</td>
+                    <td>3.01</td>
+                    <td class="
+              fc_r
+              ">-23.2%</td>
+                    <td>3.92</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">存货周转率</td>
+                    <td>20.15</td>
+                    <td class="
+              fc_r
+              ">-11.1%</td>
+                    <td>22.66</td>
+                    <td class="
+              fc_g
+              ">1.1%</td>
+                    <td>22.41</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">账款回收天数</td>
+                    <td>111.69</td>
+                    <td class="
+              fc_g
+              ">17.0%</td>
+                    <td>95.46</td>
+                    <td class="
+              fc_g
+              ">3.4%</td>
+                    <td>92.30</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">付款天数</td>
+                    <td>35.72</td>
+                    <td class="
+              fc_g
+              ">4.9%</td>
+                    <td>34.05</td>
+                    <td class="
+              fc_g
+              ">2.6%</td>
+                    <td>33.19</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">流动比率</td>
+                    <td>1.46</td>
+                    <td class="
+              fc_r
+              ">-5.8%</td>
+                    <td>1.55</td>
+                    <td class="
+              fc_g
+              ">7.6%</td>
+                    <td>1.44</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">酸性测试比率</td>
+                    <td>1.13</td>
+                    <td class="
+              fc_r
+              ">-3.4%</td>
+                    <td>1.17</td>
+                    <td class="
+              fc_g
+              ">11.4%</td>
+                    <td>1.05</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">流动负债率</td>
+                    <td>1.25</td>
+                    <td class="
+              fc_g
+              ">5.9%</td>
+                    <td>1.18</td>
+                    <td class="
+              fc_g
+              ">12.4%</td>
+                    <td>1.05</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">杠杆比率</td>
+                    <td>119.67</td>
+                    <td class="
+              fc_g
+              ">12.9%</td>
+                    <td>106.04</td>
+                    <td class="
+              fc_g
+              ">36.9%</td>
+                    <td>77.47</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td class="tb_t_l">负债比率</td>
+                    <td>2.44</td>
+                    <td class="
+              fc_g
+              ">10.4%</td>
+                    <td>2.21</td>
+                    <td class="
+              fc_g
+              ">22.8%</td>
+                    <td>1.80</td>
+                    <td class="
+              ">-</td>
+                    <td>-</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <div class="tb_header tb_f4">其他财务科目</div>
+        <table class="rating_lim_tb tb_f3">
+            <tbody>
+            <tr>
+                <td class="tb_w30">财务年度截止日期</td>
+                <td class="tb_w20 f_w_b">31/12/2020</td>
+                <td class="tb_w30">出口</td>
+                <td class="tb_w20 f_w_b">-</td>
+            </tr>
+            <tr>
+                <td>销售成本</td>
+                <td class="f_w_b">￡10,533,000,000.00</td>
+                <td>董事薪酬</td>
+                <td class="f_w_b">-</td>
+            </tr>
+            <tr>
+                <td>重估储备</td>
+                <td class="f_w_b">￡0</td>
+                <td>毛利润</td>
+                <td class="f_w_b">￡3,203,000,000.00</td>
+            </tr>
+            <tr>
+                <td>短期赊购和金融租赁负债</td>
+                <td class="f_w_b">￡1,000,000.00</td>
+                <td>长期赊购和金融租赁负债</td>
+                <td class="f_w_b">￡44,000,000.00</td>
+            </tr>
+            </tbody>
+        </table>
+        <table class="rating_lim_tb tb_f3">
+            <tbody>
+            <tr>
+                <td class="tb_w30">财务年度截止日期</td>
+                <td class="tb_w20 f_w_b">31/12/2019</td>
+                <td class="tb_w30">出口</td>
+                <td class="tb_w20 f_w_b">-</td>
+            </tr>
+            <tr>
+                <td>销售成本</td>
+                <td class="f_w_b">￡11,482,000,000.00</td>
+                <td>董事薪酬</td>
+                <td class="f_w_b">-</td>
+            </tr>
+            <tr>
+                <td>重估储备</td>
+                <td class="f_w_b">￡0</td>
+                <td>毛利润</td>
+                <td class="f_w_b">￡3,160,000,000.00</td>
+            </tr>
+            <tr>
+                <td>短期赊购和金融租赁负债</td>
+                <td class="f_w_b">￡0</td>
+                <td>长期赊购和金融租赁负债</td>
+                <td class="f_w_b">￡1,000,000.00</td>
+            </tr>
+            </tbody>
+        </table>
+        <table class="rating_lim_tb tb_f3">
+            <tbody>
+            <tr>
+                <td class="tb_w30">财务年度截止日期</td>
+                <td class="tb_w20 f_w_b">31/12/2018</td>
+                <td class="tb_w30">出口</td>
+                <td class="tb_w20 f_w_b">-</td>
+            </tr>
+            <tr>
+                <td>销售成本</td>
+                <td class="f_w_b">￡9,432,000,000.00</td>
+                <td>董事薪酬</td>
+                <td class="f_w_b">-</td>
+            </tr>
+            <tr>
+                <td>重估储备</td>
+                <td class="f_w_b">￡0</td>
+                <td>毛利润</td>
+                <td class="f_w_b">￡2,729,000,000.00</td>
+            </tr>
+            <tr>
+                <td>短期赊购和金融租赁负债</td>
+                <td class="f_w_b">￡0</td>
+                <td>长期赊购和金融租赁负债</td>
+                <td class="f_w_b">￡1,000,000.00</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--财务详情-->
+    <!--其他财务信息-->
+    <div class="rp_s_title">
+        <div class="rp_s_t_l"></div>
+        <div class="rp_s_t_r f_w_b">其他财务信息</div>
+    </div>
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <table class="rp_c_table tb_f">
+            <tbody><tr>
+                <th>其他财务信息</th>
+            </tr>
+            </tbody></table>
+        <table class="rating_lim_tb t_a_l tb_f nr">
+            <tbody>
+            <tr>
+                <td class="tb_w20">或有负债</td>
+                <td class="tb_w30 f_w_b">Yes</td>
+                <td class="tb_w20">营运资本</td>
+                <td class="tb_w30 f_w_b">￡3,947,000,000.00</td>
+            </tr>
+            <tr>
+                <td>净资本</td>
+                <td class="f_w_b">￡2,022,000,000.00</td>
+                <td></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--其他财务信息-->
+    <!--其他信息-->
+    <div class="rp_s_title">
+        <div class="rp_s_t_l"></div>
+        <div class="rp_s_t_r f_w_b">其他信息</div>
+    </div>
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <div class="tb_header tb_f4">银行</div>
+        <table class="rating_lim_tb tb_f3">
+            <tbody>
+            <tr>
+                <td class="tb_w15">名称</td>
+                <td class="tb_w35 f_w_b">NATIONAL W*********R BANK PLC</td>
+                <td>银行代码</td>
+                <td class="f_w_b" colspan="3">50-00-00</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="rp_s_content">
+        <div class="rp_s_content_bg"></div>
+        <table class="rp_c_table tb_f">
+            <tbody><tr>
+                <th>顾问</th>
+            </tr>
+            </tbody></table>
+        <table class="rating_lim_tb t_a_l tb_f4 nr">
+            <tbody>
+            <tr>
+                <td class="tb_w30">审计机构名称</td>
+                <td class="tb_w70 f_w_b">K**G LLP</td>
+            </tr>
+            <tr>
+                <td class="tb_w30">审计机构名称</td>
+                <td class="tb_w70 f_w_b">K**G AUDIT PLC</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--其他信息-->
+</div>
+{include file="common/footer"}
+

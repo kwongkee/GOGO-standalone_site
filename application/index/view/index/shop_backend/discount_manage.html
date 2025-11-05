@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>独立站平台 - website.gogo198.net</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="layui/css/layui.css">
+
+    <style>
+        html{height:100%;}
+        :root {--primary: #8a2be2;--primary-dark: #6a1cb9;--primary-light: #9b4de3;--secondary: #bb86fc;--accent: #e6d7f5;--text: #333333;--text-light: #f8f8f8;--background: #f9f5fd;--card-bg: #ffffff;--gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));--gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary));--shadow: 0 10px 30px rgba(138, 43, 226, 0.15);--shadow-hover: 0 15px 35px rgba(138, 43, 226, 0.25);}
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        body {color: var(--text);line-height: 1.6;overflow-x: hidden;}
+        h1, h2, h3, h4, h5, h6 {font-family: 'Montserrat', sans-serif;font-weight: 700;}
+
+        /* 导航栏样式 */
+        header {background: rgba(255, 255, 255, 0.95);color: var(--text);padding: 15px 0;box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);position: sticky;top: 0;z-index: 1000;backdrop-filter: blur(10px);}
+        nav {display: flex;justify-content: space-between;align-items: center;position: relative;}
+        .logo {font-size: 1.8rem;font-weight: 700;display: flex;align-items: center;background: var(--gradient);-webkit-background-clip: text;background-clip: text;color: transparent;z-index: 1001;}
+        .logo i {margin-right: 10px;color: var(--primary);}
+        .nav-links {display: flex;list-style: none;}
+        .nav-links li {margin-left: 25px;position: relative;}
+        .nav-links a {color: var(--text);text-decoration: none;font-weight: 500;transition: all 0.3s ease;padding: 8px 12px;border-radius: 4px;position: relative;display: flex;align-items: center;}
+        .nav-links a::after {content: '';position: absolute;bottom: 0;left: 50%;width: 0;height: 2px;background: var(--gradient);transition: all 0.3s ease;transform: translateX(-50%);}
+        .nav-links a:hover {color: var(--primary);}
+        .nav-links a:hover::after {width: 80%;}
+        .auth-buttons {display: flex;align-items: center;}
+        .btn {padding: 10px 20px;border-radius: 50px;text-decoration: none;font-weight: 600;transition: all 0.3s ease;cursor: pointer;display: inline-block;text-align: center;border: none;font-family: 'Montserrat', sans-serif;}
+        .btn-outline {border: 2px solid var(--primary);color: var(--primary);background: transparent;margin-right: 15px;}
+        .btn-outline:hover {background: var(--primary);color: white;transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-primary {background: var(--gradient);color: white;border: 2px solid transparent;}
+        .btn-primary:hover {background: transparent;border-color: var(--primary);color: var(--primary);transform: translateY(-3px);box-shadow: var(--shadow);}
+        .layui-btn.layui-btn-xs{padding:0 5px;}
+
+        /* 模态框样式 */
+        .modal {display: none;position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.5);backdrop-filter: blur(5px);z-index: 2000;align-items: center;justify-content: center;}
+        .modal-content {background: white;border-radius: 20px;padding: 30px;width: 90%;max-width: 90%;box-shadow: var(--shadow-hover);position: relative;}
+        .close-modal {position: absolute;top: 20px;right: 20px;font-size: 1.5rem;color: #999;cursor: pointer;transition: color 0.3s ease;}
+        .close-modal:hover {color: var(--primary);}
+        .modal-title {font-size: 1.5rem;margin-bottom: 20px;color: var(--primary);}
+
+        /* 表单样式 */
+        .form-section {margin-bottom: 30px;}
+        .form-title {font-size: 1.3rem;margin-bottom: 20px;color: var(--primary-dark);display: flex;align-items: center}
+        .form-title i {margin-right: 10px;}
+        .form-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));gap: 20px;}
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select,
+        .form-group textarea {width: 100%;padding: 2px 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;}
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {border-color: var(--primary);outline: none;}
+        .form-group textarea {min-height: 120px;resize: vertical;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
+
+
+        /*.form-group {margin-bottom: 20px;}*/
+        /*.form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}*/
+        /*.form-group input,*/
+        /*.form-group select {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}*/
+        /*.form-group input:focus,*/
+        /*.form-group select:focus {border-color: var(--primary);outline: none;}*/
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
+
+        .disf{display: flex;align-items: center;}
+        .btn{background:var(--primary-light);color: white;border: none;}
+        .btn-edit {background: var(--primary-light);color: white;border: none;}
+        .btn-edit:hover {background: var(--primary);}
+        .btn-waring {background: #f8ac59;color: white;border: none;}
+        .btn-delete {background: transparent;color: #ff4757;border: 2px solid #ff4757;}
+        .btn-delete:hover {background: #ff4757;color: white;}
+        /*.layui-btn-xs{line-height:21px;}*/
+        .layui-table th{background: var(--accent);color: var(--primary-dark);font-weight: 600;}
+
+        /* 动画 */
+        @keyframes fadeIn {
+            from {opacity: 0;transform: translateY(10px);}
+            to {opacity: 1;transform: translateY(0);}
+        }
+
+        @media (max-width: 576px) {
+            .btn {padding: 10px 20px;font-size: 0.9rem;}
+            /*.form-actions {flex-direction: column;}*/
+        }
+    </style>
+</head>
+<body>
+<div class="form-group" style="padding:20px;">
+    <div id="toolbar" class="btn-group" style="margin-top: 10px;margin-bottom: 10px;line-height: 34px;">
+        <button type="button" onclick="save(1,'/?s=index/save_discount&company_type={$company_type}&company_id={$company_id}');" class="btn btn-default">
+            <i class="fas fa-add"></i>
+            添加折扣
+        </button>
+    </div>
+    <table class="layui-hide" id="mainTable"></table>
+</div>
+
+<!-- 添加轮播图·模态框 -->
+<div class="modal" id="saveMenuModal">
+    <div class="modal-content" style="/**min-height:600px;max-height:600px;**/overflow-y:auto;">
+        <span class="close-modal close-modal-menu">&times;</span>
+        <h2 class="modal-title">保存信息</h2>
+        <iframe src="" class="menu_iframe" frameborder="0" style="width: 100%;height:600px;"></iframe>
+    </div>
+</div>
+</body>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    layui.use(['layer','form','laydate','upload','colorpicker','table'],function() {
+        var laydate = layui.laydate
+            ,layer = layui.layer
+            ,form = layui.form
+            ,$ = layui.jquery
+            ,upload = layui.upload
+            ,colorpicker = layui.colorpicker
+            ,table = layui.table;
+
+        //菜单弹窗关闭事件===start
+        const menu_modal = document.getElementById('saveMenuModal');
+        const menu_closeBtn = document.querySelector('.close-modal-menu');
+
+        // 关闭模态框
+        function closeModalMenu() {
+            menu_modal.style.display = 'none';
+        }
+        menu_closeBtn.addEventListener('click', closeModalMenu);
+        // 点击模态框外部关闭
+        window.addEventListener('click', function(event) {
+            if (event.target === menu_modal) {
+                closeModalMenu();
+            }
+        });
+        //菜单弹窗关闭事件===end
+
+        table.render({
+            elem: '#mainTable'
+            ,url: "/?s=index/discount_manage&pa=1&company_type={$company_type}&company_id={$company_id}"
+            ,cellMinWidth: 200
+            ,cols: [[
+                {field:'title', width:200, title: '标题'}
+                ,{field:'typename', width:80, title: '类型'}
+                ,{field:'createtime', width:200, title: '创建时间'}
+                ,{align:'center', fixed: 'right', title: '操作', templet: function(d){
+                        var result = "";
+
+                        result += '<a onclick="save(1,' + "'/?s=index/save_discount&company_type={$company_type}&company_id={$company_id}&id="+ d.id + '\');" class="layui-btn layui-btn-xs btn-edit btn"><i class="fas fa-edit"></i> 编辑</a>';
+                        result += '<a onclick="del('+ "'"+d.id+"'" +',1);" class="layui-btn layui-btn-xs btn-delete btn"><i class="fas fa-trash"></i> 删除</a>';
+
+                        return [
+                            result
+                        ].join('');
+
+                        return result;
+                    }}
+            ]]
+            ,page: true
+        });
+
+        var $ = layui.$, active = {
+            reload: function(){
+                //执行重载
+                table.reload('mainTable', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                        keywords: $("#keywords").val()
+                    }
+                });
+            }
+        };
+
+        $('.main-table-reload-btn .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+
+    function save(type,url) {
+        if(type==1){
+            //轮播图
+            var modal = document.getElementById('saveMenuModal');
+            modal.style.display = 'flex';
+
+            $('#saveMenuModal .menu_iframe').attr('src',url);
+        }
+    }
+
+    function del(id){
+        var layer = layui.layer,$ = layui.$;
+        layer.confirm('确认删除该折扣吗',{
+            btn:['确认','取消']
+        }, function(){
+            $.ajax({
+                url:"/?s=index/del_discount",
+                method:'post',
+                data:{id:id,'type':1},
+                dataType:'JSON',
+                success:function(res){
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            window.location.reload();
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            layer.closeAll();
+        }, function(){
+
+        });
+    }
+</script>
+</html>

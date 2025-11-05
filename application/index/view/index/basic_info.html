@@ -1,0 +1,312 @@
+{include file="common/header"}
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<link rel="stylesheet" href="css/chosen.css?v=1.2"/>
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;}
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .title{font-size:26px;color:{$website['color_word']};font-weight:800;text-align:center;line-height:normal !important;}
+    .content .control-group{margin-top:10px;}
+    .content .control-group .label_title{width:80px;color:{$website['color_word']};font-weight:800;font-size:15px;text-align:right;margin-right:10px;}
+    .content .control-group .controls .form-control{font-size:15px;}
+    .content .control-group .controls .btn-send{padding:7px 20px;background:{$website['color']};color:{$website['color_word']};border:1px solid {$website['color_word']};}
+    .content form{text-align:center;}
+    .content form .btn-submit{background:{$website['color']};color:{$website['color_word']};border:1px solid #D2A778;padding:10px 100px;box-sizing:border-box;float:unset !important;margin-top:15px;}
+	.content .form-control{width:100%;}
+	.content .phoneInput{width:55%;}
+	.content .emailInput{width:85%;}
+	.content .code_div{width:80px !important;}
+	.btn-upd,.btn-send{padding:6px 10px !important;}
+	.updDiv{display:none;}
+
+	.phone .selectBox *{font-family: Courier !important;}
+	.phone .selectBox{width:30%;}
+	.phone .selectBox .chosen-container{width:100%;text-align: left;background: #fff !important;}
+	.phone .selectBox .chosen-container-single .chosen-single{background: #fff !important;box-shadow: unset;border: 0;border-right: 0;border-radius: 0;position: relative;height:34px !important;}
+	.phone .selectBox .chosen-container-active .chosen-with-drop .chosen-single{background: unset !important;color: #000 !important;font-size: 15px !important;border: 0 !important;outline: unset !important;box-shadow: unset !important;height:34px !important;}
+	.phone .selectBox .chosen-container-single .chosen-single span{background: unset !important;color: #000 !important;font-size: 15px;border: 0 !important;outline: unset !important;box-shadow: unset !important;position:relative;height: 34px;line-height: 34px;font-weight: 800;}
+	.phone .selectBox .chosen-results li{padding:5px 0 !important;font-weight: 800;}
+	.phone .selectBox .chosen-container-single .chosen-single div{top:5px;}
+
+	#country_code{width:20%;height:34px;}
+	#country_code option:not(:checked) {color: #000;}
+	#country_code option:not(:checked) span{display: block;}
+	#country_code option:checked{color:#000;}
+
+	@media (max-width: 992px){
+		.content .emailInput{width:79%;}
+		#country_code{width: 100%;}
+		.phone .selectBox{width:25%;}
+		.content .code_div{width: 37px !important;}
+		.form-control{padding:6px 4px;}
+	}
+</style>
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="content" >
+            <div class="col-md-12">
+                <a href="javascript:history.back(-1);">
+                    <div style="display:flex;align-items:center;border: 1px solid #fff;width: fit-content;padding: 10px 20px;border-radius: 15px;background: #8f8b8b;">
+                        <img class="" src="./img/account/back.png" alt="" style="width: 18px;margin-right: 10px;"/>
+                        返回
+                    </div>
+                </a>
+                <form name="sentMessage" id="basicForm"  novalidate>
+                    <input type="text" name="id" id="id" value="{$account['id']}" style="display:none;"/>
+        	        <div class="title">基本信息</div>
+					<div class="disf" style="justify-content: center;">
+						<div class="">
+							<div class="control-group">
+								<div class="controls disf">
+									<label class="label_title">昵称</label>
+									<input type="text" class="form-control" placeholder="请输入您的昵称" id="nickname" name="nickname" required value="{$account['nickname']}"/>
+									<p class="help-block"></p>
+								</div>
+							</div>
+							<div class="control-group" style="display:none;">
+								<div class="controls disf">
+									<label class="label_title">真实名称</label>
+									<input type="text" class="form-control" placeholder="请输入您的真实名称" id="realname" name="realname" required value="{$account['realname']}"/>
+									<p class="help-block"></p>
+								</div>
+							</div>
+							<div class="control-group phone">
+								<div class="controls disf">
+									<label class="label_title">手机号码</label>
+									<div class="selectBox">
+										<select name="country_code" id="country_code" class="country_code">
+											{volist name="country_code" id="vo"}
+											<option value="{$vo.id}" {if $vo.id==$account['area_code']}selected{/if}>{$vo.param6} {$vo.param8}</option>
+											{/volist}
+										</select>
+									</div>
+									<input type="text" class="form-control phoneInput inputs" placeholder="请输入您的手机号码" id="phone" name="phone" required value="{$account['phone']}" {if(!empty($account['phone']))}readonly style="background:#999;"{else}style="width:40%;"{/if}/>
+									<p class="help-block">
+										{if(!empty($account['phone']))}
+											<div class="btn btn-upd" onclick="upd_info(1,this)">更改</div>
+											<div class="updDiv">
+												<div class="disf">
+													<input type="text" name="phone_code" class="code_div form-control">
+													<div class="sendCode btn btn-send phoneSend" onclick="send_code(1)">发送</div>
+												</div>
+											</div>
+										{else}
+											<div class="disf">
+												<input type="text" name="phone_code" class="code_div form-control">
+												<div class="sendCode btn btn-send phoneSend" onclick="send_code(1)">发送</div>
+											</div>
+										{/if}
+										<input type="hidden" name="upd_phone" id="upd_phone" value="{if(!empty($account['phone']))}0{else}1{/if}">
+									</p>
+								</div>
+							</div>
+							<div class="control-group email">
+								<div class="controls disf">
+									<label class="label_title">邮箱地址</label>
+									<input type="text" class="form-control emailInput inputs" placeholder="请输入您的邮箱地址" id="email" name="email" required  value="{$account['email']}" {if(!empty($account['email']))}readonly style="background:#999;"{else}style="width:70%;"{/if}/>
+									<p class="help-block">
+										{if(!empty($account['email']))}
+											<div class="btn btn-upd" onclick="upd_info(2,this)">更改</div>
+											<div class="updDiv">
+												<div class="disf">
+													<input type="text" name="email_code" class="code_div form-control">
+													<div class="sendCode btn btn-send emailSend" onclick="send_code(2)">发送</div>
+												</div>
+											</div>
+										{else}
+											<div class="disf">
+												<input type="text" name="email_code" class="code_div form-control">
+												<div class="sendCode btn btn-send emailSend" onclick="send_code(2)">发送</div>
+											</div>
+										{/if}
+										<input type="hidden" name="upd_email" id="upd_email" value="{if(!empty($account['email']))}0{else}1{/if}">
+									</p>
+								</div>
+							</div>
+
+							<div class="control-group">
+								<div class="controls disf">
+									<label class="label_title">社媒绑定</label>
+									<select name="media_id" id="media_id" class="form-control" style="height:34px;width:100% !important;">
+										<option value="">请选择</option>
+										<option value="1" {if(!empty(session('account.openid')))}disabled{/if}>微信公众号{if(!empty(session('account.openid')))}（已绑定）{/if}</option>
+										<option value="2" {if(!empty(session('account.sns_openid')))}disabled{/if}>微信小程序{if(!empty(session('account.sns_openid')))}（已绑定）{/if}</option>
+									</select>
+								</div>
+								<div class="miniprogram_verify" style="text-align: center;margin-top:15px;width:100%;">
+
+								</div>
+							</div>
+
+							<button type="submit" class="btn pull-center btn-submit">提交</button><br />
+						</div>
+					</div>
+                  </form>
+            </div>
+        </div>
+    </div>
+</section>
+{include file="common/footer"}
+<!--<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>-->
+<script src="js/jquery.chosen.js?v=1.3"></script>
+<script type="text/javascript" charset="utf-8">
+    $(function(){
+		$('.country_code').chosen();
+
+		$('.country_code').on('change', function(e, params) {
+			$.getJSON("?s=gather/getminiprogramcode", {pa:4,id:params.selected}, function(data) {
+				$('.selectBox .chosen-container-single .chosen-single span').text(data.data);
+
+			});
+		});
+
+        $('#basicForm').submit(function(){
+            // let json = $('#basicForm').serialize();
+            let nickname = $('input[name="nickname"]').val();
+            let realname = $('input[name="realname"]').val();
+            let phone = $('input[name="phone"]').val();
+            let phone_code = $('input[name="phone_code"]').val();
+            let email = $('input[name="email"]').val();
+            let email_code = $('input[name="email_code"]').val();
+            let id = $('input[name="id"]').val();
+			let upd_phone = $('#upd_phone').val();
+			let upd_email = $('#upd_email').val();
+
+            $.ajax({
+                url: "?s=index/basic_info",
+                method: 'post',
+                data: {'nickname':nickname,'realname':realname,'phone':phone,'phone_code':phone_code,'email':email,'email_code':email_code,'id':id,'upd_phone':upd_phone,'upd_email':upd_email},
+                dataType: 'JSON',
+                success: function (res) {
+                    if(res.code==-1){
+                        alert(res.msg);
+                        return false;
+                    }else{
+                        alert(res.msg);
+                        setTimeout(function(){
+                            window.location.href='/?s=index/account_manage';
+                        },3000);
+                    }
+                },
+                error: function (data) {
+                    
+                }
+            }); 
+            
+            return false;
+        });
+
+        $('#media_id').change(function(){
+        	let val = $(this).val();
+        	if(val==1){
+        		//微信公众号
+				window.location.href='https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx76d541cc3e471aeb&redirect_uri=https://www.gogo198.net/?s=gather/getweixin&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect';
+				// $.getJSON("/?s=gather/getminiprogramcode", {pa:4}, function(data) {
+				// 	console.log(data);
+				// });
+			}
+        	else if(val==2){
+        		//微信小程序
+				$('.miniprogram_verify').show();
+				$.getJSON("?s=gather/getminiprogramcode", {pa:1}, function(data) {
+					$('.miniprogram_verify').html('<img src="' + data.img + '" style="width:200px;"><p style="margin-top:15px;font-size: 15px;color:#fff;text-align: center;">请打开手机扫描</p>');
+					//开始每5秒查询
+					setInterval(function() {
+						$.getJSON("?s=gather/getminiprogramcode", {pa: 2, auth_id: data.auth_id}, function (data2) {
+							if(data2.code==1){
+								alert('绑定小程序成功');
+								window.location.reload();
+							}
+						});
+					},5000);
+				});
+			}
+		});
+    });
+
+    function upd_info(typ,t){
+    	if(typ==1){
+			$(t).parent().find('.updDiv').show();
+			$(t).parent().parent().find('.phoneInput').css({'background':'#fff','width':'40%'});
+			$(t).parent().parent().find('.phoneInput').attr('readonly',false);
+			$(t).hide();
+			$('#upd_phone').val(1);
+		}else if(typ==2){
+			$(t).parent().find('.updDiv').show();
+			$(t).parent().parent().find('.emailInput').css({'background':'#fff','width':'70%'});
+			$(t).parent().parent().find('.emailInput').attr('readonly',false);
+			$(t).hide();
+			$('#upd_email').val(1);
+		}
+	}
+
+    //倒计时
+    var n=60;
+    function timers(typ){
+        n-=1;
+        if(typ==1){
+        	//手机
+			if(n==0){
+				n=60;
+				$(".phoneSend").html("发送");
+			}else{
+				$(".phoneSend").html(n+"重试");
+				setTimeout(function () {
+					timers(typ);
+				},1000);
+			}
+		}else if(typ==2){
+        	//邮箱
+			if(n==0){
+				n=60;
+				$(".emailSend").html("发送");
+			}else{
+				$(".emailSend").html(n+"重试");
+				setTimeout(function () {
+					timers(typ);
+				},1000);
+			}
+		}
+
+    }
+    
+    function send_code(typ){
+        let number = '';
+		let country_code = 0;
+
+        if(typ==1){
+            number = $('input[name="phone"]').val();
+            if(number==''){
+                alert('手机格式错误');return false;
+            }
+			country_code = $('#country_code').val();
+        }else if(typ==2){
+            number = $('input[name="email"]').val();
+            var myreg=/^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/; //邮箱正则
+            if (!myreg.test(number)){
+                alert('邮箱格式错误');return false;
+            }
+        }
+        if(n==60){
+            timers(typ);
+            $.ajax({
+                url: "?s=index/send_code",
+                method: 'post',
+                data: {'code_type':typ,'number':number,'country_code':country_code,'isverify':1,'basic_verify':1},
+                dataType: 'JSON',
+                success: function (res) {
+                    if(res.code==-1){
+                        alert(res.msg);
+                        return false;
+                    }else{
+                        
+                    }
+                },
+                error: function (data) {
+                    
+                }
+            });   
+        }
+    }
+</script>

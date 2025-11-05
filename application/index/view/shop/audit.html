@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>订购信息</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <script src="layui/layui.js"></script>
+    <style>
+        .layui-fluid{padding-top:15px;}
+        .layui-form-item{margin-bottom: 0;}
+        .inline{line-height: 38px;}
+        .disf{display:flex;align-items: center;}
+        .link{text-decoration: underline;color:#1790FF;}
+    </style>
+</head>
+<body style="background: #eee;">
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-header" style="height:60px;padding:10px;box-sizing: border-box;">
+                        <div class="disf">
+                            <a class="layui-btn {if $pa==1}layui-btn-normal{else}layui-btn-primary{/if}" href="/?s=shop/audit&pa=1">{if $pa==1}⚪{/if}待分流</a>
+                            <a class="layui-btn {if $pa==1}layui-btn-primary{else}layui-btn-normal{/if}" href="/?s=shop/audit&pa=2">{if $pa==2}⚪{/if}已分流</a>
+                        </div>
+                    </div>
+                    <div class="layui-card-body">
+                        <table class="layui-hide" id="mainTable"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    layui.use(['layer', 'form', 'table', 'upload'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , upload = layui.upload
+            , table = layui.table;
+
+        table.render({
+            elem: '#mainTable'
+            ,url: "/?s=shop/audit&req=1&pa={$pa}"
+            ,cellMinWidth: 200
+            ,cols: [[
+                {field:'ordersn', title: '订单编号'}
+                ,{field:'createtime', title: '创建日期'}
+                ,{align:'center',  title: '操作',fixed:'right',width:90, templet: function(d){
+                        return [
+                            '<a onclick="openWindow('+"'"+ d.id +"'" +','+"1"+ ');" class="layui-btn layui-btn-normal layui-btn-xs">查看详情</a>',
+                            // '<a onclick="openWindow('+"'"+ d.id +"'" +','+"2"+ ');" class="layui-btn layui-btn-danger layui-btn-xs">删除</a>',
+                        ].join('');
+                    } }
+            ]]
+            ,page: true
+        });
+    });
+
+    function openWindow(id,typ) {
+        let url = '';
+        if (typ == 1) {
+            window.location.href = "/?s=shop/audit_detail&id=" + id;
+        }
+    }
+</script>
+</html>

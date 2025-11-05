@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>独立站平台 - website.gogo198.net</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style>
+        :root {--primary: #8B5FBF;--primary-light: #9b4de3;--primary-dark: #6A4A9C;--accent: #F0E6FF;--background: #f8f9fa;--card-bg: #ffffff;--text: #333333;--text-light: #666666;--shadow: 0 5px 15px rgba(0, 0, 0, 0.08);--shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.12);--gradient: linear-gradient(135deg, #8B5FBF 0%, #6A4A9C 100%);--border-radius: 12px;}
+
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        .action-buttons {display: flex;justify-content:end;gap: 15px;}
+        .btn {padding: 10px 20px;border-radius: 50px;font-weight: 600;cursor: pointer;transition: all 0.3s ease;display: flex;align-items: center;gap: 8px;border: none;}
+        .btn-primary {background: var(--gradient);color: white;}
+        .btn-primary:hover {transform: translateY(-3px);box-shadow: var(--shadow-hover);}
+        .btn-outline {background: transparent;color: var(--primary);border: 2px solid var(--primary-light);}
+        .btn-outline:hover {background: var(--primary-light);color: white;}
+        /* 表单样式 */
+        .form-container {max-width: 800px;}
+        .form-group {margin-bottom: 20px;}
+        .form-label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-control {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;}
+        .form-control:focus {border-color: var(--primary);outline: none;}
+        .form-row {display: grid;grid-template-columns: repeat(2, 1fr);gap: 20px;}
+
+        .content-header {display: flex;justify-content: space-between;align-items: center;margin-bottom: 25px;padding-bottom: 15px;border-bottom: 1px solid #eee;}
+        .content-title {font-size: 1.5rem;color: var(--primary-dark);}
+        .btn{background:var(--primary-light);color: white;border: none;}
+        .btn-edit {background: var(--primary-light);color: white;border: none;}
+        .btn-edit:hover {background: var(--primary);}
+        .btn-delete {background: transparent;color: #ff4757;border: 2px solid #ff4757;}
+        .btn-delete:hover {background: #ff4757;color: white;}
+        .layui-btn-xs{line-height:21px;}
+        .layui-table th{background: var(--accent);color: var(--primary-dark);font-weight: 600;}
+
+        /* 模态框样式 */
+        .modal {display: none;position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.5);backdrop-filter: blur(5px);z-index: 2000;align-items: center;justify-content: center;}
+        .modal-content {background: white;border-radius: 20px;padding: 30px;width: 90%;max-width: 90%;box-shadow: var(--shadow-hover);position: relative;}
+        .close-modal {position: absolute;top: 20px;right: 20px;font-size: 1.5rem;color: #999;cursor: pointer;transition: color 0.3s ease;}
+        .close-modal:hover {color: var(--primary);}
+        .modal-title {font-size: 1.5rem;margin-bottom: 20px;color: var(--primary);}
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}
+        .form-group input:focus,
+        .form-group select:focus {border-color: var(--primary);outline: none;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
+
+        .layui-form-label{width:100px;}
+        .layui-colorpicker-trigger-span{line-height: 24px;}
+        .layui-btn-container{display: flex;}
+        .btnHide-1{display:none;}
+        .channel-actions {display: flex;gap: 10px;}
+    </style>
+</head>
+<body>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="ibox float-e-margins">
+            <div class="ibox-content">
+                <div id="toolbar" class="btn-group" style="margin-top: 10px;margin-bottom: 10px;line-height: 34px;">
+                    <button type="button" onclick="save(1);" class="btn btn-default">
+                        <i class="fas fa-add"></i>
+                        添加轮播图
+                    </button>
+                </div>
+                <table id="table" class="layui-table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>轮播图名称</th>
+                        <th>导流方式</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {if empty($list)}
+                    <tr>
+                        <td colspan="4" style="text-align:center;">--暂无信息--</td>
+                    </tr>
+                    {else}
+                    {volist name="list" id="vo"}
+                    <tr>
+                        <td>{$vo['id']}</td>
+                        <td>{$vo['descs']}</td>
+                        <td>{$vo['go_method']}</td>
+                        <td>
+                            <div class="channel-actions">
+                                <button class="channel-btn btn-edit btn" onclick="edit({$vo['id']})"><i class="fas fa-edit"></i> 编辑</button>
+                                <button class="channel-btn btn-delete btn" onclick="del_component({$vo['id']})"><i class="fas fa-trash"></i> 删除</button>
+                            </div>
+                        </td>
+                    </tr>
+                    {/volist}
+                    {/if}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 添加轮播图·模态框 -->
+<div class="modal" id="saveMenuModal">
+    <div class="modal-content" style="/**min-height:600px;max-height:600px;**/overflow-y:auto;">
+        <span class="close-modal close-modal-menu">&times;</span>
+        <h2 class="modal-title">保存信息</h2>
+        <iframe src="" class="menu_iframe" frameborder="0" style="width: 100%;height:550px;"></iframe>
+    </div>
+</div>
+</body>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    layui.use(['layer','form','laydate','upload','colorpicker'],function() {
+        laydate = layui.laydate;
+        layer = layui.layer;
+        var form = layui.form;
+        $ = layui.jquery;
+        var upload = layui.upload;
+        var colorpicker = layui.colorpicker;
+
+        //菜单弹窗关闭事件===start
+        const menu_modal = document.getElementById('saveMenuModal');
+        const menu_closeBtn = document.querySelector('.close-modal-menu');
+
+        // 关闭模态框
+        function closeModalMenu() {
+            menu_modal.style.display = 'none';
+        }
+        menu_closeBtn.addEventListener('click', closeModalMenu);
+        // 点击模态框外部关闭
+        window.addEventListener('click', function(event) {
+            if (event.target === menu_modal) {
+                closeModalMenu();
+            }
+        });
+        //菜单弹窗关闭事件===end
+    });
+
+    function save(type) {
+        if(type==1){
+            //轮播图
+            var modal = document.getElementById('saveMenuModal');
+            modal.style.display = 'flex';
+
+            $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_shop_recommend&company_id={$company_id}&company_type={$company_type}');
+        }
+    }
+
+    //社媒编辑
+    function edit(id,name=''){
+        var modal = document.getElementById('saveMenuModal');
+        modal.style.display = 'flex';
+
+        $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_shop_recommend&company_id={$company_id}&company_type={$company_type}&id='+id);
+    }
+
+    //社媒删除
+    function del_component(id,name=''){
+        var layer = layui.layer,$ = layui.$;
+        layer.confirm('确认要删除该轮播图？', {
+            btn: ['删除','取消']
+        }, function(){
+            $.ajax({
+                url:"/?s=index/del_shop_recommend",
+                type:"GET",
+                dataType:"json",
+                data:{id:id},
+                success:function (res) {
+                    layer.msg(res.msg);
+                    if (res.code==0){
+                        setTimeout(function () {
+                            window.location.reload();
+                        },2000);
+                    }
+                },
+                error:function (xhr) {
+                    layer.msg('连接服务器错误！');
+                }
+            });
+            layer.closeAll();
+        }, function(){
+
+        });
+    }
+</script>
+</html>

@@ -1,0 +1,403 @@
+{include file="common/merchant_header"}
+<style type="text/css">
+    .layui-upload-img{width: 92px; height: 92px; margin: 0 10px 10px 0;}
+    .layui-btn{background-color: #F7931E !important;}
+    .layui-btn-primary{background-color: #fff !important;}
+    .layui-btn-primary:hover {border-color: #F7931E !important;}
+    .layui-fluid{padding:0;}
+    .info_div{display: grid;grid-template-columns: repeat(2,1fr);-moz-column-gap: 0px;column-gap: 0px;row-gap: 0px;}
+    .layui-table th{background: {$website['color']};color:{$website['color_word']};}
+    .layui-colla-content{padding:10px;}
+    .layui-input-block{line-height: 38px;}
+    @media screen and (min-width: 992px){
+        .layui-form-label {margin-left: 0px!important;}
+        .layui-input-block{margin-left: 140px !important;}
+        .yulan{width: 700px !important;}
+        .layui-select-fs{width: 100%;}
+        .layui-select-fscon{width: 735px !important;}
+    }
+    @media screen and (max-width: 450px){
+        .layui-form-label {width: 60px!important;margin-left: 0px!important;}
+        .layui-input-block{margin-left: 75px !important;}
+        .layui-form-label{padding: 9px 5px;}
+        .yulan{width: 80% !important;}
+        .layui-select-fs{width: 100%;}
+        .layui-select-fscon{width: 62%  !important;}
+        .layui-form-item .layui-input-inline {display: block;float: none;left: 4px;width: auto;margin: 0 0 10px 95px;}
+        .layui-form-item .layui-inline {margin-bottom:10px;}
+        .layui-form-item{margin-bottom:5px !important;}
+        .info_div{display: grid;grid-template-columns: repeat(1,1fr);-moz-column-gap: 0px;column-gap: 0px;row-gap: 0px;}
+    }
+    html{background:#fff;}
+    .layui-btn{background:{$website['color']} !important;}
+    .layui-btn-danger{background:#e60000 !important;}
+    .layui-btn-primary{background:#fff !important;}
+    .sel_box{width: 50%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
+    .sel_div .layui-form-selected dl{width: 100%;}
+    .result_div{display:none;width: calc(100% - 0px);height: 200px;position: absolute;background: #fff;color: #000;font-size: 13px;overflow-y: scroll;z-index: 9;border: 1px solid #c7c6c6;padding: 5px 10px;box-sizing: border-box;}
+    .result_div li{border-bottom:1px solid #000;padding:5px 0;box-sizing: border-box;}
+    .result_div li:hover{background:{$website['color']};color:{$website['color_word']};cursor:pointer;}
+    .layui-layer-nobg{background:#fff;}
+    .remark{margin-bottom:20px;}
+    .layui-colla-item .layui-colla-title{background:{$website['color']};color:{$website['color_word']};}
+    .layui-colla-content{border:1px solid {$website['color']};}
+</style>
+<script src="/centralize_manager/js/jquery.min.js"></script>
+<script src="/layuiadmin/layui/layui.js"></script>
+<script src="/layuiadmin/qrcode/jquery-3.2.1.min.js"></script>
+</head>
+<body>
+<div class="layui-fluid" style="margin-top:0;">
+    <div class="layui-card">
+        <div class="layui-card-body" style="padding: 10px;background:rgb(240,230,221);">
+            <form class="layui-form" action="" lay-filter="component-form-group">
+                <input type="hidden" name="id" value="{$id}">
+                <input type="hidden" name="pa" value="1">
+                {if $is_edit==1}
+                    {if $is_join['status']==0}
+                        <p style="text-align: center;font-size:15px;color:#000;font-weight: 600;margin-bottom:25px;">系统检测到您未加入群组，请在以下操作后决议：</p>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">选择加入</label>
+                            <div class="layui-input-block">
+                                <select id="select_enterprise" class="f18" lay-filter="select_enterprise" style="width: 100%;height:38px;border: 1px solid {$website['color']};">
+                                    <option value="">请选择是否加入</option>
+                                    <option value="1">同意加入</option>
+                                    <option value="-1">拒绝加入</option>
+                                </select>
+                            </div>
+                        </div>
+                    {elseif($is_join['status']==-1)}
+                        <p class="f15" style="color:{$website['color_word']};">您已拒绝加入该群组，所以无法决议。</p>
+                    {elseif($is_join['status']==1)}
+                        <div class="layui-collapse" lay-accordion="now" style="margin:10px 0 30px 0;">
+                            <div class="layui-colla-item">
+                                <h2 class="layui-colla-title">{$data['name']}</h2>
+                                <div class="layui-colla-content">
+                                    <div class="info_div">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">议题名称</label>
+                                            <div class="layui-input-block">
+                                                {$data['name']}
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">议题内容</label>
+                                            <div class="layui-input-block">
+                                                {$data['content']}
+                                            </div>
+                                        </div>
+                                        {if !empty($data['files'])}
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">议题附件</label>
+                                            <div class="layui-input-block">
+
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <div class="layui-input-block" style="margin-left:10px !important;">
+                                                {volist name="data['files']" id="vo"}
+                                                    <a href="/{$vo}" target="_blank" style="text-decoration: underline;margin-top:10px;">
+                                                        <div class="disf">
+                                                            <?php echo str_replace('uploads/topics_files/','',$vo);?>
+                                                            <img src="/img/eyes.png" alt="" style="width:20px;height:20px;">
+                                                        </div>
+                                                    </a>
+                                                {/volist}
+                                            </div>
+                                        </div>
+                                        {/if}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-colla-item">
+                                <h2 class="layui-colla-title">决议时效</h2>
+                                <div class="layui-colla-content">
+                                    <div class="info_div">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">开始时间</label>
+                                            <div class="layui-input-block">
+                                                {$data['starttime']}
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">结束时间</label>
+                                            <div class="layui-input-block">
+                                                {$data['endtime']}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-colla-item">
+                                <h2 class="layui-colla-title">决议选项</h2>
+                                <div class="layui-colla-content layui-show">
+                                    <div class="info_div">
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">决议选项</label>
+                                            <div class="layui-input-block">
+                                                <select name="option_id" lay-verify="required" lay-filter="option_id">
+                                                    <option value="">请选择选项</option>
+                                                    {volist name="data['options']" id="vo"}
+                                                    <option value="{$vo['id']}" {if $vo['id']==$data['selected']['option_id']}selected{/if} data-remark="{$vo['content']}">{$vo['name']}</option>
+                                                    {/volist}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="remark">
+                                            <div class="layui-collapse" lay-accordion="" style="margin:0;">
+                                                <div class="layui-colla-item">
+                                                    <h2 class="layui-colla-title">选项说明</h2>
+                                                    <div class="layui-colla-content" style="max-height: 200px;overflow-y: auto;overflow-x:hidden;">
+                                                        <span class="rightRemark f15">
+                                                            {volist name="data['options']" id="vo"}
+                                                                {if $vo['id']==$data['selected']['option_id']}{$vo['content']}{/if}
+                                                            {/volist}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-colla-item">
+                                <h2 class="layui-colla-title">议题状态</h2>
+                                <div class="layui-colla-content">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">议题状态</label>
+                                        <div class="layui-input-block">
+                                            {if $data['is_ending']==0}
+                                            进行中
+                                            {elseif($data['is_ending']==1)}
+                                            已结束({if $data['is_pass']==0}未通过{elseif($data['is_pass']==1)}已通过{/if})
+                                            {/if}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {if $is_edit==1}
+                            <div class="disf" style="justify-content: center;">
+                                <a href="/?s=customer/discuss_online&id={$id}" style="background:#05af05;color:{$website['color_word']};padding:7px 18px;border-radius: 2px;box-sizing: border-box;margin-right:10px;white-space: nowrap;text-align: center;">我要讨论</a>
+                                {if $data['is_ending']==0}
+                                <button class="layui-btn" lay-submit="" lay-filter="component-form-demo1">提交决议</button>
+                                {/if}
+                            </div>
+                        {/if}
+                        {if $is_edit==1}
+<!--                        <div class="layui-form-item layui-layout-admin">-->
+<!--                            <div class="layui-input-block">-->
+<!--                                <div class="layui-footer" style="left: 0;text-align: center;padding:10px 0;z-index: 99;">-->
+<!--                                    <button class="layui-btn" lay-submit="" lay-filter="component-form-demo1">立即决议</button>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                        {/if}
+                    {/if}
+                {elseif($is_edit==0)}
+                    <div class="layui-collapse" lay-accordion="now" style="margin:10px 0 30px 0;">
+                        <div class="layui-colla-item">
+                            <h2 class="layui-colla-title">{$data['name']}</h2>
+                            <div class="layui-colla-content">
+                                <div class="info_div">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">议题名称</label>
+                                        <div class="layui-input-block">
+                                            {$data['name']}
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">议题内容</label>
+                                        <div class="layui-input-block">
+                                            {$data['content']}
+                                        </div>
+                                    </div>
+                                    {if !empty($data['files'])}
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">议题附件</label>
+                                            <div class="layui-input-block">
+
+                                            </div>
+                                        </div>
+                                        <div class="layui-form-item">
+                                            <div class="layui-input-block" style="margin-left:10px !important;">
+                                                {volist name="data['files']" id="vo"}
+                                                <a href="/{$vo}" target="_blank" style="text-decoration: underline;margin-top:10px;">
+                                                    <div class="disf">
+                                                        <?php echo str_replace('uploads/topics_files/','',$vo);?>
+                                                        <img src="/img/eyes.png" alt="" style="width:20px;height:20px;">
+                                                    </div>
+                                                </a>
+                                                {/volist}
+                                            </div>
+                                        </div>
+                                    {/if}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-colla-item">
+                            <h2 class="layui-colla-title">决议时效</h2>
+                            <div class="layui-colla-content">
+                                <div class="info_div">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">开始时间</label>
+                                        <div class="layui-input-block">
+                                            {$data['starttime']}
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">结束时间</label>
+                                        <div class="layui-input-block">
+                                            {$data['endtime']}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-colla-item">
+                            <h2 class="layui-colla-title">决议选项</h2>
+                            <div class="layui-colla-content layui-show">
+                                <div class="info_div">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">决议选项</label>
+                                        <div class="layui-input-block">
+                                            <select name="option_id" lay-verify="required" lay-filter="option_id">
+                                                <option value="">请选择选项</option>
+                                                {volist name="data['options']" id="vo"}
+                                                <option value="{$vo['id']}" {if $vo['id']==$data['selected']['option_id']}selected{/if} data-remark="{$vo['content']}">{$vo['name']}</option>
+                                                {/volist}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="remark">
+                                        <div class="layui-collapse" lay-accordion="" style="margin:0;">
+                                            <div class="layui-colla-item">
+                                                <h2 class="layui-colla-title">选项说明</h2>
+                                                <div class="layui-colla-content" style="max-height: 200px;overflow-y: auto;overflow-x:hidden;">
+                                                    <span class="rightRemark f15">
+                                                        {volist name="data['options']" id="vo"}
+                                                            {if $vo['id']==$data['selected']['option_id']}{$vo['content']}{/if}
+                                                        {/volist}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-colla-item">
+                            <h2 class="layui-colla-title">议题状态</h2>
+                            <div class="layui-colla-content">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">议题状态</label>
+                                    <div class="layui-input-block">
+                                        {if $data['is_ending']==0}
+                                        进行中
+                                        {elseif($data['is_ending']==1)}
+                                        已结束({if $data['is_pass']==0}未通过{elseif($data['is_pass']==1)}已通过{/if})
+                                        {/if}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {/if}
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form','upload','element','laydate'], function() {
+        var $ = layui.$
+            , admin = layui.admin
+            , element = layui.element
+            , layer = layui.layer
+            , form = layui.form
+            , laydate = layui.laydate
+            , upload = layui.upload;
+
+        form.render(null, 'component-form-group');
+
+        form.on('select(select_enterprise)',function(data){
+           let val = data.value;
+            if(val != ''){
+                $.post('/?s=member/join_group',{'group_id':"{$data['group_id']}",'status':val},function(res){
+                    layer.msg(res.msg, {time: 3000}, function () {
+                        if (res.code == 0) {
+                            window.location.reload();
+                        }
+                    });
+                });
+            }
+        });
+
+        form.on('select(option_id)',function(data){
+            let val = data.value;
+            if(val==''){
+                // $(this).parents(":eq(2)").find('.remark').find('.rightRemark').text('');
+                $('.remark').find('.rightRemark').text('');
+            }else{
+                let remark = data.elem.options[data.elem.selectedIndex].dataset.remark;
+                $('.remark').find('.rightRemark').text(remark);
+            }
+        });
+
+        /* 监听提交 */
+        form.on('submit(component-form-demo1)', function (data) {
+            layer.load();
+            $.ajax({
+                url: "/?s=member/topics_detail",
+                method: 'post',
+                data: data.field,
+                dataType: 'JSON',
+                success: function (res) {
+                    layer.closeAll('loading');
+
+                    layer.msg(res.msg, {time: 2000}, function () {
+                        if (res.code == 0) {
+                            // var index = parent.layer.getFrameIndex(window.name);
+                            // parent.layer.close(index);
+                            parent.location.reload();
+                        }
+                    });
+                },
+                error: function (data) {
+                    layer.msg('系统错误', {time: 2000});
+                }
+            });
+            return false;
+        });
+    });
+
+    function delPic(obj){
+        var layer = layui.layer,$ = layui.$;
+        layer.confirm('确认要删除该附件？', {
+            btn: ['删除','取消']
+        }, function(){
+            $(obj).parent().remove();
+            layer.closeAll();
+        }, function(){
+
+        });
+    }
+
+    function seePic(obj){
+        var layer = layui.layer,$ = layui.$;
+        layer.open({
+            type: 1,
+            title: false,
+            closeBtn: 1,
+            area: ['auto'],
+            skin: 'layui-layer-nobg',
+            shadeClose: true,
+            content: '<img width="100%" src="' + $(obj)[0].src + '" />'
+        });
+    }
+</script>
+</body>
+</html>

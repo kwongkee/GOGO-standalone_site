@@ -1,0 +1,404 @@
+{include file="common/merchant_header"}
+<style>
+    .translate_div{width: 100%;height:27px;}
+    .translate_div #translate select{width: 100%;height:100%;}
+    body{overflow:hidden;}
+    .page{width:100%;}
+    .left{transition:all 0.3s ease;background:#603160;height: 100%;position:absolute;}
+    .left .logo{box-sizing:border-box;overflow: hidden;text-overflow: ellipsis;text-align: center;color:{$website['color_word']};height: 60px;font-size: 15px;font-weight:800;background:#603160;line-height: 60px;border-top: 1px solid {$website['color_word']};border-right: 1px solid {$website['color_word']};}
+    .left .logo .logo_title{color:{$website['color_word']};}
+    .left .logo img{width:30px;}
+    .left .logo .logo_box{position:absolute;justify-content: center;top:6px;left:15px;}
+    .left .logo .logo_box .logo_title{color: {$website['color_word']};text-transform: none;text-shadow: -1px 0 4px {$website['color']}, 0 1px 4px {$website['color']}, 1px 0 {$website['color']}, 0 -1px {$website['color']};margin-left:0px;}
+    .left .menu{border-top: 1px solid {$website['color_word']};height:calc(100% - 60px);position:relative;}
+    .left1{width:70px;z-index: 9;top:0px;left:0px;transition: all .2s ease;}
+
+    .menu ul{list-style:none;margin:0px;padding:0px;}
+    .menu .menu_ul{padding-top:0px;}
+
+    .menu ul li{padding-left:0px;padding-bottom: 0px;margin-bottom:0px;position:relative;border-bottom: 2px solid {$website['color_word']};height:50px;}
+    .menu ul li a{display:block;line-height:50px;width:70px;text-decoration:none;padding-left:0px;color:{$website['color_word']};white-space:nowrap;text-align:center;transition:all .2s ease;}
+    .menu ul li a.child_a_active{background:{$website['color']};}
+    .menu ul li a .child_img{width:25px;height:25px;}
+    .menu .plus{background:url("/centralize_manager/plus.png") no-repeat left center;background-size:15px;padding-left:25px;color:{$website['color_word']};}
+    .menu .minus{background:url("/centralize_manager/minus.png?v=231") no-repeat left center;background-size:15px;padding-left:25px;color:{$website['color_word']};}
+
+    .right{width:calc(100% - 68px);position:absolute;left:68px;height:100%;text-align:left;transition: all .2s ease;}
+    .menu_label{border:1px solid {$website['color_word']};border-left:0;height:30px;background:#603160;display: flex;align-items: center;padding:0 10px;box-sizing:border-box;}
+    .left_label{width:97%;display: flex;align-items: center;overflow:auto;white-space:nowrap;padding-top:5px;box-sizing:border-box;scrollbar-width: none;}
+    .right_label{width:3%;font-size:20px;font-weight:600;cursor:pointer;text-align:right;color:{$website['color_word']};}
+    .menu_label .label_box{border:1px solid {$website['color_word']};width:fit-content;height:100%;display:inline-block;padding: 0 12px;box-sizing:border-box;cursor:pointer;border-top-left-radius: 30px;border-top-right-radius: 7px;color:{$website['color_word']};}
+    .menu_label .menu_label_active{background:{$website['color_word']};font-weight:600;border-bottom:1px solid {$website['color_word']};color:{$website['color']};}
+    .menu_body{width:100%;height:calc(100% - 122px);background: #a0a0a0;padding: 10px;box-sizing: border-box;}
+    .menu_body .child-show{display:block;height: 100%;}
+    .menu_body .child_box{width:100%;height:100%;border-radius: 20px;overflow: hidden;}
+
+    /**底部主菜单**/
+    .menu_head{width: 100%;height: 60px;background:#603160;box-sizing:border-box;}
+    .menu_head .menu_a{color:{$website['color_word']};text-align:center;width:50%;box-sizing:border-box;height:100%;line-height:60px;border-top:1px solid {$website['color_word']};border-right:1px solid {$website['color_word']};}
+    /*.menu_head .menu_a:last-child{border-right:0;}*/
+    .menu_head .menu_active{background: {$website['color']};color:{$website['color_word']};}
+    /**有子功能的主菜单**/
+    .have_child_div{width: 50%;position:relative;color: {$website['color_word']};text-align: center;box-sizing: border-box;height: 100%;line-height: 60px;border-top: 1px solid {$website['color_word']};border-right: 1px solid {$website['color_word']};cursor:pointer;}
+    .have_child_div .child_func_div{position: absolute;bottom: 70px;left: 5%;width: calc(100% - 10%);z-index: 9;background: #603160;}
+    .have_child_div .child_func_div:after{position: absolute;content: '';bottom: -10px;left: calc(50% - 10px);width: 0;height: 0;border-left: 10px solid transparent;border-right: 10px solid transparent;border-bottom: 10px solid #603160;transform: rotate(180deg);}
+    .have_child_div .child_func_div .menu_child_div{border:0;border-bottom:1px solid {$website['color_word']};width:100%;height: 35px;line-height: 35px;white-space: nowrap;  overflow: hidden;text-overflow: ellipsis;}
+    .have_child_div .child_func_div .menu_child_div .menu_child_txt{border:0;line-height:0;width: 100%;color:{$website['color_word']};}
+    /**左侧子菜单栏隐藏**/
+    .close_menu{position:absolute;top:50%;right:-17px;width:30px;height:30px;background:{$website['color']};border:1px solid #fff;border-radius: 50%;text-align: center;z-index: 9;}
+    .close_menu .arrow{width:8px;height:8px;border-top:2px solid #fff;border-left:2px solid #fff;transform: rotate(-45deg);margin: 9px 11px;}
+
+    @media screen and (max-width:768px) {
+        .left .logo img{width:34px;}
+        .menu ul li{padding-left:0px;padding-bottom: 0px;margin-bottom:0px;position:relative;border-bottom: 2px solid {$website['color_word']};height:50px;}
+        .menu ul li a{display:block;height:100%;line-height:50px;width:70px;text-decoration:none;padding-left:0px;color:{$website['color_word']};white-space:nowrap;text-align:center;transition:all .2s ease;}
+        .menu ul li a .child_img{width: 22px;height:22px;}
+        .left1{width:70px;z-index: 9;top:0px;left:0px;transition: all .2s ease;}
+        .right{width:calc(100% - 68px);left:68px;transition: all .2s ease;}
+        .accountDiv span{width: 90px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
+    }
+</style>
+</head>
+<body>
+<div class="page">
+    <div class="" style="width:100%;height:100%;position:absolute;">
+        <div class="left left1">
+            <div class="menu">
+                <ul class="menu_ul">
+                    <li style="height:30px;width:100%;"></li>
+                    {volist name="menu" key="k" id="v"}
+                    {if(strstr($level['authList'],strval($v['id'])))}
+                    {volist name="v['children']" key="k2" id="v2"}
+                    {if(strstr($level['authList'],strval($v2['id'])))}
+                        {if $v['id']==251}
+                            {volist name="v2['children']" key="key" id="val"}
+                                <li class="li_pid{$v2['id']} li_elem" style="display:none;margin-top:28px;">
+                                    <a href="javascript:;" data-href="{$val['url']}&pid={$val['id']}" data-idx="{$val['id']}" class="menu_li2 f15">
+                                        <span class="child_txt">{$val['title']}</span>
+                                    </a>
+                                </li>
+                            {/volist}
+                        {else}
+                            <li class="li_pid{$v['id']} li_elem" style="display:{if $k==$footer}block{else}none{/if};margin-top:28px;">
+                                <a href="javascript:;" data-href="{$v2['url']}&pid={$v2['id']}" data-idx="{$v2['id']}" class="menu_li2 f15 {if($tz_url==$v2['url'].'&pid='.$v2['id'])}child_a_active{/if}">
+                                    {if($v2['icon_type']==1)}
+                                    <!--                            <img src="//shop.gogo198.cn/{$v2['icon']}" class="child_img">-->
+                                    {/if}
+                                    <span class="child_txt">{$v2['title']}</span>
+                                </a>
+                            </li>
+                        {/if}
+                    {/if}
+                    {/volist}
+                    {/if}
+                    {/volist}
+                </ul>
+                <div class="close_menu" onclick="open_menu(this)"><div class="arrow"></div></div>
+            </div>
+            <div class="logo">
+<!--                <img src="//shop.gogo198.cn/{$website['sico']}" class="logo_img" title="决策系统">-->
+                GoChat
+            </div>
+        </div>
+        <div class="right">
+            <div class="menu_head_box" style="width:100%;height: 30px;background:#603160;border-bottom: 1px solid #fff;border-top: 1px solid #fff;color: #fff;text-align: center;line-height: 30px;font-size: 16px;font-weight: 800;">
+                会员中心
+                <img src="/img/share.png" style="width:23px;height:23px;float:right;margin:3px 6px 0 0;cursor:pointer;" onclick="share_website()">
+            </div>
+            <div class="menu_label">
+                <div class="left_label"><div class="label_box menu_label9 menu_label_active" data-index="9" data-parent="客服中心"><span class="f12" onclick="change_menu(this,9)">客服中心</span>&nbsp;<span class="closeBtn f18" onclick="closeWindow(this)" style="display: none;">×</span></div></div>
+                <div class="right_label f20" title="删除所有标签页" style="display: none;">×</div>
+            </div>
+            <div class="menu_body">
+
+            </div>
+            <div class="disf">
+                <div class="menu_head disf">
+                    {volist name="menu" key="k" id="v"}
+                    {if(strstr($level['authList'],strval($v['id'])))}
+                        {if $v['id']==251}
+                            <div class="have_child_div">
+                                <div class="child_func_div" style="display: none;">
+                                    {volist name="v['children']" key="key" id="val"}
+                                        <div class="menu_child_div" onclick="show_childMenu({$val['id']})"><a href="javascript:void(0);" class="menu_a{$val['id']} menu_child_txt f15">{$val['title']}</a></div>
+                                    {/volist}
+                                </div>
+                                <div class="menu_parent_div" style="cursor: pointer;" onclick="show_childMenu({$v['id']})">
+                                    <a href="javascript:void(0);" class=" f15" style="border:0;color:{$website['color_word']};">{$v['title']}</a>
+                                </div>
+                            </div>
+                        {else}
+                            <a href="javascript:show_childMenu({$v['id']});" class="menu_a{$v['id']} menu_a f15 {if($footer==$k)}menu_active{/if}">{$v['title']}</a>
+                        {/if}
+                    {/if}
+                    {/volist}
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .add_func{position: fixed;right: 10px;bottom: 130px;display:none;}
+        .add_func .add_icon{font-size: 25px;background: {$website['color']};color:{$website['color_word']};padding: 5px 12px;box-sizing:border-box;border-radius: 50%;cursor:pointer;}
+        .add_func .func_div{position:absolute;right: 45px;bottom: 0px;background: rgb(242, 242, 242);padding: 5px;box-sizing: border-box;border-radius: 5px;box-shadow: 0px 0px 10px 0px #603160;}
+        .add_func .func_div .add_icon2{font-size:15px;background: {$website['color']};color:{$website['color_word']};width: fit-content;white-space: nowrap;border-radius: 5px;padding: 5px 12px;box-sizing:border-box;cursor:pointer;margin-bottom:5px;}
+    </style>
+    <div class="add_func">
+        <div class="add_icon" onclick="show_func(this)">+</div>
+        <div class="func_div func_div228" style="display: none;">
+            <div class="add_icon2" onclick="add_frame(this,'/?s=member/save_topics','99101')">发起议题</div>
+            <div class="add_icon2" onclick="add_frame(this,'/?s=member/send_topics_list&pid=243','243')">管理决策</div>
+        </div>
+        <div class="func_div func_div224" style="display: none;">
+            <div class="add_icon2" onclick="add_frame(this,'/?s=member/save_group','99102')">组建群组</div>
+            <div class="add_icon2" onclick="add_frame(this,'/?s=member/chat_list&pid=225','225')">发起聊天</div>
+        </div>
+    </div>
+    <input type="hidden" id="footer_menu" value="{if $footer==1}224{elseif($footer==2)}228{/if}">
+</div>
+</body>
+<script src="/centralize_manager/js/jquery.min.js"></script>
+<script src="/layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index'], function(){
+        var $ = layui.$
+            ,admin = layui.admin
+            , layer = layui.layer;
+    });
+
+    function add_frame(t,url,menu_index) {
+        $('.menu_body').find('.child_box').hide();
+        let mb = '<div class="child_box child_body' + menu_index + ' child-show" style="box-sizing: border-box;padding: 0px;">\n' +
+            '<iframe src="'+url+'" width="100%" height="100%" style="box-sizing: border-box;padding: 0px;border-radius: 15px;border: 0;">\n' +
+            '</iframe>\n' +
+            '</div>';
+        $('.menu_body').find('.child_box').removeClass('child-show');
+        $('.menu_body').append(mb);
+        $('.func_div').hide();
+    }
+    $(function(){
+        {if !empty($tz_url)}
+            let menu_index = '99198';
+            let mb = '<div class="child_box child_body'+menu_index+' child-show" style="box-sizing: border-box;padding: 0px;">\n'+
+                '<iframe src="{$tz_url}" width="100%" height="100%" style="box-sizing: border-box;padding: 0px;border-radius: 15px;border: 0;">\n'+
+                '</iframe>\n'+
+                '</div>';
+            $('.menu_body').find('.child_box').removeClass('child-show');
+            $('.menu_body').append(mb);
+        {/if}
+        if(isMobile()){
+            $('.companyName1,.nickname1').hide();
+            $('.companyName2').show();
+        }
+
+        $(".menu_li").each(function(){
+            if($(this).children("ul").length>0)//判断li下是否有ul列表
+            {
+                //如果有隐藏ul，添加样式
+                $(this).children("ul").eq(0).css("display","none");
+                $(this).children("a").first().addClass("plus");
+                //点击一级列表
+                $(this).find(".menu_a").click(function(){
+                    //判断ul是否隐藏
+                    if($(this).parent().children("ul").first().css("display")=="none")
+                    {
+                        $(this).parent().children("ul").first().css("display","block");
+                        $(this).removeClass();
+                        $(this).addClass("minus").addClass("f15");
+                    }
+                    else{
+                        $(this).parent().children("ul").first().css("display","none");
+                        $(this).removeClass();
+                        $(this).addClass("plus").addClass("f15");
+                    }
+                });
+            }
+        });
+
+        //左侧菜单点击添加
+        $('.menu_li2').click(function(){
+            let text = $(this).text();
+            let parent_text = $(this).parents(":eq(2)").find('.minus').text();
+            text = text.replace(">","");
+            let href = $(this).attr('data-href');
+            let menu_index = $(this).attr('data-idx');
+
+            $(this).addClass('child_a_active');
+            $(this).parent().siblings().children().removeClass('child_a_active');
+
+            let all_text = $('.menu_label').find('.left_label').find('.label_box').text();
+
+            if(all_text.indexOf(text)!=-1){
+                $('.menu_label'+menu_index).siblings().removeClass('menu_label_active');
+                $('.menu_label'+menu_index).removeClass('menu_label_active');
+                $('.menu_label'+menu_index).addClass('menu_label_active');
+                // $('.menu_body').find('.child_box').hide();
+                $('.menu_body').find('.child_body'+menu_index).siblings().hide();
+                $('.menu_body').find('.child_body'+menu_index).show();
+            }else{
+                if(href.includes('https://') || href.includes('http://')){
+                    //如有https的链接则另窗打开，并附带商户
+                    if(href.includes('?')){
+                        href += "&uid=<?php echo base64_encode(session('shopping_user.user_id'));?>";
+                    }else{
+                        href += "?uid=<?php echo base64_encode(session('shopping_user.user_id'));?>";
+                    }
+                    //   const windowFeatures = 'menubar=no,toolbar=no,location=no,status=no,resizable=yes,scrollbars=yes,width=800,height=600';
+                    //   window.open(href, '_blank', windowFeatures);
+                    window.open(href, '_blank');
+                    return false;
+                }
+
+                // let html = '<div class="label_box menu_label'+menu_index+' menu_label_active" data-index="'+menu_index+'" data-parent="'+parent_text+'"><span class="f15" onclick="change_menu(this,'+menu_index+')">'+text+'</span>&nbsp;<span class="closeBtn f18" onclick="closeWindow(this)">×</span>';
+                // $('.menu_label').find('.left_label').find('.label_box').removeClass('menu_label_active');
+                // $('.menu_label').find('.left_label').append(html);
+                $('.menu_body').find('.child_box').hide();
+                let mb = '<div class="child_box child_body'+menu_index+' child-show">\n'+
+                    '<iframe src="'+href+'" width="100%" height="100%" style="border:0;">\n'+
+                    '</iframe>\n'+
+                    '</div>';
+                $('.menu_body').find('.child_box').removeClass('child-show');
+                $('.menu_body').append(mb);
+                //   menu_index = parseInt(menu_index) + 1;
+            }
+            let path = '<span class="f15">'+text+'</span>';
+            $('.menu_head').find('.head_path').html(path);
+
+            if(text=='切换企业'){
+                $(this).parent().hide();
+            }
+        });
+
+        $('.menu_a').click(function(){
+            $(this).siblings().removeClass('menu_active');
+            $(this).addClass('menu_active');
+        });
+        {if(!empty($func))}
+            $('.add_func').show();
+            $('.add_func').find('.func_div224').hide();
+            $('.add_func').find('.func_div228').hide();
+        {/if}
+    });
+
+    //切换成子菜单栏
+    function show_childMenu(pid){
+        if(pid==232){
+            window.location.href='/?s=members/member_center';
+        }
+        if(pid==251){
+            if($('.child_func_div').css('display') == 'block'){
+                $('.child_func_div').hide();
+            }else{
+                $('.child_func_div').show();
+            }
+            $('.menu_parent_div').addClass('menu_active');
+            $('.menu_parent_div').parent().siblings().removeClass('menu_active');
+            return false;
+        }else{
+            $('.child_func_div').hide();
+        }
+        $('.li_elem').hide();
+        $('.li_pid'+pid).show();
+
+        $('.left1').css({'width':'70px','left':'0px'});
+        $('.right').css({'width':'calc(100% - 68px)','left':'68px'});
+        $('.child_txt').show();
+        $('.close_menu').css({'right':'-17px'});
+        $('.close_menu .arrow').css({'transform':'rotate(-45deg)','margin':'9px 11px'});
+        $('.menu ul li a').css({'width':'70px'});
+        // $('.menu ul li').css({'margin-left':'15px'});
+
+        if(pid==224){
+            {if(!empty($func))}
+                $('.add_func').show();
+                $('.add_func').find('.func_div224').hide();
+                $('.add_func').find('.func_div228').hide();
+                $('#footer_menu').val('224');
+            {/if}
+        }
+        else if(pid==228){
+                {if(!empty($func))}
+                $('.add_func').show();
+                $('.add_func').find('.func_div224').hide();
+                $('.add_func').find('.func_div228').hide();
+                $('#footer_menu').val('228');
+                {/if}
+        }
+        else if(pid==232){
+            {if(!empty($func))}
+                $('.add_func').hide();
+                $('.add_func').find('.func_div224').hide();
+                $('.add_func').find('.func_div228').hide();
+                $('#footer_menu').val('232');
+            {/if}
+        }
+    }
+
+    function share_website(){
+        var layer = layui.layer,$ = layui.$;
+        $.post('/?s=members/get_website_qrcode',{},function(data){
+            var index = layer.open({
+                type: 1,
+                title: '分享网站',
+                content: '<div style="padding:10px;box-sizing:border-box;text-align:center;"><img src="'+data.img+'" style="width:200px;"></div>',
+                area:['250px','270px']
+            });
+        });
+    }
+
+    function show_func(t){
+        var layer = layui.layer,$ = layui.$;
+        var footer_menu = $('#footer_menu').val();
+
+        if($(t).parent().find('.func_div'+footer_menu).css('display') == 'block'){
+            $(t).parent().find('.func_div'+footer_menu).hide();
+        }else{
+            $(t).parent().find('.func_div'+footer_menu).show();
+        }
+    }
+
+    //打开子菜单栏
+    function open_menu(t){
+        if($('.left1').css('width')=='70px'){
+            $('.left1').css({'width':'59px','left':'-70px'});
+            $('.right').css({'width':'calc(100% - 0px)','left':'0px'});
+            $('.child_txt').hide();
+            $('.close_menu').css({'right':'-35px'});
+            $('.close_menu .arrow').css({'transform':'rotate(135deg)','margin':'9px 7px'});
+            $('.menu ul li a').css({'width':'30px'});
+            // $('.menu ul li').css({'margin-left':'15px'});
+        }else{
+            $('.left1').css({'width':'70px','left':'0px'});
+            $('.right').css({'width':'calc(100% - 68px)','left':'68px'});
+            $('.child_txt').show();
+            $('.close_menu').css({'right':'-17px'});
+            $('.close_menu .arrow').css({'transform':'rotate(-45deg)','margin':'9px 11px'});
+            $('.menu ul li a').css({'width':'70px'});
+            // $('.menu ul li').css({'margin-left':'15px'});
+        }
+    }
+
+    function isMobile() {
+        var userAgentInfo = navigator.userAgent;
+        var mobileAgents = [ "Android", "iPhone", "SymbianOS", "Windows Phone", "iPad","iPod"];
+        var mobile_flag = false;
+        //根据userAgent判断是否是手机
+        for (var v = 0; v < mobileAgents.length; v++) {
+            if (userAgentInfo.indexOf(mobileAgents[v]) > 0) {
+                mobile_flag = true;
+                break;
+            }
+        }
+        var screen_width = window.screen.width;
+        var screen_height = window.screen.height;
+        //根据屏幕分辨率判断是否是手机
+        if(screen_width < 500 && screen_height < 800){
+            mobile_flag = true;
+        }
+        return mobile_flag;
+    }
+    //https://wenku.baidu.com/view/25ab6f5601768e9951e79b89680203d8ce2f6a9a.html?_wkts_=1676793026783&bdQuery=jq%E5%A4%9A%E7%BA%A7%E6%A0%91%E8%8F%9C%E5%8D%95%E6%A0%8F
+</script>

@@ -1,0 +1,100 @@
+{include file="common/header"}
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;}
+    .content{padding:0;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .title{font-size:26px;color:{$website['color_word']};font-weight:800;text-align:center;line-height:normal !important;}
+    .content .control-group{margin-top:10px;}
+    .content .control-group .label_title{width:80px;color:{$website['color_word']};font-weight:800;font-size:15px;text-align:right;margin-right:10px;}
+    .content .control-group .controls .form-control{width:90%;font-size:15px;}
+    .content .control-group .controls .btn-send{padding:7px 20px;background:{$website['color']};color:{$website['color_word']};border:1px solid {$website['color_word']};}
+    .content form{text-align:center;}
+    .content form .btn-submit{background:{$website['color']};color:{$website['color_word']};border:1px solid #D2A778;padding:10px 100px;box-sizing:border-box;float:unset !important;margin-top:15px;}
+    
+    .abtn{color:{$website['color_word']};font-size:15px;padding:5px 15px;font-weight:800;}
+    .btn-sure{background:rgb(19 213 93);margin-bottom:10px;width:fit-content;margin:0 auto;}
+    
+    .fee_table{width:800px;overflow-x:scroll;max-width:800px;color:{$website['color_word']};font-size:15px;text-align:center;margin:15px 0;}
+    .fee_table thead tr td{font-weight:800;background:#BDD7EE;color:#000;padding:5px 10px;box-sizing:border-box;}
+    .fee_table tbody{background:;}
+</style>
+<section id="content" class="non_topimg" >
+    <div class="container">
+        <div class="content" style="overflow-x:scroll;">
+            <div class="col-md-12">
+                <div class="title">{if session('lang')=='zh'}账单确认{elseif(session('lang')=='cht')}賬單核對{elseif(session('lang')=='en')}Bill verification{/if}</div>
+                    <table class="fee_table" border="1">
+                        <thead>
+                            <tr>
+                                <td style="width:90px;">费用日期</td>
+                                <td style="width:90px;">费用类别</td>
+                                <td style="width:90px;">费用名称</td>
+                                <td style="width:90px;">计价单位</td>
+                                <td style="width:90px;">单价</td>
+                                <td style="width:80px;">次/天/周</td>
+                                <td style="width:95px;">立方/件/托</td>
+                                <td style="width:70px;">金额</td>
+                                <td style="width:120px;">摘要备注</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {volist name="order.fee_content" id="vo"}
+                                <tr>
+                                    <td>{$vo['event_date']}</td>
+                                    <td>{$vo['event_type']}</td>
+                                    <td>{$vo['event_name']}</td>
+                                    <td>{$vo['price_unit']}/{$vo['price_unit2']}</td>
+                                    <td>{$vo['price']}</td>
+                                    <td>{$vo['cycle']}</td>
+                                    <td>{$vo['piece']}</td>
+                                    <td>{$vo['event_currency']} {$vo['event_price']}</td>
+                                    <td>{$vo['event_remark']}</td>
+                                </tr>
+                            {/volist}
+                        </tbody>
+                    </table>
+                    
+                    {if $order['status']==0}
+                        <div class="btn-sure abtn" onclick="pass({$order.id})">账单确认</div>
+                    {/if}
+            </div>
+        </div>
+    </div>
+</section>
+
+{include file="common/footer"}
+<script type="text/javascript" charset="utf-8">
+    $(function(){
+      
+    });
+    
+    function view(id){
+        window.location.href="?s=index/view_bill&id="+id;
+    }
+    
+    function pass(id){
+        if(confirm('确认此账单确认操作？')){
+            $.ajax({
+                url: "?s=index/bill_sure",
+                method: 'post',
+                data: {'id':id},
+                dataType: 'JSON',
+                success: function (res) {
+                    if(res.code==-1){
+                        alert(res.msg);
+                        return false;
+                    }else{
+                        alert(res.msg);
+                        setTimeout(function(){
+                            window.location.reload();
+                        },3000);
+                    }
+                },
+                error: function (data) {
+                    
+                }
+            }); 
+            return false;
+        }
+    }
+</script>

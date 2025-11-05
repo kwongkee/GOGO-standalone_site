@@ -1,0 +1,40 @@
+<!--首页导流区-->
+<style>
+    .guide_content{width:1210px;margin:10px auto;}
+    @media (max-width: 992px){
+        .guide_content{width:100%;padding:0 10px;}
+    }
+</style>
+<div class="guide_content">
+    {volist name="data['websites']['guide'] key="k" id="v"}
+    {if $v['format_info']['id']==1}
+    <!--店铺展示版式-->
+    {if !empty($v['children'])}
+        {assign name="k" value="$k" /}
+        {assign name="v" value="$v" /}
+        {include file="layouts/guide_format1"}
+    {/if}
+    {elseif($v['format_info']['id']==2 || $v['format_info']['id']==5)}
+    <!--卡片导航展示版式/图文展示版式-->
+    {if !empty($v['children'])}
+        {assign name="k" value="$k" /}
+        {assign name="v" value="$v" /}
+        {include file="layouts/guide_format2"}
+    {/if}
+    {elseif($v['format_info']['id']==3)}
+    <!--触发搜索版式-->
+    {if !empty($v['children'])}
+        {assign name="k" value="$k" /}
+        {assign name="v" value="$v" /}
+        {include file="layouts/guide_format3"}
+    {/if}
+    {elseif($v['format_info']['id']==4)}
+    <!--杂志导航版式-->
+    {if !empty($v['big_children'])}
+        {assign name="k" value="$k" /}
+        {assign name="v" value="$v" /}
+        {include file="layouts/guide_format4"}
+    {/if}
+    {/if}
+    {/volist}
+</div>

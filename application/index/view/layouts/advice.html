@@ -1,0 +1,96 @@
+<!--我要咨询-->
+<style>
+    .mask {background: black;opacity: 0.7;display: none;width: 100%;position: fixed;z-index: 9999;top: 0;left: 0;height: 100%;display: none;}
+    .mask_content {width: 350px;/*position: fixed;bottom: 50% !important;left: 50%;z-index: 99999;transform: translate(-50%, 30%);*/display:none;}
+    .mask_content{border:1px solid {$data['websites']['info']['color_word']};display: none;padding:0 20px 20px 20px;}
+    .mask_content .text-center {text-align: center;padding:20px 0;}
+    .mask_content.padding {padding: 10px;}
+    .mask_content h3 {font-weight: bold;color: {$data['websites']['info']['color_word']};}
+    .mask_content .form-group {margin-bottom: 15px;}
+    .mask_content .input-group {border-collapse: separate;display: table;position: relative;width: 100%;display: flex;align-items: center;}
+    .mask_content .input-group .addon {background-color: #ffffff;border: 1px solid #ddd;line-height: 1;padding: 6px 12px;text-align: center;width: 18%;height: 46px;}
+    .mask_content .input-group .input {display: table-cell;}
+    .mask_content .input-group .input {width: 100%;}
+    .mask_content .form-big .input, .mask_content  .form-big .button {padding: 10px;font-size: 15px;line-height: 24px;height: 46px;border:0;width: 100%;}
+    .mask_content .cancel {margin-right: 0;background: #e60000;color: white;text-shadow: 0 1px 0 #C04131;width: 100%;border: 1px solid #ffffff;padding: 10px;margin-top: 10px;cursor:pointer;display:none;}
+</style>
+<div class="mask"></div>
+<div class="mask_content advice common_inner_background">
+    <div class="x12 x3-move padding-big" style="padding-top: 0;width:100%;">
+        <form action="" id="advice" class="form-big form-tips" method="post">
+            <div class="text-center padding text-sub">
+                <h3>我要咨询</h3>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <img class="addon icon-user text-large" src="https://admin.gogo198.cn/collect_website/public/static/img/advice/addon1.png" alt="">
+                    <input type="text" class="input" name="myname" placeholder="您的名称">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <img class="addon icon-user text-large" src="https://admin.gogo198.cn/collect_website/public/static/img/advice/addon4.png" alt="">
+                    <input type="text" class="input" name="mobile" maxlength="50" placeholder="您的联系电话">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <img class="addon icon-user text-large" src="https://admin.gogo198.cn/collect_website/public/static/img/advice/addon2.png" alt="">
+                    <input type="text" class="input" name="myemail" maxlength="50" placeholder="您的邮箱号码">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <img class="addon icon-user text-large" src="https://admin.gogo198.cn/collect_website/public/static/img/advice/addon3.png" alt="">
+                    <textarea name="contents" class="input" placeholder="请输入您的需求"></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="input-group">
+                    <input name="codeimg" type="hidden" value="{$data['websites']['rand']}">
+                    <span class="addon text-center" style="width:30%;line-height: 30px;color:#000;" id="codeimg">{$data['websites']['rand']}</span>
+                    <input name="mycode" class="input" type="text" maxlength="5" placeholder="请输入左侧验证码">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="field" style="text-align:center;">
+                    <input type="submit" class="button x6 x3-move bg-blue text-big" value="立即提交" style="border:1px solid {$data['websites']['info']['color_word']};color:{$data['websites']['info']['color_word']};float:unset;background:{$data['websites']['info']['color']};">
+                    <div class="cancel" style="">关闭</div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        $('#advice').submit(function(){
+            let name = $('input[name="myname"]').val();
+            let email = $('input[name="myemail"]').val();
+            let mobile = $('input[name="mobile"]').val();
+            let content = $('textarea[name="contents"]').val();
+            let code_origin = $('input[name="codeimg"]').val();
+            let code_input = $('input[name="mycode"]').val();
+
+            $.ajax({
+                url: "/?s=index/advice",
+                data: {'name': name,'email':email,'content':content,'mobile':mobile,'code_origin':code_origin,'code_input':code_input},
+                type: 'post',
+                cache: false,
+                dataType: 'json',
+                success: function (data) {
+                    if(data.code==0){
+                        setTimeout(function(){
+                            alert(data.msg);
+                            window.location.reload();
+                        },3000);
+                    }else{
+                        alert(data.msg);
+                    }
+                }
+            });
+            return false;
+        });
+    });
+</script>

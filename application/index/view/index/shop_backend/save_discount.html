@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>独立站平台 - website.gogo198.net</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style>
+        :root {--primary: #8a2be2;--primary-dark: #6a1cb9;--primary-light: #9b4de3;--secondary: #bb86fc;--accent: #e6d7f5;--text: #333333;--text-light: #f8f8f8;--background: #f9f5fd;--card-bg: #ffffff;--gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));--gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary));--shadow: 0 10px 30px rgba(138, 43, 226, 0.15);--shadow-hover: 0 15px 35px rgba(138, 43, 226, 0.25);}
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        body {color: var(--text);line-height: 1.6;overflow-x: hidden;}
+        h1, h2, h3, h4, h5, h6 {font-family: 'Montserrat', sans-serif;font-weight: 700;}
+        .disf{display:flex;align-items: center;}
+
+        .btn {padding: 12px 25px;border-radius: 50px;text-decoration: none;font-weight: 600;transition: all 0.3s ease;cursor: pointer;display: inline-block;text-align: center;border: none;font-family: 'Montserrat', sans-serif;}
+        .btn-outline {border: 2px solid var(--primary);color: var(--primary);background: transparent;margin-right: 15px;}
+        .btn-outline:hover {background: var(--primary);color: white;transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-primary {background: var(--gradient);color: white;border: 2px solid transparent;}
+        .btn-primary:hover {background: transparent;border-color: var(--primary);color: var(--primary);transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-default{padding:padding:10px 10px;background: var(--primary);}
+
+        /* 模态框样式 */
+        .modal {display: none;position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.5);backdrop-filter: blur(5px);z-index: 2000;align-items: center;justify-content: center;}
+        .modal-content {background: white;border-radius: 20px;padding: 30px;width: 90%;max-width: 90%;box-shadow: var(--shadow-hover);position: relative;}
+        .close-modal {position: absolute;top: 20px;right: 20px;font-size: 1.5rem;color: #999;cursor: pointer;transition: color 0.3s ease;}
+        .close-modal:hover {color: var(--primary);}
+        .modal-title {font-size: 1.5rem;margin-bottom: 20px;color: var(--primary);}
+
+        /* 表单样式 */
+        .form-section {margin-bottom: 30px;}
+        .form-title {font-size: 1.3rem;margin-bottom: 20px;color: var(--primary-dark);display: flex;align-items: center}
+        .form-title i {margin-right: 10px;}
+        .form-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));gap: 20px;}
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select,
+        .form-group textarea {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;}
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {border-color: var(--primary);outline: none;}
+        .form-group textarea {min-height: 120px;resize: vertical;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
+
+        .sel_container .sel_line{margin-bottom:5px;}
+        .trush_box{display:none;}
+        .trush_box .trush{padding: 6px 6px;border: 1px solid #efefef;color: #6d6d6d;cursor: pointer;}
+        .currency_symbol{font-size: 15px;}
+        .amount{margin-left:5px;font-size: 15px;}
+
+        /* 动画 */
+        @keyframes fadeIn {
+            from {opacity: 0;transform: translateY(10px);}
+            to {opacity: 1;transform: translateY(0);}
+        }
+
+
+        @media (max-width: 576px) {
+            .btn {padding: 10px 20px;font-size: 0.9rem;}
+            /*.form-actions {flex-direction: column;}*/
+        }
+
+        /*自定义颜色配置*/
+        .layui-colorpicker.layui-colorpicker-lg,.layui-colorpicker-trigger-i.layui-icon-close{line-height: 24px;}
+        .layui-colorpicker, .layui-colorpicker-trigger-span{border-color:#777;}
+        .layui-colorpicker-main-input .layui-btn-container .layui-btn {margin: 0 0 0 5px;}
+        .layui-form-item .layui-form-label{width:100px;}
+
+        .edui-editor{z-index: 1 !important;}
+    </style>
+</head>
+<body>
+<form id="siteForm" class="layui-form" action="" method="post" lay-filter="component-form-menu" style="padding:10px;margin-bottom:0px;">
+    <input type="hidden" name="company_id" value="{$company_id}">
+    <input type="hidden" name="company_type" value="{$company_type}">
+    <input type="hidden" name="id" value="{$id}">
+
+    <!--折扣类型-->
+    <fieldset class="layui-elem-field">
+        <legend>折扣信息</legend>
+        <div class="layui-field-box">
+
+            <div class="layui-form-item">
+                <div class="layui-form-label">折扣类型</div>
+                <div class="layui-input-block">
+                    {if $id==0}
+                        <select name="type" id="type" lay-filter="type">
+                            <option value="1" {if $data['type']==1}selected{/if}>产品折扣金额</option>
+<!--                            <option value="2" {if $data['type']==2}selected{/if}>买X送Y</option>-->
+                            <option value="3" {if $data['type']==3}selected{/if}>折扣订单金额</option>
+                            <option value="4" {if $data['type']==4}selected{/if}>免运费</option>
+                        </select>
+                    {else}
+                        {if $data['type']==1}产品折扣金额{/if}{if $data['type']==2}买X送Y{/if}{if $data['type']==3}折扣订单金额{/if}{if $data['type']==4}免运费{/if}
+                        <input type="hidden" name="type" value="{$data['type']}">
+                    {/if}
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label">折扣方式</div>
+                <div class="layui-input-block">
+                    <select name="method" id="method" lay-filter="method">
+                        <option value="1" {if $data['method']==1}selected{/if}>折扣代码</option>
+                        <option value="2" {if $data['method']==2}selected{/if}>自动折扣</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item discount_code" style="display: {if $data['method']==1}block{else}none{/if};">
+                <div class="layui-form-label">折扣代码</div>
+                <div class="layui-input-block">
+                    <div class="disf">
+                        <input type="text" class="layui-input" name="discount_code" id="discount_code" value="{$data['discount_code']}" lay-verify="" placeholder="折扣代码">
+                        <div class="generate_code btn" onclick="generate_code()" style="margin-left:0px;white-space: nowrap;">随机代码</div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item discount_name" style="display: {if $data['method']==2}block{else}none{/if};">
+                <div class="layui-form-label">折扣标题</div>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" name="name" value="{$data['name']}" lay-verify="" placeholder="折扣标题">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <!--折扣价值-->
+    <fieldset class="layui-elem-field type0" style="display:{if $data['type']==1 || $data['type']==2 || $data['type']==3}block{else}none{/if};">
+        <legend>折扣价值</legend>
+        <div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-form-label">折扣金额</div>
+                <div class="layui-input-block">
+                    <div class="disf">
+                        <div class="sel_box">
+                            <select name="discount_method" id="discount_method" lay-filter="discount_method">
+                                <option value="0" {if $data['discount_method']==0}selected{/if}>百分比</option>
+                                <option value="1" {if $data['discount_method']==1}selected{/if}>金额</option>
+                            </select>
+                        </div>
+                        <input type="text" class="layui-input" name="discount_num" value="{$data['discount_num']}" lay-verify="" placeholder="">
+                        <div class="layui-form-mid layui-word-aux discount_method0" style="display: {if $data['discount_method']==0}block{else}none{/if};margin-left:5px;">%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="type1" style="display: {if $data['type']==1}block{else}none{/if};">
+                <div class="layui-form-item">
+                    <div class="layui-form-label">适用于</div>
+                    <div class="layui-input-block">
+                        <select name="discount_object" id="discount_object" lay-filter="discount_object">
+                            <option value="0" {if $data['discount_object']==0}selected{/if}>商品系列</option>
+                            <option value="1" {if $data['discount_object']==1}selected{/if}>具体商品</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item discount_object0" style="display: {if $data['discount_object']==0}block{else}none{/if};">
+                    <div class="layui-form-label">选择系列</div>
+                    <div class="layui-input-block">
+                        <div id="series_id" class="xm-select-demo" style="display: inline-block;width:300px;"></div>
+                    </div>
+                </div>
+                <div class="layui-form-item discount_object1" style="display: {if $data['discount_object']==1}block{else}none{/if};">
+                    <div class="layui-form-label">具体商品</div>
+                    <div class="layui-input-block">
+                        <button type="button" onclick="add_goods();" class="btn btn-default" style="margin-top:0px;color:#fff;">
+                            <i class="fas fa-add"></i>
+                            选择商品
+                        </button>
+                    </div>
+                </div>
+                <table class="layui-table goods_table" style="display: none;">
+                    <thead>
+                    <th>商品</th>
+                    <th>库存</th>
+                    <th>操作</th>
+                    </thead>
+                    <tbody>
+                    {if isset($data.goods_info) && !empty($data.goods_info)}
+                    {volist name="data.goods_info" id="goods"}
+                    <tr id="goods_row_{$goods.goods_id}_{$goods.sku_id}" data-goods-id="{$goods.goods_id}">
+                        <td>
+                            {if $goods.sku_id > 0}
+                            <span style="font-weight: 600;">{$goods.goods_name}</span><br/><span style="font-size:12px;">{$goods.sku_name}</span>
+                            {else}
+                            <span style="font-weight: 600;">{$goods.goods_name}</span>
+                            {/if}
+                        </td>
+                        <td>{$goods.goods_number}</td>
+                        <td><input type="hidden" name="goods_id[]" value="{$goods.goods_id}"><input type="hidden" name="sku_id[]" value="{$goods.sku_id}"><div class="trush" onclick="del_goods(this)"><i class="fas fa-trash"></i></div></td>
+                    </tr>
+                    {/volist}
+                    {/if}
+                    </tbody>
+                </table>
+                <div class="layui-form-item discount_method1" style="display: {if $data['discount_method']==1}block{else}none{/if};">
+                    <div class="layui-form-label"></div>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="pre_order_times" title="每笔订单一次" lay-skin="primary" {if $data['pre_order_times']==1}checked{/if}>
+                        <div class="layui-form-mid layui-word-aux">如果未选择，金额将从订单中每件符合条件的商品中扣除。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <!--免运费国家地区-->
+    <fieldset class="layui-elem-field type4" style="display:{if $data['type']==4}block{else}none{/if};">
+        <legend>免运费国家地区</legend>
+        <div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-form-label">适用国家地区</div>
+                <div class="layui-input-block">
+                    <select name="country_type" id="country_type" lay-filter="country_type">
+                        <option value="0" {if $data['country_type']==0}selected{/if}>全部国家地区</option>
+                        <option value="1" {if $data['country_type']==1}selected{/if}>选定的国家地区</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item country_type1" style="display: {if $data['country_type']==1}block{else}none{/if}">
+                <div class="layui-form-label">适用国家</div>
+                <div class="layui-input-block">
+                    <div id="country_ids" class="xm-select-demo" style="display: inline-block;width:300px;"></div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label">适用金额（≤）</div>
+                <div class="layui-input-block">
+                    <div class="disf">
+                        <div class="sel_box">
+                            <select name="low_freight_currency" id="low_freight_currency" lay-search>
+                                {volist name="list.currency" id="vo"}
+                                    <option value="{$vo['id']}" {if $data['low_freight_currency']==$vo['id']}selected{/if}>{$vo['code_zhname']}({$vo['currency_symbol_standard']})</option>
+                                {/volist}
+                            </select>
+                        </div>
+                        <input type="number" class="layui-input" name="low_freight_price" value="{$data['low_freight_price']}">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <!--销售资格-->
+    <fieldset class="layui-elem-field">
+        <legend>销售资格</legend>
+        <div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-form-label">面向买家</div>
+                <div class="layui-input-block">
+                    <select name="sale_type" id="sale_type" lay-filter="sale_type">
+                        <option value="0" {if $data['sale_type']==0}selected{/if}>所有买家</option>
+                        <option value="1" {if $data['sale_type']==1}selected{/if}>特定买家标识</option>
+                        <option value="2" {if $data['sale_type']==2}selected{/if}>特定买家</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item sale_type1" style="display:{if $data['sale_type']==1}block{else}none{/if};">
+                <div class="layui-form-label">选择标识</div>
+                <div class="layui-input-block">
+                    <div id="customer_tag_ids" class="xm-select-demo" style="display: inline-block;width:300px;"></div>
+                </div>
+            </div>
+            <div class="layui-form-item sale_type2" style="display:{if $data['sale_type']==2}block{else}none{/if};">
+                <div class="layui-form-label">选择买家</div>
+                <div class="layui-input-block">
+                    <div id="customer_ids" class="xm-select-demo" style="display: inline-block;width:300px;"></div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <!--最低购买要求-->
+    <fieldset class="layui-elem-field">
+        <legend>最低购买要求</legend>
+        <div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-form-label">选择要求</div>
+                <div class="layui-input-block">
+                    <select name="buy_requirement" id="buy_requirement" lay-filter="buy_requirement">
+                        <option value="0" {if $data['buy_requirement']==0}selected{/if}>无最低要求</option>
+                        <option value="1" {if $data['buy_requirement']==1}selected{/if}>最低购买金额</option>
+                        <option value="2" {if $data['buy_requirement']==2}selected{/if}>最低商品数量</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item buy_requirement1" style="display: {if $data['buy_requirement']==1}block{else}none{/if}">
+                <div class="layui-form-label">最低购买金额</div>
+                <div class="layui-input-block">
+                    <div class="disf">
+                        <div class="sel_box">
+                            <select name="low_currency" id="low_currency" lay-search>
+                                {volist name="list.currency" id="vo"}
+                                <option value="{$vo['id']}" {if $data['low_currency']==$vo['id']}selected{/if}>{$vo['code_zhname']}({$vo['currency_symbol_standard']})</option>
+                                {/volist}
+                            </select>
+                        </div>
+                        <input type="number" name="low_price" class="layui-input" value="{$data['low_price']}">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item buy_requirement2" style="display: {if $data['buy_requirement']==2}block{else}none{/if}">
+                <div class="layui-form-label">最低商品数量</div>
+                <div class="layui-input-block">
+                    <input type="number" name="low_num" class="layui-input" value="{$data['low_num']}">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <!--最大折扣使用量-->
+    <fieldset class="layui-elem-field">
+        <legend>最大折扣使用量</legend>
+        <div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-form-label">限制使用量</div>
+                <div class="layui-input-block">
+                    <input type="number" name="canusetimes" class="layui-input" value="{$data['canusetimes']}" placeholder="最大折扣使用量">
+                    <div class="layui-form-mid layui-word-aux">此折扣总共可使用次数限制</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label">限用量</div>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="onetimes" title="支持" {if $data['onetimes']==1}checked{/if}>
+                    <br>
+                    <div class="layui-form-mid layui-word-aux">每位买家限用一次，不设置就代表无限制</div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <!--折扣组合-->
+    <fieldset class="layui-elem-field">
+        <legend>折扣组合</legend>
+        <div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-form-label">产品折扣</div>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="goods_discount" title="支持" {if $data['goods_discount']==1}checked{/if}>
+                    <br>
+                    <div class="layui-form-mid layui-word-aux">购物车中每件符合条件的商品最多可享受一次产品折扣</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label">订单折扣</div>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="order_discount" title="支持" {if $data['order_discount']==1}checked{/if}>
+                    <div class="layui-form-mid layui-word-aux">除了符合条件的产品折扣外，所有符合条件的订单折扣均适用</div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label">运费折扣</div>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="freight_discount" title="支持" {if $data['freight_discount']==1}checked{/if}>
+                    <div class="layui-form-mid layui-word-aux">除符合条件的产品折扣外，还将适用最大符合条件的运费折扣</div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <!--开始&结束时间-->
+    <fieldset class="layui-elem-field">
+        <legend>生效日期</legend>
+        <div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-form-label">开始时间</div>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" name="starttime" placeholder="请选择开始时间" value="{$data['starttime']}" id="starttime">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label">结束时间</div>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" name="endtime" placeholder="请选择结束时间" value="{$data['endtime']}" id="endtime">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="form-actions">
+        <button type="button" class="btn btn-outline" id="cancelBtnMenu" style="background:transparent;border: 2px solid var(--primary);color: var(--primary);display:none;">取消</button>
+        <button type="submit" class="btn btn-primary" lay-submit lay-filter="component-form-menu2">立即保存</button>
+    </div>
+</form>
+
+<!-- 添加轮播图·模态框 -->
+<div class="modal" id="saveMenuModal">
+    <div class="modal-content" style="/**min-height:600px;max-height:600px;**/overflow-y:auto;">
+        <span class="close-modal close-modal-menu">&times;</span>
+        <h2 class="modal-title">保存信息</h2>
+        <iframe src="" class="menu_iframe" frameborder="0" style="width: 100%;height:400px;"></iframe>
+    </div>
+</div>
+</body>
+<script src="./layui/xm-select.js"></script>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    layui.use(['layer','form','laydate','upload','colorpicker'],function() {
+        var laydate = layui.laydate
+            ,layer = layui.layer
+            ,form = layui.form
+            ,$ = layui.jquery
+            ,upload = layui.upload
+            ,colorpicker = layui.colorpicker;
+
+        laydate.render({
+            elem: '#starttime',
+            format: 'yyyy-MM-dd HH:mm:ss',
+            min: '-0',
+            type:'datetime'//指定元素
+        });
+
+        laydate.render({
+            elem: '#endtime',
+            format: 'yyyy-MM-dd HH:mm:ss',
+            min: '-0',
+            type:'datetime'//指定元素
+        });
+
+        //菜单弹窗关闭事件===start
+        const menu_modal = document.getElementById('saveMenuModal');
+        const menu_closeBtn = document.querySelector('.close-modal-menu');
+        const cancelBtn = document.getElementById('cancelBtnMenu');
+
+        // 关闭模态框
+        function closeModalMenu() {
+            menu_modal.style.display = 'none';
+        }
+        menu_closeBtn.addEventListener('click', closeModalMenu);
+        cancelBtn.addEventListener('click', closeModalMenu);
+        // 点击模态框外部关闭
+        window.addEventListener('click', function(event) {
+            if (event.target === menu_modal) {
+                closeModalMenu();
+            }
+        });
+        //菜单弹窗关闭事件===end
+
+        //产品系列
+        xmSelect.render({
+            el: '#series_id',
+            autoRow: true, //自动换行
+            filterable: true, //可搜索
+            searchTips: '请搜索',
+            radio: false,
+            name: "series_id",
+            model: {
+                icon: 'show',//是否展示复选框或者单选框图标 show, hidden:变换背景色  ！！这句话是重点，不然会变成父节点也有单选框！！
+                label: {
+                    type: 'block',
+                    block: {
+                        //最大显示数量, 0:不限制
+                        showCount: 1,
+                        //是否显示删除图标
+                        showIcon: true,
+                    }
+                },
+            },
+            prop:{
+                name: 'title',
+                value: 'id',
+            },
+            tree: {
+                show: true, //用树显示
+                showFolderIcon: true, //是否显示节点前的三角图标
+                expandedKeys: false, //默认全部展开
+                showLine: true, //显示渐近线
+                indent: 20, //间距
+                strict: false, //重点！！设置成非严格父子模式，这样父节点被禁用，子节点依然可以点击
+                clickCheck: true,
+                vaguaSearch:0,//关闭模糊搜索
+            },
+            toolbar: {
+                show: false, //显示工具条
+                list: ['ALL', 'REVERSE', 'CLEAR']
+            },
+            height: '300px', //最大下拉框高度
+            data: {$list['series']},
+            initValue:[{$data['series_id']}],
+            on:function(res){
+                if(res.isAdd==true) {
+                }
+            }
+        });
+
+        //买家标识
+        xmSelect.render({
+            el: '#customer_tag_ids',
+            autoRow: true, //自动换行
+            filterable: true, //可搜索
+            searchTips: '请搜索',
+            radio: false,
+            name: "customer_tag_ids",
+            model: {
+                icon: 'show',//是否展示复选框或者单选框图标 show, hidden:变换背景色  ！！这句话是重点，不然会变成父节点也有单选框！！
+                label: {
+                    type: 'block',
+                    block: {
+                        //最大显示数量, 0:不限制
+                        showCount: 1,
+                        //是否显示删除图标
+                        showIcon: true,
+                    }
+                },
+            },
+            prop:{
+                name: 'name',
+                value: 'id',
+            },
+            tree: {
+                show: true, //用树显示
+                showFolderIcon: true, //是否显示节点前的三角图标
+                expandedKeys: false, //默认全部展开
+                showLine: true, //显示渐近线
+                indent: 20, //间距
+                strict: false, //重点！！设置成非严格父子模式，这样父节点被禁用，子节点依然可以点击
+                clickCheck: true,
+                vaguaSearch:0,//关闭模糊搜索
+            },
+            toolbar: {
+                show: false, //显示工具条
+                list: ['ALL', 'REVERSE', 'CLEAR']
+            },
+            height: '300px', //最大下拉框高度
+            data: {$list['tag']},
+            initValue:[{$data['customer_tag_ids']}],
+            on:function(res){
+                if(res.isAdd==true) {
+                }
+            }
+        });
+
+        //企业买家
+        xmSelect.render({
+            el: '#customer_ids',
+            autoRow: true, //自动换行
+            filterable: true, //可搜索
+            searchTips: '请搜索',
+            radio: false,
+            name: "customer_ids",
+            model: {
+                icon: 'show',//是否展示复选框或者单选框图标 show, hidden:变换背景色  ！！这句话是重点，不然会变成父节点也有单选框！！
+                label: {
+                    type: 'block',
+                    block: {
+                        //最大显示数量, 0:不限制
+                        showCount: 1,
+                        //是否显示删除图标
+                        showIcon: true,
+                    }
+                },
+            },
+            prop:{
+                name: 'name',
+                value: 'id',
+            },
+            tree: {
+                show: true, //用树显示
+                showFolderIcon: true, //是否显示节点前的三角图标
+                expandedKeys: false, //默认全部展开
+                showLine: true, //显示渐近线
+                indent: 20, //间距
+                strict: false, //重点！！设置成非严格父子模式，这样父节点被禁用，子节点依然可以点击
+                clickCheck: true,
+                vaguaSearch:0,//关闭模糊搜索
+            },
+            toolbar: {
+                show: false, //显示工具条
+                list: ['ALL', 'REVERSE', 'CLEAR']
+            },
+            height: '300px', //最大下拉框高度
+            data: {$list['customer']},
+            initValue:[{$data['customer_ids']}],
+            on:function(res){
+                if(res.isAdd==true) {
+                }
+            }
+        });
+
+        //选定的国家
+        xmSelect.render({
+            el: '#country_ids',
+            autoRow: true, //自动换行
+            filterable: true, //可搜索
+            searchTips: '请搜索',
+            radio: false,
+            name: "country_ids",
+            model: {
+                icon: 'show',//是否展示复选框或者单选框图标 show, hidden:变换背景色  ！！这句话是重点，不然会变成父节点也有单选框！！
+                label: {
+                    type: 'block',
+                    block: {
+                        //最大显示数量, 0:不限制
+                        showCount: 1,
+                        //是否显示删除图标
+                        showIcon: true,
+                    }
+                },
+            },
+            prop:{
+                name: 'param2',
+                value: 'id',
+            },
+            tree: {
+                show: true, //用树显示
+                showFolderIcon: true, //是否显示节点前的三角图标
+                expandedKeys: false, //默认全部展开
+                showLine: true, //显示渐近线
+                indent: 20, //间距
+                strict: false, //重点！！设置成非严格父子模式，这样父节点被禁用，子节点依然可以点击
+                clickCheck: true,
+                vaguaSearch:0,//关闭模糊搜索
+            },
+            toolbar: {
+                show: true, //显示工具条
+                list: ['ALL', 'REVERSE', 'CLEAR']
+            },
+            height: '300px', //最大下拉框高度
+            data: {$list['country']},
+            initValue:[{$data['country_ids']}],
+            on:function(res){
+                if(res.isAdd==true) {
+                }
+            }
+        });
+
+        //折扣类型
+        form.on('select(type)',function(data){
+            let val = data.value;
+
+            if(val==1){
+                //产品折扣金额
+                $('.type1,.type0').show();
+                $('.type4').hide();
+            }else if(val==2){
+                //买X送Y
+                $('.type0').show();
+                $('.type1,.type4').hide();
+            }else if(val==3){
+                //订单金额
+                $('.type0').show();
+                $('.type1,.type4').hide();
+            }else if(val==4){
+                //免运费
+                $('.type1,.type0').hide();
+                $('.type4').show();
+            }
+        });
+
+        //折扣方法
+        form.on('select(method)',function(data){
+            let val = data.value;
+            if(val==1){
+                $('.discount_code').show();
+                $('.discount_name').hide();
+            }else if(val==2){
+                $('.discount_code').hide();
+                $('.discount_name').show();
+            }
+        });
+
+        //适用国家
+        form.on('select(country_type)',function(data){
+           let val = data.value;
+           if(val==0){
+               $('.country_type1').hide();
+           }else if(val==1){
+               $('.country_type1').show();
+           }
+        });
+
+        //折扣金额
+        form.on('select(discount_method)',function(data){
+            let val = data.value;
+            if(val==0){
+                $('.discount_method0').show();
+                $('.discount_method1').hide();
+            }else if(val==1){
+                $('.discount_method0').hide();
+                $('.discount_method1').show();
+            }
+        });
+
+        //适用于选择
+        form.on('select(discount_object)',function(data){
+           let val = data.value;
+           if(val==0){
+               $('.discount_object0').show();
+               $('.discount_object1').hide();
+           }
+           else if(val==1){
+                $('.discount_object1').show();
+                $('.discount_object0').hide();
+            }
+        });
+
+        //面向买家选择
+        form.on('select(sale_type)',function(data){
+           let val = data.value;
+
+           if(val==0){
+               $('.sale_type1').hide();
+               $('.sale_type2').hide();
+           }else if(val==1){
+               $('.sale_type1').show();
+               $('.sale_type2').hide();
+           }else if(val==2){
+               $('.sale_type1').hide();
+               $('.sale_type2').show();
+           }
+        });
+
+        //最低购买要求
+        form.on('select(buy_requirement)',function(data){
+            let val = data.value;
+            if(val==0){
+                $('.buy_requirement1').hide();
+                $('.buy_requirement2').hide();
+            }
+            else if(val==1){
+                $('.buy_requirement1').show();
+                $('.buy_requirement2').hide();
+            }
+            else if(val==2){
+                $('.buy_requirement1').hide();
+                $('.buy_requirement2').show();
+            }
+        });
+
+        form.on('submit(component-form-menu2)', function(data){
+            layer.load();
+            $.ajax({
+                url:"/?s=index/save_discount",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.closeAll('loading');
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            // let currentUrl = new URL(parent.location.href);
+                            // currentUrl.searchParams.set('tab', 'shop_head_menu');
+                            // parent.history.pushState({}, '', currentUrl.toString());
+
+                            parent.location.reload();
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+
+        // 检查是否有商品数据，如果有则显示表格
+        if ($('.goods_table tbody tr').length > 0) {
+            $('.goods_table').show();
+        }
+    });
+
+    //随机生成折扣代码
+    function generate_code(){
+        var laydate = layui.laydate
+            ,layer = layui.layer
+            ,$ = layui.jquery;
+        var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let rand_code = '';
+
+        // 循环生成12个字符
+        for (let i = 0; i < 12; i++) {
+            // 生成0-35的随机索引（对应chars的长度）
+            const randomIndex = Math.floor(Math.random() * chars.length);
+            // 拼接字符
+            rand_code += chars[randomIndex];
+        }
+
+        $('#discount_code').val(rand_code);
+    }
+
+    //添加商品
+    function add_goods(){
+        var layer = layui.layer,
+            $ = layui.jquery,
+            form = layui.form;
+
+        layer.load();
+
+        // 通过AJAX获取商品数据
+        $.ajax({
+            url: "/?s=index/get_goods",
+            data:{'company_id':"{$company_id}",'company_type':"{$company_type}"},
+            method: 'post',
+            dataType: 'JSON',
+            success: function(res){
+                layer.closeAll('loading');
+                if(res.code == 0) {
+                    // 创建商品选择弹窗
+                    var content = '<div style="padding: 15px;">';
+
+                    content += '<div class="goods-list" style="max-height: 450px; overflow-y: auto; margin-top: 15px;">';
+                    content += '<table class="layui-table" style="margin: 0;">';
+                    content += '<thead>';
+                    content += '<tr><th></th><th>商品</th><th>库存</th></tr>';
+                    content += '</thead>';
+                    content += '<tbody>';
+
+                    // 获取已添加的商品ID
+                    var existingGoodsIds = getExistingGoodsIds();
+
+                    // 遍历商品数据
+                    $.each(res.data, function(index, product) {
+                        var hasVariants = product.variants && product.variants.length > 0;
+
+                        // 检查产品是否已存在
+                        var productUniqueId = product.goods_id + '_0'; // 产品本身的唯一标识
+                        var isProductDisabled = existingGoodsIds.includes(productUniqueId);
+
+                        // 如果有变体，检查是否所有变体都已添加
+                        var allVariantsDisabled = true;
+                        var hasEnabledVariants = false;
+                        if (hasVariants) {
+                            $.each(product.variants, function(vIndex, variant) {
+                                var variantUniqueId = product.goods_id + '_' + variant.sku_id;
+                                if (!existingGoodsIds.includes(variantUniqueId)) {
+                                    allVariantsDisabled = false;
+                                    hasEnabledVariants = true;
+                                }
+                            });
+                        }
+
+                        content += '<tr>';
+                        // 如果有变体且所有变体都已添加，或者没有变体但产品已添加，则禁用父级复选框
+                        var parentDisabled = (hasVariants && allVariantsDisabled) || (!hasVariants && isProductDisabled);
+                        content += '<td><input type="checkbox" name="product_variant" value="' + product.goods_id + '" lay-skin="primary" class="parent-checkbox" data-has-variants="' + hasVariants + '" data-product-id="' + product.goods_id + '" ' + (parentDisabled ? 'disabled' : '') + '></td>';
+                        content += '<td><img style="width:40px;height:40px;margin-right:5px;" src="'+product.goods_image+'">' + product.goods_name + '</td>';
+                        content += '<td>' + (product.goods_number || 0) + '</td>';
+                        content += '</tr>';
+
+                        // 如果有变体，显示变体
+                        if(hasVariants) {
+                            $.each(product.variants, function(vIndex, variant) {
+                                var variantUniqueId = product.goods_id + '_' + variant.sku_id;
+                                var isVariantDisabled = existingGoodsIds.includes(variantUniqueId);
+
+                                content += '<tr>';
+                                content += '<td><input type="checkbox" name="product_variant" value="' + variant.sku_id + '" lay-skin="primary" class="child-checkbox" data-product-id="' + product.goods_id + '" ' + (isVariantDisabled ? 'disabled' : '') + '></td>';
+                                content += '<td style="padding-left: 20px;">' + variant.spec_names + '</td>';
+                                content += '<td>' + (variant.goods_number || 0) + '</td>';
+                                content += '</tr>';
+                            });
+                        }
+                    });
+
+                    content += '</tbody>';
+                    content += '</table>';
+                    content += '</div>';
+
+                    content += '<div style="margin-top: 15px; padding: 10px 0; border-top: 1px solid #eee;">';
+                    content += '<span>已选择 <span id="selected_variants_count">0</span> 个变体</span>';
+                    content += '<div style="float: right;">';
+                    content += '<button type="button" class="btn btn-outline" id="cancelSelect">取消</button>';
+                    content += '<button type="button" class="btn btn-primary" id="confirmSelect">添加</button>';
+                    content += '</div>';
+                    content += '</div>';
+                    content += '</div>';
+
+                    // 打开弹窗
+                    var index = layer.open({
+                        type: 1,
+                        title: '添加商品',
+                        content: content,
+                        area: ['100%', '100%'],
+                        success: function(layero, index) {
+                            // 渲染表单元素
+                            form.render();
+
+                            // 统计已选择的变体数量
+                            function updateSelectedCount() {
+                                var selectedCount = $('input[name="product_variant"]:checked:not(.parent-checkbox)').length;
+                                $('#selected_variants_count').text(selectedCount);
+                            }
+
+                            // 绑定父级复选框变化事件
+                            $('.parent-checkbox').on('change', function() {
+                                var productId = $(this).data('product-id');
+                                var isChecked = $(this).prop('checked');
+                                var hasVariants = $(this).data('has-variants');
+
+                                // 如果产品有变体，则选中/取消选中所有子变体
+                                if (hasVariants) {
+                                    $('.child-checkbox[data-product-id="' + productId + '"]:not(:disabled)').prop('checked', isChecked);
+                                }
+
+                                updateSelectedCount();
+                            });
+
+                            // 绑定子级复选框变化事件
+                            $('.child-checkbox').on('change', function() {
+                                var productId = $(this).data('product-id');
+                                var allChildren = $('.child-checkbox[data-product-id="' + productId + '"]:not(:disabled)');
+                                var checkedChildren = $('.child-checkbox[data-product-id="' + productId + '"]:checked');
+
+                                // 如果所有子变体都被选中，则选中父级复选框
+                                if (allChildren.length > 0 && checkedChildren.length === allChildren.length) {
+                                    $('.parent-checkbox[data-product-id="' + productId + '"]').prop('checked', true);
+                                } else {
+                                    $('.parent-checkbox[data-product-id="' + productId + '"]').prop('checked', false);
+                                }
+
+                                updateSelectedCount();
+                            });
+
+                            // 绑定取消按钮事件
+                            $('#cancelSelect').on('click', function() {
+                                layer.close(index);
+                            });
+
+                            // 绑定确认按钮事件
+                            $('#confirmSelect').on('click', function() {
+                                var selectedVariants = [];
+                                var hasDuplicate = false;
+
+                                // 只收集选中的子变体
+                                $('.child-checkbox:checked').each(function() {
+                                    var variantId = $(this).val();
+                                    var productId = $(this).data('product-id');
+                                    var row = $(this).closest('tr');
+                                    var variantName = row.find('td:eq(1)').text().trim();
+                                    var productNum = row.find('td:eq(2)').text().trim();
+
+                                    // 再次检查是否已存在
+                                    var variantUniqueId = productId + '_' + variantId;
+                                    if (existingGoodsIds.includes(variantUniqueId)) {
+                                        hasDuplicate = true;
+                                        return false; // 退出循环
+                                    }
+
+                                    selectedVariants.push({
+                                        id: variantId,
+                                        name: variantName,
+                                        goods_number: productNum,
+                                        goods_id: productId, // 商品ID
+                                        sku_id: variantId    // 规格ID
+                                    });
+                                });
+
+                                // 如果发现重复，显示错误信息
+                                if (hasDuplicate) {
+                                    layer.msg('选择的商品或规格已存在，请勿重复添加', {icon: 2});
+                                    return;
+                                }
+
+                                // 收集没有变体的产品
+                                $('.parent-checkbox:checked').each(function() {
+                                    var hasVariants = $(this).data('has-variants');
+                                    if (!hasVariants) {
+                                        var productId = $(this).val();
+                                        var row = $(this).closest('tr');
+                                        var productName = row.find('td:eq(1)').text().trim();
+                                        var productNum = row.find('td:eq(2)').text().trim();
+
+                                        // 再次检查是否已存在
+                                        var productUniqueId = productId + '_0';
+                                        if (existingGoodsIds.includes(productUniqueId)) {
+                                            hasDuplicate = true;
+                                            return false; // 退出循环
+                                        }
+
+                                        selectedVariants.push({
+                                            id: productId,
+                                            name: productName,
+                                            goods_number: productNum,
+                                            goods_id: productId, // 商品ID
+                                            sku_id: 0           // 没有规格，SKU ID为0
+                                        });
+                                    }
+                                });
+
+                                // 如果发现重复，显示错误信息
+                                if (hasDuplicate) {
+                                    layer.msg('选择的商品或规格已存在，请勿重复添加', {icon: 2});
+                                    return;
+                                }
+
+                                if(selectedVariants.length > 0) {
+                                    addGoodsToTable(selectedVariants);
+                                    layer.close(index);
+                                } else {
+                                    layer.msg('请至少选择一个商品或变体', {icon: 2});
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    layer.msg(res.msg || '获取商品数据失败', {icon: 2});
+                }
+            },
+            error: function() {
+                layer.msg('系统错误，获取商品数据失败', {icon: 2});
+            }
+        });
+    }
+
+    // 获取已存在的商品ID
+    function getExistingGoodsIds() {
+        var $ = layui.jquery;
+        var existingIds = [];
+
+        $('.goods_table tbody tr').each(function() {
+            var goodsId = $(this).data('goods-id');
+            var skuId = $(this).find('input[name="sku_id[]"]').val();
+            if (goodsId) {
+                // 对于有规格的商品，使用 goodsId_skuId 作为唯一标识
+                // 对于没有规格的商品，使用 goodsId_0 作为唯一标识
+                var uniqueId = goodsId + '_' + (skuId || '0');
+                existingIds.push(uniqueId);
+            }
+        });
+
+        return existingIds;
+    }
+
+    // 添加商品到表格
+    function addGoodsToTable(selectedVariants) {
+        var layer = layui.layer,
+            $ = layui.jquery,
+            form = layui.form;
+
+        // 获取最新的已存在商品ID
+        var existingGoodsIds = getExistingGoodsIds();
+        var validVariants = [];
+
+        // 过滤掉已存在的商品/变体
+        $.each(selectedVariants, function(index, variant) {
+            var goodsId = variant.goods_id || variant.id;
+            var skuId = variant.sku_id || 0;
+            var uniqueId = goodsId + '_' + skuId;
+
+            if (!existingGoodsIds.includes(uniqueId)) {
+                validVariants.push(variant);
+            }
+        });
+
+        if (validVariants.length === 0) {
+            layer.msg('选择的商品或规格已存在，请勿重复添加', {icon: 2});
+            return;
+        }
+
+        // 显示表格
+        $('.goods_table').show();
+
+        var tbody = $('.goods_table tbody');
+
+        // 遍历选中的商品/变体
+        $.each(validVariants, function(index, variant) {
+            // 生成唯一ID用于后续操作
+            var rowId = 'goods_row_' + new Date().getTime() + '_' + index;
+
+            // 解析商品ID和SKU ID
+            var goodsId = variant.goods_id || variant.id;
+            var skuId = variant.sku_id || 0;
+            var html = '<tr id="' + rowId + '" data-goods-id="' + goodsId + '">';
+            html += '<td><span style="font-size:12px;">' + variant.name + '</span></td>';
+            html += '<td>' + variant.goods_number + '</td>';
+            html += '<td><input type="hidden" name="goods_id[]" value="' + goodsId + '"><input type="hidden" name="sku_id[]" value="' + skuId + '"><div class="trush" onclick="del_goods(this)"><i class="fas fa-trash"></i></div></td>';
+            html += '</tr>';
+
+            tbody.append(html);
+        });
+
+        // 重新渲染表单
+        form.render();
+    }
+
+    // 删除商品行
+    function del_goods(t) {
+        var $ = layui.jquery;
+
+        $(t).closest('tr').remove();
+
+        // 如果表格中没有商品了，隐藏表格
+        if ($('.goods_table tbody tr').length === 0) {
+            $('.goods_table').hide();
+        }
+    }
+</script>
+</html>

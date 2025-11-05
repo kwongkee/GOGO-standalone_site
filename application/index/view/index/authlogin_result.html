@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
+    <title>授权结果</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style>
+        body{background:#000;}
+        .disf{display:flex;}
+
+        #content{transform: translate(0, 50%);}
+        #content .container{width: 100%;max-width: 440px;padding: 0px;margin: 0 auto;border-radius: 5px;background:#fff;border-radius: 5px;}
+
+        .resultBox{width:100%;height:300px;border-bottom:1px solid #000;}
+        .resultBox .leftBox{width:40%;border-right:1px solid #444444;text-align: center;padding-top:25%;}
+        .resultBox .leftBox .logo{width:150px;}
+        .resultBox .leftBox .result_txt{font-size:15px;margin-top:15px;text-align: center;}
+        .resultBox .rightBox{text-align: center;padding-top:20%;width: 60%;}
+        .resultBox .rightBox .fail_txt{color:#e60000;font-size:25px;font-weight:800;}
+        .resultBox .rightBox .success_txt{color:#45b542;font-size:25px;font-weight:800;}
+        .resultBox .rightBox .accountDiv{justify-content: center;align-items: center;max-width: 240px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;margin: 20px 15px 0;border: 1px solid #ccc;background: #ccc;}
+        .resultBox .rightBox .accountDiv .app_logo{width:30px;margin-right:5px;}
+        .resultBox .rightBox .accountDiv .account_info{width:165px;overflow: hidden;text-overflow: ellipsis;}
+        .resultBox .rightBox .accountDiv span{font-size:15px;}
+        .resultBox .rightBox .returnDiv{justify-content: center;margin-top:20px;}
+        .resultBox .rightBox .returnDiv a{background: #000;color: #fff;font-size: 15px;padding: 7px 15px;width: 35%;}
+
+        /*版权*/
+        .copyright{padding:10px 0;}
+        .copyright,.copyright a,.copyright span,.copyright p{color:#000 !important;}
+
+        @media (max-width: 992px){
+            #content .container{max-width:360px;}
+        }
+    </style>
+</head>
+<body>
+    <section id="content" class="non_topimg" >
+        <div class="container">
+            <div class="resultBox disf">
+                <div class="leftBox">
+                    <img src="https://shop.gogo198.cn/collect_website/public/uploads/centralize/website_index/64a5282e9bdbf.png" class="logo">
+                    <p class="result_txt">GOGO授权结果→</p>
+                </div>
+                <div class="rightBox">
+                    {if $info['status']==0}
+                        <p class="fail_txt">授权失败！</p>
+                    {else}
+                        <p class="success_txt">授权成功！</p>
+                    {/if}
+                    
+                    <div class="accountDiv disf">
+                        <img src="{$app_info['pic']}" class="app_logo">
+                        <div class="account_info" title="{$info['account']}">{$info['account']}</div>
+                    </div>
+                    
+                    <div class="returnDiv disf">
+                        {if $info['status']==0}
+                            <a href="{$info['link']}">点击返回</a>
+                        {elseif($info['status']==1)}
+                            <a href="{$info['link']}?authid={$info['id']}">点击返回</a>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">{$website['copyright']}</div>
+        </div>
+    </section>
+</body>
+<script src="layui/layui.js"></script>
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+    layui.use(['layer','form','laydate','upload'],function() {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , laydate = layui.laydate
+            , upload = layui.upload;
+
+    });
+</script>
+</html>

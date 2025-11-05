@@ -1,0 +1,117 @@
+{include file="common/merchant_header"}
+<style>
+    html,body{background:#fff;}
+    .layui-fluid{padding:0;}
+    .layui-card,.layui-card-body,.layui-tab{height:100%;}
+    .layui-card-body{box-sizing: border-box;padding:0px;}
+    .layui-tab-card>.layui-tab-title{background:#fff;}
+    .layui-tab-card>.layui-tab-title .layui-this{background:{$website['color']};color:{$website['color_word']};}
+    .layui-table-view{border:0;}
+    @media (max-width: 768px){
+        .layui-table-view{border-width:1px;}
+        .layui-table-box{width: 100% !important;}
+        .keywords_inline{width: calc(100% - 160px);}
+        .shuaxin{display: none;}
+    }
+</style>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body" style="padding-top:10px;">
+            <div class="layui-btn-group test-table-operate-btn" style="margin-bottom: 10px;">
+                <!--                <button class="layui-btn layui-btn-normal" onclick="openWindow('新增人员','/?s=merchant/save_staff');">新增人员</button>-->
+                <button class="layui-btn layui-btn-normal shuaxin" onclick="location.reload()">刷新</button>
+            </div>
+            <div class="main-table-reload-btn" style="margin-bottom: 10px;float: right;">
+                搜索：
+                <div class="layui-inline" style="width: 50%;">
+                    <input class="layui-input" placeholder="要搜索的关键词"  id="keywords" autocomplete="off">
+                </div>
+                <button class="layui-btn layui-btn-normal" data-type="reload">搜索</button>
+            </div>
+            <table class="layui-hide" id="mainTable"></table>
+        </div>
+    </div>
+</div>
+
+<script src="/layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'table', 'upload'], function(){
+        var admin = layui.admin
+            ,table = layui.table
+            ,$ = layui.jquery
+            ,upload = layui.upload;
+
+        table.render({
+            elem: '#mainTable'
+            ,url: "/?s=member/topics_manage&pa2={$pa}&group_id={$group_id}"
+            ,cellMinWidth: 200
+            ,cols: [[
+                {field:'id', width:60, title: '编号'}
+                ,{field:'name',  title: '议题名称'}
+                ,{field:'status_name',  title: '状态'}
+                ,{width:90, align:'center', fixed: 'right', title: '操作', templet: function(d){
+                        return [
+                            '<a onclick="openWindow2('+ "'["+d.name+"]'" +',' + "'/?s=member/topics_manage2&id="+ d.id +"'" + ');" class="layui-btn layui-btn-xs layui-btn-normal">管理决策</a>',
+                            // '<a onclick="openWindow('+ "'["+d.name+"]'" +',' + "'/?s=merchant/topics_detail&is_edit=<?php echo base64_encode(1);?>&id="+ d.id +"'" + ');" class="layui-btn layui-btn-xs layui-btn-normal">群组决策</a>',
+                        ].join('');
+                    } }
+            ]]
+            ,page: true
+        });
+
+        var $ = layui.$, active = {
+            reload: function(){
+                //执行重载
+                table.reload('mainTable', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                        keywords: $("#keywords").val()
+                    }
+                });
+            }
+        };
+
+        $('.main-table-reload-btn .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+
+    function openWindow(title,url,type)
+    {
+        var layer = layui.layer;
+        var index = layer.open({
+            type: 2,
+            title: title,
+            content: url,
+            area:['100%','100%']
+        });
+        // layer.full(index);
+    }
+
+    function openWindow2(title,url,type)
+    {
+        var area = ['100%','100%'];
+        // if(isMobile()){
+        //     area = ['100%','100%'];
+        // }
+        var layer = layui.layer;
+        var index = layer.open({
+            type: 2,
+            title: title,
+            content: url,
+            area:area
+        });
+        // layer.full(index);
+    }
+</script>
+</body>
+</html>

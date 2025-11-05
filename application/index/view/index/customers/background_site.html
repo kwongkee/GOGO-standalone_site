@@ -1,0 +1,1006 @@
+{include file="common/header"}
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style>
+    li{list-style: none;}
+    p{margin-bottom:0;}
+    .whoIsHome {
+        background: url("/img/customers/bd_banner_bg.png") #F4F6FB no-repeat top left/1920px 400px;
+        overflow: hidden
+    }
+
+    .whoIsHome .whoIsHome_remain_box {
+        width: 1200px;
+        margin: 20px auto;
+        display: flex;
+        justify-content: flex-end
+    }
+
+    .whoIsHome .whoIsHome_remain_box .whoIsHome_remain {
+        display: flex;
+        align-items: center;
+        height: 28px;
+        background: #0248C9;
+        border-radius: 14px;
+        width: max-content;
+        padding: 0 20px;
+        cursor: pointer
+    }
+
+    .whoIsHome .whoIsHome_remain_box .whoIsHome_remain .remain_label {
+        font-size: 14px;
+        color: #fff
+    }
+
+    .whoIsHome .whoIsHome_remain_box .whoIsHome_remain .remain_num {
+        font-size: 16px;
+        color: #FFD74C;
+        margin: 0 5px
+    }
+
+    .whoIsHome .whoIsHome_remain_box .whoIsHome_remain .check_more {
+        font-size: 14px;
+        color: #4AFFD2;
+        margin-left: 20px
+    }
+
+    .whoIsHome .whoIsHome_remain_box .whoIsHome_remain .getRemainNum {
+        display: none
+    }
+
+    .whoIsHome .whoIsHome_remain_box.nologin {
+        visibility: hidden
+    }
+
+    .whoIsHome .whoIsHome_banner_header {
+        width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        display: flex;
+        flex-flow: column
+    }
+
+    .whoIsHome .whoIsHome_banner_header .pullCouple {
+        position: absolute;
+        top: 20px;
+        right: 0;
+        height: 28px;
+        background: #1D48C5;
+        border-radius: 14px;
+        padding: 0 20px;
+        display: flex;
+        align-items: center
+    }
+
+    .whoIsHome .whoIsHome_banner_header .pullCouple .static {
+        font-size: 14px;
+        font-weight: 400;
+        color: #FFFFFF
+    }
+
+    .whoIsHome .whoIsHome_banner_header .pullCouple .static span {
+        font-size: 16px;
+        color: #FF8A71
+    }
+
+    .whoIsHome .whoIsHome_banner_header .pullCouple .getRemainNum {
+        font-size: 14px;
+        font-weight: 400;
+        color: #4AFFD2;
+        margin-left: 20px;
+        cursor: pointer
+    }
+
+    .whoIsHome .whoIsHome_banner_header .title {
+        font-size: 40px;
+        font-weight: bold;
+        color: #FFFFFF;
+        background: linear-gradient(180deg, #D3E4FF 0%, #fff 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        line-height: 40px;
+        text-align: center
+    }
+
+    .whoIsHome .whoIsHome_banner_header .subTitle {
+        font-size: 16px;
+        color: #E2EDFF;
+        line-height: 16px;
+        margin-top: 23px;
+        text-align: center;
+        font-weight: normal
+    }
+
+    .whoIsHome .searchContainer {
+        width: 1200px;
+        height: 310px;
+        border-radius: 6px;
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+        position: relative;
+        background: url("/img/customers/bd_sear_bg.png") no-repeat center/100%;
+        margin: 45px auto 0
+    }
+
+    .whoIsHome .searchContainer .linkBtnBox {
+        width: 820px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 40px
+    }
+
+    .whoIsHome .searchContainer .linkBtnBox ul {
+        display: flex;
+        align-items: center
+    }
+
+    .whoIsHome .searchContainer .linkBtnBox ul.right li {
+        margin-right: 0;
+        margin-left: 20px
+    }
+
+    .whoIsHome .searchContainer .linkBtnBox ul li {
+        width: 120px;
+        height: 40px;
+        background: #1a64e0;
+        border-radius: 4px;
+        margin-right: 20px
+    }
+
+    .whoIsHome .searchContainer .linkBtnBox ul li:hover {
+        background: linear-gradient(-17deg, #FF8C88, #FFCBAC)
+    }
+
+    .whoIsHome .searchContainer .linkBtnBox ul li a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        font-size: 16px;
+        font-family: A-OTF Jun Pro 34;
+        color: #fff
+    }
+
+    .whoIsHome .searchContainer .linkBtnBox ul li a:hover {
+        color: #522214 !important
+    }
+
+    .whoIsHome .searchContainer .linkBtnBox ul li.active {
+        background: linear-gradient(-17deg, #FF8C88, #FFCBAC);
+        position: relative;
+        box-shadow: 0px 4px 15px 0px rgba(16,94,190,0.5)
+    }
+
+    .whoIsHome .searchContainer .linkBtnBox ul li.active a {
+        color: #522214
+    }
+
+    .whoIsHome .searchContainer .linkBtnBox ul li.active::after {
+        content: '';
+        width: 0;
+        height: 0;
+        border: 6px solid;
+        border-color: #FF8C88 transparent transparent transparent;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -12px;
+        margin: auto;
+        z-index: 1888
+    }
+
+    .whoIsHome .searchContainer .searchBox {
+        margin-top: 24px
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput {
+        display: flex;
+        align-items: center;
+        border-radius: 6px;
+        width: 820px;
+        height: 50px;
+        background: #fff;
+        position: relative
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .icon {
+        width: 16px;
+        height: 100%;
+        margin-left: 20px;
+        background: url("/img/customers/icon_se.png") no-repeat center/16px
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .inputSearch {
+        flex: 1;
+        height: 100%;
+        padding-right: 30px;
+        position: relative
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .inputSearch .icon-guanbi1 {
+        position: absolute;
+        right: 10px;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        display: none;
+        align-items: center;
+        cursor: pointer;
+        color: #909399;
+        user-select: none
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput #top_search_input {
+        width: 100%;
+        height: 100%;
+        padding: 10px;
+        background: #fff;
+        border: none;
+        font-size: 14px
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput #top_search_input::placeholder {
+        color: #909399;
+        font-size: 14px
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .searchBtn {
+        width: 100px;
+        height: 100%;
+        background: linear-gradient(0deg, #FF7E71, #FF7E71);
+        border-radius: 0px 6px 6px 0px;
+        font-size: 16px;
+        font-weight: 400;
+        color: #FFFFFF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        user-select: none;
+        cursor: pointer
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .searchBtn:hover {
+        background: linear-gradient(0deg, #FF6859, #FF7E71)
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .searchBtn:active {
+        background: linear-gradient(0deg, #FF6859, #FF5948)
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .history_drop {
+        position: absolute;
+        display: none;
+        width: 660px;
+        background: #FFFFFF;
+        border: 1px solid #DEDFE4;
+        box-shadow: 0px 2px 20px 0px rgba(46,46,46,0.15);
+        border-radius: 6px;
+        padding: 20px;
+        top: 56px;
+        left: 0px;
+        z-index: 1
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .history_drop .drop_item {
+        width: 100%
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .history_drop .drop_item .item_title {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 6px
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .history_drop .drop_item .item_title .title_label {
+        font-size: 14px;
+        color: #999999
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .history_drop .drop_item .item_title .delete_box {
+        display: flex;
+        align-items: center;
+        cursor: pointer
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .history_drop .drop_item .item_title .delete_box .delete_icon {
+        width: 14px;
+        height: 14px;
+        background: url("/public/images/searchWorld/cq_icon_del.png") no-repeat;
+        background-size: 100% 100%
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .history_drop .drop_item .item_title .delete_box .delete_label {
+        font-size: 13px;
+        color: #999999;
+        margin: 2px 0 0 7px
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .history_drop .drop_item .item_title .delete_box:hover .delete_icon {
+        background: url("/public/images/searchWorld/cq_icon_del02.png") no-repeat;
+        background-size: 100% 100%
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .history_drop .drop_item .item_title .delete_box:hover .delete_label {
+        color: #4D64CC
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .history_drop .drop_item .search_box {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .history_drop .drop_item .search_box .search_item_box {
+        display: flex;
+        align-items: center;
+        margin: 10px 10px 0 0
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .history_drop .drop_item .search_box .search_item_box .search_item {
+        display: block;
+        height: 28px;
+        line-height: 26px;
+        max-width: 590px;
+        padding: 0 10px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        border-radius: 2px;
+        font-size: 13px;
+        color: #555555
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .history_drop .drop_item .search_box .search_item_box .search_item:hover {
+        color: #4D64CC !important
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .history_drop .drop_item .search_box .search_item_box .delete_icon {
+        display: block;
+        width: 12px;
+        height: 12px;
+        background: url("/public/images/delete_single.png") no-repeat;
+        background-size: 100% 100%;
+        cursor: pointer
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .history_drop .drop_item .search_box .search_item_box .delete_icon.hide {
+        display: none
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .history_drop .recentSearch {
+        margin-bottom: 26px
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .history_drop .login_tips_box {
+        width: 445px;
+        height: 49px;
+        background: url("/public/images/searchWorld/drop_login_tips.png") no-repeat;
+        background-size: 100% 100%;
+        margin: 20px auto 0;
+        overflow: hidden;
+        display: none
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .history_drop .login_tips_box .drop_login_botton {
+        font-size: 14px;
+        color: #6283FB;
+        margin: 20px 0 0 350px;
+        cursor: pointer
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .history_drop .login_tips_empty_box {
+        width: 100%;
+        display: none
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .history_drop .login_tips_empty_box .login_tips_empty_img {
+        width: 285px;
+        height: 83px;
+        background: url("/public/images/mobile/login_tips_article.png") no-repeat;
+        background-size: 100% 100%;
+        margin: 30px auto
+    }
+
+    .whoIsHome .searchContainer .searchBox .searchInput .history_drop .login_tips_empty_box .drop_login_botton {
+        width: 128px;
+        height: 39px;
+        background: linear-gradient(-90deg, rgba(77,106,227,0.91) 0%, rgba(108,134,241,0.91) 100%);
+        border-radius: 6px;
+        text-align: center;
+        line-height: 39px;
+        font-size: 14px;
+        color: #FFFFFF;
+        cursor: pointer;
+        margin: 0 auto
+    }
+
+    .whoIsHome .searchContainer .hot {
+        width: 820px;
+        margin-top: 26px;
+        display: flex;
+        align-items: center
+    }
+
+    .whoIsHome .searchContainer .hot .hotItem {
+        width: calc((100% - 20px) / 3);
+        margin-right: 10px;
+        display: flex;
+        align-items: center;
+        background: rgba(33,107,231,0.6);
+        padding: 11px 15px;
+        border-radius: 8px;
+        color: #E2F1FE
+    }
+
+    .whoIsHome .searchContainer .hot .hotItem:hover {
+        cursor: pointer;
+        background: #216be7
+    }
+
+    .whoIsHome .searchContainer .hot .hotItem::last-child {
+        margin-right: 0
+    }
+
+    .whoIsHome .searchContainer .hot .hotItem .info {
+        width: calc(100% - 22px);
+        margin-right: 10px
+    }
+
+    .whoIsHome .searchContainer .hot .hotItem .info a {
+        display: inline-block;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #fff;
+        font-size: 14px;
+        font-weight: bold
+    }
+
+    .whoIsHome .searchContainer .hot .hotItem .info a:hover {
+        color: #fff !important
+    }
+
+    .whoIsHome .searchContainer .hot .hotItem .info .orgStatics {
+        width: 100%
+    }
+
+    .whoIsHome .searchContainer .hot .hotItem .info .orgStatics p {
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #fff;
+        font-size: 12px
+    }
+
+    .whoIsHome .searchContainer .hot .hotItem .icon {
+        font-size: 18px;
+        color: #4AFFD2
+    }
+
+    .whoIsHome .harvest {
+        width: 100%;
+        height: 863px;
+        background: url("/img/customers/bd_web_bg.png") no-repeat center/1920px 100%;
+        padding-top: 100px;
+        margin-top: -100px
+    }
+
+    .whoIsHome .harvest .title {
+        width: 1200px;
+        margin: 70px auto 0;
+        font-size: 28px;
+        color: #303133;
+        line-height: 28px;
+        text-align: center
+    }
+
+    .whoIsHome .harvest .harvestList {
+        width: 1200px;
+        margin: 70px auto 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between
+    }
+
+    .whoIsHome .harvest .harvestList .harvestItem {
+        width: calc((100% - 82px) / 2);
+        margin-bottom: 60px
+    }
+
+    .whoIsHome .harvest .harvestList .harvestItem:nth-of-type(1) {
+        background: url("/img/customers/01pic.png") no-repeat right top/117px 80px
+    }
+
+    .whoIsHome .harvest .harvestList .harvestItem:nth-of-type(2) {
+        background: url("/img/customers/02pic.png") no-repeat right top/117px 80px
+    }
+
+    .whoIsHome .harvest .harvestList .harvestItem:nth-of-type(3) {
+        background: url("/img/customers/03pic.png") no-repeat right top/117px 80px
+    }
+
+    .whoIsHome .harvest .harvestList .harvestItem:nth-of-type(4) {
+        background: url("/img/customers/04pic.png") no-repeat right top/117px 80px
+    }
+
+    .whoIsHome .harvest .harvestList .harvestItem .labelBox {
+        display: flex;
+        align-items: flex-end
+    }
+
+    .whoIsHome .harvest .harvestList .harvestItem .labelBox .icon {
+        margin-right: 20px;
+        width: 63px;
+        height: 50px
+    }
+
+    .whoIsHome .harvest .harvestList .harvestItem .labelBox .icon img {
+        width: 100%;
+        height: 100%
+    }
+
+    .whoIsHome .harvest .harvestList .harvestItem .labelBox .label {
+        font-size: 24px;
+        color: #303133;
+        line-height: 24px
+    }
+
+    .whoIsHome .harvest .harvestList .harvestItem .line {
+        margin: 38px 0 26px;
+        width: 25px;
+        height: 5px
+    }
+
+    .whoIsHome .harvest .harvestList .harvestItem .line img {
+        width: 100%;
+        height: 100%
+    }
+
+    .whoIsHome .harvest .harvestList .harvestItem .tips {
+        width: 510px;
+        font-size: 15px;
+        color: #606266;
+        line-height: 30px
+    }
+
+    .whoIsHome .harvest .harvestList .harvestItem .labelList {
+        width: 460px;
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 20px
+    }
+
+    .whoIsHome .harvest .harvestList .harvestItem .labelList .labelItem {
+        padding: 0 10px;
+        height: 22px;
+        line-height: 22px;
+        font-size: 12px;
+        color: #5F96E6;
+        background: #E9F2FF;
+        margin-right: 10px;
+        border-radius: 4px;
+        margin-bottom: 10px
+    }
+
+    .whoIsHome .whatIsWhoIsDescBox {
+        height: 404px;
+        background: url("/img/customers/bd_web_bg02.png") no-repeat center/1920px 100%;
+        margin: 0 auto
+    }
+
+    .whoIsHome .whatIsWhoIsDescBox .whatIsWhoIsDesc {
+        width: 1200px;
+        height: 100%;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0px auto
+    }
+
+    .whoIsHome .whatIsWhoIsDescBox .whatIsWhoIsDesc .whatIsWhoIsDescItem {
+        width: 380px;
+        height: 204px;
+        background: #FFFFFF;
+        border-radius: 10px;
+        margin-right: 30px;
+        padding: 40px 30px
+    }
+
+    .whoIsHome .whatIsWhoIsDescBox .whatIsWhoIsDesc .whatIsWhoIsDescItem:last-child {
+        margin-right: 0
+    }
+
+    .whoIsHome .whatIsWhoIsDescBox .whatIsWhoIsDesc .whatIsWhoIsDescItem .header {
+        display: flex;
+        align-items: center
+    }
+
+    .whoIsHome .whatIsWhoIsDescBox .whatIsWhoIsDesc .whatIsWhoIsDescItem .header img {
+        width: 58px;
+        height: 50px;
+        margin-right: 10px
+    }
+
+    .whoIsHome .whatIsWhoIsDescBox .whatIsWhoIsDesc .whatIsWhoIsDescItem .header .title {
+        height: 40px;
+        font-size: 20px;
+        font-weight: 400;
+        color: #303133;
+        line-height: 22px;
+        position: relative;
+        margin-top: 0
+    }
+
+    .whoIsHome .whatIsWhoIsDescBox .whatIsWhoIsDesc .whatIsWhoIsDescItem .header .title::after {
+        content: '';
+        width: 46px;
+        height: 3px;
+        background: #4088F6;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        z-index: 1888
+    }
+
+    .whoIsHome .whatIsWhoIsDescBox .whatIsWhoIsDesc .whatIsWhoIsDescItem .content {
+        font-size: 14px;
+        font-weight: 400;
+        color: #909399;
+        line-height: 28px;
+        margin-top: 30px
+    }
+    
+    /**手机版**/
+    @media (max-width: 992px) {
+        .whoIsHome .whoIsHome_banner_header {width: 100%;padding-top: 60px;}
+        .whoIsHome .whoIsHome_banner_header .title {font-size: 30px;}
+        .whoIsHome .whoIsHome_banner_header .subTitle {font-size: 20px;}
+        .whoIsHome .searchContainer {width: 100%;margin-top:30px;height:320px;}
+        .whoIsHome .searchContainer .linkBtnBox{width: 100%;margin-top:0;}
+        .whoIsHome .searchContainer .linkBtnBox ul{flex-wrap: wrap;padding-left: 0;justify-content: center;}
+        .whoIsHome .searchContainer .linkBtnBox ul li{width: 100px;display: inline-block;margin-top:10px;}
+        .whoIsHome .searchContainer .linkBtnBox ul li a{font-size:14px;}
+        .whoIsHome .searchContainer .searchBox{width:90%;margin-top:30px;}
+        .whoIsHome .searchContainer .searchBox .searchInput{width: 100%;}
+        .whoIsHome .searchContainer .searchBox .searchInput .icon{margin-left:10px;}
+        .whoIsHome .searchContainer .searchBox .searchInput .inputSearch {padding-right: 10px;}
+        .whoIsHome .searchContainer .searchBox .searchInput #top_search_input{font-size:12px;}
+        .whoIsHome .searchContainer .searchBox .searchInput .searchBtn{width:80px;font-size: 15px;}
+        .whoIsHome .searchContainer .hot{width:100%;padding-left: 10px;background: rgb(1,91,216);margin-top:16px;padding-top:10px;padding-bottom: 10px;}
+        .whoIsHome .searchContainer .hot .hotItem{width:100%;}
+        .whoIsHome .harvest{height:fit-content;}
+        .whoIsHome .harvest .title{width: 100%;margin:60px auto 0;}
+        .whoIsHome .harvest .harvestList {width: 100%;margin: 30px auto 0;padding-left: 20px;padding-right: 20px;}
+        .whoIsHome .harvest .harvestList .harvestItem {width: 100%;margin-bottom: 40px;}
+        .whoIsHome .harvest .harvestList .harvestItem .labelBox .icon {margin-right: 10px;width: 50px;height: 42px;}
+        .whoIsHome .harvest .harvestList .harvestItem .labelBox .label {font-size: 20px;}
+        .whoIsHome .harvest .harvestList .harvestItem .line {margin: 25px 0 26px;}
+        .whoIsHome .harvest .harvestList .harvestItem .tips {width: 100%;}
+        .whoIsHome .whatIsWhoIsDescBox{height:fit-content;}
+        .whoIsHome .whatIsWhoIsDescBox .whatIsWhoIsDesc{width: 100%;display: block;padding: 20px;box-sizing: border-box;}
+        .whoIsHome .whatIsWhoIsDescBox .whatIsWhoIsDesc .whatIsWhoIsDescItem{width: 100%;padding:30px;height:fit-content;margin-bottom:20px;}
+        .whoIsHome .whatIsWhoIsDescBox .whatIsWhoIsDesc .whatIsWhoIsDescItem .header img {width: 48px;height: 40px;}
+        .whoIsHome .whatIsWhoIsDescBox .whatIsWhoIsDesc .whatIsWhoIsDescItem .header .title{font-size:18px;}
+        .whoIsHome .whatIsWhoIsDescBox .whatIsWhoIsDesc .whatIsWhoIsDescItem .content{margin-top:20px;}
+        .whoIsHome .whatIsWhoIsDescBox .whatIsWhoIsDesc .whatIsWhoIsDescItem:last-child{margin-bottom:0;}
+        .whoIsHome .harvest .harvestList .harvestItem .labelList{width:100%;}
+    }
+</style>
+<div id="main">
+
+    <div class="whoIsHome">
+        <div class="whoIsHome_remain_box nologin">
+            <div class="remain_content vip_remain_box">
+
+            </div>
+        </div>
+        <div class="whoIsHome_banner_header">
+            <h1 class="title">做背调</h1>
+            <h2 class="subTitle" style="margin-bottom:0;margin-top:0;">查阅客户背景资料及联系方式</h2>
+        </div>
+        <div class="searchContainer">
+            <div class="linkBtnBox">
+                <ul>
+                    <li>
+                        <a href="/?s=index/background_email">邮箱背调</a>
+                    </li>
+                    <li class="active">
+                        <a href="/?s=index/background_site">网站背调</a>
+                    </li>
+                    <li>
+                        <a href="/?s=index/background_company">企业名称背调</a>
+                    </li>
+<!--                </ul>-->
+<!--                <ul class="right">-->
+                    <li>
+                        <a href="/?s=index/background_searchworld" target="_blank">查注册信息</a>
+                    </li>
+                    <li>
+                        <a href="/?s=index/background_overseasreport" target="_blank">信用报告</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="searchBox">
+                <div class="searchInput">
+                    <div class="icon"></div>
+                    <div class="inputSearch">
+                        <input type="text" id="top_search_input" placeholder="输入网站地址，挖掘相关邮箱信息、企业信息、联系人信息" autocomplete="off">
+                        <i class="gald_iconfont icon-guanbi1" id="clear_top_search_input"></i>
+                    </div>
+                    <div class="searchBtn" id="searchBtn">立即查询</div>
+                    <div class="history_drop" id="history_drop">
+                        <div class="drop_item recentSearch">
+                            <div class="item_title">
+                                <div class="title_label">浏览历史</div>
+                                <div class="delete_box" id="recentSearchDelete">
+                                    <div class="delete_icon"></div>
+                                    <div class="delete_label">清除</div>
+                                </div>
+                            </div>
+                            <div class="search_box" id="search_box"></div>
+                        </div>
+
+                        <div class="login_tips_empty_box">
+                            <div class="login_tips_empty_img"></div>
+                            <div class="drop_login_botton">马上登录</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ul class="hot">
+                <li class="hotItem" onclick="window.location.href='https://www.gogo198.net/img/customers/google.com背调结果_域名whois信息_关联企业-Gogo.pdf';">
+                    <div class="info">
+                        <a href="https://www.gogo198.net/img/customers/google.com背调结果_域名whois信息_关联企业-Gogo.pdf" target="_blank">google.com</a>
+                        <div class="orgStatics">
+                            <p>国家：美国</p>
+                            <p>联系人数量：3个</p>
+                            <p>关联企业：OPTIMA3 LIMITED</p>
+                        </div>
+                    </div>
+                    <div class="icon">
+                        >
+                    </div>
+                </li>
+                <li class="hotItem" path="/background/site/1011-amazon.com.html" style="display: none;">
+                    <div class="info">
+                        <a href="/background/site/1011-amazon.com.html" target="_blank">amazon.com</a>
+                        <div class="orgStatics">
+                            <p>国家：美国</p>
+                            <p>联系人数量：3个</p>
+                            <p>关联企业：AMAZON LTD</p>
+                        </div>
+                    </div>
+                    <div class="icon">
+                        >
+                    </div>
+                </li>
+                <li class="hotItem" path="/background/site/1211-linkedin.com.html" style="display: none;">
+                    <div class="info">
+                        <a href="/background/site/1211-linkedin.com.html" target="_blank">linkedin.com</a>
+                        <div class="orgStatics">
+                            <p>国家：美国</p>
+                            <p>联系人数量：3个</p>
+                            <p>关联企业：Linkedin</p>
+                        </div>
+                    </div>
+                    <div class="icon">
+                        >
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="harvest">
+            <div class="title">输入网址或域名，您会获得</div>
+            <div class="harvestList">
+                <div class="harvestItem">
+                    <div class="labelBox">
+                        <div class="icon">
+                            <img src="/img/customers/bd_web_icon01.png" alt="">
+                        </div>
+                        <div class="label">网址关联的邮箱</div>
+                    </div>
+                    <div class="line">
+                        <img src="/img/customers/dian.png" alt="">
+                    </div>
+                    <div class="tips">从网站注册信息，相关企业注册信息、企业社交媒体信息等，全网挖掘该网址关联的联系人邮箱</div>
+                    <div class="labelList">
+                        <div class="labelItem">邮箱地址</div>
+                        <div class="labelItem">邮箱联系人姓名</div>
+                        <div class="labelItem">部门</div>
+                        <div class="labelItem">职位</div>
+                        <div class="labelItem">电话</div>
+                    </div>
+                </div>
+                <div class="harvestItem">
+                    <div class="labelBox">
+                        <div class="icon">
+                            <img src="/img/customers/bd_web_icon02.png" alt="">
+                        </div>
+                        <div class="label">网址关联的联系人</div>
+                    </div>
+                    <div class="line">
+                        <img src="/img/customers/dian.png" alt="">
+                    </div>
+                    <div class="tips">从Linkedin等社媒网站，挖掘与网站相关的联系人信息</div>
+                    <div class="labelList">
+                        <div class="labelItem">联系人姓名</div>
+                        <div class="labelItem">国别</div>
+                        <div class="labelItem">职位</div>
+                        <div class="labelItem">邮箱</div>
+                        <div class="labelItem">企业名称</div>
+                    </div>
+                </div>
+                <div class="harvestItem">
+                    <div class="labelBox">
+                        <div class="icon">
+                            <img src="/img/customers/bd_web_icon03.png" alt="">
+                        </div>
+                        <div class="label">网址关联的企业</div>
+                    </div>
+                    <div class="line">
+                        <img src="/img/customers/dian.png" alt="">
+                    </div>
+                    <div class="tips">从企业官方注册登记信息、企业的社交媒体网站、企业官网、黄页类网站等，全网搜索与该网址关联的企业信息</div>
+                    <div class="labelList">
+                        <div class="labelItem">企业名称</div>
+                        <div class="labelItem">国别</div>
+                        <div class="labelItem">行业</div>
+                        <div class="labelItem">电话</div>
+                        <div class="labelItem">地址</div>
+                        <div class="labelItem">联系人</div>
+                        <div class="labelItem">邮箱</div>
+                        <div class="labelItem">采购商品类别</div>
+                        <div class="labelItem">···</div>
+                    </div>
+                </div>
+                <div class="harvestItem">
+                    <div class="labelBox">
+                        <div class="icon">
+                            <img src="/img/customers/bd_web_icon04.png" alt="">
+                        </div>
+                        <div class="label">网站内容分析及变更记录</div>
+                    </div>
+                    <div class="line">
+                        <img src="/img/customers/dian.png" alt="">
+                    </div>
+                    <div class="tips">从网站基础信息、网站的关联网址和域名变更记录进行网站内容分析，了解网站提供的产品及服务、企业介绍等</div>
+                    <div class="labelList">
+                        <div class="labelItem">网站标题</div>
+                        <div class="labelItem">网站关键词</div>
+                        <div class="labelItem">网站国家</div>
+                        <div class="labelItem">网站子页面</div>
+                        <div class="labelItem">关联网址</div>
+                        <div class="labelItem">域名注册及变更信息</div>
+                        <div class="labelItem">···</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="whatIsWhoIsDescBox">
+            <div class="whatIsWhoIsDesc">
+                <div class="whatIsWhoIsDescItem">
+                    <div class="header">
+                        <img src="/img/customers/bd_web_icon05.png" alt="">
+                        <div class="title">获取客户联系方式</div>
+                    </div>
+                    <div class="content">通过企业网址，挖掘客户的姓名、邮箱、社媒等，更快与客户建立联系</div>
+                </div>
+                <div class="whatIsWhoIsDescItem">
+                    <div class="header">
+                        <img src="/img/customers/bd_web_icon06.png" alt="">
+                        <div class="title">了解客户企业规模实力</div>
+                    </div>
+                    <div class="content">挖掘企业背景信息，包含但不限于企业地址、规模、成立时间、所属行业、采购商品等</div>
+                </div>
+                <div class="whatIsWhoIsDescItem">
+                    <div class="header">
+                        <img src="/img/customers/bd_web_icon07.png" alt="">
+                        <div class="title">挖掘更多联系方式</div>
+                    </div>
+                    <div class="content">邮件不回复，联系不上客户，可通过企业网址关联获取更多联系方式、或同企业其他联系人</div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" id="searchType" value="url">
+        <input type="hidden" id="pullCoupleNum" value="0">
+
+
+
+
+        <div class="vipNumPay_dialog_box" id="vipNumPay_dialog_box">
+            <input id="userPhoneInfo" type="hidden" value="">
+            <input type="hidden" id="appType" value="F">
+            <input type="hidden" id="remainNum" value="0">
+            <input type="hidden" id="vipFlag" value="0">
+            <input type="hidden" id="source" value="">
+            <div id="vipNumPay_dialog" class="vipNumPay_dialog"><!----> <div class="dialog_item invite_dialog hide"><div class="invite_content invite_none"><div class="invite_title">邀请好友享无限次数</div> <div class="num_box"><div class="item_box invite_num_box"><div class="item_num invite_num">0</div> <div class="num_box_label">邀请好友</div></div> <div class="item_box get_num_box"><div class="item_num get_num">0</div> <div class="num_box_label">获得网站背调次数</div></div></div> <div class="invited_box invited_box_hide"><div class="invited_title">已邀请好友</div> <div class="invited_list"></div></div> <div class="active_explain">
+                活动说明<br>1. 每邀请<span class="explain_num">1</span>名外贸好友成功注册，您可以获得
+                <!----> <span class="explain_num">20</span> <span>次网站背调次数</span>，被邀请用户可获得大礼包一份（选市场<span class="explain_num">1</span>次、客户背调<span class="explain_num">60</span>次、100元优惠券<span class="explain_num">1</span>张）<br>2. 邀请方式：复制下方专属邀请链接--&gt;分享到外贸群、朋友圈或者外贸好友--&gt;点击链接注册成功--&gt;奖励次数到账<br>3. 奖励的网站背调次数有效期为3个月。<br>4. 本活动最终解释权归格兰德所有
+            </div> <div class="share_box"><div class="share_label">分享链接，获取次数</div> <div class="share_link_box"><div id="share_link" class="share_link"></div> <div class="share_button"><div class="share_button_label">立即分享</div> <input type="text" class="share_copy"></div></div></div> <i class="gald_iconfont close_button"></i></div></div> <!----> <!----> <!----> <!----> <!----></div></div>
+
+
+        <div class="vipBuyDialog" id="vipBuyDialog"></div>
+
+    </div>
+
+</div>
+{include file="common/footer"}
+<script type="text/javascript">
+    layui.use(['layer','form','laydate','upload'],function() {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , laydate = layui.laydate
+            , upload = layui.upload;
+
+        $('#searchBtn').click(function(){
+            $.ajax({
+                url:"/?s=index/background_site",
+                method:'post',
+                data:{},
+                dataType:'JSON',
+                success:function(res){
+                    if(res.code == 0)
+                    {
+                        if(res.jump_gld==0) {
+                            layer.confirm('是否同意授权跳转到第三方网站[格兰德]？', {
+                                btn: ['同意', '拒绝']
+                            }, function () {
+                                $.ajax({
+                                    url: "/?s=index/goto_gld",
+                                    method: 'post',
+                                    data: {'is_jump': 1, 'firsttimes': 1, 'type': 9},
+                                    dataType: 'JSON',
+                                    success: function (res) {
+                                        if (res.code == 0) {
+                                            window.location.href = res.url;
+                                        }
+                                    }
+                                });
+                            }, function () {
+
+                            });
+                        }else {
+                            $.ajax({
+                                url: "/?s=index/goto_gld",
+                                method: 'post',
+                                data: {'is_jump': 1, 'firsttimes': 0, 'type': 9},
+                                dataType: 'JSON',
+                                success: function (res) {
+                                    if (res.code == 0) {
+                                        window.location.href = res.url;
+                                    }
+                                }
+                            });
+                        }
+                    }else if(res.code == -1){
+                        layer.msg(res.msg,{time:2000}, function () {
+                            layer.open({
+                                type: 2,
+                                title: '请先登录',
+                                shadeClose: true,
+                                shade: 0.3,
+                                area: ['100%', '100%'],
+                                content: "/?s=index/customer_login&open=3",
+                            });
+                        });
+                    }else if(res.code==-2){
+
+                    }
+
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+        });
+    });
+</script>

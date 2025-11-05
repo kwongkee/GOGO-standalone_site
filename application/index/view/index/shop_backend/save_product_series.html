@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>独立站平台 - website.gogo198.net</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style>
+        :root {--primary: #8a2be2;--primary-dark: #6a1cb9;--primary-light: #9b4de3;--secondary: #bb86fc;--accent: #e6d7f5;--text: #333333;--text-light: #f8f8f8;--background: #f9f5fd;--card-bg: #ffffff;--gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));--gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary));--shadow: 0 10px 30px rgba(138, 43, 226, 0.15);--shadow-hover: 0 15px 35px rgba(138, 43, 226, 0.25);}
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        body {color: var(--text);line-height: 1.6;overflow-x: hidden;}
+        h1, h2, h3, h4, h5, h6 {font-family: 'Montserrat', sans-serif;font-weight: 700;}
+        .disf{display:flex;align-items: center;}
+
+        .btn {padding: 12px 25px;border-radius: 50px;text-decoration: none;font-weight: 600;transition: all 0.3s ease;cursor: pointer;display: inline-block;text-align: center;border: none;font-family: 'Montserrat', sans-serif;}
+        .btn-outline {border: 2px solid var(--primary);color: var(--primary);background: transparent;margin-right: 15px;}
+        .btn-outline:hover {background: var(--primary);color: white;transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-primary {background: var(--gradient);color: white;border: 2px solid transparent;}
+        .btn-primary:hover {background: transparent;border-color: var(--primary);color: var(--primary);transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-default{padding:padding:10px 10px;background: var(--primary);}
+
+        /* 表单样式 */
+        .form-section {margin-bottom: 30px;}
+        .form-title {font-size: 1.3rem;margin-bottom: 20px;color: var(--primary-dark);display: flex;align-items: center}
+        .form-title i {margin-right: 10px;}
+        .form-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));gap: 20px;}
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select,
+        .form-group textarea {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;}
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {border-color: var(--primary);outline: none;}
+        .form-group textarea {min-height: 120px;resize: vertical;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
+
+
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}
+        .form-group input:focus,
+        .form-group select:focus {border-color: var(--primary);outline: none;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
+
+        .sel_container .sel_line{margin-bottom:5px;}
+        .trush_box{display:none;}
+        .trush_box .trush{padding: 6px 6px;border: 1px solid #efefef;color: #6d6d6d;cursor: pointer;}
+
+        /* 动画 */
+        @keyframes fadeIn {
+            from {opacity: 0;transform: translateY(10px);}
+            to {opacity: 1;transform: translateY(0);}
+        }
+
+
+        @media (max-width: 576px) {
+            .btn {padding: 10px 20px;font-size: 0.9rem;}
+            /*.form-actions {flex-direction: column;}*/
+        }
+
+        /*自定义颜色配置*/
+        .layui-colorpicker.layui-colorpicker-lg,.layui-colorpicker-trigger-i.layui-icon-close{line-height: 24px;}
+        .layui-colorpicker, .layui-colorpicker-trigger-span{border-color:#777;}
+        .layui-colorpicker-main-input .layui-btn-container .layui-btn {margin: 0 0 0 5px;}
+        .layui-form-item .layui-form-label{width:100px;}
+
+        .edui-editor{z-index: 1 !important;}
+    </style>
+    <!--百度富文本-->
+    <script type="text/javascript" src="cklein/plugins/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" src="cklein/plugins/ueditor/ueditor.all.min.js"> </script>
+    <script type="text/javascript" src="cklein/plugins/ueditor/lang/zh-cn/zh-cn.js"></script>
+</head>
+<body>
+<form id="siteForm" class="layui-form" action="" method="post" lay-filter="component-form-menu2" style="padding:10px;margin-bottom:0px;">
+    <input type="hidden" name="company_id" value="{$company_id}">
+    <input type="hidden" name="company_type" value="{$company_type}">
+    <input type="hidden" name="id" value="{$id}">
+
+    <div class="layui-form-item">
+        <div class="layui-form-label">标题</div>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" lay-verify="required" name="title" value="{$data['title']}" placeholder="请输入标题">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-form-label">描述</div>
+        <div class="layui-input-block">
+            <script id="desc" name="desc" type="text/plain" style="width:100%;height:400px;">
+                {if !empty($data['desc'])}
+                    {$data['desc']|htmlspecialchars_decode|stripslashes}
+                {/if}
+            </script>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-form-label">系列导向图片(400*400)</div>
+        <div class="layui-input-block">
+            <div class="layui-upload" style="margin-top: 10px;">
+                <button type="button" class="layui-btn" id="img_file-upload">上传图片(一张)</button>
+                <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                    预览图：
+                    <div class="layui-upload-list" id="img_file-upload-list">
+                        {if !empty($data['image'])}
+                        <div style="display: inline-block;">
+                            <img onclick="seePic(this);" src="{$data['image']}" class="layui-upload-img" style="width:80px;height:80px;">
+                            <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
+                            <input type="hidden" name="image[]" value="{$data['image']}">
+                        </div>
+                        {/if}
+                    </div>
+                </blockquote>
+            </div>
+        </div>
+    </div>
+
+    <fieldset class="layui-elem-field">
+        <legend>系列条件</legend>
+        <div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-form-label">系列类型</div>
+                <div class="layui-input-block">
+                    <select name="type" id="type" lay-filter="type">
+                        <option value="0" {if $data['type']==0}selected{/if}>手动（将商品逐个添加到此商品系列）</option>
+                        <option value="1" {if $data['type']==1}selected{/if}>智能（所设条件的现有和未来商品将自动添加到此商品系列）</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item type0" style="display:{if $data['type']==0}block{else}none{/if};">
+                <div class="layui-form-label">选择商品</div>
+                <div class="layui-input-block">
+                    <div id="goods_id" class="xm-select-demo" style="margin-top:0px;"></div>
+                </div>
+            </div>
+            <div class="type1" style="display:{if $data['type']==1}block{else}none{/if};">
+                <div class="layui-form-item">
+                    <div class="layui-form-label">商品须匹配</div>
+                    <div class="layui-input-block">
+                        <select name="condition" id="condition">
+                            <option value="0" {if $data['condition']==0}selected{/if}>所有条件</option>
+                            <option value="1" {if $data['condition']==1}selected{/if}>任一条件</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-form-label"></div>
+                    <div class="layui-input-block">
+                        <div class="sel_container">
+
+                            {if empty($id)}
+                                <div class="sel_line disf">
+                                    <div class="sel_box">
+                                        <select name="condition_list[condition1][]">
+                                            <option value="1">标题</option>
+                                            <!--                            <option value="2">类型</option>-->
+                                            <option value="3">类别</option>
+                                            <option value="4">厂商</option>
+                                            <!--                            <option value="5">标记</option>-->
+                                            <option value="6">价格</option>
+                                            <option value="7">原价</option>
+                                            <option value="8">重量</option>
+                                            <option value="9">库存</option>
+                                        </select>
+                                    </div>
+                                    <div class="sel_box">
+                                        <select name="condition_list[condition2][]">
+                                            <option value="1">等于</option>
+                                            <option value="2">不等于</option>
+                                            <option value="3">包含</option>
+                                            <option value="4">不包含</option>
+                                            <option value="5">大于</option>
+                                            <option value="6">小于</option>
+                                        </select>
+                                    </div>
+                                    <div class="sel_box">
+                                        <input type="text" class="layui-input" name="condition_list[condition3][]" value="">
+                                    </div>
+                                    <div class="sel_box trush_box">
+                                        <div class="trush" onclick="del_condition(this)">
+                                            <i class="fas fa-trash"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            {else}
+                                {volist name="data.condition_list.condition1" key="key" id="vo"}
+                                    <div class="sel_line disf">
+                                        <div class="sel_box">
+                                            <select name="condition_list[condition1][]">
+                                                <option value="1" {if $vo==1}selected{/if}>标题</option>
+                                                <!--                            <option value="2">类型</option>-->
+                                                <option value="3" {if $vo==3}selected{/if}>类别</option>
+                                                <option value="4" {if $vo==4}selected{/if}>厂商</option>
+                                                <!--                            <option value="5">标记</option>-->
+                                                <option value="6" {if $vo==6}selected{/if}>价格</option>
+                                                <option value="7" {if $vo==7}selected{/if}>原价</option>
+                                                <option value="8" {if $vo==8}selected{/if}>重量</option>
+                                                <option value="9" {if $vo==9}selected{/if}>库存</option>
+                                            </select>
+                                        </div>
+                                        <div class="sel_box">
+                                            <select name="condition_list[condition2][]">
+                                                <option value="1" {if $data['condition_list']['condition2'][$key-1]==1}selected{/if}>等于</option>
+                                                <option value="2" {if $data['condition_list']['condition2'][$key-1]==2}selected{/if}>不等于</option>
+                                                <option value="3" {if $data['condition_list']['condition2'][$key-1]==3}selected{/if}>包含</option>
+                                                <option value="4" {if $data['condition_list']['condition2'][$key-1]==4}selected{/if}>不包含</option>
+                                                <option value="5" {if $data['condition_list']['condition2'][$key-1]==5}selected{/if}>大于</option>
+                                                <option value="6" {if $data['condition_list']['condition2'][$key-1]==6}selected{/if}>小于</option>
+                                            </select>
+                                        </div>
+                                        <div class="sel_box">
+                                            <input type="text" class="layui-input" name="condition_list[condition3][]" value="{$data['condition_list']['condition3'][$key-1]}">
+                                        </div>
+                                        <div class="sel_box trush_box">
+                                            <div class="trush" onclick="del_condition(this)">
+                                                <i class="fas fa-trash"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {/volist}
+                            {/if}
+                        </div>
+                        <button type="button" onclick="add_condition();" class="btn btn-default" style="margin-top:10px;color:#fff;">
+                            <i class="fas fa-add"></i>
+                            添加其他条件
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+
+    <fieldset class="layui-elem-field">
+        <legend>搜索引擎列表</legend>
+        <div class="layui-field-box">
+            <div class="layui-form-item">
+                <div class="layui-form-label">页面标题</div>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" name="page_title" value="{$data['page_title']}">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label">页面描述</div>
+                <div class="layui-input-block">
+                    <textarea name="page_desc" class="layui-textarea" >{$data['page_desc']}</textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label">URL名称</div>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" name="page_url" value="{$data['page_url']}">
+                </div>
+            </div>
+        </div>
+    </fieldset>
+
+    <div class="form-actions">
+        <button type="button" class="btn btn-outline" id="cancelBtnMenu" style="background:transparent;border: 2px solid var(--primary);color: var(--primary);">取消</button>
+        <button type="submit" class="btn btn-primary" lay-submit lay-filter="component-form-menu2">立即保存</button>
+    </div>
+</form>
+</body>
+<script src="./layui/xm-select.js"></script>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    layui.use(['layer','form','laydate','upload','colorpicker'],function() {
+        var laydate = layui.laydate
+            ,layer = layui.layer
+            ,form = layui.form
+            ,$ = layui.jquery
+            ,upload = layui.upload
+            ,colorpicker = layui.colorpicker;
+
+        let ue = UE.getEditor('desc', {
+            initialFrameHeight: 300,
+            serverUrl: 'cklein/plugins/ueditor/php/controller.php'
+        });
+        setTimeout(function(){
+            $('.edui-editor-iframeholder iframe').css('background','#666');
+            $('#edui1').find('body').css('background','#666');
+        },3000);
+
+        //菜单弹窗关闭事件
+        const modal = parent.document.getElementById('saveMenuModal');
+        const cancelBtn = document.getElementById('cancelBtnMenu');
+        // 关闭模态框
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+        cancelBtn.addEventListener('click', closeModal);
+
+        //系列类型
+        form.on('select(type)',function(data){
+            let val = data.value;
+            if(val==0){
+                $('.type0').show();
+                $('.type1').hide();
+            }else if(val==1){
+                $('.type0').hide();
+                $('.type1').show();
+            }
+        });
+
+        //多选商品
+        xmSelect.render({
+            el: '#goods_id',
+            autoRow: true, //自动换行
+            filterable: true, //可搜索
+            searchTips: '请搜索',
+            radio: false,
+            name: "goods_id",
+            model: {
+                icon: 'show',//是否展示复选框或者单选框图标 show, hidden:变换背景色  ！！这句话是重点，不然会变成父节点也有单选框！！
+                label: {
+                    type: 'block',
+                    block: {
+                        //最大显示数量, 0:不限制
+                        showCount: 1,
+                        //是否显示删除图标
+                        showIcon: true,
+                    }
+                },
+            },
+            prop:{
+                name: 'goods_name',
+                value: 'goods_id',
+            },
+            tree: {
+                show: true, //用树显示
+                showFolderIcon: true, //是否显示节点前的三角图标
+                expandedKeys: false, //默认全部展开
+                showLine: true, //显示渐近线
+                indent: 20, //间距
+                strict: false, //重点！！设置成非严格父子模式，这样父节点被禁用，子节点依然可以点击
+                clickCheck: true,
+                vaguaSearch:0,//关闭模糊搜索
+            },
+            toolbar: {
+                show: true, //显示工具条
+                list: ['ALL', 'REVERSE', 'CLEAR']
+            },
+            height: '300px', //最大下拉框高度
+            data: {$goods},
+            initValue:[{$data['goods_id']}],
+        });
+
+        // 系列导向图
+        upload.render({
+            elem: '#img_file-upload'
+            ,url: '/?s=index/upload_file'
+            ,accept: 'image'
+            ,data: { folder: 'merch_file', type:"shop_series"}
+            ,multiple: false
+            ,number:1
+            ,before: function(obj){
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                layer.msg(res.message, {time: 2000}, function () {
+                    if (res.error == 1) {
+                        $('#img_file-upload-list').append('<div style="display: inline-block;"><img onclick="seePic(this);" src="' + res.file_path + '" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="image[]" value="' + res.file_path + '"></div>')
+                    }
+                });
+            }
+        });
+
+        form.on('submit(component-form-menu2)', function(data){
+            layer.load();
+
+            $.ajax({
+                url:"/?s=index/save_product_series",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.closeAll('loading');
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            // let currentUrl = new URL(parent.location.href);
+                            // currentUrl.searchParams.set('tab', 'shop_head_menu');
+                            // parent.history.pushState({}, '', currentUrl.toString());
+                            parent.location.reload();
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+
+    function add_condition(){
+        var layer = layui.layer,$ = layui.$,form = layui.form;
+
+        let html = '<div class="sel_line disf">\n' +
+            '                                <div class="sel_box">\n' +
+            '                                    <select name="condition_list[condition1][]">\n' +
+            '                                        <option value="1">标题</option>\n' +
+            '                                        <!--                            <option value="2">类型</option>-->\n' +
+            '                                        <option value="3">类别</option>\n' +
+            '                                        <option value="4">厂商</option>\n' +
+            '                                        <!--                            <option value="5">标记</option>-->\n' +
+            '                                        <option value="6">价格</option>\n' +
+            '                                        <option value="7">原价</option>\n' +
+            '                                        <option value="8">重量</option>\n' +
+            '                                        <option value="9">库存</option>\n' +
+            '                                    </select>\n' +
+            '                                </div>\n' +
+            '                                <div class="sel_box">\n' +
+            '                                    <select name="condition_list[condition2][]">\n' +
+            '                                        <option value="1">等于</option>\n' +
+            '                                        <option value="2">不等于</option>\n' +
+            '                                        <option value="3">包含</option>\n' +
+            '                                        <option value="4">不包含</option>\n' +
+            '                                        <option value="5">大于</option>\n' +
+            '                                        <option value="6">小于</option>\n' +
+            '                                    </select>\n' +
+            '                                </div>\n' +
+            '                                <div class="sel_box">\n' +
+            '                                    <input type="text" class="layui-input" name="condition_list[condition3][]" value="">\n' +
+            '                                </div>\n' +
+            '                                <div class="sel_box trush_box">\n' +
+            '                                    <div class="trush" onclick="del_condition(this)">\n' +
+            '                                        <i class="fas fa-trash"></i>\n' +
+            '                                    </div>\n' +
+            '                                </div>\n' +
+            '                            </div>';
+
+        $('.sel_container').append(html);
+        $('.trush_box').show();
+        form.render(null,'component-form-menu2');
+    }
+
+    //删除当前条件
+    function del_condition(t){
+        var layer = layui.layer,$ = layui.$;
+
+        $(t).parents(":eq(1)").remove();
+
+        let condition_num = $('.sel_container').find('.sel_line').length;
+        if(condition_num==1){
+            $('.trush_box').hide();
+        }
+    }
+
+    function delPic(obj)
+    {
+        var layer = layui.layer,$ = layui.$;
+        layer.confirm('确认要删除该附件？', {
+            btn: ['删除','取消']
+        }, function(){
+            $(obj).parent().remove();
+            layer.closeAll();
+        }, function(){
+
+        });
+    }
+</script>
+</html>

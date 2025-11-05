@@ -1,0 +1,604 @@
+{include file="common/gather_header"}
+<meta name="viewport" content="width=device-width, initial-scale=0.5" />
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    .main-container{background:unset;min-height:720px;padding:15px;box-sizing:border-box;border-radius: 5px;box-shadow: 0 0 14px rgba(0,0,0,.04);border:1px solid #fff;}
+    .main-container .layui-elem-field legend,.main-container .layui-form-label{color:#fff;}
+    .guide{cursor:pointer;color:#f1be83;display:none;}
+    #cs{display:none;}
+    .know{color:#f1be83;}
+</style>
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="personalMain">
+            <div class="personal">
+                {include file="common/member_left"}
+                <div class="personal_right">
+                    <div class="main-container">
+                        <form class="layui-form" action="" lay-filter="component-form-group">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">预报方式</label>
+                                <div class="layui-input-inline layui-select-fscon">
+                                    <select name="prediction_id" id="prediction_id" lay-filter="prediction_id" lay-verify="required" lay-search>
+                                            <option value="">选择预报方式</option>
+                                            <option value="1">包裹无需处理即可集运</option>
+                                            <option value="2">包裹需要处理才可集运</option>
+                                     </select>
+                                    <div class="guide" onclick="guide()">《阅读须知》</div>
+                                    <div class="guide_detail" style="display: none;padding:10px;box-sizing: border-box;">
+                                          <div class="guide_content"></div>
+                                          <div class="guide_footer">
+                                                <div class="layui-form-item" style="margin-bottom:20px !important;">
+                                                    <label class="layui-form-label" style="width:0 !important;"></label>
+                                                    <div class="layui-input-block" style="margin-left:0 !important;text-align:center;">
+                                                        <div style="display: flex;align-items: center;justify-content: center;">
+                                                            <span class="guide_times" style="color:#000;margin-right:8px;display: inline-block;"></span>
+                                                            <div class="guide_can_check" style="display: none;"><input type="checkbox" name="guide_sure" lay-skin="switch" lay-text="yes|no"></div>
+                                                        </div>
+                                                        <div class="layui-btn layui-btn-success layui-btn-md close_win" style="margin-top:10px;"><i class="layui-icon">&#xe605;</i> 保存</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                     </div>
+                                </div>
+                            </div>
+                            <div class="task_iframe">
+
+                            </div>
+                            <!--线路列表-->
+                            <div class="line_list" style="display:none;padding:15px;box-sizing: border-box;text-align: center;">
+
+                            </div>
+                            <!--线路详情-->
+                            <div class="line_detail" style="display:none;">
+                                <div class="line_content" style="padding:20px;">
+
+                                </div>
+                                <div class="line_footer">
+                                    <div class="layui-form-item" style="margin-bottom:20px !important;">
+                                        <label class="layui-form-label" style="width:0 !important;"></label>
+                                        <div class="layui-input-block" style="margin-left:0 !important;text-align:center;">
+                                            <p style="color:#ff2222;font-weight:600;">请认真查阅线路详情，下单后将无法修改！</p>
+                                            <div>
+                                                {if session('account')['email']!=''}
+                                                <span class="f15">确认须知前需把验证码发送到邮箱“<span style="color:#ff2222;font-weight:600;"><?php echo session('account')['email'];?></span>”，然后把验证码输入下方文本框中。</span>
+                                                <input type="text" name="number" id="number" value="<?php echo session('account')['email'];?>" style="display: none;">
+                                                <input type="text" name="method" id="method" value="1" style="display: none;">
+                                                {elseif(session('account')['phone'] != '')}
+                                                <span class="f15">确认须知前需把验证码发送到手机“<span style="color:#ff2222;font-weight:600;"><?php echo session('account')['phone'];?></span>”，然后把验证码输入下方文本框中。</span>
+                                                <input type="text" name="number" id="number" value="<?php echo session('account')['phone'];?>" style="display: none;">
+                                                <input type="text" name="method" id="method" value="2" style="display: none;">
+                                                {/if}
+                                                <div style="display: flex;align-items: center;justify-content: center;width: 50%;margin:0 auto;">
+                                                    <input type="number" class="layui-input" name="sure_code" placeholder="请输入验证码">
+                                                    <div class="layui-btn layui-btn-primary" id="sendCode" onclick="sendCode()">发送</div>
+                                                </div>
+                                                <div class="layui-btn layui-btn-success layui-btn-md close_win" style="margin-top:10px;"><i class="layui-icon">&#xe605;</i> 保存</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item layui-layout-admin">
+                                <div class="layui-input-block">
+                                    <div class="" style="left: 0;">
+                                        <button class="layui-btn" lay-submit="" lay-filter="component-form-demo1" style="background:unset;color:#fff;border:1px solid #fff;width: 190px;">提交预报</button>
+<!--                                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--查看仓库信息-->
+<div class="warehouse_info" style="display: none;">
+    <div id="cs"></div>
+    <div class="layui-fluid">
+        <div class="layui-card">
+            <div class="layui-card-body" style="padding: 15px;">
+                <form class="layui-form" action="" lay-filter="component-form-group">
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{include file="common/gather_footer"}
+<script>
+    var time_name = '';
+    layui.use(['layer', 'form', 'table', 'upload'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , element = layui.element
+            , upload = layui.upload
+            , table = layui.table;
+
+        form.render(null,'component-form-group');
+
+        //预报方式
+        form.on('select(prediction_id)',function(data){
+            let val = data.value;
+            if(val==1){
+                let html = single_parcel();
+                if($('.parcel_list').length>0){
+                    $('.parcel_list').remove();
+                }
+                $('.task_iframe').append(html);
+                $('.guide').show();
+            }else if(val==2){
+                let html = multipart_parcel();
+                if($('.parcel_list').length>0){
+                    $('.parcel_list').remove();
+                }
+                $('.task_iframe').append(html);
+                $('.guide').show();
+            }else{
+                $('.guide').hide();
+            }
+            formrender();
+        });
+
+        //目的国地
+        form.on('select(country)',function(data){
+            let val = data.value;
+            let channel = $('#channel').val();
+            if(channel){
+                let html = show_line(val,channel);
+                if($('.line_table').length>0){
+                    $('.task_iframe').find('.parcel_list').find('.warehouse_field').find('.layui-field-box').find('.line_table').html(html[0]);
+                }else{
+                    $('.task_iframe').find('.parcel_list').find('.warehouse_field').find('.layui-field-box').append(html[0]);
+                }
+                put_line_list(html[1],html[2]);
+                formrender();
+            }
+        });
+
+        //集运渠道
+        form.on('select(channel)',function(data){
+            let val = data.value;
+            let country = $('#country').val();
+            if(country) {
+                let html = show_line(country, val);
+                if ($('.line_table').length > 0) {
+                    $('.task_iframe').find('.parcel_list').find('.warehouse_field').find('.layui-field-box').find('.line_table').html(html[0]);
+                } else {
+                    $('.task_iframe').find('.parcel_list').find('.warehouse_field').find('.layui-field-box').append(html[0]);
+                }
+                put_line_list(html[1],html[2]);
+                formrender();
+            }
+        });
+
+        /* 监听提交 */
+        form.on('submit(component-form-demo1)', function (data) {
+            $.ajax({
+                url: "/?s=gather/package_forecast",
+                method: 'post',
+                data: data.field,
+                dataType: 'JSON',
+                success: function (res) {
+                    layer.msg(res.msg, {time: 2000}, function () {
+                        if (res.code == 0) {
+                            // var index = parent.layer.getFrameIndex(window.name);
+                            // parent.layer.close(index);
+                            // parent.window.location.reload();
+                            window.location.href='/?s=gather/order_management';
+                        }
+                    });
+                },
+                error: function (data) {
+                    layer.msg('系统错误', {time: 2000});
+                }
+            });
+            return false;
+        });
+    });
+
+    //单个包裹集运
+    function single_parcel(){
+        var $ = layui.$
+            , layer = layui.layer;
+        let html = '   <div class="parcel_list">\n' +
+            '               <fieldset class="layui-elem-field warehouse_field" style="margin-top:10px;">\n' +
+            '                        <legend>仓库预订：</legend>\n' +
+            '                        <div class="layui-field-box">\n' +
+            '                            <div class="layui-form-item">\n' +
+            '                                <label class="layui-form-label">目的国地</label>\n' +
+            '                                <div class="layui-input-inline layui-select-fscon">\n'+
+            '                                     <select name="country" id="country" lay-filter="country" lay-verify="required" lay-search>\n'+
+            '                                         <option value="">请选择目的国地</option>\n';
+        $.ajax({
+            url: "/?s=gather/get_country",
+            method: 'post',
+            data: {},
+            dataType: 'JSON',
+            async: false,
+            success: function (res) {
+                if (res.code == 0) {
+                    if(res.list.length!=0){
+                        for(let i=0;i<res.list.length;i++){
+                            html += '<option value="'+res.list[i].code_value+'">'+res.list[i].code_name+'</option>\n';
+                        }
+                    }
+                }
+            },
+            error: function (data) {
+                layer.msg('系统错误', {time: 2000});
+            }
+        });
+        html += '                                </select>\n'+
+            '                                </div>\n' +
+            '                            </div>\n' +
+            '                                     <div class="layui-form-item">\n'+
+            '                                          <label class="layui-form-label">集运渠道</label>\n'+
+            '                                          <div class="layui-input-inline layui-select-fscon">\n'+
+            '                                             <select name="channel" id="channel" lay-filter="channel" lay-verify="required" lay-search>\n'+
+            '                                                  <option value="">请选择集运渠道</option>\n'+
+            '                                                  <option value="1">跨境专线，双清到门</option>\n'+
+            '                                                  <option value="2">国际快递，双清到门</option>\n'+
+            '                                                  <option value="3">国际邮政，双清到门</option>\n'+
+            '                                             </select>\n'+
+            '                                          </div>\n'+
+            '                                     </div>\n'+
+            '                        </div>\n' +
+            '                    </fieldset>\n' +
+            '          </div>';
+
+        return html;
+    }
+
+    //多个包裹集运
+    function multipart_parcel(){
+        var $ = layui.$
+            , layer = layui.layer;
+        $('.know').css('display','none');
+        let html = '   <div class="parcel_list">\n' +
+            '               <fieldset class="layui-elem-field warehouse_field" style="margin-top:10px;">\n' +
+            '                        <legend>仓库预订：</legend>\n' +
+            '                        <div class="layui-field-box">\n' +
+            '                            <div class="layui-form-item">\n' +
+            '                                <label class="layui-form-label">选择仓库</label>\n' +
+            '                                <div class="layui-input-inline layui-select-fscon" style="display:flex;align-items:center;">\n'+
+            '                                     <select name="warehouse_id" id="warehouse_id" lay-filter="warehouse_id" lay-verify="required" lay-search>\n'+
+            '                                         <option value="">请选择仓库</option>\n';
+        $.ajax({
+            url: "/?s=gather/get_warehouse",
+            method: 'post',
+            data: {},
+            dataType: 'JSON',
+            async: false,
+            success: function (res) {
+                if (res.code == 0) {
+                    if(res.list.length!=0){
+                        for(let i=0;i<res.list.length;i++){
+                            html += '<option value="'+res.list[i].id+'">'+res.list[i].warehouse_name+'</option>\n';
+                        }
+                    }
+                }
+            },
+            error: function (data) {
+                layer.msg('系统错误', {time: 2000});
+            }
+        });
+        html += '                             </select>\n'+
+            '                                         <div class="layui-btn layui-btn-primary layui-btn-md" onclick="view_warehouse()">查看</div>\n'+
+            '                                </div>\n' +
+            '                            </div>\n' +
+            '                        </div>\n' +
+            '                    </fieldset>\n' +
+            '          </div>\n';
+
+        return html;
+    }
+
+    //预报方式阅读须知
+    function guide(){
+        var $ = layui.$
+            , layer = layui.layer;
+        let prediction_id = $('#prediction_id').val();
+
+        $.ajax({
+            url: "/?s=gather/get_guide",
+            method: 'post',
+            data: { 'val': prediction_id},
+            dataType: 'JSON',
+            async: false,
+            success: function (res) {
+                timers('guide_times','guide_can_check');
+                $('.guide_detail').find('.guide_content').html(res.info.content);
+                var index2 = layer.open({
+                    type: 1,
+                    title: "阅读须知",
+                    content: $('.guide_detail'),
+                    area:['80%','80%']
+                });
+
+                $('.close_win').click(function(){
+                    clearTimeout(time_name);
+                    layer.close(index2);
+                });
+
+                $('.layui-layer-close').click(function(){
+                    clearTimeout(time_name);
+                });
+            }
+        });
+    }
+
+    //查看仓库详情
+    function view_warehouse(){
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form;
+        let warehouse_id = $('#warehouse_id').val();
+
+        let html = '';
+        $.ajax({
+            url: "/?s=gather/get_warehouse_info",
+            type: "POST",
+            dataType: "json",
+            data: {
+                "warehouse_id": warehouse_id,
+            },
+            success: function (res) {
+                html += '<div class="layui-form-item">\n' +
+                    '                        <label class="layui-form-label">收件人名称</label>\n' +
+                    '                        <div class="layui-input-inline layui-select-fscon">\n' +
+                    '                            <div class="copy2">' + res.data.name + '</div>\n' +
+                    '                        </div>\n' +
+                    '                    </div>\n' +
+                    '                    <div class="layui-form-item">\n' +
+                    '                        <label class="layui-form-label">收件人电话</label>\n' +
+                    '                        <div class="layui-input-inline layui-select-fscon">\n' +
+                    '                            <div class="copy2">' + res.data.area_code + '-' + res.data.mobile + '</div>\n' +
+                    '                        </div>\n' +
+                    '                    </div>\n' +
+                    '                    <div class="layui-form-item">\n' +
+                    '                        <label class="layui-form-label">邮政编码</label>\n' +
+                    '                        <div class="layui-input-inline layui-select-fscon">\n' +
+                    '                            <div class="copy2">' + res.data.postal_code + '</div>\n' +
+                    '                        </div>\n' +
+                    '                    </div>\n' +
+                    '                    <div class="layui-form-item">\n' +
+                    '                        <label class="layui-form-label">仓库地址1</label>\n' +
+                    '                        <div class="layui-input-inline layui-select-fscon">\n' +
+                    '                            <div class="copy2">' + res.data.province_code + res.data.city_code + res.data.address1 + '</div>\n' +
+                    '                        </div>\n' +
+                    '                    </div>\n' +
+                    '                    <div class="layui-form-item">\n' +
+                    '                        <label class="layui-form-label">仓库地址2</label>\n' +
+                    '                        <div class="layui-input-inline layui-select-fscon">\n' +
+                    '                            <div class="copy2">' + res.data.address2 + '</div>\n' +
+                    '                        </div>\n' +
+                    '                    </div>\n' +
+                    '                    <div class="layui-form-item">\n' +
+                    '                        <label class="layui-form-label"></label>\n' +
+                    '                        <div class="layui-input-inline layui-select-fscon">\n' +
+                    '                            <div class="layui-btn layui-btn-primary layui-btn-md copy_all"\n' +
+                    '                                 data-name="收件人名称：' + res.data.name + '"\n' +
+                    '                                 data-tel="收件人电话：' + res.data.area_code +'-'+ res.data.mobile + '"\n' +
+                    '                                 data-post="邮政编码：' + res.data.postal_code + '"\n' +
+                    '                                 data-address="仓库地址1：' + res.data.province_code + res.data.city_code + res.data.address1 + '"\n' +
+                    '                                 data-address2="仓库地址2：' + res.data.address2 + '"\n' +
+                    '                                 onclick="xs_all(this)">\n' +
+                    '                                一键复制\n' +
+                    '                            </div>\n' +
+                    '                        </div>\n' +
+                    '                    </div>';
+                $('.warehouse_info').find('.layui-form').html(html);
+                form.render(null,'component-form-group');
+            }
+        });
+
+        var index = layer.open({
+            type: 1,
+            title: "仓库信息",
+            content: $('.warehouse_info'),
+            area:['80%','80%']
+        });
+    }
+
+    //展示线路
+    function show_line(val,channel){
+        return ['                <div class="layui-form-item">\n' +
+        '                        <label class="layui-form-label">线路列表</label>\n' +
+        '                        <div class="layui-input-inline layui-select-fscon">\n' +
+        '                            <div class="layui-btn layui-btn-primary layui-btn-md" onclick="line_list()">查看列表</div>\n' +
+        '                            <div onclick="know()" class="know">《集运须知》</div>\n'+
+        '                        </div>\n' +
+        '                    </div>',val,channel];
+    }
+
+    //放入线路列表
+    function put_line_list(val,channel) {
+        var $ = layui.$
+            , layer = layui.layer;
+        var html2 = '';
+        //获取指定国地的所有线路-start
+        $.ajax({
+            url: "/?s=gather/get_lines",
+            method: 'post',
+            data: {'val':val,'channel':channel},
+            dataType: 'JSON',
+            async: false,
+            success: function (res) {
+                html2 += '<table class="layui-table line_table" lay-even="true" style="table-layout: fixed;word-break: break-all;">\n'+
+                    '<thead>\n'+
+                    '      <th>线路名称</th>\n'+
+                    '      <th>运输方式</th>\n'+
+                    '      <th>签收时效(日)</th>\n'+
+                    '      <th>接受货物属性</th>\n'+
+                    '      <th>操作</th>\n'+
+                    '</thead>\n'+
+                    '<tbody>\n';
+                if (res.code == 0) {
+                    if(res.list.length!=0){
+                        for(let i=0;i<res.list.length;i++){
+                            html2 += '<tr>\n'+
+                                '<td>'+res.list[i].name+'</td>\n'+
+                                '<td>'+res.list[i].transport_method+'</td>\n'+
+                                '<td>'+res.list[i].sign_time+'</td>\n'+
+                                '<td>'+res.list[i].accept_product+'</td>\n'+
+                                '<td><input type="radio" name="line_id" value="'+res.list[i].id+'" title="选择"></td>\n'+
+                                '</tr>';
+                        }
+                        $('.know').css('display','inline-block');
+                    }else{
+                        html2 += '<tr>\n'+
+                            '<td colspan="4">暂无合适线路</td>';
+                        '</tr>';
+                        $('.know').css('display','none');
+                    }
+                }
+                html2 += '</tbody>\n'+
+                    '</table>\n'+
+                    '<div class="layui-btn layui-btn-success layui-btn-md close_win" style="margin-top:10px;"><i class="layui-icon">&#xe605;</i> 保存</div>';
+            },
+            error: function (data) {
+                layer.msg('系统错误', {time: 2000});
+            }
+        });
+        $('.line_list').html(html2);
+        //获取指定国地的所有线路-end
+
+    }
+
+    //线路列表
+    function line_list(){
+        var $ = layui.$
+            , layer = layui.layer;
+
+        var index = layer.open({
+            type: 1,
+            title: "线路列表",
+            content: $('.line_list'),
+            area:['80%','80%']
+        });
+        $('.close_win').click(function(){
+            layer.close(index);
+        });
+    }
+
+    //集运须知
+    function know(){
+        var $ = layui.$
+            , layer = layui.layer;
+        let val = $('input[name="line_id"]:checked').val();
+        if(val){
+            $.ajax({
+                url: "/?s=gather/get_line_detail",
+                method: 'post',
+                data: {'id': val},
+                dataType: 'JSON',
+                async: false,
+                success: function (res) {
+                    // timers('times','can_check');
+                    $('.line_detail').find('.line_content').html(res.data.detail_content);
+                }
+            });
+            var index2 = layer.open({
+                type: 1,
+                title: '线路须知',
+                content: $('.line_detail'),
+                area:['80%','80%']
+            });
+            $('.close_win').click(function(){
+                layer.close(index2);
+            });
+        }else{
+            layer.msg('请选择线路');
+        }
+    }
+
+    var n=10;
+    function timers(times,check){
+        n-=1;
+        if(n==0){
+            n=10;
+            $("."+times).html("我已了解");
+            $('.'+check).show();
+        }else{
+            $("."+times).html("我已了解（"+n+"秒)");
+            time_name = setTimeout(function () {
+                timers(times,check);
+            },1000);
+        }
+    }
+
+    //发送数字验证码
+    function sendCode(obj) {
+        var number = $("#number").val();
+        var method = $("#method").val();
+        // 发送成功倒计时
+        $.ajax({
+            url:"/?s=gather/sendcode",
+            type:"POST",
+            dataType:"json",
+            data:{
+                "number":number,
+                'method':method,
+                'code_name':'sure_code',
+                'msg':'尊敬的客户，您正在集运网确认须知，确认验证码：'
+            },
+            success:function (res) {
+                layer.msg(res.msg, {time: 2000}, function () {
+                    if (res.code == 0) {
+                        settime();
+                    }
+                });
+            },
+            error:function (xhr) {
+                var res = JSON.parse(xhr.responseText);
+            }
+        })
+    }
+
+    var num=60;
+    function settime() {
+        if (num == 0) {
+            $("#sendCode").html("发送");
+            num = 60;
+        } else {
+            $("#sendCode").html(num+"重试");
+            num--;
+            time_name = setTimeout(function() {
+                settime()
+            },1000)
+        }
+    }
+
+    function formrender(){
+        var $ = layui.$
+            ,form = layui.form;
+
+        form.render(null, 'component-form-group');
+    }
+
+    //複製全部
+    function xs_all(this1){
+        var name = $(this1).attr('data-name');
+        var tel = $(this1).attr('data-tel');
+        var post = $(this1).attr('data-post');
+        var address = $(this1).attr('data-address');
+        var address2 = $(this1).attr('data-address2');
+        document.getElementById("cs").innerHTML=name+'<br>'+tel+'<br>'+post+'<br>'+address+'<br>'+address2;
+
+        //開始複製
+        var oInput = document.createElement('textarea');
+        // oInput.value = document.getElementById("cs").innerText;
+        oInput.value = name+'\n'+tel+'\n'+post+'\n'+address+'\n'+address2;
+        document.body.appendChild(oInput);
+        oInput.select(); // 选择对象
+        document.execCommand("Copy"); // 执行浏览器复制命令
+        oInput.remove();
+        layer.msg("复制成功");
+    }
+</script>

@@ -1,0 +1,166 @@
+{include file="common/gather_header"}
+<meta name="viewport" content="width=device-width, initial-scale=0.5" />
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    .coupon-container {display: flex;flex-direction: column;}
+    .main-container {display: flex;flex-direction: column;flex: 1;background-color: unset;padding-bottom: 20px;border-radius: 5px;overflow: hidden;box-shadow: 0 0 14px rgba(0,0,0,.04);border:1px solid #fff;}
+    .operat-box {display: flex;align-items: center;justify-content: space-between;padding: 16px 30px;background-color: #0e2e68;color:#fff;}
+    .main-container-title {padding-right: 20px;}
+    .coupon-container .coupon-content {flex: 1;display: flex;flex-direction: column;justify-content: space-between;padding: 30px;}
+    .el-tabs__header {padding: 0;position: relative;margin: 0 0 15px;}
+    .el-tabs__nav-wrap {overflow: hidden;margin-bottom: -1px;position: relative;}
+    .el-tabs__nav-scroll {overflow: hidden;}
+    .el-tabs__nav-wrap:after {content: "";position: absolute;left: 0;bottom: 0;width: 100%;height: 2px;background-color: #e4e7ed;z-index: 1;}
+    .el-tabs__nav {white-space: nowrap;position: relative;transition: transform .3s;float: left;z-index: 2;}
+    .el-tabs__active-bar {position: absolute;bottom: 0;left: 0;height: 2px;background-color: #f1be83;z-index: 1;transition: transform .3s cubic-bezier(.645,.045,.355,1);list-style: none;}
+    .el-tabs--bottom .el-tabs__item.is-bottom:nth-child(2), .el-tabs--bottom .el-tabs__item.is-top:nth-child(2), .el-tabs--top .el-tabs__item.is-bottom:nth-child(2), .el-tabs--top .el-tabs__item.is-top:nth-child(2) {padding-left: 0;}
+    .el-tabs__item {padding: 0 20px;height: 40px;box-sizing: border-box;line-height: 40px;display: inline-block;list-style: none;font-size: 14px;font-weight: 500;color: #fff;position: relative;}
+    .el-tabs--bottom .el-tabs__item.is-bottom:last-child, .el-tabs--bottom .el-tabs__item.is-top:last-child, .el-tabs--top .el-tabs__item.is-bottom:last-child, .el-tabs--top .el-tabs__item.is-top:last-child {padding-right: 0;}
+    .el-tabs__item.is-active {color: #f1be83;}
+    .coupon-container .coupon-content .coupon-list {display: flex;gap: 50px;flex-wrap: wrap;padding: 10px 20px 20px;}
+    .empty-box {flex: 1;padding-top: 30px;color: #ccc;font-size: 14px;text-align: center;}
+    .empty-box img {width: 120px;padding-bottom: 16px;}
+    .coupon-container .coupon-content .coupon-list .coupon-item {position: relative;display: flex;height: 120px;overflow: hidden;color: #fff;font-size: 12px;}
+    .coupon-container .coupon-content .coupon-list .coupon-item .coupon-time {display: flex;flex-direction: column;justify-content: space-between;width: 260px;height: 120px;padding: 20px 55px 20px 20px;box-sizing: border-box;margin-right: -10px;-webkit-mask-image: radial-gradient(circle at right 35px bottom 7px,transparent 7px,red 7.5px),linear-gradient(transparent 25%,red 0,red 75%,transparent 0);-webkit-mask-size: 100%,2px 20px;-webkit-mask-repeat: repeat,repeat-y;-webkit-mask-position: 0 7px,calc(100% - 34px);-webkit-mask-composite: source-out;mask-composite: subtract;}
+    .coupon-container .coupon-content .coupon-list .not-available {background: #ccc;}
+    .coupon-container .coupon-content .coupon-list .can-use {background: #f55;}
+    .coupon-container .coupon-content .coupon-list .coupon-item .coupon-time .coupon-name {font-size: 18px;}
+    .coupon-container .coupon-content .coupon-list .coupon-item .coupon-time .over-hidden {white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
+    .coupon-container .coupon-content .coupon-list .coupon-item .coupon-amount {display: flex;flex-direction: column;justify-content: space-between;width: 110px;height: 120px;box-sizing: border-box;padding: 30px 20px 30px 3px;text-align: center;-webkit-mask-image: radial-gradient(circle at 10px,transparent 7px,red 7.5px);-webkit-mask-position: -10px;-webkit-mask-size: 100% 24px;}
+    .coupon-container .coupon-content .coupon-list .coupon-item .coupon-amount .amount-text {font-size: 20px;}
+
+</style>
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="personalMain">
+            <div class="personal">
+                {include file="common/member_left"}
+                <div   class="coupon-container main-container">
+                    <div  class="operat-box">
+                        <div  class="main-container-title">我的优惠券</div>
+                    </div>
+                    <div  class="coupon-content">
+                        <div >
+                            <div  class="el-tabs el-tabs--top">
+                                <div class="el-tabs__header is-top">
+                                    <div class="el-tabs__nav-wrap is-top">
+                                        <div class="el-tabs__nav-scroll">
+                                            <div role="tablist" class="el-tabs__nav is-top"
+                                                 style="transform: translateX(0px);">
+                                                <div class="el-tabs__active-bar is-top"
+                                                     style="width: 84px; transform: translateX(110px);"></div>
+                                                <div id="tab-1" aria-controls="pane-1" role="tab" tabindex="-1"
+                                                     class="el-tabs__item is-top">可用优惠券
+                                                </div>
+                                                <div id="tab-2" aria-controls="pane-2" role="tab" tabindex="0"
+                                                     class="el-tabs__item is-top is-active" aria-selected="true">不可用优惠券
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="el-tabs__content">
+                                    <div  role="tabpanel" id="pane-1" aria-labelledby="tab-1"
+                                         class="el-tab-pane" aria-hidden="true" style="display: none;"></div>
+                                    <div  role="tabpanel" id="pane-2" aria-labelledby="tab-2"
+                                         class="el-tab-pane" style=""></div>
+                                </div>
+                            </div>
+                            <div  class="coupon-list">
+                                <div  class="coupon-item"><!---->
+                                    <div  class="coupon-time not-available">
+                                        <div  class="coupon-name">10元无门槛优惠券</div>
+                                        <div  class="over-hidden">
+                                            适用范围：
+                                            <span >全部范围</span></div>
+                                        <div >
+                                            时间：
+                                            2022-05-20
+                                            -
+                                            2022-08-18
+                                        </div>
+                                    </div>
+                                    <div  class="coupon-amount not-available">
+                                        <div  class="amount-text">
+                                            ￥
+                                            10.00
+                                        </div>
+                                        <div >
+                                            满
+                                            ￥10.00
+                                            可用
+                                        </div>
+                                    </div>
+                                </div>
+                                <div  class="coupon-item"><!---->
+                                    <div  class="coupon-time not-available">
+                                        <div  class="coupon-name">299-15新人券</div>
+                                        <div  class="over-hidden">
+                                            适用范围：
+                                            <span  class="el-tooltip"
+                                                  aria-describedby="el-tooltip-9659" tabindex="0">BG欧洲包税普货（限重5kg）,YDH欧洲普货（限重5kg）,YDH欧洲内置电弱磁（限重5kg）,BG欧洲包税特货（限重5kg）,BG英国包税普货（限重5kg）,BG英国包税特货（限重5kg）,BG欧洲包税食品专线(限重5kg),英国年货特价线(限重5kg),BG日本普货专线（限重5kg）,BG日本特货专线（限重5kg）,BG包税美国普货专线,BG包税美国内置电弱磁专线,BG美国普货专线-货到付款,BG比利时普货专线,YDH中欧经济（限重2kg）,BG特货瑞士专线,YDH内置电弱磁法国专线（限重5kg）,BG包税法国普货专线（限重5kg）,BG包税法国特货专线（限重5kg）,BG加拿大普货专线（限重5kg）,BG加拿大特货专线（限重5kg）,BG澳大利亚普货专线,BG澳大利亚特货专线</span>
+                                        </div>
+                                        <div >
+                                            时间：
+                                            2022-05-20
+                                            -
+                                            2022-08-18
+                                        </div>
+                                    </div>
+                                    <div  class="coupon-amount not-available">
+                                        <div  class="amount-text">
+                                            ￥
+                                            15.00
+                                        </div>
+                                        <div >
+                                            满
+                                            ￥299.00
+                                            可用
+                                        </div>
+                                    </div>
+                                </div>
+                                <div  class="coupon-item"><!---->
+                                    <div  class="coupon-time not-available">
+                                        <div  class="coupon-name">499-30新人券</div>
+                                        <div  class="over-hidden">
+                                            适用范围：
+                                            <span >全部范围</span></div>
+                                        <div >
+                                            时间：
+                                            2022-05-20
+                                            -
+                                            2022-08-18
+                                        </div>
+                                    </div>
+                                    <div  class="coupon-amount not-available">
+                                        <div  class="amount-text">
+                                            ￥
+                                            30.00
+                                        </div>
+                                        <div >
+                                            满
+                                            ￥499.00
+                                            可用
+                                        </div>
+                                    </div>
+                                </div>
+                                <div  class="empty-box" style="display: none;">
+                                    <div ><img  src="/images/empty2.png"
+                                                                 class="img-empty"></div>
+                                    <div >暂无优惠券</div>
+                                </div>
+                                <div class="el-loading-mask" style="display: none;">
+                                    <div class="el-loading-spinner">
+                                        <svg viewBox="25 25 50 50" class="circular">
+                                            <circle cx="50" cy="50" r="20" fill="none" class="path"></circle>
+                                        </svg><!----></div>
+                                </div>
+                            </div>
+                        </div> <!----></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{include file="common/gather_footer"}

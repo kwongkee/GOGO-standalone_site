@@ -1,0 +1,1020 @@
+{include file="common/header"}
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style>
+    li{list-style: none;}
+    p{margin-bottom:0;}
+    #pageMain .bannerBG {
+        height: 400px;
+        width: 100%;
+        background: url("/img/customers/bd_banner_bg.png") #F4F6FB no-repeat top center/1920px 400px;
+        padding: 68px 0 0 0
+    }
+
+    #pageMain .bannerBG .banner_content {
+        width: 1200px;
+        margin: 0 auto
+    }
+
+    #pageMain .bannerBG .banner_content .residue_degree {
+        margin-top: -50px;
+        float: right;
+        font-size: 14px;
+        font-weight: bold;
+        color: #FFFFFF;
+        justify-content: center;
+        display: flex;
+        align-items: center;
+        height: 28px;
+        background: #0248C9;
+        border-radius: 14px;
+        width: max-content;
+        font-weight: 400;
+        cursor: pointer;
+        padding: 0 20px
+    }
+
+    #pageMain .bannerBG .banner_content .residue_degree .threeTime {
+        font-size: 16px;
+        color: #FFD74C
+    }
+
+    #pageMain .bannerBG .banner_content .residue_degree .look_detail_more {
+        font-family: A-OTF Jun Pro 34;
+        font-weight: bold;
+        color: #4AFFD2;
+        cursor: pointer;
+        margin-left: 20px
+    }
+
+    #pageMain .bannerBG .banner_content .residue_degree .getRemainNum {
+        display: none;
+        font-family: A-OTF Jun Pro 34;
+        font-weight: bold;
+        color: #4AFFD2;
+        margin-left: 20px
+    }
+
+    #pageMain .bannerBG .banner_content .banner_title {
+        font-size: 40px;
+        font-weight: bold;
+        color: #FFFFFF;
+        background: linear-gradient(180deg, #D3E4FF 0%, #fff 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        line-height: 40px;
+        text-align: center
+    }
+
+    #pageMain .bannerBG .banner_content .banner_subtitle {
+        font-size: 16px;
+        color: #E2EDFF;
+        line-height: 16px;
+        margin-top: 23px;
+        text-align: center
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer {
+        width: 1200px;
+        height: 310px;
+        border-radius: 6px;
+        margin-top: 45px;
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+        position: relative;
+        background: url("/img/customers/bd_sear_bg.png") no-repeat center/100%
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .linkBtnBox {
+        width: 820px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 40px
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .linkBtnBox ul {
+        display: flex;
+        align-items: center
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .linkBtnBox ul.right li {
+        margin-right: 0;
+        margin-left: 20px
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .linkBtnBox ul li {
+        width: 120px;
+        height: 40px;
+        background: #1a64e0;
+        border-radius: 4px;
+        margin-right: 20px
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .linkBtnBox ul li:hover {
+        background: linear-gradient(-17deg, #FF8C88, #FFCBAC)
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .linkBtnBox ul li a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        font-size: 16px;
+        font-family: A-OTF Jun Pro 34;
+        color: #fff
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .linkBtnBox ul li a:hover {
+        color: #522214 !important
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .linkBtnBox ul li.active {
+        background: linear-gradient(-17deg, #FF8C88, #FFCBAC);
+        position: relative;
+        box-shadow: 0px 4px 15px 0px rgba(16,94,190,0.5)
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .linkBtnBox ul li.active a {
+        color: #522214
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .linkBtnBox ul li.active::after {
+        content: '';
+        width: 0;
+        height: 0;
+        border: 6px solid;
+        border-color: #FF8C88 transparent transparent transparent;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -12px;
+        margin: auto;
+        z-index: 1888
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box {
+        display: flex;
+        margin-top: 24px;
+        position: relative
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .banner_serarch_content {
+        width: 720px;
+        height: 50px;
+        background: #FFFFFF;
+        border-radius: 6px 0px 0px 6px;
+        display: flex;
+        align-items: center
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .banner_serarch_content .banner_search_icon {
+        width: 16px;
+        height: 16px;
+        background: url("/img/customers/icon_se.png") no-repeat;
+        background-size: 100% 100%;
+        margin-left: 20px
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .banner_serarch_content .banner_search_input {
+        flex: 1;
+        margin-left: 10px;
+        border: none;
+        font-size: 14px
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .banner_serarch_content input::-webkit-input-placeholder {
+        color: #909399;
+        font-size: 14px
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .banner_serarch_content input::-moz-placeholder {
+        color: #909399;
+        font-size: 14px;
+        opacity: 1
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .banner_serarch_content .claer_icon_box {
+        width: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .banner_serarch_content .claer_icon_box .icon-guanbi1 {
+        display: none;
+        width: 20px;
+        user-select: none;
+        color: #909399;
+        cursor: pointer
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .banner_search_button {
+        width: 100px;
+        height: 50px;
+        background: linear-gradient(0deg, #FF7E71, #FF7E71);
+        border-radius: 0px 6px 6px 0px;
+        text-align: center;
+        line-height: 50px;
+        font-size: 16px;
+        color: #FFFFFF;
+        cursor: pointer
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .banner_search_button:hover {
+        background: linear-gradient(0deg, #FF6859, #FF7E71)
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .banner_search_button:active {
+        background: linear-gradient(0deg, #FF6859, #FF5948)
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .history_drop {
+        position: absolute;
+        width: 660px;
+        display: none;
+        background: #FFFFFF;
+        border: 1px solid #DEDFE4;
+        box-shadow: 0px 2px 20px 0px rgba(46,46,46,0.15);
+        border-radius: 6px;
+        padding: 20px;
+        top: 56px;
+        left: 0px;
+        z-index: 1
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .history_drop .drop_item {
+        width: 100%
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .history_drop .drop_item .item_title {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 6px
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .history_drop .drop_item .item_title .title_label {
+        font-size: 14px;
+        color: #999999
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .history_drop .drop_item .item_title .delete_box {
+        display: flex;
+        align-items: center;
+        cursor: pointer
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .history_drop .drop_item .item_title .delete_box .delete_icon {
+        width: 14px;
+        height: 14px;
+        background: url("/public/images/searchWorld/cq_icon_del.png") no-repeat;
+        background-size: 100% 100%
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .history_drop .drop_item .item_title .delete_box .delete_label {
+        font-size: 13px;
+        color: #999999;
+        margin: 2px 0 0 7px
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .history_drop .drop_item .item_title .delete_box:hover .delete_icon {
+        background: url("/public/images/searchWorld/cq_icon_del02.png") no-repeat;
+        background-size: 100% 100%
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .history_drop .drop_item .item_title .delete_box:hover .delete_label {
+        color: #4D64CC
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .history_drop .drop_item .search_box {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .history_drop .drop_item .search_box .search_item_box {
+        display: flex;
+        align-items: center;
+        margin: 10px 10px 0 0
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .history_drop .drop_item .search_box .search_item_box .search_item {
+        display: block;
+        height: 28px;
+        line-height: 26px;
+        max-width: 590px;
+        padding: 0 10px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        border-radius: 2px;
+        font-size: 13px;
+        color: #555555
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .history_drop .drop_item .search_box .search_item_box .search_item:hover {
+        color: #4D64CC !important
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .history_drop .drop_item .search_box .search_item_box .delete_icon {
+        display: block;
+        width: 12px;
+        height: 12px;
+        background: url("/public/images/delete_single.png") no-repeat;
+        background-size: 100% 100%;
+        cursor: pointer
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .history_drop .drop_item .search_box .search_item_box .delete_icon.hide {
+        display: none
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .history_drop .recentSearch {
+        margin-bottom: 26px
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .history_drop .login_tips_box {
+        width: 445px;
+        height: 49px;
+        background: url("/public/images/searchWorld/drop_login_tips.png") no-repeat;
+        background-size: 100% 100%;
+        margin: 20px auto 0;
+        overflow: hidden;
+        display: none
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .history_drop .login_tips_box .drop_login_botton {
+        font-size: 14px;
+        color: #6283FB;
+        margin: 20px 0 0 350px;
+        cursor: pointer
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .history_drop .login_tips_empty_box {
+        width: 100%;
+        display: none
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .history_drop .login_tips_empty_box .login_tips_empty_img {
+        width: 285px;
+        height: 83px;
+        background: url("/public/images/mobile/login_tips_article.png") no-repeat;
+        background-size: 100% 100%;
+        margin: 30px auto
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .history_drop .login_tips_empty_box .drop_login_botton {
+        width: 128px;
+        height: 39px;
+        background: linear-gradient(-90deg, rgba(77,106,227,0.91) 0%, rgba(108,134,241,0.91) 100%);
+        border-radius: 6px;
+        text-align: center;
+        line-height: 39px;
+        font-size: 14px;
+        color: #FFFFFF;
+        cursor: pointer;
+        margin: 0 auto
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .banner_tips {
+        position: relative
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .banner_tips .banner_tips_content {
+        width: 170px;
+        height: 50px;
+        background: url("../images/emailVerify/wx_tips.png") no-repeat;
+        background-size: 100% 100%;
+        margin-left: 20px;
+        cursor: pointer
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .banner_tips .kfwx_box {
+        position: absolute;
+        top: -15px;
+        left: 210px;
+        width: 170px;
+        height: 208px;
+        background: #E8F6FF;
+        box-shadow: 0px 2px 10px 0px rgba(48,95,175,0.45);
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .banner_tips .kfwx_box.hide {
+        display: none
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .banner_tips .kfwx_box .kfwx_box_title {
+        font-size: 16px;
+        color: #266edb;
+        font-weight: bold;
+        letter-spacing: 2px
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .banner_tips .kfwx_box .kfwx_img {
+        display: block;
+        width: 152px;
+        height: 152px;
+        margin-top: 10px
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .hot {
+        width: 820px;
+        margin-top: 26px;
+        display: flex;
+        align-items: center
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .hot .hotItem {
+        width: calc((100% - 20px) / 3);
+        margin-right: 10px;
+        display: flex;
+        align-items: center;
+        background: rgba(33,107,231,0.6);
+        padding: 11px 15px;
+        border-radius: 8px;
+        color: #E2F1FE
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .hot .hotItem:hover {
+        cursor: pointer;
+        background: #216be7
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .hot .hotItem::last-child {
+        margin-right: 0
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .hot .hotItem .info {
+        width: calc(100% - 22px);
+        margin-right: 10px
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .hot .hotItem .info a {
+        display: inline-block;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #fff;
+        font-size: 14px;
+        font-weight: bold
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .hot .hotItem .info a:hover {
+        color: #fff !important
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .hot .hotItem .info .orgStatics {
+        width: 100%
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .hot .hotItem .info .orgStatics p {
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: #fff;
+        font-size: 12px
+    }
+
+    #pageMain .bannerBG .banner_content .searchContainer .hot .hotItem .icon {
+        font-size: 18px;
+        color: #4AFFD2
+    }
+
+    #pageMain .advantage_box {
+        width: 100%;
+        padding: 160px 0 0px;
+        height: 715px;
+        background: url("/img/customers/bd_web_bg.png") no-repeat center/1920px 100%
+    }
+    #pageMain .advantage_box div{
+        line-height: 1.5;
+    }
+
+    #pageMain .advantage_box .advantage_title {
+        font-size: 28px;
+        color: #303133;
+        width: 100%;
+        text-align: center
+    }
+
+    #pageMain .advantage_box .advantage_list {
+        width: 1200px;
+        margin: 70px auto 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between
+    }
+
+    #pageMain .advantage_box .advantage_list .advantage_item {
+        width: 540px;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 70px
+    }
+
+    #pageMain .advantage_box .advantage_list .advantage_item .advantage_img {
+        display: block;
+        width: 150px;
+        height: 156px
+    }
+
+    #pageMain .advantage_box .advantage_list .advantage_item .advantage_item_info {
+        width: 336px
+    }
+
+    #pageMain .advantage_box .advantage_list .advantage_item .advantage_item_info .item_index {
+        font-size: 30px;
+        font-family: DIN
+    }
+
+    #pageMain .advantage_box .advantage_list .advantage_item .advantage_item_info .item_title {
+        font-size: 20px;
+        font-family: A-OTF Jun Pro 34;
+        color: #303133
+    }
+
+    #pageMain .advantage_box .advantage_list .advantage_item .advantage_item_info .item_line {
+        width: 336px;
+        height: 1px;
+        background: #E2E2E2
+    }
+
+    #pageMain .advantage_box .advantage_list .advantage_item .advantage_item_info .item_explain {
+        font-size: 14px;
+        color: #909399;
+        line-height: 19px;
+        margin-top: 16px
+    }
+
+    #pageMain .advantage_box .advantage_list .advantage_item:nth-of-type(1) .advantage_item_info .item_index {
+        color: #5372F6
+    }
+
+    #pageMain .advantage_box .advantage_list .advantage_item:nth-of-type(2) .advantage_item_info .item_index {
+        color: #FF786B
+    }
+
+    #pageMain .advantage_box .advantage_list .advantage_item:nth-of-type(3) .advantage_item_info .item_index {
+        color: #FCA75D
+    }
+
+    #pageMain .advantage_box .advantage_list .advantage_item:nth-of-type(4) .advantage_item_info .item_index {
+        color: #5394F7
+    }
+
+    #pageMain .zl_box {
+        width: 100%;
+        background: url("/img/customers/mail_bg02.png") no-repeat;
+        background-size: 100% 100%;
+        padding: 80px 0 0
+    }
+
+    #pageMain .zl_box .zl_title {
+        width: 100%;
+        text-align: center;
+        font-size: 28px;
+        color: #303133
+    }
+
+    #pageMain .zl_box .zl_list {
+        width: 1200px;
+        margin: 70px auto 0;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap
+    }
+
+    #pageMain .zl_box .zl_list .zl_item {
+        width: 380px;
+        height: 314px;
+        background: #FFFFFF;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-right: 30px;
+        margin-bottom: 30px
+    }
+
+    #pageMain .zl_box .zl_list .zl_item:nth-of-type(3n) {
+        margin-right: 0
+    }
+
+    #pageMain .zl_box .zl_list .zl_item .zl_img {
+        display: block;
+        width: 92px;
+        height: 92px;
+        margin-top: 44px
+    }
+
+    #pageMain .zl_box .zl_list .zl_item .zl_title {
+        font-size: 18px;
+        color: #303133;
+        margin-top: 30px;
+        line-height: 18px
+    }
+
+    #pageMain .zl_box .zl_list .zl_item .zl_explain {
+        width: 252px;
+        text-align: center;
+        font-size: 14px;
+        color: #909399;
+        line-height: 30px;
+        margin-top: 24px
+    }
+
+    #pageMain .question_box {
+        width: 100%;
+        padding: 60px 0;
+        background: #fff
+    }
+
+    #pageMain .question_box .question_title {
+        width: 100%;
+        text-align: center;
+        font-size: 28px;
+        color: #303133
+    }
+
+    #pageMain .question_box .question_list {
+        width: 1200px;
+        margin: 60px auto 0;
+        display: flex;
+        flex-wrap: wrap
+    }
+
+    #pageMain .question_box .question_list .question_item {
+        width: 599px;
+        height: 162px;
+        border-bottom: 1px dashed #DFE6EC
+    }
+
+    #pageMain .question_box .question_list .question_item .question_label_box {
+        display: flex;
+        align-items: center;
+        margin-top: 0px
+    }
+
+    #pageMain .question_box .question_list .question_item .question_label_box .question_icon {
+        width: 28px;
+        height: 28px;
+        background: url("../images/icon_q.png") no-repeat;
+        background-size: 100% 100%
+    }
+
+    #pageMain .question_box .question_list .question_item .question_label_box .question_label {
+        font-size: 16px;
+        color: #303133;
+        margin-left: 20px
+    }
+
+    #pageMain .question_box .question_list .question_item .answer_label_box {
+        display: flex;
+        align-items: flex-start;
+        margin-top: 15px
+    }
+
+    #pageMain .question_box .question_list .question_item .answer_label_box .answer_icon {
+        width: 28px;
+        height: 28px;
+        background: url("../images/icon_a.png") no-repeat;
+        background-size: 100% 100%
+    }
+
+    #pageMain .question_box .question_list .question_item .answer_label_box .question_label {
+        width: 517px;
+        font-size: 14px;
+        color: #909399;
+        line-height: 24px;
+        margin-left: 20px
+    }
+
+    #pageMain .question_box .question_list .question_item:nth-of-type(odd) {
+        border-right: 1px dashed #DFE6EC
+    }
+
+    #pageMain .question_box .question_list .question_item:nth-of-type(even) {
+        padding-left: 30px
+    }
+
+    #pageMain .question_box .question_list .question_item:nth-of-type(3) {
+        border-bottom: none;
+        height: 143px
+    }
+
+    #pageMain .question_box .question_list .question_item:nth-of-type(3) .question_label_box {
+        margin-top: 30px
+    }
+
+    #pageMain .question_box .question_list .question_item:nth-of-type(4) {
+        border-bottom: none;
+        height: 143px
+    }
+
+    #pageMain .question_box .question_list .question_item:nth-of-type(4) .question_label_box {
+        margin-top: 30px
+    }
+
+    /**手机版**/
+    @media (max-width: 992px){
+        #pageMain .bannerBG{height:585px;background: url(/img/customers/bd_banner_bg.png) #F4F6FB no-repeat top center/1920px 585px;padding-top:80px;}
+        #pageMain .bannerBG .banner_content{width:100%;}
+        #pageMain .bannerBG .banner_content .banner_title{font-size:30px;margin-top:40px;}
+        #pageMain .bannerBG .banner_content .banner_subtitle{font-size: 20px;margin-top:20px;}
+        #pageMain .bannerBG .banner_content .searchContainer{width: 100%;height:320px;margin-top:30px;}
+        #pageMain .bannerBG .banner_content .searchContainer .linkBtnBox{width: 100%;margin-top:0;}
+        #pageMain .bannerBG .banner_content .searchContainer .linkBtnBox ul{flex-wrap: wrap;padding-left: 0;justify-content: center;}
+        #pageMain .bannerBG .banner_content .searchContainer .linkBtnBox ul li{width: 100px;display: inline-block;margin-top:10px;}
+        #pageMain .bannerBG .banner_content .searchContainer .linkBtnBox ul li a{font-size:14px;}
+        #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .banner_serarch_content{width: 100%;}
+        #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .banner_serarch_content .banner_search_icon{margin-left:10px;}
+        #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .banner_serarch_content .banner_search_input{font-size:12px;}
+        #pageMain .bannerBG .banner_content .searchContainer .banner_search_box{width: 90%;margin-top:30px;}
+        #pageMain .bannerBG .banner_content .searchContainer .banner_search_box .banner_search_button{font-size:15px;}
+        #pageMain .bannerBG .banner_content .searchContainer .hot{width: 100%;margin-top:35px;padding-left: 10px;}
+        #pageMain .bannerBG .banner_content .searchContainer .hot .hotItem{width:100%;}
+        #pageMain .advantage_box{padding-top:40px;}
+        #pageMain .advantage_box .advantage_list{width: 100%;margin-top:0px;padding: 0 20px;box-sizing: border-box;}
+        #pageMain .advantage_box .advantage_list .advantage_item {width: 100%;margin-top:30px;margin-bottom:0;}
+        #pageMain .advantage_box .advantage_list .advantage_item .advantage_img {width: 100px;height: 100px;}
+        #pageMain .advantage_box .advantage_list .advantage_item .advantage_item_info {width: 70%;}
+        #pageMain .advantage_box .advantage_list .advantage_item .advantage_item_info .item_index {font-size: 20px;}
+        #pageMain .advantage_box .advantage_list .advantage_item .advantage_item_info .item_title {font-size: 18px;}
+        #pageMain .advantage_box .advantage_list .advantage_item .advantage_item_info .item_line {width: 100%;}
+        #pageMain .advantage_box .advantage_list .advantage_item .advantage_item_info .item_explain {margin-top: 10px;}
+        #pageMain .zl_box{padding: 40px 20px;}
+        #pageMain .zl_box .zl_list {width: 100%;margin: 30px auto 0;display: block;}
+        #pageMain .zl_box .zl_list .zl_item {width: 100%;height: fit-content;padding-bottom:30px;margin-right: 0;margin-bottom: 20px;}
+        #pageMain .zl_box .zl_list .zl_item .zl_img{margin-top:30px;}
+        #pageMain .zl_box .zl_list .zl_item .zl_title{margin-top:20px;}
+        #pageMain .zl_box .zl_list .zl_item .zl_explain{margin-top:20px;}
+    }
+</style>
+<div id="main">
+    <div id="pageMain">
+        <div class="bannerBG">
+            <div class="banner_content">
+                <h1 class="banner_title">做背调</h1>
+                <div class="banner_subtitle">查阅客户背景资料及联系方式</div>
+                <div class="searchContainer">
+                    <div class="linkBtnBox">
+                        <ul>
+                            <li class="active">
+                                <a href="/?s=index/background_email">邮箱背调</a>
+                            </li>
+                            <li>
+                                <a href="/?s=index/background_site">网站背调</a>
+                            </li>
+                            <li>
+                                <a href="/?s=index/background_company">企业名称背调</a>
+                            </li>
+<!--                        </ul>-->
+<!--                        <ul class="right">-->
+                            <li>
+                                <a href="/?s=index/background_searchworld" target="_blank">查注册信息</a>
+                            </li>
+                            <li>
+                                <a href="/?s=index/background_overseasreport" target="_blank">信用报告</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="banner_search_box">
+                        <div class="banner_serarch_content">
+                            <div class="banner_search_icon"></div>
+                            <input type="text" class="banner_search_input" id="email_input" placeholder="输入邮箱地址，挖掘相关企业信息、联系人信息、网站信息" autocomplete="off">
+                            <div class="claer_icon_box">
+                                <i class="gald_iconfont icon-guanbi1" id="clear_top_search_input"></i>
+                            </div>
+                        </div>
+                        <div class="banner_search_button">立即查询</div>
+                        <!--搜索历史-->
+                        <div class="history_drop" id="history_drop">
+                            <div class="drop_item recentSearch">
+                                <div class="item_title">
+                                    <div class="title_label">浏览历史</div>
+                                    <div class="delete_box" id="recentSearchDelete">
+                                        <div class="delete_icon"></div>
+                                        <div class="delete_label">清除</div>
+                                    </div>
+                                </div>
+                                <div class="search_box" id="search_box"></div>
+                            </div>
+
+                            <div class="login_tips_empty_box">
+                                <div class="login_tips_empty_img"></div>
+                                <div class="drop_login_botton">马上登录</div>
+                            </div>
+                        </div>
+                        <!--搜索历史-->
+                    </div>
+                    <ul class="hot">
+                        <li class="hotItem" path="/background/email/eric@radpowerbikes.com.html?ky=2242" style="display: none;">
+                            <div class="info">
+                                <a href="/background/email/eric@radpowerbikes.com.html?ky=2242" target="_blank">eric@radpowerbikes.com</a>
+                                <div class="orgStatics">
+                                    <p>美国丨有效</p>
+                                    <p>联系人：Tim Cook</p>
+                                    <p>关联企业：Apple Inc.</p>
+                                </div>
+                            </div>
+                            <div class="icon">
+                                >
+                            </div>
+                        </li>
+                        <li class="hotItem" onclick="window.location.href='https://www.gogo198.net/img/customers/jenn@holbrookmultimedia.com邮箱验证结果.pdf';">
+                            <div class="info">
+                                <a href="https://www.gogo198.net/img/customers/jenn@holbrookmultimedia.com邮箱验证结果.pdf" target="_blank">jenn@holbrookmultimedia.com</a>
+                                <div class="orgStatics">
+                                    <p>美国丨有效</p>
+                                    <p>联系人：Jennifer Holbrook</p>
+                                    <p>关联企业：Holbrook Multi Media Inc</p>
+                                </div>
+                            </div>
+                            <div class="icon">
+                                >
+                            </div>
+                        </li>
+                        <li class="hotItem" path="/background/email/mlaroche@audencia.com.html?ky=2098" style="display: none;">
+                            <div class="info">
+                                <a href="/background/email/mlaroche@audencia.com.html?ky=2098" target="_blank">mlaroche@audencia.com</a>
+                                <div class="orgStatics">
+                                    <p>美国丨有效</p>
+                                    <p>联系人：Marie Laroche</p>
+                                    <p>关联企业：Linkedin</p>
+                                </div>
+                            </div>
+                            <div class="icon">
+                                >
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="advantage_box">
+            <div class="advantage_title">不仅仅是邮箱验证</div>
+            <div class="advantage_list">
+                <div class="advantage_item">
+                    <img src="https://cdn.www.x315.cn/public/images/emailVerify/mail_icon_01.png" alt="" class="advantage_img">
+                    <div class="advantage_item_info">
+                        <div class="item_index">01.</div>
+                        <div class="item_title">邮箱信息</div>
+                        <div class="item_line"></div>
+                        <div class="item_explain">邮箱是否有效、邮箱类型、邮箱相关域名信息、同后缀邮箱</div>
+                    </div>
+                </div>
+                <div class="advantage_item">
+                    <div class="advantage_item_info">
+                        <div class="item_index">02.</div>
+                        <div class="item_title">联系人信息</div>
+                        <div class="item_line"></div>
+                        <div class="item_explain">邮箱联系人姓名、国别、职位、电话、社媒链接、所属企业信息</div>
+                    </div>
+                    <img src="https://cdn.www.x315.cn/public/images/emailVerify/mail_icon_02.png" alt="" class="advantage_img">
+                </div>
+                <div class="advantage_item">
+                    <img src="https://cdn.www.x315.cn/public/images/emailVerify/mail_icon_03.png" alt="" class="advantage_img">
+                    <div class="advantage_item_info">
+                        <div class="item_index">03.</div>
+                        <div class="item_title">邮箱关联企业</div>
+                        <div class="item_line"></div>
+                        <div class="item_explain">企业名称、国别、行业、电话、企业网址、企业地址、联系人、邮箱等</div>
+                    </div>
+                </div>
+                <div class="advantage_item">
+                    <div class="advantage_item_info">
+                        <div class="item_index">04.</div>
+                        <div class="item_title">邮箱关联网站</div>
+                        <div class="item_line"></div>
+                        <div class="item_explain">存在该邮箱的网址、邮箱注册过的域名、域名注册人、注册单位、注册国家、联系邮箱、联系电话、网址高频词</div>
+                    </div>
+                    <img src="https://cdn.www.x315.cn/public/images/emailVerify/mail_icon_04.png" alt="" class="advantage_img">
+                </div>
+            </div>
+        </div>
+        <div class="zl_box">
+            <div class="zl_title">全方位助力外贸人开发客户</div>
+            <div class="zl_list">
+
+                <div class="zl_item">
+                    <img src="/img/customers/bd_mail_icon01.png" alt="" class="zl_img">
+                    <div class="zl_title">询盘背调</div>
+                    <div class="zl_explain">获得领英、阿里等询盘后，根据客户留的邮箱判断询盘真假，了解对方规模实力</div>
+                </div>
+
+                <div class="zl_item">
+                    <img src="/img/customers/bd_mail_icon02.png" alt="" class="zl_img">
+                    <div class="zl_title">搜索/采集的邮箱背调</div>
+                    <div class="zl_explain">谷歌搜索/批量采集的目标客户邮箱，联系前验证有效性提高邮件到达率，对回信的邮箱做进一步背调</div>
+                </div>
+
+                <div class="zl_item">
+                    <img src="/img/customers/bd_mail_icon03.png" alt="" class="zl_img">
+                    <div class="zl_title">公共邮箱背调</div>
+                    <div class="zl_explain">通过info、sales 等公共邮箱，查找更多关联邮箱和联系人信息</div>
+                </div>
+
+                <div class="zl_item">
+                    <img src="/img/customers/bd_mail_icon04.png" alt="" class="zl_img">
+                    <div class="zl_title">失联客户背调</div>
+                    <div class="zl_explain">邮件不回复，联系不上客户，需要查更多联系方式或其他联系人</div>
+                </div>
+
+                <div class="zl_item">
+                    <img src="/img/customers/bd_mail_icon05.png" alt="" class="zl_img">
+                    <div class="zl_title">促单背调</div>
+                    <div class="zl_explain">通过邮箱挖掘社媒地址，了解对方的专业程度、个人喜好等，有针对性促单</div>
+                </div>
+
+                <div class="zl_item">
+                    <img src="/img/customers/bd_mail_icon06.png" alt="" class="zl_img">
+                    <div class="zl_title">意向客户背调</div>
+                    <div class="zl_explain">挖掘邮箱关联的企业网站，了解对方企业的发展历程、目标客户、合作伙伴</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{include file="common/footer"}
+<script type="text/javascript">
+    layui.use(['layer','form','laydate','upload'],function() {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , laydate = layui.laydate
+            , upload = layui.upload;
+
+        $('.banner_search_button').click(function(){
+            $.ajax({
+                url:"/?s=index/background_email",
+                method:'post',
+                data:{},
+                dataType:'JSON',
+                success:function(res){
+                    if(res.code == 0)
+                    {
+                        if(res.jump_gld==0) {
+                            layer.confirm('是否同意授权跳转到第三方网站[格兰德]？', {
+                                btn: ['同意', '拒绝']
+                            }, function () {
+                                $.ajax({
+                                    url: "/?s=index/goto_gld",
+                                    method: 'post',
+                                    data: {'is_jump': 1, 'firsttimes': 1, 'type': 8},
+                                    dataType: 'JSON',
+                                    success: function (res) {
+                                        if (res.code == 0) {
+                                            window.location.href = res.url;
+                                        }
+                                    }
+                                });
+                            }, function () {
+
+                            });
+                        }else{
+                        $.ajax({
+                            url: "/?s=index/goto_gld",
+                            method: 'post',
+                            data: {'is_jump': 1,'firsttimes':0,'type':8},
+                            dataType: 'JSON',
+                            success: function (res) {
+                                if(res.code==0){
+                                    window.location.href=res.url;
+                                }
+                            }
+                        });
+                        }
+                    }else if(res.code == -1){
+                        layer.msg(res.msg,{time:2000}, function () {
+                            layer.open({
+                                type: 2,
+                                title: '请先登录',
+                                shadeClose: true,
+                                shade: 0.3,
+                                area: ['100%', '100%'],
+                                content: "/?s=index/customer_login&open=3",
+                            });
+                        });
+                    }else if(res.code==-2){
+
+                    }
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+        });
+    });
+</script>

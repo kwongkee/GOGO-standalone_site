@@ -1,0 +1,121 @@
+<!-- 页脚 -->
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>关于我们</h3>
+                <p>我们致力于为用户提供最优质的独立站平台服务，让每个人都能轻松拥有和管理自己的网站。</p>
+            </div>
+            <div class="footer-column">
+                <h3>快速链接</h3>
+                <ul class="footer-links">
+                    <li><a href="#intro"><i class="fas fa-chevron-right"></i>平台简介</a></li>
+                    <li><a href="#features"><i class="fas fa-chevron-right"></i>功能特性</a></li>
+                    <li><a href="#management"><i class="fas fa-chevron-right"></i>账户管理</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i>使用教程</a></li>
+                    <li><a href="#"><i class="fas fa-chevron-right"></i>常见问题</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>联系我们</h3>
+                <ul class="footer-links">
+                    <li><a href="mailto:support@website.gogo198.net"><i class="fas fa-envelope"></i>support@website.gogo198.net</a></li>
+                    <li><a href="tel:+12345678900"><i class="fas fa-phone"></i>+1 234 567 8900</a></li>
+                    <li><a href="#"><i class="fas fa-map-marker-alt"></i>北京市海淀区中关村大街1号</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 website.gogo198.net 独立站平台. 保留所有权利.</p>
+        </div>
+    </div>
+</footer>
+
+
+<script>
+    $(document).ready(function() {
+        // 移动菜单切换
+        $('.mobile-menu-btn').click(function() {
+            $('.nav-links').toggleClass('active');
+
+            if ($('.nav-links').hasClass('active')) {
+                $(this).html('<i class="fas fa-times"></i>');
+            } else {
+                $(this).html('<i class="fas fa-bars"></i>');
+                // 关闭所有子菜单
+                $('.nav-links .submenu').removeClass('active').slideUp();
+            }
+        });
+
+        // 移动端菜单项点击事件 - 处理有子菜单的项
+        $(document).on('click', '.already_login .sublink', function(e) {
+            e.preventDefault();
+            var $submenu = $(this).siblings('.submenu');
+            $('.submenu.active').toggleClass('active').css('display','none');
+
+            if ($submenu.length) {
+                $submenu.slideToggle().toggleClass('active');
+                $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
+            } else {
+                // 如果没有子菜单，直接跳转
+                window.location.href = $(this).attr('href');
+            }
+        });
+
+        // 导航链接点击后关闭移动菜单（无子菜单的项）
+        $('.nav-links > li > a:not(.has-submenu)').click(function() {
+            if ($(window).width() <= 992) {
+                console.log(11);
+                $('.nav-links').removeClass('active');
+                $('.mobile-menu-btn').html('<i class="fas fa-bars"></i>');
+            }
+        });
+
+        // 导航链接点击后关闭移动菜单
+        $('.nav-links a').click(function() {
+            if ($(window).width() <= 992) {
+                if(!$(this).hasClass('has-submenu') && !$(this).hasClass('sublink')){
+                    $('.nav-links').removeClass('active');
+                    $('.mobile-menu-btn').html('<i class="fas fa-bars"></i>');
+                }
+                else if($(this).hasClass('has-submenu')){
+                    var $submenu = $(this).siblings('.submenu');
+                    $('.submenu.active').toggleClass('active').css('display','none');
+                    if ($submenu.length) {
+                        $submenu.slideToggle().toggleClass('active');
+                        $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
+                    } else {
+                        // 如果没有子菜单，直接跳转
+                        window.location.href = $(this).attr('href');
+                    }
+                }
+                else if($(this).hasClass('sublink')){
+                    var $submenu = $(this).siblings('.submenu');
+
+                    if ($submenu.length) {
+                        $submenu.slideToggle().toggleClass('active');
+                        $(this).find('i').toggleClass('fa-chevron-down fa-chevron-up');
+                    } else {
+                        // 如果没有子菜单，直接跳转
+                        window.location.href = $(this).attr('href');
+                    }
+                }
+            }
+        });
+
+        // 立即开始按钮点击事件
+        $('#heroRegisterBtn').click(function() {
+            $('html, body').animate({
+                scrollTop: $('#features').offset().top
+            }, 800);
+        });
+    });
+
+    function getLanguageFromUrl() {
+        const currentUrl = window.location.href;
+        const match = currentUrl.match(/\/\/(?:[^\/]+)\/([a-z]{2})\//);
+        return match ? match[1] : ''; // 默认返回 'en'
+    }
+</script>
+</body>
+</html>

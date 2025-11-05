@@ -1,0 +1,45 @@
+<!--首页轮播图-->
+<style>
+    #banner{border:1px solid {$data['websites']['info']['color']};height:550px;width: 100%;}
+    #banner .swiper-container{width:100%;height:100%;}
+    #banner .swiper-container img{width:100%;height:100%;}
+
+    @media (max-width: 992px){
+        #banner .swiper-container img{background-position: center;background-repeat: no-repeat;background-size: cover;height: 101%;margin: -1px 0px 0px -1px;object-fit: cover;}
+    }
+</style>
+<section id="banner">
+    <!-- 轮播图开始 -->
+    <div class="swiper-container" id="carousel-container">
+        <!--轮播内容-->
+        <div class="swiper-wrapper">
+            {volist name="data['websites']['rotate']" id="vo"}
+            {if $vo['go_other']==0}
+            <!--无跳转-->
+            <div class="swiper-slide"><a href="javascript:void(0);"><img src="{$data['source_link']}{$vo['thumb']}" alt="" style="width:100%;" class="carousel-image"/></a></div>
+            {elseif($vo['go_other']==1 || $vo['go_other']==6 || $vo['go_other']==7)}
+            <!--分享&我要咨询&去找客服-->
+            <div class="swiper-slide"><a href="javascript:common_operation({$vo['go_other']},this);"><img src="{$data['source_link']}{$vo['thumb']}" alt="" style="width:100%;" class="carousel-image"/></a></div>
+            {elseif($vo['go_other']==2)}
+            <!--商品链接-->
+            <div class="swiper-slide"><a href="/?s=merch/goods&id={$vo['other_goods']}" target="_blank"><img src="{$data['source_link']}{$vo['thumb']}" alt="" style="width:100%;" class="carousel-image"/></a></div>
+            {elseif($vo['go_other']==3)}
+            <!--菜单链接-->
+            <div class="swiper-slide"><a href="/?s=index/detail&id={$vo['other_navbar']}" target="_blank"><img src="{{$data['source_link']}}{{$vo['thumb']}}" alt="" style="width:100%;" class="carousel-image"/></a></div>
+            {elseif($vo['go_other']==4)}
+            <!--第三方链接-->
+            <div class="swiper-slide"><a href="{$vo['other_link']}" target="_blank"><img src="{$data['source_link']}{$vo['thumb']}" alt="" style="width:100%;" class="carousel-image"/></a></div>
+            {elseif($vo['go_other']==5)}
+            <!--搜索关键字-->
+            <div class="swiper-slide"><a href="/?s=merch/goods_list&frame_id=3&hotsearchId={$vo['id']}&searchTitle={$vo['other_keywords']}" target="_blank"><img src="{$data['source_link']}{$vo['thumb']}" alt="" style="width:100%;" class="carousel-image"/></a></div>
+            {/if}
+            {/volist}
+        </div>
+        <!--左右切换-->
+        <!--<div class="swiper-button-next sn1"></div>-->
+        <!--<div class="swiper-button-prev sp1"></div>-->
+        <!--分页器-->
+        <div class="swiper-pagination carousel-pagination"></div>
+    </div>
+    <!-- 轮播图结束 -->
+</section>

@@ -1,0 +1,36 @@
+{include file="common/header"}
+<link rel="stylesheet" href="https://www.gogo198.net/layui/font/iconfont.woff?v=256">
+<link rel="stylesheet" href="layui/css/layui.css">
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;background:{$website['color_inner']};}
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+    .content .box_content{background:{$website['color']};color:{$website['color_word']};border:1px solid {$website['color_word']};font-size:25px;text-align:center;padding:30px;width:100%;}
+    .content .box_content img{width:40px;margin-right:5px;}
+    .inquiry_box{display:none;}
+    .navbar_menu{color: {$website['color_word']};font-size: 16px;margin-bottom:10px;}
+    .context,.navbar_menu a{color:{$website['color_word']};}
+    .context{margin-bottom:1cm;}
+    .layui-colla-title{color:{$website['color_word']};background-color:#0e2e68;}
+    .preamble_con,.layui-colla-content{color:{$website['color_word']};font-size:15px;}
+    .layui-colla-content p{margin-bottom:0.3cm;}
+</style>
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="content" >
+            <div class="layui-fluid" style="padding:0;">
+                <div class="layui-row layui-col-space15" style="text-align:center;margin-top:10px;">
+                    <div class="layui-btn layui-btn-normal" style="margin-right:30px;" onclick="go(1)">运单处理&nbsp;→</div>
+                    <div class="layui-btn layui-btn-warining" onclick="go(2)">运单管理&nbsp;→</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{include file="common/footer"}
+<script type="text/javascript" charset="utf-8">
+    function go(typ){
+        window.location.href="/?s=index/express_list&id={$id}&typ="+typ;
+    }
+</script>

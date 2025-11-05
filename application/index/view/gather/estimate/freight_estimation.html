@@ -1,0 +1,182 @@
+{include file="common/gather_header"}
+<title>运费估算</title>
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;background:#444444;}
+    #content .container{width: 80%;max-width: 1200px;padding: 30px;margin: 30px auto 40px;border-radius: 5px;background-color: unset;box-shadow: 0 0 16px rgba(0,0,0,.04);}
+    #content .container .layui-card,#content .container .result{background: unset;border: 1px solid #fff;border-radius: 5px;padding: 20px 10px;color:#fff;}
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+    .content .box_content{background:;color:;border:1px solid #000;font-size:25px;text-align:center;padding:30px;width:100%;}
+    .content .box_content img{width:40px;margin-right:5px;}
+    .layui-elem-field legend,.layui-form-item .layui-form-label{color:;}
+    .word_color{color:;}
+    .layui-card{background:;box-shadow:unset;}
+    .layui-fluid,.layui-card-body{padding:0;}
+    .layui-col-space15{padding:15px;box-sizing: border-box;}
+
+    .layui-form-label{width:fit-content;}
+    .layui-input-block{line-height:38px;margin-left:100px;}
+    .estimate_div{display: grid;grid-template-columns: repeat(3,1fr);-moz-column-gap: 50px;column-gap: 50px;row-gap: 40px;}
+    .estimate_div .package_size{grid-column-start: 2;grid-column-end: 4;}
+    .size{display: grid;gap: 20px;grid-template-columns: repeat(3,1fr);}
+    /**数量增减框样式**/
+    .quantity {display: flex;align-items: center;}
+    .quantity input[type="number"] {width: 100%;text-align: center;}
+    .quantity button {background-color: transparent;cursor: pointer;font-size: 20px;padding: 0 5px;border: 1px solid #e6e6e6;height: 38px;width: 50px;}
+    .layui-elem-field{margin-bottom: 0;}
+    .no-line{text-align: center;color:;}
+    @media (max-width:992px){
+        .container_content{margin-top:15px;}
+        /**日期时间**/
+        .layui-laydate-range{left: 0 !important;width: fit-content;}
+        .layui-laydate-range .layui-laydate-main{display: block;width: 100%;}
+        .layui-laydate-range .layui-laydate-main .layui-laydate-content table{width: 100%;}
+        .layui-fluid,.layui-card-body{padding:0;}
+        .estimate_div{display: block;}
+        .size{gap:0px;}
+        #content .container {width: 90%;}
+    }
+</style>
+<body>
+<section id="content" class="non_topimg">
+<!--    <div class="container">-->
+        <div class="container" style="padding:0;">
+            <div class="layui-fluid">
+                <div class="layui-row layui-col-space15">
+                    <form class="layui-form" action="" method="post" lay-filter="component-form-element">
+                        <div class="layui-col-md12">
+                            <div class="layui-card">
+                                <div class="layui-card-body estimate_div">
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">*目的地</div>
+                                        <div class="layui-input-block">
+                                            <select name="country" id="country" lay-filter="country" lay-verify="required" lay-search>
+                                                {volist name="country" id="vo"}
+                                                <option value="{$vo['code_value']}">{$vo['code_name']}</option>
+                                                {/volist}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">*始发仓库</div>
+                                        <div class="layui-input-block">
+                                            <select name="warehouse" id="warehouse" lay-filter="warehouse" lay-verify="required" lay-search>
+                                                <option value="">暂无数据</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">物品属性</div>
+                                        <div class="layui-input-block">
+                                            <select name="value" id="value" lay-filter="value">
+                                                {volist name="value" id="vo"}
+                                                <option value="{$vo['id']}">{$vo['name']}</option>
+                                                {/volist}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">*实重(KG)</div>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="weight" class="layui-input" placeholder="请输入重量" lay-verify="required">
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item package_size">
+                                        <div class="layui-form-label">包裹尺寸</div>
+                                        <div class="layui-input-block">
+                                            <div class="size">
+                                                <input type="text" name="long" placeholder="长(CM)" class="layui-input">
+                                                <input type="text" name="width" placeholder="宽(CM)" class="layui-input">
+                                                <input type="text" name="height" placeholder="高(CM)" class="layui-input">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item" style="margin-top: 25px;text-align: center;">
+                                    <div>
+                                        <button class="layui-btn layui-btn-normal " lay-submit lay-filter="component-form-element2" style="padding: 0 60px;border-radius: 5px !important;background:unset;border:1px solid #fff;">立即查询</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="container" style="padding:0;">
+            <div class="layui-fluid" style="margin-top:30px;">
+                <div class="layui-row layui-col-space15">
+                    <div class="result">
+                        <div class="no-line">
+                            <div><img src="/img/empty3.png" alt=""></div>
+                            <span>请输入相应的参数查询运费!</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+<!--    </div>-->
+</section>
+<script src="./layui/xm-select.js"></script>
+<script type="text/javascript">
+    var label5_select = [];
+    layui.use(['layer','form','laydate','upload','element'],function(){
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , laydate = layui.laydate
+            , element = layui.element
+            , upload = layui.upload;
+
+        laydate.render({
+            elem: '#effecttime'
+            ,format: 'yyyy/MM/dd'
+            ,range: true
+            ,min: "<?php echo date('Y-m-d');?>"
+            ,max: "<?php echo date('Y-m-d',time()+63072000)?>"
+        });
+
+        form.render(null, 'component-form-element');
+
+        form.on('submit(component-form-element2)', function(data){
+            // JSON.stringify()
+            // console.log(data.field);return false;
+            $.ajax({
+                url:"/?s=index/save_upload",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            window.location.reload();
+                        }else if(res.code == -2){
+                            layer.open({
+                                type: 2,
+                                title: '请先登录',
+                                shadeClose: true,
+                                shade: 0.3,
+                                area: ['85%', '50%'],
+                                content: "/?s=index/customer_login&open=3",
+                            });
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+</script>
+
+{include file="common/gather_footer"}
+
+
+
+

@@ -1,0 +1,144 @@
+{include file="common/header"}
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;}
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+    .content .box_content{background:{$website['color']};color:{$website['color_word']};border:1px solid {$website['color_word']};font-size:25px;text-align:center;padding:30px;width:100%;}
+    .content .box_content img{width:40px;margin-right:5px;}
+    .layui-form-label{width:100px;}
+    .layui-input-block,.layui-input-inline{line-height:38px;}
+    .money{color:#ff2222;}
+</style>
+
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="content" style="padding:0;">
+            <form class="layui-form" action="" method="post" lay-filter="component-form-element">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-body">
+                            <div class="layui-form-item">
+                                <div class="layui-form-label">提现金额</div>
+                                <div class="layui-input-block money">
+                                    {$data['withdraw_money']}
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">提现账号</label>
+                                <div class="layui-input-block">
+                                    {if $data['account_info']['type']==1}
+                                        银行名称：{$data['account_info']['bankname']}<br/>
+                                        银行账号：{$data['account_info']['bank_account']}<br/>
+                                        收款人：{$data['account_info']['bank_name']}<br/>
+                                    {elseif($data['account_info']['type']==2)}
+                                        收款平台：{$data['account_info']['platform_name']}<br/>
+                                        {if $data['account_info']['type2']==1}
+                                            收款码：<a href="https://shop.gogo198.cn/{$account['platform_code']}"><img src="{$data['account_info']['platform_code']}" style="width:100px;height:100px;"></a><br/>
+                                        {elseif($account['type']==2)}
+                                            收款账号：{$data['account_info']['platform_account']}<br/>
+                                        {/if}
+                                    {/if}
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">费率</label>
+                                <div class="layui-input-inline">
+                                    {$data['withdrawal_expenses_rate']}
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">费用</label>
+                                <div class="layui-input-inline">
+                                    {$data['withdrawal_expenses']}
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">到账金额</label>
+                                <div class="layui-input-inline money">
+                                    {$data['real_withdraw']}
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">到账时间</label>
+                                <div class="layui-input-inline">
+                                    {$data['withdrawtime']}
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">审核结果</label>
+                                <div class="layui-input-inline">
+                                    {if $data['status']==1}提现已确认，已打款{/if}{if $data['status']==-1}审核不通过，拒绝申请{/if}
+                                </div>
+                            </div>
+                        
+                            <!-- 审核不通过原因 -->
+                            {if $data['status']==-1}
+                            <div class="layui-form-item layui-form-text" id="remark_div" style="display: none;">
+                                <label class="layui-form-label">原因</label>
+                                <div class="layui-input-block">
+                                    {$data['remark']}
+                                </div>
+                            </div>
+                            {/if}
+                        </div>
+                    </div>
+                </div>
+    
+                <!--<div class="layui-form-item" style="margin-top: 25px;text-align: center;">-->
+                <!--    <div>-->
+                <!--        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="component-form-element">立即提交</button>-->
+                <!--        <button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
+                <!--    </div>-->
+                <!--</div>-->
+            </form>
+        </div>
+    </div>
+</section>
+<script>
+    layui.use(['layer', 'form', 'table', 'upload'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , element = layui.element
+            , upload = layui.upload
+            , table = layui.table;
+
+        form.on('submit(component-form-element)', function(data){
+            $.ajax({
+                url:"/?s=index/save_withdraw",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            parent.location.reload();
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+    
+    function delPic(obj)
+    {
+        var layer = layui.layer,$ = layui.$;
+        layer.confirm('确认要删除该附件？', {
+            btn: ['删除','取消']
+        }, function(){
+            $(obj).parent().remove();
+            layer.closeAll();
+        }, function(){
+
+        });
+    }
+</script>
+{include file="common/footer"}

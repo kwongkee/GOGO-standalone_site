@@ -1,0 +1,65 @@
+<!--<link rel="stylesheet" href="layui/css/layui.css">-->
+<!--<script src="layui/layui.js"></script>-->
+
+<style>
+    /**弹窗样式**/
+    .layer_frame .layui-layer-title{background:#bebebe;color:#fff;}
+    .layer_frame .layui-layer-content{overflow:unset !important;}
+    .layer_frame .layui-layer-setwin{top:-28px;}
+    .layer_frame .layui-layer-title .disf{height:100%;}
+    .layer_frame .exclamation-circle {position: relative;margin-right:8px;}
+    .layer_frame .exclamation-circle span{font-size: 14px;font-weight:900;color: #fff;font-family: PingFang SC, Hiragino Sans GB, Heiti SC, Microsoft YaHei, Helvetica, Tahoma, Arial, SimHei, WenQuanYi Micro Hei !important;}
+    .layer_frame .exclamation-circle::after {content: '';position: absolute;left: 50%;top: 50%;transform: translate(-50%, -50%);width: 14px;height: 14px;background-color: #fff;border-radius: 50%;opacity:0.5;}
+    .layer_frame .page_innerhead{width:100%;border-bottom:1px solid #1f5188;}
+    .layer_frame .page_innerhead .pageBack{width:15%;text-align: center;padding:10px 0;font-size:15px;color:#000;font-weight:600;background:#bebebe;cursor:pointer;position:relative;}
+    .layer_frame .page_innerhead .pageSel{width:42.5%;text-align: center;padding:10px 0;font-size:15px;color:#000;font-weight:600;background:#fff;cursor:pointer;position:relative;}
+    .layer_frame .page_innerhead .pageSel:first-child{border-right:1px solid #fff;}
+    .layer_frame .page_innerhead .pageAct{background:#1f5188;color:#fff;}
+    .layer_frame .page_innerhead .pageAct:after {content: '';position: absolute;top: 15px;right: 35px;width: 8px;height: 8px;border-top: 2px solid #fff;border-right: 2px solid #fff;transform: rotate(135deg);}
+    .layer_frame .layui-layer-content .rightBox .page_content{height:100%;}
+    .layer_frame .layui-layer-content .rightBox .page_content .rightContent{height:100%;}
+</style>
+
+<script>
+    layui.use(['layer', 'form', 'table', 'upload'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , element = layui.element
+            , upload = layui.upload
+            , table = layui.table;
+
+    });
+
+    //弹框显示条件
+    var layer_frame_div = '';
+    function showCondition(){
+        var $ = layui.$,
+            layer = layui.layer;
+
+        layer.load();
+
+        // let main_html = '<iframe id="chat" name="chat" style="width: 100%;height: 100%;" frameborder="0" scrolling="yes" src="/?s=customer/customer_online&isframe=1"></iframe>';
+        let main_html = '<iframe src="https://boss.gogo198.cn/?s=customer/customer_online&pa=2&who_send=2&id=0&pid=0&isframe=1&uid=<?php echo session('user.gogo_id');?>&company_id={$company_id}&company_type={$company_type}" frameborder="0" style="width:100%;height:100%;"></iframe>';
+
+        let html = '<div class="disf" style="align-items: flex-start;width:100%;height:100%;">'+
+            '            <div class="rightBox" style="width:100%;height:100%;border-left:0px solid #fff;">'+
+            '                 <div class="page_content">'+
+            '                      <div class="leftContent" style="height:100%;">'+main_html+'</div>';
+        '                 </div>';
+        '            </div>'+
+        '       </div>';
+
+        layer_frame_div = layer.open({
+            skin:'layer_frame',
+            type: 1,
+            title: '<div class="disf"><div class="exclamation-circle"><span>!</span></div>系统提示：在线客服</div>',
+            area: ['600px', '433px'],
+            content: html
+        });
+
+
+        layer.closeAll('loading');
+    }
+</script>
+

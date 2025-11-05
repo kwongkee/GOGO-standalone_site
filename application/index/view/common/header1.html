@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link rel="icon" href="https://dtc.gogo198.net{$website['sico']}" type="image/x-icon" />
+    <title>{$website['title']}</title>
+    <meta name="facebook-domain-verification" content="g8f97gl1a53q5kfh649b8x1ro6w752" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0" />-->
+    <meta name="description" content="{$website['description']}" />
+    <meta name="keywords" content="{$website['keywords']}" />
+    <!-- css -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/fancybox/jquery.fancybox.css" rel="stylesheet">
+    <link href="css/flexslider.css" rel="stylesheet" />
+    <link href="css/style.css?v=333" rel="stylesheet" />
+    <link href="css/swiper.min.css" rel="stylesheet">
+    <script src="js/swiper.min.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style type="text/css" media="all">
+        :root {--primary-color: {$website['color']};--primary-light: #818cf8;--primary-dark: #3730a3;--secondary-color: #10b981;--accent-color: #f59e0b;--accent-gradient: linear-gradient(90deg, #f59e0b, #ec4899);--dark-color: #0f172a;--light-color: #f8fafc;--gray-color: #64748b;--card-bg: rgba(255, 255, 255, 0.85);--card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);--glass-bg: rgba(255, 255, 255, 0.2);--glass-border: 1px solid rgba(255, 255, 255, 0.3);--transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);--border-radius: 20px;}
+        * {margin: 0;padding: 0;box-sizing: border-box;}
+        .disf{display:flex;align-items: center;}
+        a{color:#fff;text-decoration:unset;}
+        a:hover{color:#fff;text-decoration:unset;}
+        body {font-family: "Microsoft JhengHei", 微軟正黑體, "Arial", sans-serif !important;background-color: #f1f5f9;background-image: radial-gradient(circle at top right, rgba(129, 140, 248, 0.1), transparent 20%), radial-gradient(circle at bottom left, rgba(245, 158, 11, 0.1), transparent 20%);color: var(--dark-color);line-height: 1.6;position: relative;overflow-x: hidden;}
+        body::before {content: '';position: absolute;top: 0;left: 0;width: 100%;height: 100%;background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLTIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0ibm9uZSIvPjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSJ1cmwoI2dyaWQpIiBvcGFjaXR5PSIwLjAzIi8+PC9zdmc+');background-size: 20px 20px;pointer-events: none;z-index: -1;}
+        .container {width: 100%;margin: 0 auto;max-width: 1200px;padding: 0 20px;}
+        /* 顶部导航栏 - 现代玻璃拟态效果 */
+        header {background: var(--glass-bg);backdrop-filter: blur(12px);position: fixed;top: 0;left: 0;width: 100%;z-index: 1000;box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);border-bottom: var(--glass-border);}
+        .navbar-brand{margin-top:-25px;}
+        .top-bar {height: 40px;background: {$website['color']};display: flex;align-items: center;justify-content: space-between;padding: 0 20px;font-size: 14px;color: white;}
+        .top-bar .contact-info {display: flex;gap: 20px;}
+        .top-bar a {color: white;text-decoration: none;display: flex;align-items: center;gap: 8px;transition: var(--transition);padding: 5px 10px;border-radius: 50px;white-space:nowrap;}
+        .top-bar a:hover {background: rgba(255, 255, 255, 0.15);}
+        .main-nav {display: flex;justify-content: space-between;align-items: center;padding: 15px 20px;height:75px;}
+        .logo {display: flex;align-items: center;gap: 15px;transition: var(--transition);}
+        .logo:hover {transform: translateY(-3px);}
+        .logo img {height: 55px;width:130px;border-radius: 12px;box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);margin-top: -6px;}
+        .logo h1 {color: var(--dark-color);font-size: 26px;font-weight: 700;background: linear-gradient(90deg, var(--primary-color), var(--primary-light));-webkit-background-clip: text;background-clip: text;color: transparent;}
+        .nav-links {display: flex;list-style: none;gap: 30px;margin-bottom:0 !important;}
+        .nav-links a {color: var(--dark-color);text-decoration: none;font-weight: 600;padding: 8px 0;position: relative;transition: var(--transition);display: flex;align-items: center;gap: 8px;}
+        .nav-links a:hover {color: var(--primary-color);}
+        .nav-links a::after {content: '';position: absolute;bottom: 0;left: 0;width: 0;height: 3px;background: var(--accent-gradient);transition: var(--transition);border-radius: 2px;}
+        .nav-links a:hover::after {width: 100%;}
+        .nav-actions {display: flex;gap: 15px;}
+        .btn {padding: 5px 18px;border-radius: 50px !important;font-weight: 600;cursor: pointer;transition: var(--transition);border: none;font-size: 15px !important;position: relative;overflow: hidden;z-index: 1;}
+        .btn::before {content: '';position: absolute;top: 0;left: 0;width: 100%;height: 100%;background: linear-gradient(90deg, var(--primary-color), var(--primary-light));z-index: -1;transition: var(--transition);opacity: 0;}
+        .btn:hover::before {opacity: 1;}
+        .btn-primary {background: white;color: var(--primary-color);box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25);}
+        .btn-primary:hover {transform: translateY(-4px);box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);color: white;}
+        .btn-outline {background: transparent;color: var(--dark-color);border: 2px solid var(--primary-color);}
+        .btn-outline:hover {color: white;border-color: transparent;}
+
+        /* 主菜单样式 start*/
+        header .navbar{background:unset;min-height: unset;}
+        .navbar .nav-list {display: flex;align-items: center;list-style: none;}
+        .nav-item {margin: 0 18px; /* 主菜单间距 */position: relative; /* 子菜单定位基准 */}
+        .nav-link {text-decoration: none;color: #333;font-size: 16px;padding: 10px 0;display: block;transition: color 0.3s ease; /* 颜色过渡 */}
+        .nav-link:hover {color: var(--primary-color); /* hover时蓝色 */}
+
+        /* 二级子菜单样式 */
+        .submenu {position: absolute;top: 100%; /* 位于主菜单正下方 */left: 0;background: #fff;border-radius: 8px; /* 圆角 */box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1); /* 深阴影区分层级 */padding: 12px 0;min-width: fit-content;display: none; /* 默认隐藏 */z-index: 10;border:2px solid {$website['color']};}
+        .subitem {padding: 8px 24px; /* 子菜单项内边距 */position: relative; /* 三级菜单定位基准 */}
+        .sublink {text-decoration: none;color: #333;font-size: 14px;white-space:nowrap;display: block;transition: background 0.3s ease, color 0.3s ease; /* 背景与颜色过渡 */}
+        .subitem:hover .sublink {background: #f0f5ff; /* hover时浅蓝背景 */color: var(--primary-color); /* 文字蓝色 */}
+
+        /* 三级子菜单样式 */
+        .subsubmenu {position: absolute;top: 0; /* 与二级菜单顶部对齐 */left: 100%; /* 位于二级菜单右侧 */background: #fff;border-radius: 8px;box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);padding: 12px 0;min-width: fit-content;white-space:nowrap;display: none; /* 默认隐藏 */z-index: 10;border:2px solid {$website['color']};}
+        .subsubitem {padding: 8px 24px;}
+        .subsublink {text-decoration: none;color: #333;font-size: 14px;display: block;transition: background 0.3s ease, color 0.3s ease;}
+        .subsubitem:hover .subsublink {background: #f0f5ff;color: var(--primary-color);}
+
+        /* 底部渐变装饰条（匹配示例中的橙粉渐变） */
+        .header-gradient {height: 5px;background: linear-gradient(to right, #ff9a9e, #fad0c4, #fad0c4, #ffd1ff); /* 橙→粉渐变 */}
+
+        /* 移动端样式（768px以下） */
+        @media (max-width: 768px) {
+            .logo{margin-right:180px;}
+            /* 隐藏主菜单和右侧按钮 */
+            .navbar {display: none;}
+            .navbar-brand{padding:0 0 0 0px;}
+
+            /* 显示汉堡菜单 */
+            .hamburger {display: block;cursor: pointer;padding: 10px;}
+            .hamburger span {display: block;width: 25px;height: 3px;background: #333;margin: 5px 0;transition: 0.3s;}
+
+            /* 汉堡菜单激活状态（旋转成叉号） */
+            .hamburger.active span:nth-child(1) {transform: rotate(45deg) translate(6px, 6px);}
+            .hamburger.active span:nth-child(2) {opacity: 0;}
+            .hamburger.active span:nth-child(3) {transform: rotate(-45deg) translate(5px, -5px);}
+
+            /* 移动端主菜单样式（全屏显示） */
+            .navbar.mobile-active {display: block;position: absolute;top: 65px; /* 位于导航栏下方 */left: 0;width: 100%;background: #fff;box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);padding: 10px 0;}
+            .navbar.mobile-active .nav-list {flex-direction: column; /* 垂直排列 */align-items: flex-start;padding: 0 20px;}
+            .navbar.mobile-active .nav-item {margin: 10px 0;width: 100%;}
+
+            /* 移动端子菜单样式（缩进显示） */
+            .navbar.mobile-active .submenu {position: static;box-shadow: none;padding: 0 0 0 20px;margin-top: 10px;}
+            .navbar.mobile-active .subsubmenu {position: static;padding: 0 0 0 20px;margin-top: 10px;}
+        }
+        /* 主菜单样式 end*/
+
+        /**翻译时更改字体**/
+        .f26{font-size:26px !important;}
+        .f22{font-size:22px !important;}
+        .f20{font-size:20px !important;}
+        .f18{font-size:18px !important;}
+        .f16{font-size:16px !important;}
+        .f15{font-size:15px !important;}
+        .f13{font-size:13px !important;}
+    </style>
+</head>
+<body style="background:;">
+<div id="wrapper" class="home-page">
+    <!-- 菜单栏开始 -->
+    <header style="background:{$website['color_head']};">
+        <div class="top-bar">
+            <div class="contact-info">
+                <a href="tel:{$website['tel']}"><i class="fas fa-phone"></i> {$website['tel']}</a>
+                <a href="mailto:{$website['email']}"><i class="fas fa-envelope"></i> {$website['email']}</a>
+            </div>
+            <div class="language-selector" style="display: none;">
+                <select>
+                    <option>简体中文</option>
+                    <option>English</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="main-nav container">
+            <div class="logo">
+                <a class="navbar-brand" href="/"><img src="https://dtc.gogo198.net/{$website['ico']}" alt="logo"/></a>
+<!--                <h1>慧安通</h1>-->
+            </div>
+
+            <div class="navbar">
+                <ul class="nav-list">
+                    <!-- 无 submenu 的项 -->
+                    {volist name="menu" id="vo"}
+                        {if !empty($vo.childMenu)}
+                            <li class="nav-item has-sub">
+                                <a href="#" class="nav-link f18">{$vo.name}</a>
+                                <ul class="submenu">
+                                    {volist name="vo.childMenu" id="vo2"}
+                                        {if !empty($vo2.childMenu)}
+                                            <li class="subitem has-sub-sub">
+                                                <a href="#" class="sublink f16">{$vo2.name}</a>
+                                                <ul class="subsubmenu">
+                                                    {volist name="vo2.childMenu" id="vo3"}
+                                                        {if $vo3.go_other==1}
+                                                            <li class="subsubitem"><a href="{$vo3.other_link}" class="subsublink f15" target="_blank">{$vo3.name}</a></li>
+                                                        {elseif($vo3.go_other==2)}
+                                                            <li class="subsubitem"><a href="?s=index/detail&company_id={$company_id}&company_type={$company_type}&id={$vo3.other_navbar}" class="subsublink f15" target="_blank">{$vo3.name}</a></li>
+                                                        {else}
+                                                            <li class="subsubitem"><a href="?s=index/detail&company_id={$company_id}&company_type={$company_type}&id={$vo3.id}" class="subsublink f15">{$vo3.name}</a></li>
+                                                        {/if}
+                                                    {/volist}
+                                                </ul>
+                                            </li>
+                                        {else}
+                                            {if $vo2.go_other==1}
+                                                <li class="subitem"><a href="{$vo2.other_link}" target="_blank" class="sublink f16">{$vo2.name}</a></li>
+                                            {elseif($vo2.go_other==2)}
+                                                <li class="subitem"><a href="?s=index/detail&company_id={$company_id}&company_type={$company_type}&id={$vo2.other_navbar}" target="_blank" class="sublink f16">{$vo2.name}</a></li>
+                                            {else}
+                                                <li class="subitem"><a href="?s=index/detail&company_id={$company_id}&company_type={$company_type}&id={$vo2.id}" class="sublink f16">{$vo2.name}</a></li>
+                                            {/if}
+                                        {/if}
+                                    {/volist}
+                                </ul>
+                            </li>
+                        {else}
+                            {if $vo.go_other==1}
+                                <li class="nav-item"><a href="{$vo.other_link}" class="nav-link f18" target="_blank">{$vo.name}</a></li>
+                            {elseif($vo.go_other==2)}
+                                <li class="nav-item"><a href="/?s=index/detail&company_id={$company_id}&company_type={$company_type}&id={$vo.other_navbar}" class="nav-link f18" target="_blank">{$vo.name}</a></li>
+                            {else}
+                                <li class="nav-item"><a href="/?s=index/detail&company_id={$company_id}&company_type={$company_type}&id={$vo.id}" class="nav-link f18" target="_blank">{$vo.name}</a></li>
+                            {/if}
+                        {/if}
+                    {/volist}
+
+                    {if(!empty(session('account')))}
+                        <li class="nav-item has-sub">
+                            <a href="#" class="nav-link f18">GoFriend</a>
+                            <ul class="submenu">
+                                <li class="subitem"><a href="//dtc.gogo198.net/?s=index/website_manage" target="_blank" class="sublink f16">商家后台</a></li>
+                                <li class="subitem"><a href="https://boss.gogo198.cn/?s=index/member_login&uid=<?php echo base64_encode(session('account.id'));?>" target="_blank" class="sublink f16">个人中心</a></li>
+                                <li class="subitem"><a href="/?s=index/change_account" class="sublink f16">切换账号</a></li>
+                            </ul>
+                        </li>
+                    {else}
+                        <li class="nav-item"><div class="nav-actions"><button onclick="javascript:window.location.href='/?s=index/customer_login&company_id={$company_id}&company_type={$company_type}';" class="f18 btn btn-outline">登录/注册</button></div></li>
+                    {/if}
+                </ul>
+            </div>
+
+            <!-- 移动端汉堡菜单（隐藏） -->
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </header>
+    <!-- 菜单栏结束 -->
+
+    <!--谷歌翻译SCRIPT-->
+    <div class="gtranslate_wrapper"></div>
+    <script>window.gtranslateSettings = {"default_language":"zh-CN","native_language_names":true,"url_structure":"sub_directory","languages":["zh-CN","ja","fy","zh-TW","ms","en","ko","ru","de"],"wrapper_selector":".gtranslate_wrapper","switcher_horizontal_position":"right","switcher_vertical_position":"top"}</script>
+    <script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>

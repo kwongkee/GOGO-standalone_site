@@ -1,0 +1,400 @@
+{include file="common/gather_header"}
+<link rel="stylesheet" href="layui/css/layui.css">
+<link rel="stylesheet" href="css/gather_homepage.css?v=2312">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    header {background-image: url("https://api-jiyun.beegoplus.com/storage/admin/20211021-x8mGsSyzfWzjgLZw.png");background-repeat: no-repeat;background-size: cover;background-position: center;}
+    #app header .introduce {height: 500px;display: flex;justify-content: center;align-items: center;text-align: center;line-height: 68px;}
+    #app header .introduce .introduce-content {width: 50%;}
+    #app header .introduce .introduce-content .introduce-title {font-size: 48px;font-weight: 700;}
+    #app header .introduce .introduce-content .introduce-subtitle {font-size: 32px;}
+
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+    .content .box_content{background:;color:;border:1px solid ;font-size:25px;text-align:center;padding:30px;width:100%;}
+    .content .box_content img{width:40px;margin-right:5px;}
+    .layui-elem-field legend,.layui-form-item .layui-form-label{color:;}
+    .word_color{color:;}
+    .layui-card{background:;}
+    .layui-fluid,.layui-card-body{padding:0;}
+
+    .layui-form-label{width:fit-content;}
+    .layui-input-block{line-height:38px;margin-left:100px;}
+    .layui-elem-field{margin-bottom: 0;}
+    .no-line{text-align: center;color:;}
+    .about{background: #fff;}
+    .nav-items img{width:30px;}
+    @media (max-width:992px){
+        .container_content{margin-top:15px;}
+        /**日期时间**/
+        .layui-laydate-range{left: 0 !important;width: fit-content;}
+        .layui-laydate-range .layui-laydate-main{display: block;width: 100%;}
+        .layui-laydate-range .layui-laydate-main .layui-laydate-content table{width: 100%;}
+        .layui-fluid,.layui-card-body{padding:0;}
+        #content .container{width:100%;}
+    }
+</style>
+<div id="app">
+    <header>
+        <div class="introduce">
+            <div class="introduce-content">
+                <div class="introduce-title">集运物流</div>
+                <div class="introduce-subtitle">轻松买国货，无忧寄全球</div>
+            </div>
+        </div>
+        <div class="head-nav">
+            <div class="nav">
+                <a href="/?s=gather/warehouse_address" class="nav-item">
+                    <div class="nav-items"><img src="/img/gather/warehouse.png" alt=""> <span>仓库地址</span></div>
+                </a>
+                <a href="/?s=gather/freight_estimation" class="nav-item">
+                    <div class="nav-items"><img src="/img/gather/computed.png" alt=""> <span>运费估算</span></div>
+                </a>
+                <a href="/?s=gather/package_forecast" class="nav-item">
+                    <div class="nav-items"><img src="/img/gather/fly.png" alt=""> <span>开始集运</span></div>
+                </a>
+            </div>
+        </div>
+    </header>
+    <section>
+        <div class="position-center">
+            <div class="process">
+                <div class="title">集运流程</div>
+                <div class="subtitle">THE PROCESS OF COLLECTION AND TRANSPORTATION</div>
+                <div class="process-content">
+                    <div class="process-item"><img src="https://www.beegoplus.com/images/process1.png" alt="">
+                        <div class="process-title">寄送到仓</div>
+                        <div class="process-subtitle">购物时将包裹寄到指定集运仓</div>
+                    </div>
+                    <div class="process-item jian-tou"><img src="https://www.beegoplus.com/images/jiantou.png" alt=""></div>
+                    <div class="process-item"><img src="https://www.beegoplus.com/images/process2.png" alt="">
+                        <div class="process-title">添加包裹</div>
+                        <div class="process-subtitle">在小程序或者官网上提交包裹信息</div>
+                    </div>
+                    <div class="process-item jian-tou none-700"><img src="https://www.beegoplus.com/images/jiantou.png" alt=""></div>
+                    <div class="process-item"><img src="https://www.beegoplus.com/images/process3.png" alt="">
+                        <div class="process-title">合并打包</div>
+                        <div class="process-subtitle">勾选已入库的包裹并选择渠道，然后合并打包</div>
+                    </div>
+                    <div class="process-item jian-tou none-960"><img src="https://www.beegoplus.com/images/jiantou.png" alt=""></div>
+                    <div class="process-item"><img src="https://www.beegoplus.com/images/process4.png" alt="">
+                        <div class="process-title">支付运费</div>
+                        <div class="process-subtitle">等待仓库完成打包后支付相应费用</div>
+                    </div>
+                    <div class="process-item jian-tou none-700"><img src="https://www.beegoplus.com/images/jiantou.png" alt=""></div>
+                    <div class="process-item"><img src="https://www.beegoplus.com/images/process5.png" alt="">
+                        <div class="process-title">等待签收</div>
+                        <div class="process-subtitle">包裹经过运输、清关后，当地服务商提取派送</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="route">
+            <div class="position-center">
+                <div class="title">精选路线</div>
+                <div class="subtitle">SELECTED ROUTES</div>
+                <div class="route-info">
+                    <div class="no-line"><h2>暂无推荐路线</h2></div>
+                </div>
+            </div>
+        </div>
+        <div class="position-center information">
+            <div class="title">活动与资讯</div>
+            <div class="subtitle">EVENTS AND INFORMATION</div>
+            <div class="information-content"><img src="https://www.beegoplus.com/images/banner.png" class="banner">
+                <div class="information-info"><a class="information-item" href="/?s=gather/notice_detail"><img src="https://www.beegoplus.com/images/notice.png" alt="">
+                    <div class="notice-content">【Beegoplus公告】：<span>关于“BG德国专线派送商测试”通知</span></div>
+                </a><a class="information-item" href="/?s=gather/notice_detail"><img src="https://www.beegoplus.com/images/notice.png" alt="">
+                    <div class="notice-content">【Beegoplus公告】：<span>丢失、破损理赔及超时赔付的调整通知</span></div>
+                </a><a class="information-item" href="/?s=gather/notice_detail"><img src="https://www.beegoplus.com/images/notice.png" alt="">
+                    <div class="notice-content">【Beegoplus公告】：<span>关于BEEGOPLUS“重新打包规则”的公告</span></div>
+                </a></div>
+            </div>
+        </div>
+        <div class="service">
+            <div class="position-center">
+                <div class="title">平台服务</div>
+                <div class="subtitle">PLATFORM SERVICES</div>
+                <div class="service-content">
+                    <div class="service-item">
+                        <div class="service-img"><img src="https://www.beegoplus.com/images/serve1.png"></div>
+                        <div class="service-details">
+                            <div class="service-title">保价服务</div>
+                            <div class="service-subtitle">我们提供商品保险服务 保险金额为商品价值的2%，最高赔付1000元/包裹，即保费最高为20元/包裹。</div>
+                        </div>
+                    </div>
+                    <div class="service-item">
+                        <div class="service-img"><img src="https://www.beegoplus.com/images/serve2.png"></div>
+                        <div class="service-details">
+                            <div class="service-title">免费拆包装</div>
+                            <div class="service-subtitle">我们将按照您的需求去拆除快递包装，减少货品的重量和体积从而减少费用。</div>
+                        </div>
+                    </div>
+                    <div class="service-item">
+                        <div class="service-img"><img src="https://www.beegoplus.com/images/serve3.png"></div>
+                        <div class="service-details">
+                            <div class="service-title">稳定时效</div>
+                            <div class="service-subtitle">我们会每月公布专线的时效，助您对我的时效有更深切的认知。</div>
+                        </div>
+                    </div>
+                    <div class="service-item">
+                        <div class="service-img"><img src="https://www.beegoplus.com/images/serve4.png"></div>
+                        <div class="service-details">
+                            <div class="service-title">24小时内发货</div>
+                            <div class="service-subtitle">用户提交包裹合并后，仓库将在工作日24小时内将包裹合并打包；付款后将在工作日24小时内完成出库。</div>
+                        </div>
+                    </div>
+                    <div class="service-item">
+                        <div class="service-img"><img src="https://www.beegoplus.com/images/serve5.png"></div>
+                        <div class="service-details">
+                            <div class="service-title">免费拍照质检</div>
+                            <div class="service-subtitle">我们将对您的物品进行入库拍照，帮助您核对的物品样式与数量，助您无忧海淘。</div>
+                        </div>
+                    </div>
+                    <div class="service-item">
+                        <div class="service-img"><img src="https://www.beegoplus.com/images/serve6.png"></div>
+                        <div class="service-details">
+                            <div class="service-title">超长仓储</div>
+                            <div class="service-subtitle">我们提供超长的商品仓储时间180天。</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="position-center customer" style="display:none;">
+            <div class="title">客户说</div>
+            <div class="subtitle">THE CUSTOMER SAID</div>
+            <div class="customer-content">
+                <div class="el-carousel el-carousel--horizontal">
+                    <div class="el-carousel__container">
+                        <button type="button" class="el-carousel__arrow el-carousel__arrow--left"><i
+                                class="el-icon-arrow-left"></i></button>
+                        <button type="button" class="el-carousel__arrow el-carousel__arrow--right"><i
+                                class="el-icon-arrow-right"></i></button>
+                        <div class="el-carousel__item customer-scroll is-animating"
+                             style="transform: translateX(-1022px) scale(1);"><!---->
+                            <div class="customer-item">
+                                <div>
+                                    <div class="customer-top"><img
+                                            src="https://thirdwx.qlogo.cn/mmopen/vi_32/9FN33ibbgKjHNdqL0HMwVwicqho6tIcmDTJzb3kegh4ZqhNOdcpllXmJUHU6icvPLdVYTicrZsh8LJ6bFibcj0pXzKA/132"
+                                            alt="" class="avatar">
+                                        <div class="user-info">
+                                            <div class="user-name">Sussiezcy</div>
+                                            <div class="user-star"><img src="/images/star.svg" class="star"><img
+                                                    src="/images/star.svg" class="star"><img src="/images/star.svg"
+                                                                                             class="star"><img
+                                                    src="/images/star.svg" class="star"><img src="/images/star.svg"
+                                                                                             class="star"></div>
+                                        </div>
+                                    </div>
+                                    <div class="customer-center">
+                                        <div class="comment">
+                                            挺好的。很满意，8.9打包，8.15收到。DHL确实快很多。客服回复速度很快。挺好的。很满意，8.9打包，8.15收到。DHL确实快很多。客服回复速度很快。挺好的。很满意，8.9打包，8.15收到。DHL确实快很多。客服回复速度很快。
+                                        </div>
+                                        <div class="customer-img"><img
+                                                src="https://api-jiyun.beegoplus.com/storage/client-images202308/20230828pNVGBFD1c1BeTTXLgfIHy6Qvy7E3XXHpSc4fxhGm.jpg"
+                                                alt="" class="img-item" style="cursor: pointer;"><img
+                                                src="https://api-jiyun.beegoplus.com/storage/client-images202308/20230828jnYgcRqF47hOtVcgO1sOW0HYAtf4wC9OsH9kVL5C.jpg"
+                                                alt="" class="img-item" style="cursor: pointer;"><img
+                                                src="https://api-jiyun.beegoplus.com/storage/client-images202308/20230828jXy1YpxDi1iXMCZx3Hb9AOvPk6Bp7uMeIx886cI3.jpg"
+                                                alt="" class="img-item" style="cursor: pointer;"></div>
+                                    </div>
+                                </div>
+                                <div class="customer-footer">
+                                    <div><img src="https://www.beegoplus.com/images/location.png" alt=""> <span
+                                            style="padding-left: 6px;">德国</span></div>
+                                    <div>2023-08-28 16:58:08</div>
+                                </div>
+                            </div>
+                            <div class="customer-item">
+                                <div>
+                                    <div class="customer-top"><img
+                                            src="https://api-jiyun-v2.haiouoms.com/storage/default_user_avatar.jpg"
+                                            alt="" class="avatar">
+                                        <div class="user-info">
+                                            <div class="user-name"></div>
+                                            <div class="user-star"><img src="/images/star.svg" class="star"><img
+                                                    src="/images/star.svg" class="star"><img src="/images/star.svg"
+                                                                                             class="star"><img
+                                                    src="/images/star.svg" class="star"><img src="/images/star.svg"
+                                                                                             class="star"></div>
+                                        </div>
+                                    </div>
+                                    <div class="customer-center">
+                                        <div class="comment">效果杠杠的，价钱合理。一直坚持使用，是小卖家的首选物流。希望以后能一直保持这个服务</div>
+                                        <div class="customer-img"><img
+                                                src="https://api-jiyun.beegoplus.com/storage/client-images202308/202308288z40RxH1SyjmBVVrFM07BlweZpgp21jHBqocBsvS.png"
+                                                alt="" class="img-item" style="cursor: pointer;"><img
+                                                src="https://api-jiyun.beegoplus.com/storage/client-images202308/202308287GG6CtciZbJpUBwiL2pasIJtaBYdPvrevH0ukRHm.png"
+                                                alt="" class="img-item" style="cursor: pointer;"><img
+                                                src="https://api-jiyun.beegoplus.com/storage/client-images202308/20230828Q5tAtFx6674Uk96dIiOmOdBcgmM5Fr0FvQ1Ommec.png"
+                                                alt="" class="img-item" style="cursor: pointer;"></div>
+                                    </div>
+                                </div>
+                                <div class="customer-footer">
+                                    <div><img src="https://www.beegoplus.com/images/location.png" alt=""> <span
+                                            style="padding-left: 6px;">日本</span></div>
+                                    <div>2023-08-28 16:23:17</div>
+                                </div>
+                            </div>
+                            <div class="customer-item">
+                                <div>
+                                    <div class="customer-top"><img
+                                            src="https://api-jiyun-v2.haiouoms.com/storage/default_user_avatar.jpg"
+                                            alt="" class="avatar">
+                                        <div class="user-info">
+                                            <div class="user-name"></div>
+                                            <div class="user-star"><img src="/images/star.svg" class="star"><img
+                                                    src="/images/star.svg" class="star"><img src="/images/star.svg"
+                                                                                             class="star"><img
+                                                    src="/images/star.svg" class="star"><img src="/images/star.svg"
+                                                                                             class="star"></div>
+                                        </div>
+                                    </div>
+                                    <div class="customer-center">
+                                        <div class="comment">
+                                            这个客户因为第一次寄出没有取件，要求补发。因为退回的件在海外仓只能这边重发一件。补发的件第一天就联系不上本人派送，客服知道这个客户第一的包裹被退回，第二次的包裹有什么情况就第一时间告知。后面及时联系上才签收了。客户真的很用心。
+                                        </div>
+                                        <div class="customer-img"><img
+                                                src="https://api-jiyun.beegoplus.com/storage/client-images202308/20230828iHHxfFuAHG4Rtp3vD2SsBuPMUZCbtMSkMq4JjmiA.png"
+                                                alt="" class="img-item" style="cursor: pointer;"><img
+                                                src="https://api-jiyun.beegoplus.com/storage/client-images202308/202308284eZdD4KXRjUUtzvb1QfTHfH5WMm5fId7GULyK71h.png"
+                                                alt="" class="img-item" style="cursor: pointer;"><img
+                                                src="https://api-jiyun.beegoplus.com/storage/client-images202308/202308284utX1Ly1iTO3d4XteMgZ6iQk85Fy8pvOnSjGYIXF.png"
+                                                alt="" class="img-item" style="cursor: pointer;"></div>
+                                    </div>
+                                </div>
+                                <div class="customer-footer">
+                                    <div><img src="/images/location.png" alt=""> <span
+                                            style="padding-left: 6px;">日本</span></div>
+                                    <div>2023-08-28 16:21:47</div>
+                                </div>
+                            </div>
+                            <div class="customer-item">
+                                <div>
+                                    <div class="customer-top"><img
+                                            src="https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132"
+                                            alt="" class="avatar">
+                                        <div class="user-info">
+                                            <div class="user-name">微信用户</div>
+                                            <div class="user-star"><img src="https://www.beegoplus.com/images/star.svg" class="star"><img
+                                                    src="https://www.beegoplus.com/images/star.svg" class="star"><img src="https://www.beegoplus.com/images/star.svg"
+                                                                                             class="star"><img
+                                                    src="https://www.beegoplus.com/images/star.svg" class="star"><img src="https://www.beegoplus.com/images/star.svg"
+                                                                                             class="star"></div>
+                                        </div>
+                                    </div>
+                                    <div class="customer-center">
+                                        <div class="comment">非常好 还很快 包装完整</div>
+                                        <div class="customer-img"></div>
+                                    </div>
+                                </div>
+                                <div class="customer-footer">
+                                    <div><img src="https://www.beegoplus.com/images/location.png" alt=""> <span
+                                            style="padding-left: 6px;">意大利</span></div>
+                                    <div>2023-08-28 14:50:19</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="el-carousel__item customer-scroll is-active is-animating"
+                             style="transform: translateX(0px) scale(1);"><!---->
+                            <div class="customer-item">
+                                <div>
+                                    <div class="customer-top"><img
+                                            src="https://thirdwx.qlogo.cn/mmopen/vi_32/l3N0kle8FBvINxZ2dJubiauDzupXXJAlW1a4ibyKwfkcdV406ic4MWWLOEzmspGAJF3H6Ozky8OryxBuQic8ejBYeA/132"
+                                            alt="" class="avatar">
+                                        <div class="user-info">
+                                            <div class="user-name">Dr.</div>
+                                            <div class="user-star"><img src="https://www.beegoplus.com/images/star.svg" class="star"><img
+                                                    src="https://www.beegoplus.com/images/star.svg" class="star"><img src="https://www.beegoplus.com/images/star.svg"
+                                                                                             class="star"><img
+                                                    src="https://www.beegoplus.com/images/star.svg" class="star"><img src="https://www.beegoplus.com/images/star.svg"
+                                                                                             class="star"></div>
+                                        </div>
+                                    </div>
+                                    <div class="customer-center">
+                                        <div class="comment">运了我的球拍 很脆弱但没坏 速度也快！</div>
+                                        <div class="customer-img"></div>
+                                    </div>
+                                </div>
+                                <div class="customer-footer">
+                                    <div><img src="https://www.beegoplus.com/images/location.png" alt=""> <span
+                                            style="padding-left: 6px;">德国</span></div>
+                                    <div>2023-08-28 14:21:20</div>
+                                </div>
+                            </div>
+                            <div class="customer-item">
+                                <div>
+                                    <div class="customer-top"><img
+                                            src="https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132"
+                                            alt="" class="avatar">
+                                        <div class="user-info">
+                                            <div class="user-name">微信用户</div>
+                                            <div class="user-star"><img src="https://www.beegoplus.com/images/star.svg" class="star"><img
+                                                    src="https://www.beegoplus.com/images/star.svg" class="star"><img src="https://www.beegoplus.com/images/star.svg"
+                                                                                             class="star"><img
+                                                    src="https://www.beegoplus.com/images/star.svg" class="star"><img src="https://www.beegoplus.com/images/star.svg"
+                                                                                             class="star"></div>
+                                        </div>
+                                    </div>
+                                    <div class="customer-center">
+                                        <div class="comment">非常好 速度比想象中的快 包装的很好 箱子里的空间都合理利用起来了</div>
+                                        <div class="customer-img"></div>
+                                    </div>
+                                </div>
+                                <div class="customer-footer">
+                                    <div><img src="https://www.beegoplus.com/images/location.png" alt=""> <span
+                                            style="padding-left: 6px;">英国</span></div>
+                                    <div>2023-08-28 09:11:45</div>
+                                </div>
+                            </div>
+                            <div class="customer-item">
+                                <div>
+                                    <div class="customer-top"><img
+                                            src="https://thirdwx.qlogo.cn/mmopen/vi_32/Q0j4TwGTfTICJKdIPN7mtHKXQgeTErQ1lIKabZ7HE0MF5rrHaky5hpv0WjFsxsgahiaTnkwN2Uw6lBm6hMEWkjw/132"
+                                            alt="" class="avatar">
+                                        <div class="user-info">
+                                            <div class="user-name">akiw</div>
+                                            <div class="user-star"><img src="https://www.beegoplus.com/images/star.svg" class="star"><img
+                                                    src="https://www.beegoplus.com/images/star.svg" class="star"><img src="https://www.beegoplus.com/images/star.svg"
+                                                                                             class="star"><img
+                                                    src="https://www.beegoplus.com/images/star.svg" class="star"><img src="https://www.beegoplus.com/images/star.svg"
+                                                                                             class="star"></div>
+                                        </div>
+                                    </div>
+                                    <div class="customer-center">
+                                        <div class="comment">很快 打包的也挺好的 这次是真的挺快 的 4天就到了 就是体积太大了 但是也比日本这边买的便宜的多啊a
+                                            照片要是一次就可以添加多张就好了
+                                        </div>
+                                        <div class="customer-img"><img
+                                                src="https://api-jiyun.beegoplus.com/storage/client-images202308/20230828G2do3MXlcRNnB1bzZWwRpzQKqmt0uUWMzPaJqALH.jpg"
+                                                alt="" class="img-item" style="cursor: pointer;"><img
+                                                src="https://api-jiyun.beegoplus.com/storage/client-images202308/20230828XMub3b937j5ibJqS7xCOzzbCyoUFKi3WBQxdPCBc.jpg"
+                                                alt="" class="img-item" style="cursor: pointer;"><img
+                                                src="https://api-jiyun.beegoplus.com/storage/client-images202308/20230828FrtMaEbgij0GHMcSCHzrvygsQgG4NoxmEzcgyUNk.jpg"
+                                                alt="" class="img-item" style="cursor: pointer;"></div>
+                                    </div>
+                                </div>
+                                <div class="customer-footer">
+                                    <div><img src="https://www.beegoplus.com/images/location.png" alt=""> <span
+                                            style="padding-left: 6px;">日本</span></div>
+                                    <div>2023-08-28 08:32:44</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="el-carousel__indicators el-carousel__indicators--horizontal el-carousel__indicators--outside">
+                        <li class="el-carousel__indicator el-carousel__indicator--horizontal">
+                            <button class="el-carousel__button"><!----></button>
+                        </li>
+                        <li class="el-carousel__indicator el-carousel__indicator--horizontal is-active">
+                            <button class="el-carousel__button"><!----></button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{include file="common/gather_footer"}

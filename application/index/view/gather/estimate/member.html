@@ -1,0 +1,149 @@
+{include file="common/gather_header"}
+<meta name="viewport" content="width=device-width, initial-scale=0.5" />
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    .main-container {display: flex;flex-direction: column;flex: 1;background-color: unset;padding-bottom: 20px;border-radius: 5px;overflow: hidden;box-shadow: 0 0 14px rgba(0,0,0,.04);border:1px solid #fff;}
+    .operat-box {display: flex;align-items: center;justify-content: space-between;padding: 16px 30px;background-color: #0e2e68;color:#fff;}
+    .main-container-title {padding-right: 20px;}
+    .member-container .user, .member-container .user .user-info {display: flex;align-items: center;}
+    .member-container .user {justify-content: space-between;padding: 40px 100px 40px 30px;background-color: unset;border-bottom: 1px solid #fff;}
+    .member-container .user .user-info .avatar {margin-right: 20px;}
+    .member-container .user .user-info .avatar img {width: 80px;height: 80px;border-radius: 50%;}
+    .member-container .user .user-info .user-name {color: #fff;font-size: 14px;line-height: 25px;}
+    .member-container .user .user-info .user-name .username {font-size: 20px;color: #fff;}
+    .member-container .member-content {padding: 30px;color:#fff;}
+    .member-container .member-content .recharge .recharge-content {display: grid;grid-template-columns: repeat(4,minmax(200px,1fr));-moz-column-gap: 20px;column-gap: 20px;row-gap: 33px;padding: 30px 0;margin: 0 20px;border-bottom: 1px solid #eee;}
+    .member-container .member-content .recharge .recharge-content .recharge-item {position: relative;cursor: pointer;text-align: center;border: 1px solid #eee;box-shadow: 0 0 10px rgba(0,0,0,.06);border-radius: 10px;}
+    .member-container .member-content .recharge .recharge-content .recharge-item .amount {padding: 20px 0 10px;font-size: 32px;font-weight: 400;}
+    .member-container .red-text {color: #fff;}
+    .member-container .member-content .recharge .recharge-content .recharge-item .amount .unit {font-size: 20px;}
+    .member-container .member-content .recharge .recharge-content .recharge-item .amount {padding: 20px 0 10px;font-size: 32px;font-weight: 400;}
+    .member-container .member-content .recharge .recharge-content .recharge-item .grade {padding-bottom: 10px;font-size: 20px;font-weight: 700;}
+    .member-container .member-content .recharge .recharge-content .recharge-item .discount {height: 36px;padding: 0 10px;line-height: 36px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;font-size: 14px;background: unset;border-radius: 0 0 10px 10px;color:#fff;border-top:1px solid #fff;}
+    .member-container .member-content .recharge .pay {display: flex;align-items: center;padding: 20px;}
+    .member-container .member-content .recharge .pay .pay-btn {cursor: pointer;width: 148px;padding: 12px 0;margin-right: 20px;background-color: #0e2e68;text-align: center;border-radius: 5px;color:#fff;border:1px solid #fff;}
+    .member-container .member-content .recharge .pay .amount {font-size: 24px;}
+    .member-container .member-content .growth .growth-content {padding: 10px 20px 30px;}
+    .member-container .member-content .growth .growth-content .level-table {border-collapse: collapse;}
+    .member-container .member-content .growth .growth-content .level-table th {background: #0e2e68;font-weight: 400!important;}
+    .member-container .member-content .growth .growth-content .level-table td, .member-container .member-content .growth .growth-content .level-table th {padding: 16px 0;text-align: center;color: #fff;border: 1px solid #fff;}
+    .member-container .select{border: 1px solid #f1be83 !important;background: #0e2e68;}
+</style>
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="personalMain">
+            <div class="personal">
+                {include file="common/member_left"}
+                <div  class="member-container main-container">
+                    <div  class="operat-box"><span  class="main-container-title">会员中心</span>
+                    </div>
+                    <div  class="user">
+                        <div  class="user-info">
+                            <div  class="avatar"><img 
+                                                                        src="https://thirdwx.qlogo.cn/mmopen/vi_32/KZd62NRVDNpKmr1SHyWwFCpXU9DUFZW5CbSG1YxDib7jXrpUhMiaMmruYAX6kicEvf7XIP377ia0sJazTtovbhPaFQ/132">
+                            </div>
+                            <div  class="user-name">
+                                <div  class="username">hjxssl</div>
+                                <div >用户ID：398249</div>
+                                <div >
+                                    成长值
+                                    <span  style="color: #f1be83;">0</span>
+                                    |
+                                    再累积
+                                    <span  style="color: #f1be83;">1000</span>
+                                    成长值即可升级
+                                </div>
+                            </div>
+                        </div>
+                        <img  src="/images/member.png" alt=""></div>
+                    <div  class="member-content">
+                        <div  class="recharge">
+                            <div  class="member-title">充值会员（年费）</div>
+                            <div  class="recharge-content">
+                                <div  class="recharge-item select">
+                                    <div  class="red-text amount"><span 
+                                                                                          class="unit">￥</span> <span
+                                            >99</span></div>
+                                    <div  class="grade">普通会员</div>
+                                    <div  class="discount">运费享9.6折</div> <!----></div>
+                                <div  class="recharge-item">
+                                    <div  class="red-text amount"><span 
+                                                                                          class="unit">￥</span> <span
+                                            >399</span></div>
+                                    <div  class="grade">银卡会员</div>
+                                    <div  class="discount">运费享9.4折；理赔享500元/年</div> <!----></div>
+                                <div  class="recharge-item">
+                                    <div  class="red-text amount"><span 
+                                                                                          class="unit">￥</span> <span
+                                            >799</span></div>
+                                    <div  class="grade">金卡会员</div>
+                                    <div  class="discount">运费享9.0折；理赔享1000元/年</div> <!----></div>
+                                <div  class="recharge-item">
+                                    <div  class="red-text amount"><span 
+                                                                                          class="unit">￥</span> <span
+                                            >999</span></div>
+                                    <div  class="grade">尊享钻石会员</div>
+                                    <div  class="discount">运费享8.5折；理赔享2000元/年</div> <!----></div>
+                                <div  class="recharge-item">
+                                    <div  class="red-text amount"><span 
+                                                                                          class="unit">￥</span> <span
+                                            >1999</span></div>
+                                    <div  class="grade">尊享黑卡会员</div>
+                                    <div  class="discount">运费享8.0折；理赔享5000元/年</div> <!----></div>
+                            </div>
+                            <div  class="pay">
+                                <div  class="pay-btn">去支付</div>
+                                <div ><span >合计：</span> <span 
+                                                                                                  class="red-text"><span
+                                         class="unit">￥</span> <span 
+                                                                                       class="amount">0</span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div  class="growth">
+                            <div  class="member-title">成长值说明</div>
+                            <div  class="growth-content"><p >1、各等级成长值及权益对应表:</p>
+                                <table  width="100%" border="0" cellspacing="1" cellpadding="0"
+                                       class="level-table">
+                                    <tr >
+                                        <th ></th>
+                                        <th >BG用户</th>
+                                        <th >普通会员</th>
+                                        <th >银卡会员</th>
+                                        <th >尊享钻石会员</th>
+                                        <th >尊享黑卡会员</th>
+                                        <th >金卡会员</th>
+                                    </tr>
+                                    <tr >
+                                        <td >成长值</td>
+                                        <td >
+                                            0
+                                        </td>
+                                        <td >
+                                            1000
+                                        </td>
+                                        <td >
+                                            6000
+                                        </td>
+                                        <td >
+                                            50000
+                                        </td>
+                                        <td >
+                                            100000
+                                        </td>
+                                        <td >
+                                            25000
+                                        </td>
+                                    </tr>
+                                </table>
+                                <p >2、所有使用服务所产生的运费都可获得1:1专属积分和成长值;</p>
+                                <p >3、购买会员即可获得对应成长值（如上表），用于累计成长值。</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{include file="common/gather_footer"}

@@ -1,0 +1,170 @@
+{include file="common/gather_header"}
+<meta name="viewport" content="width=device-width, initial-scale=0.5" />
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    .main-container {display: flex;flex-direction: column;flex: 1;background-color: unset;padding-bottom: 20px;border-radius: 5px;overflow: hidden;box-shadow: 0 0 14px rgba(0,0,0,.04);border:1px solid #fff;}
+    .operat-box {display: flex;align-items: center;justify-content: space-between;padding: 16px 30px;background-color: #0e2e68;color:#fff;}
+    .main-container-title {padding-right: 20px;}
+    .balance .my-balance {padding: 30px 50px;background: unset;color:#fff;border-bottom:1px solid #fff;}
+    .balance .my-balance .balance {display: grid;align-items: center;justify-items: center;grid-template-columns: 1fr 1fr 1fr;}
+    .balance .red-text {color: #f55;}
+    .balance .balance-content {padding: 30px;color: #666!important;}
+    .el-tabs__header {padding: 0;position: relative;margin: 0 0 15px;}
+    .el-tabs__nav-wrap {overflow: hidden;margin-bottom: -1px;position: relative;}
+    .el-tabs__nav-scroll {overflow: hidden;}
+    .el-tabs__nav-wrap:after {content: "";position: absolute;left: 0;bottom: 0;width: 100%;height: 2px;background-color: #e4e7ed;z-index: 1;}
+    .el-tabs__nav {white-space: nowrap;position: relative;transition: transform .3s;float: left;z-index: 2;}
+    .el-tabs__active-bar {position: absolute;bottom: 0;left: 0;height: 2px;background-color: #f1be83;z-index: 1;transition: transform .3s cubic-bezier(.645,.045,.355,1);list-style: none;}
+    .el-tabs__item.is-active {color: #f1be83;}
+    .el-tabs--bottom .el-tabs__item.is-bottom:nth-child(2), .el-tabs--bottom .el-tabs__item.is-top:nth-child(2), .el-tabs--top .el-tabs__item.is-bottom:nth-child(2), .el-tabs--top .el-tabs__item.is-top:nth-child(2) {padding-left: 0;}
+    .el-tabs--bottom .el-tabs__item.is-bottom:last-child, .el-tabs--bottom .el-tabs__item.is-top:last-child, .el-tabs--top .el-tabs__item.is-bottom:last-child, .el-tabs--top .el-tabs__item.is-top:last-child {padding-right: 0;}
+    .el-tabs__item {padding: 0 20px;height: 40px;box-sizing: border-box;line-height: 40px;display: inline-block;list-style: none;font-size: 14px;font-weight: 500;color: #fff;position: relative;}
+    .el-tabs__content {overflow: hidden;position: relative;color:#fff;}
+    .balance .balance-content .recharge-content {display: flex;gap: 20px;padding: 20px 0 30px;color: #fff;border-bottom: 1px solid #eee;}
+    .balance .balance-content .recharge-content .amount-content {display: grid;-moz-column-gap: 28px;column-gap: 28px;row-gap: 20px;grid-template-columns: repeat(3,120px);}
+    .balance .balance-content .recharge-content .amount-content .amount-item {cursor: pointer;display: flex;gap: 12px;flex-direction: column;justify-content: center;padding: 12px;text-align: center;border-radius: 5px;border: 1px solid #eee;}
+    .el-input {position: relative;font-size: 14px;display: inline-block;width: 100%;}
+    .el-input__inner {-webkit-appearance: none;background-color: #fff;background-image: none;border-radius: 4px;border: 1px solid #dcdfe6;box-sizing: border-box;color: #606266;display: inline-block;font-size: inherit;height: 40px;line-height: 40px;outline: none;padding: 0 15px;transition: border-color .2s cubic-bezier(.645,.045,.355,1);width: 100%;}
+    .balance .balance-content .diy-amount-content .nomoney {font-size: 10px;color: grey;}
+    .balance .balance-content .pay {display: flex;align-items: center;padding: 20px 0;}
+    .pay-btn {cursor: pointer;width: 148px;padding: 12px 0;margin-right: 20px;background-color: #0e2e68;text-align: center;border-radius: 5px;color:#fff;border:1px solid #fff;}
+    .balance-content .select{border: 1px solid #f55!important;}
+</style>
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="personalMain">
+            <div class="personal">
+                {include file="common/member_left"}
+                <div   class="balance main-container">
+                    <div  class="operat-box"><span  class="main-container-title">余额充值</span>
+                    </div>
+                    <div  class="my-balance">
+                        <div >账户余额：</div>
+                        <div  class="balance">
+                            <div ></div>
+                            <div  class="red-text"><span 
+                                                                           style="font-size: 24px;">￥</span> <span
+                                     style="font-size: 36px;">0.00</span></div>
+                            <img  src="/images/balance2.png" alt=""></div>
+                    </div>
+                    <div  class="balance-content">
+                        <div  class="el-tabs el-tabs--top">
+                            <div class="el-tabs__header is-top">
+                                <div class="el-tabs__nav-wrap is-top">
+                                    <div class="el-tabs__nav-scroll">
+                                        <div role="tablist" class="el-tabs__nav is-top"
+                                             style="transform: translateX(0px);">
+                                            <div class="el-tabs__active-bar is-top"
+                                                 style="width: 56px; transform: translateX(0px);"></div>
+                                            <div id="tab-amount" aria-controls="pane-amount" role="tab" tabindex="0"
+                                                 class="el-tabs__item is-top is-active" aria-selected="true">充值金额
+                                            </div>
+                                            <div id="tab-record" aria-controls="pane-record" role="tab" tabindex="-1"
+                                                 class="el-tabs__item is-top">充值记录
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="el-tabs__content">
+                                <div  role="tabpanel" id="pane-amount" aria-labelledby="tab-amount"
+                                     class="el-tab-pane" style="">
+                                    <div  class="recharge-content">
+                                        <div >请选择您要充值的金额:</div>
+                                        <div  class="amount-content">
+                                            <div  class="amount-item select"><!---->
+                                                <div  class="red-text"><span 
+                                                                                               style="font-size: 16px;">￥</span>
+                                                    <span  style="font-size: 24px;">520</span></div>
+                                                <div  style="font-size: 14px;">
+                                                    赠
+                                                    ￥52
+                                                </div>
+                                            </div>
+                                            <div  class="amount-item"><!---->
+                                                <div  class="red-text"><span 
+                                                                                               style="font-size: 16px;">￥</span>
+                                                    <span  style="font-size: 24px;">1314</span></div>
+                                                <div  style="font-size: 14px;">
+                                                    赠
+                                                    ￥252
+                                                </div>
+                                            </div>
+                                            <div  class="amount-item"><!---->
+                                                <div  class="red-text"><span 
+                                                                                               style="font-size: 16px;">￥</span>
+                                                    <span  style="font-size: 24px;">5200</span></div>
+                                                <div  style="font-size: 14px;">
+                                                    赠
+                                                    ￥1314
+                                                </div>
+                                            </div>
+                                            <div  class="amount-item"><!---->
+                                                <div  class="red-text"><span 
+                                                                                               style="font-size: 16px;">￥</span>
+                                                    <span  style="font-size: 24px;">599</span></div>
+                                                <div  style="font-size: 14px;">
+                                                    赠
+                                                    ￥30
+                                                </div>
+                                            </div>
+                                            <div  class="amount-item"><!---->
+                                                <div  class="red-text"><span 
+                                                                                               style="font-size: 16px;">￥</span>
+                                                    <span  style="font-size: 24px;">3288</span></div>
+                                                <div  style="font-size: 14px;">
+                                                    赠
+                                                    ￥228
+                                                </div>
+                                            </div>
+                                            <div  class="amount-item"><!---->
+                                                <div  class="red-text"><span 
+                                                                                               style="font-size: 16px;">￥</span>
+                                                    <span  style="font-size: 24px;">4999</span></div>
+                                                <div  style="font-size: 14px;">
+                                                    赠
+                                                    ￥500
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div  class="diy-amount-content"><p >其他充值金额</p>
+                                        <div  class="el-input"><!----><input type="number"
+                                                                                               autocomplete="off"
+                                                                                               placeholder="请输入充值金额"
+                                                                                               min="0"
+                                                                                               class="el-input__inner">
+                                            <!----><!----><!----><!----></div>
+                                        <p  class="nomoney">其他金额充值无赠送哦！</p></div>
+                                    <div  class="pay">
+                                        <div  class="pay-btn">去支付</div>
+                                        <div ><span >合计：</span> <span
+                                                 class="red-text"><span 
+                                                                                          class="unit">￥</span> <span
+                                                 class="amount">0</span></span></div>
+                                    </div>
+                                    <p >充值说明：</p>
+                                    <div  style="padding: 0px 20px;"><p >
+                                        1、充值金额仅能在BEEGOPLUS集运平台内进行运费抵扣;</p>
+                                        <p >2、充值费用长期有效，剩余金额不予退还;</p>
+                                        <p >
+                                            3、充值金额无法与微信支付或者支付宝搭配支付，请合理选择金额充值。
+                                        </p></div>
+                                </div>
+                                <div  role="tabpanel" id="pane-record" aria-labelledby="tab-record"
+                                     class="el-tab-pane" aria-hidden="true" style="display: none;">
+                                    <div  class="empty"><img 
+                                                                               src="/images/empty.png" alt="">
+                                        <div  style="padding-top: 20px;">暂无记录</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{include file="common/gather_footer"}

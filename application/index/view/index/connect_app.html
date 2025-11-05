@@ -1,0 +1,62 @@
+{include file="common/header"}
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;}
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+    .content .box_content{background:{$website['color']};color:{$website['color_word']};border:1px solid {$website['color_word']};font-size:25px;text-align:center;padding:30px;width:100%;}
+    .content .box_content img{width:40px;margin-right:5px;}
+</style>
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="content" >
+            <div class="col-md-12">
+                <a href="javascript:history.back(-1);">
+                    <div style="display:flex;align-items:center;border: 1px solid #fff;width: fit-content;padding: 10px 20px;border-radius: 15px;background: #8f8b8b;margin-bottom:30px;">
+                        <img class="" src="./img/account/back.png" alt="" style="width: 18px;margin-right: 10px;"/>
+                        返回
+                    </div>
+                </a>
+                {if empty($app)}
+                    <p style="color:{$website['color_word']};font-size:20px;text-align:center;">——暂无应用——</p>
+                {else}
+                    {volist name="app" id="vo"}
+                        {if $vo.id==1}
+                        <a href="https://decl.gogo198.cn/customs/login" target="_blank">
+                            <div class="box_content disf">
+                                <img class="" src="./img/account/system.png" alt="" />
+                                    进口报关系统
+                            </div>
+                        </a>
+                            <a href="https://decl.gogo198.cn/mobile/login" target="_blank">
+                            <div class="box_content disf">
+                                <img class="" src="./img/account/system.png" alt="" />
+                                    出口报关系统
+                            </div>
+                        </a>
+                        {/if}
+                        {if($vo.id==2)}
+                        {/if}
+                        {if($vo.id==3)}
+                        <a href="https://gather.gogo198.cn/centralizer_manage/login" target="_blank">
+                            <div class="box_content disf">
+                                <img class="" src="./img/account/system.png" alt="" />
+                                    集运系统
+                            </div>
+                        </a>
+                        {/if}
+                        <a href="http://seller.gogo198.cn/login?gogoid=<?php echo session('account.custom_id');?>" target="_blank">
+                            <div class="box_content disf">
+                                <img class="" src="./img/account/system.png" alt="" />
+                                    商城系统
+                            </div>
+                        </a>
+                    {/volist}
+                {/if}
+            </div>
+        </div>
+    </div>
+</section>
+{include file="common/footer"}

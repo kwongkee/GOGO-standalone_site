@@ -1,0 +1,325 @@
+{include file="common/header"}
+<link rel="stylesheet" href="https://www.gogo198.net/layui/font/iconfont.woff?v=256">
+<link rel="stylesheet" href="layui/css/layui.css">
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;background:{$website['color_inner']};}
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+    .content .box_content{background:{$website['color']};color:{$website['color_word']};border:1px solid {$website['color_word']};font-size:25px;text-align:center;padding:30px;width:100%;}
+    .content .box_content img{width:40px;margin-right:5px;}
+    .inquiry_box{display:none;}
+    .navbar_menu{color: {$website['color_word']};font-size: 16px;margin-bottom:10px;}
+    .context,.navbar_menu a{color:{$website['color_word']};}
+    .context{margin-bottom:1cm;}
+    .layui-colla-title{color:{$website['color_word']};background-color:#0e2e68;}
+    .preamble_con,.layui-colla-content{color:{$website['color_word']};font-size:15px;}
+    .layui-colla-content p{margin-bottom:0.3cm;}
+    
+    .navbar_menu{color:{$website['color_word']};font-size:16px;margin-bottom:10px;margin-top:15px;margin-left:10px;}
+    .navbar_menu a{color:{$website['color_word']};}
+    .navbar_menu a:last-child{color:#D2A778;font-weight:700;}
+    .layui-elem-field legend{border-bottom: 0;color: #fff;width:fit-content;}
+    .no_sub_info .layui-form-item{border-bottom: 1px solid #bbbbbb;padding-bottom: 5px;}
+    .no_sub_info .layui-form-label{padding: 0 10px;text-align: left;font-weight:600;}
+    .no_sub_info .layui-input-block{min-height: fit-content;margin-left: 80px;}
+</style>
+<script src="layui/layui.js"></script>
+<section id="content" class="non_topimg">
+    <div class="container">
+        <p class="navbar_menu"><a href="/?s=index/express&id={$id}">集运管理</a>&nbsp;<span style="color:#d1a575;">\</span>
+            {if $type==1}&nbsp;<a href="/?s=index/express_list&id={$id}&typ=1">待处理运单列表</a>&nbsp;<span style="color:#d1a575;">\</span>{/if}
+            {if $type==2}&nbsp;<a href="/?s=index/express_list&id={$id}&typ=2">已处理运单列表</a>&nbsp;<span style="color:#d1a575;">\</span>{/if}
+            <a href="javascript:;">运单详情</a>&nbsp;<span style="color:#d1a575;">\</span>
+        </p>
+
+        <div class="content" style="padding:0px;">
+            <div class="layui-collapse" lay-accordion>
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">发件人信息</h2>
+                    <div class="layui-colla-content no_sub_info">
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">名称</div>
+                            <div class="layui-input-block disf">
+                                {$info['send_name']}
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">电话</div>
+                            <div class="layui-input-block disf">
+                               {$info['send_mobile_area']}-{$info['send_mobile']}
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">邮编</div>
+                            <div class="layui-input-block disf">
+                                <div class="send_postal_div">
+                                    <div class="send_postal_rule disf"></div>
+                                    <div class="input_postal_rule disf" style="width: 200px;">
+                                        {volist name="info.send_postal" id="vo"}
+                                            {$vo}
+                                        {/volist}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <fieldset class="layui-elem-field">
+                            <legend>地址</legend>
+                            <div class="layui-field-box">
+                                <div class="layui-form-item">
+                                    <div class="layui-form-label">国家</div>
+                                    <div class="layui-input-block">
+                                        {volist name="country" id="vo"}
+                                            {if $info['send_address']['country']==$vo['id']}{$vo['param2']}{/if}
+                                        {/volist}
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">省/州</label>
+                                    <div class="layui-input-block">
+                                        {volist name="area" id="vo"}
+                                            {if $vo['id']==$info['send_address']['province_code']}{$vo['param2']}{/if}
+                                        {/volist}
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">城市</label>
+                                    <div class="layui-input-block">
+                                        {volist name="area" id="vo"}
+                                            {if $vo['id']==$info['send_address']['city_code']}{$vo['param2']}{/if}
+                                        {/volist}
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">地址1</label>
+                                    <div class="layui-input-block">
+                                        {$info['send_address']['address1']}
+                                    </div>
+                                </div>
+                                {volist name="info.send_address.address2" key="key" id="vo"}
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">地址<?php echo $key+1;?></label>
+                                        <div class="layui-input-block disf">
+                                            {$vo}
+                                        </div>
+                                    </div>
+                                {/volist}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">收件人信息</h2>
+                    <div class="layui-colla-content no_sub_info">
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">名称</div>
+                            <div class="layui-input-block disf">
+                                {$info['receive_name']}
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">电话</div>
+                            <div class="layui-input-block disf">
+                                {$info['receive_mobile_area']}-{$info['receive_mobile']}
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">邮编</div>
+                            <div class="layui-input-block disf">
+                                <div class="receive_postal_div">
+                                    <div class="receive_postal_rule disf"></div>
+                                    <div class="input_postal_rule2 disf" style="width: 200px;">
+                                        {volist name="info.receive_postal" id="vo"}
+                                            {$vo}
+                                        {/volist}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <fieldset class="layui-elem-field">
+                            <legend>地址</legend>
+                            <div class="layui-field-box">
+                                <div class="layui-form-item">
+                                    <div class="layui-form-label">国家</div>
+                                    <div class="layui-input-block">
+                                        {volist name="country" id="vo"}
+                                            {if $info['receive_address']['country']==$vo['id']}{$vo['param2']}{/if}
+                                        {/volist}
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">省/州</label>
+                                    <div class="layui-input-block">
+                                        {volist name="area" id="vo"}
+                                            {if $vo['id']==$info['receive_address']['province_code']}{$vo['param2']}{/if}
+                                        {/volist}
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">城市</label>
+                                    <div class="layui-input-block">
+                                        {volist name="area" id="vo"}
+                                            {if $vo['id']==$info['receive_address']['city_code']}{$vo['param2']}{/if}
+                                        {/volist}
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">地址1</label>
+                                    <div class="layui-input-block">
+                                        {$info['receive_address']['address1']}
+                                    </div>
+                                </div>
+                                {volist name="info.receive_address.address2" key="key" id="vo"}
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">地址<?php echo $key+1;?></label>
+                                        <div class="layui-input-block disf">
+                                            {$vo}
+                                        </div>
+                                    </div>
+                                {/volist}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">集运商信息</h2>
+                    <div class="layui-colla-content no_sub_info">
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">商户名称</div>
+                            <div class="layui-input-block disf">
+                                {$merchant['name']}
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">签收手机</div>
+                            <div class="layui-input-block disf">
+                                {$info['phone']}
+                            </div>
+                        </div>
+                        <fieldset class="layui-elem-field">
+                            <legend>仓库地址</legend>
+                            <div class="layui-field-box">
+                                <div class="layui-form-item">
+                                    <div class="layui-form-label">国家</div>
+                                    <div class="layui-input-block">
+                                        {volist name="country" id="vo"}
+                                            {if $info['merchant_warehouse']['country']==$vo['id']}{$vo['param2']}{/if}
+                                        {/volist}
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">省/州</label>
+                                    <div class="layui-input-block">
+                                        {volist name="area" id="vo"}
+                                            {if $vo['id']==$info['merchant_warehouse']['province_code']}{$vo['param2']}{/if}
+                                        {/volist}
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">市</label>
+                                    <div class="layui-input-block">
+                                        {volist name="area" id="vo"}
+                                            {if $vo['id']==$info['merchant_warehouse']['city_code']}{$vo['param2']}{/if}
+                                        {/volist}
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">地址1</label>
+                                    <div class="layui-input-block">
+                                        {$info['merchant_warehouse']['address1']}
+                                    </div>
+                                </div>
+                                {volist name="info.merchant_warehouse.address2" key="key" id="vo"}
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">地址<?php echo $key+1;?></label>
+                                    <div class="layui-input-block disf">
+                                        {$vo}
+                                    </div>
+                                </div>
+                                {/volist}
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">货物信息</h2>
+                    <div class="layui-colla-content no_sub_info layui-show">
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">货物清单</div>
+                            <div class="layui-input-block disf">
+                                <div class="layui-btn layui-btn-primary" onclick="openWindow({$id},1)">点击查看</div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">货物材积</div>
+                            <div class="layui-input-block disf">
+                                <div class="layui-btn layui-btn-primary" onclick="openWindow({$id},2)">点击查看</div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">物流渠道</div>
+                            <div class="layui-input-block disf">
+                                <div class="layui-btn layui-btn-primary" onclick="openWindow({$id},3)">点击查看</div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">物流运单</div>
+                            <div class="layui-input-block disf">
+                                <div class="layui-btn layui-btn-primary" onclick="openWindow({$id},4)">点击查看</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {if $info['status']==1}
+            <div style="text-align: center;margin-top:20px;">
+                <div class="layui-btn layui-btn-normal sure_data">确认数据无误，提交</div>
+            </div>
+            {/if}
+        </div>
+    </div>
+</section>
+
+{include file="common/footer"}
+<script>
+    layui.use(['layer', 'form', 'table', 'upload','element'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , element = layui.element
+            , upload = layui.upload
+            , table = layui.table;
+
+        form.render(null,'component-form-element');
+
+        $('.sure_data').click(function(){
+            $.ajax({
+                url:"/?s=index/express_info&pa=1&id={$id}&type={$type}",
+                method:'post',
+                data:{},
+                dataType:'JSON',
+                success:function(res){
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            parent.location.reload();
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+        });
+    });
+    
+    //货物信息-start
+    function openWindow(id,type){
+        var $ = layui.$
+            , layer = layui.layer;
+        
+        window.location.href="/?s=index/goods_info&id="+id+"&type={$type}&gtype="+type;
+    }
+    //货物信息-end
+
+</script>

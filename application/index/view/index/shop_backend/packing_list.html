@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>独立站平台 - website.gogo198.net</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="layui/css/layui.css">
+
+    <style>
+        html{height:100%;}
+        :root {--primary: #8a2be2;--primary-dark: #6a1cb9;--primary-light: #9b4de3;--secondary: #bb86fc;--accent: #e6d7f5;--text: #333333;--text-light: #f8f8f8;--background: #f9f5fd;--card-bg: #ffffff;--gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));--gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary));--shadow: 0 10px 30px rgba(138, 43, 226, 0.15);--shadow-hover: 0 15px 35px rgba(138, 43, 226, 0.25);}
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        body {background-color: var(--background);color: var(--text);line-height: 1.6;overflow-x: hidden;background-image: radial-gradient(circle at 5% 10%, rgba(187, 134, 252, 0.1) 0%, transparent 20%), radial-gradient(circle at 95% 5%, rgba(187, 134, 252, 0.1) 0%, transparent 20%), radial-gradient(circle at 50% 90%, rgba(187, 134, 252, 0.1) 0%, transparent 20%);}
+        h1, h2, h3, h4, h5, h6 {font-family: 'Montserrat', sans-serif;font-weight: 700;}
+
+        /* 导航栏样式 */
+        header {background: rgba(255, 255, 255, 0.95);color: var(--text);padding: 15px 0;box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);position: sticky;top: 0;z-index: 1000;backdrop-filter: blur(10px);}
+        nav {display: flex;justify-content: space-between;align-items: center;position: relative;}
+        .logo {font-size: 1.8rem;font-weight: 700;display: flex;align-items: center;background: var(--gradient);-webkit-background-clip: text;background-clip: text;color: transparent;z-index: 1001;}
+        .logo i {margin-right: 10px;color: var(--primary);}
+        .nav-links {display: flex;list-style: none;}
+        .nav-links li {margin-left: 25px;position: relative;}
+        .nav-links a {color: var(--text);text-decoration: none;font-weight: 500;transition: all 0.3s ease;padding: 8px 12px;border-radius: 4px;position: relative;display: flex;align-items: center;}
+        .nav-links a::after {content: '';position: absolute;bottom: 0;left: 50%;width: 0;height: 2px;background: var(--gradient);transition: all 0.3s ease;transform: translateX(-50%);}
+        .nav-links a:hover {color: var(--primary);}
+        .nav-links a:hover::after {width: 80%;}
+        .auth-buttons {display: flex;align-items: center;}
+        .btn {padding: 12px 25px;border-radius: 50px;text-decoration: none;font-weight: 600;transition: all 0.3s ease;cursor: pointer;display: inline-block;text-align: center;border: none;font-family: 'Montserrat', sans-serif;}
+        .btn-outline {border: 2px solid var(--primary);color: var(--primary);background: transparent;margin-right: 15px;}
+        .btn-outline:hover {background: var(--primary);color: white;transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-primary {background: var(--gradient);color: white;border: 2px solid transparent;}
+        .btn-primary:hover {background: transparent;border-color: var(--primary);color: var(--primary);transform: translateY(-3px);box-shadow: var(--shadow);}
+
+        /* 表单样式 */
+        .form-section {margin-bottom: 30px;}
+        .form-title {font-size: 1.3rem;margin-bottom: 20px;color: var(--primary-dark);display: flex;align-items: center}
+        .form-title i {margin-right: 10px;}
+        .form-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));gap: 20px;}
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select,
+        .form-group textarea {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;}
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {border-color: var(--primary);outline: none;}
+        .form-group textarea {min-height: 120px;resize: vertical;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
+
+
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}
+        .form-group input:focus,
+        .form-group select:focus {border-color: var(--primary);outline: none;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
+
+        .disf{display: flex;align-items: center;}
+        .layui-form-label{width: 100px;}
+
+        /*自定义多选框样式======START*/
+        .xm-label-block,xm-select > .xm-body .xm-option.selected{background-color:var(--primary) !important;color:#fff !important;}
+        xm-select .diy_search.active{border-color:var(--primary) !important;color: #fff !important;background:var(--primary) !important;}
+        /*自定义多选框样式======END*/
+        xm-select > .xm-body .xm-search > i{right:15px;}
+
+        /* 模态框样式 */
+        .modal {display: none;position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.5);backdrop-filter: blur(5px);z-index: 2000;align-items: center;justify-content: center;}
+        .modal-content {background: white;border-radius: 20px;padding: 30px;width: 90%;max-width: 90%;box-shadow: var(--shadow-hover);position: relative;}
+        .close-modal {position: absolute;top: 20px;right: 20px;font-size: 1.5rem;color: #999;cursor: pointer;transition: color 0.3s ease;}
+        .close-modal:hover {color: var(--primary);}
+        .modal-title {font-size: 1.5rem;margin-bottom: 20px;color: var(--primary);}
+
+        /*装箱单样式*/
+        body{background:#fff;}
+        label {display: inline-block;max-width: 100%;margin-bottom: 5px;font-weight: 700;}
+
+        .container {max-width: 1200px;margin: 20px auto;padding: 20px;font-family: Arial, sans-serif;margin-top:0;}
+        .template-section, .params-section {margin: 20px 0;}
+        h1 {text-align: center;color: #333;}
+        .header-info {margin: 20px 0;}
+        .header-info .row{display:inline-flex;}
+        .row {margin: 10px 0;}
+        .row label {display: inline-block;width: 170px;font-weight: bold;}
+        .row input {padding: 8px;width: 300px;border: 1px solid #ccc;border-radius: 4px;}
+        #packing-table {width: 100%;border-collapse: collapse;margin: 20px 0;}
+        #packing-table th, #packing-table td {padding: 8px;border: 1px solid #000;text-align: center;font-size: 14px;}
+        #packing-table th {background-color: #f2f2f2;font-weight: bold;}
+        .table-input {width: 90%;padding: 5px;border: 1px solid #ccc;border-radius: 4px;}
+        .controls {margin: 20px 0;}
+        button {padding: 8px 16px;margin: 5px;background-color: #4CAF50;color: white;border: none;border-radius: 4px;cursor: pointer;}
+        button:hover {background-color: #45a049;}
+        tfoot td {font-weight: bold;}
+
+        .container .disf{display: flex;align-items: center;}
+        .container .template_header .template-section{margin-left:15px;}
+        .container .layui-input {padding: 8px;width: 200px;border: 1px solid #ccc;border-radius: 4px;display: inline-block;}
+        .container select {padding: 8px;max-width: 300px;border: 1px solid #ccc;border-radius: 4px;}
+        .container .templates{display:none;}
+
+        .controlsBtn{display: none;}
+
+        /* 动画 */
+        @keyframes fadeIn {
+            from {opacity: 0;transform: translateY(10px);}
+            to {opacity: 1;transform: translateY(0);}
+        }
+
+        @media (max-width: 576px) {
+            .btn {padding: 10px 20px;font-size: 0.9rem;}
+            /*.form-actions {flex-direction: column;}*/
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="template_header disf">
+        <div class="template-section">
+            <label for="template">选择模板样式：</label>
+            <select id="template">
+                <option value="">请选择</option>
+                {volist name="data" key="k" id="v"}
+                <option value="temp{$v['id']}">{$v['name']}</option>
+                {/volist}
+            </select>
+        </div>
+        <div class="template-section">
+            <label for="template">
+                <select id="order_type">
+                    <option value="1">商城订单</option>
+                    <option value="2">集运订单</option>
+                </select>
+            </label>
+            <input type="text" class="layui-input" id="ordersn" placeholder="请输入所属订单类型的编号">
+            <button id="connect_order">关联</button>
+        </div>
+    </div>
+
+    <!--装箱单：样式一-->
+    <div class="temp1 templates">
+        <h1>装箱单</h1>
+
+        <!-- 固定信息输入区域 -->
+        <div class="header-info">
+            <div class="row">
+                <label>公司名称/COMPANY NAME:</label>
+                <input type="text" id="companyName" name="companyName" placeholder="输入公司名称">
+            </div>
+            <div class="row">
+                <label>CONSIGNEE（收货人）:</label>
+                <input type="text" id="consignee" name="consignee" placeholder="输入收货人">
+            </div>
+            <div class="row">
+                <label>（发货人）PERSON IN-CHARGE:</label>
+                <input type="text" id="shipper" name="shipper" placeholder="输入发货人">
+            </div>
+            <div class="row">
+                <label>COUNTRY（国家）:</label>
+                <input type="text" id="country" name="country" placeholder="输入国家" value="">
+            </div>
+            <div class="row">
+                <label>（发货地址）SUPPLIER ADDRESS:</label>
+                <input type="text" id="supplierAddress" name="supplierAddress" placeholder="输入发货地址">
+            </div>
+            <div class="row">
+                <label> 唛头 / MARKING CODE:</label>
+                <input type="text" id="markingCode" name="markingCode" placeholder="输入唛头">
+            </div>
+            <div class="row">
+                <label>联系电话/CONTACT NUMBER:</label>
+                <input type="text" id="contactNumber" name="contactNumber" placeholder="输入电话">
+            </div>
+            <div class="row">
+                <label>FROM（产地）:</label>
+                <input type="text" id="from" name="from" placeholder="输入产地">
+            </div>
+            <div class="row">
+                <label>出货日期 / DATE:</label>
+                <input type="date" id="date" name="date">
+            </div>
+            <div class="row">
+                <label>快递单号 / TRANSPORT NUMBER:</label>
+                <input type="text" id="transportNumber" name="transportNumber" placeholder="输入快递单号">
+            </div>
+        </div>
+        <!-- 动态表格 -->
+        <table id="packing-table" class="packing-table" border="1">
+            <thead>
+            <tr>
+                <th>中/英文品名 DESCRIPTION</th>
+                <th>产品照片 PRODUCT PHOTO</th>
+                <th>牌子名称 BRAND NAME</th>
+                <th>每一箱数量 UNITS PER CARTON</th>
+                <th>每一箱货值 VALUE PER CARTON</th>
+                <th>单价 UNIT PRICE</th>
+                <th>箱号</th>
+                <th>件数 PACKAGE</th>
+                <th>单件规格 PER DIMENSION</th>
+                <th>单件重量 PER WEIGHT</th>
+            </tr>
+            </thead>
+            <tbody id="table-body" class="table-body">
+            <tr>
+                <td><input type="text" class="table-input product_name" value=""></td>
+                <td><input type="file" accept="image/*" class="table-input product_pic"  value=""></td>
+                <td><input type="text" class="table-input product_brand" value=""></td>
+                <td><input type="number" class="table-input product_boxPreNum" value=""></td>
+                <td><input type="number" class="table-input product_boxPrice" value=""></td>
+                <td><input type="text" class="table-input product_price" value=""></td>
+                <td><input type="text" class="table-input product_boxNum" value=""></td>
+                <td><input type="number" class="table-input product_num" value=""></td>
+                <td><input type="text" class="table-input product_option" value=""></td>
+                <td><input type="number" class="table-input product_weight" value=""></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="3">总数量 TOTAL PIECES</td>
+                <td id="totalPieces" colspan="2"><input type="number" class="table-input" id="total_pieces"></td>
+                <td colspan="3">总金额 GRAND VALUE</td>
+                <td id="grandValue" colspan="2"><input type="number" class="table-input" id="grand_value"></td>
+            </tr>
+            <tr>
+                <td colspan="3">总件数 TOTAL PACKAGES</td>
+                <td id="totalPackages" colspan="2"><input type="number" class="table-input" id="total_packages"></td>
+                <td colspan="3">总立方数 TOTAL m³</td>
+                <td id="totalM3" colspan="2"><input type="number" class="table-input" id="total_m3"></td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <!--装箱单&商业发票：样式一-->
+    <div class="temp2 templates">
+        <h1>Commercial Invoice & PACKING LIST</h1>
+
+        <!-- 固定信息输入区域 -->
+        <div class="header-info">
+            <div class="row">
+                <label>DATE(日期):</label>
+                <input type="date" id="date" name="date">
+            </div>
+            <div class="row">
+                <label>Shipper/Exporter(Complete name):</label>
+                <input type="text" id="shipper" name="shipper" placeholder="输入发货人名称">
+            </div>
+            <div class="row">
+                <label>Shipper/Exporter(Complete address):</label>
+                <input type="text" id="supplierAddress" name="supplierAddress" placeholder="输入发货人地址">
+            </div>
+            <div class="row">
+                <label>Consignee(Complete name):</label>
+                <input type="text" id="consignee" name="consignee" placeholder="输入收货人名称">
+            </div>
+            <div class="row">
+                <label>Consignee(Complete address):</label>
+                <input type="text" id="consigneeAddress" name="consigneeAddress" placeholder="输入收货人地址">
+            </div>
+            <div class="row">
+                <label>Contact person:</label>
+                <input type="text" id="contactPerson" name="contactPerson" placeholder="输入发货联系人名称" value="">
+            </div>
+            <div class="row">
+                <label>Postal Code ：</label>
+                <input type="text" id="postalCode" name="postalCode" placeholder="输入收货地址邮政编码">
+            </div>
+            <div class="row">
+                <label>发货人TEL:</label>
+                <input type="text" id="contactNumber" name="contactNumber" placeholder="输入发货人电话">
+            </div>
+            <div class="row">
+                <label>收货人ATTN: </label>
+                <input type="text" id="attn" name="attn" placeholder="输入收货人attn">
+            </div>
+            <div class="row">
+                <label>收货人TEL: </label>
+                <input type="text" id="consigneeTel" name="consigneeTel" placeholder="输入收货人联系电话">
+            </div>
+        </div>
+        <!-- 动态表格 -->
+        <table id="packing-table" class="packing-table" border="1">
+            <thead>
+            <tr>
+                <th>number(序号)</th>
+                <th>FBA编号</th>
+                <th>Reference NO.</th>
+                <th>size（Long * wide * high）尺寸</th>
+                <th>gross weight（总毛重）</th>
+                <th>Description（英文品名）</th>
+                <th>Chinese name（中文品名）</th>
+                <th>magnetic or not（是否带磁） </th>
+                <th>electrified or not（是否带电）</th>
+                <th>Material(材质)</th>
+                <th>Qty(PCS)（产品数量）</th>
+                <th>HS code（海关编码）</th>
+                <th>UnitValue（USD）（单价）</th>
+                <th>TotalValue（USD）（总价）</th>
+                <th>Product pictures（产品图片）</th>
+            </tr>
+            </thead>
+            <tbody id="table-body" class="table-body">
+            <tr>
+                <td><input type="text" class="table-input product_number" value=""></td>
+                <td><input type="text" class="table-input fba_number" value=""></td>
+                <td><input type="text" class="table-input reference_number" value=""></td>
+                <td><input type="text" class="table-input size_number" value=""></td>
+                <td><input type="text" class="table-input gross_weight" value=""></td>
+                <td><input type="text" class="table-input product_enname" value=""></td>
+                <td><input type="text" class="table-input product_zhname" value=""></td>
+                <td><input type="text" class="table-input magnetic_or_not" value=""></td>
+                <td><input type="text" class="table-input electrified_or_not" value=""></td>
+                <td><input type="text" class="table-input material" value=""></td>
+                <td><input type="number" class="table-input product_piece_num" value=""></td>
+                <td><input type="number" class="table-input hs_code" value=""></td>
+                <td><input type="text" class="table-input product_price" value=""></td>
+                <td><input type="text" class="table-input product_total_price" value=""></td>
+                <td><input type="file" accept="image/*" class="table-input product_pic"  value=""></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="3">合计</td>
+                <td id="totalPieces" colspan="12"><input type="number" class="table-input" id="total_pieces"></td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <!-- 控制按钮 -->
+    <div class="controls controlsBtn">
+        <button id="add-row">添加行</button>
+        <button id="delete-row" style="background:#ff2222;">删除最后一行</button>
+        <button id="export-pdf" style="background:#1790FF;">导出为 PDF</button>
+    </div>
+</div>
+</body>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="layui/layui.js"></script>
+<script src="cklein/js/jspdf.umd.min.js"></script>
+<script src="cklein/js/jspdf.plugin.autotable.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // 模板切换
+        $('#template').change(function() {
+            let temp_id = $(this).val();
+
+            $('.container .templates').hide();
+            $('.container .'+temp_id).show();
+
+            if(temp_id!=''){
+                $('.controlsBtn').show();
+            }else{
+                $('.controlsBtn').hide();
+            }
+        });
+
+        //关联订单信息
+        $('#connect_order').click(function(){
+            let template = $('#template').val();
+            let order_type = $('#order_type').val();
+            let ordersn = $('#ordersn').val();
+
+            if(template==''){
+                alert('请先选择模板样式');return false;
+            }
+            if(ordersn==''){
+                alert('请输入正确的集运订单编号');return false;
+            }
+            $.post("/?s=index/packing_list",{'pa':1,'template_id':template,'order_type':order_type,'ordersn':ordersn},function(data){
+                alert(data.msg);
+
+                if(data.code==0){
+                    var html = '';
+                    if(template=='temp1') {
+                        //装箱单模板一
+                        $('.' + template).find('.header-info').find('#companyName').val(data.data.send_company);
+                        $('.' + template).find('.header-info').find('#shipper').val(data.data.sender);
+                        $('.' + template).find('.header-info').find('#supplierAddress').val(data.data.send_address);
+                        $('.' + template).find('.header-info').find('#contactNumber').val(data.data.send_number);
+                        $('.' + template).find('.header-info').find('#date').val(data.data.send_date);
+                        $('.' + template).find('.header-info').find('#consignee').val(data.data.consignee);
+                        $('.' + template).find('.header-info').find('#country').val(data.data.consignee_country);
+                        $('.' + template).find('.header-info').find('#markingCode').val(data.data.marking_code);
+                        $('.' + template).find('.header-info').find('#from').val(data.data.from);
+                        $('.' + template).find('.header-info').find('#transportNumber').val(data.data.transportNumber);
+
+                        for (var i = 0; i < data.data.goods.length; i++) {
+                            html += '<tr>\n' +
+                                '      <td><input type="text" class="table-input product_name" value="' + data.data.goods[i].name + '"></td>\n';
+                            if (data.data.goods[i].picture == '') {
+                                html += '<td><input type="file" accept="image/*" class="table-input product_pic"></td>\n';
+                            } else {
+                                html += '      <td><img src="' + data.data.goods[i].picture + '" style="width:60px;height:60px;"></td>\n';
+                            }
+
+                            html += '      <td><input type="text" class="table-input product_brand" value="' + data.data.goods[i].brand + '"></td>\n' +
+                                '      <td><input type="number" class="table-input product_boxPreNum" value=""></td>\n' +
+                                '      <td><input type="number" class="table-input product_boxPrice" value=""></td>\n' +
+                                '      <td><input type="text" class="table-input product_price" value="' + data.data.goods[i].currency + ' ' + data.data.goods[i].price + '"></td>\n' +
+                                '      <td><input type="text" class="table-input product_boxNum" value=""></td>\n' +
+                                '      <td><input type="number" class="table-input product_num" value="' + data.data.goods[i].package + '"></td>\n' +
+                                '      <td><input type="text" class="table-input product_option" value="' + data.data.goods[i].option_name + '"></td>\n' +
+                                '      <td><input type="number" class="table-input product_weight" value="'+data.data.goods[i].grosswt+'"></td>\n'+
+                                '</tr>';
+                        }
+                    }
+                    else if(template=='temp2'){
+                        //装箱单&商业发票模板一
+                        $('.'+template).find('.header-info').find('#date').val(data.data.send_date);
+                        $('.'+template).find('.header-info').find('#shipper').val(data.data.sender);
+                        $('.'+template).find('.header-info').find('#supplierAddress').val(data.data.send_address);
+                        $('.'+template).find('.header-info').find('#contactNumber').val(data.data.send_number);
+                        $('.'+template).find('.header-info').find('#consignee').val(data.data.consignee);
+                        // $('.'+template).find('.header-info').find('#consigneeAddress').val(data.data.consigneeAddress);
+                        $('.'+template).find('.header-info').find('#consigneeTel').val(data.data.marking_code);
+
+                        for(var i=0;i<data.data.goods.length;i++){
+                            let num = i+1;
+                            html += '<tr>\n' +
+                                '                    <td><input type="text" class="table-input product_number" value="'+num+'"></td>\n' +
+                                '                    <td><input type="text" class="table-input fba_number" value=""></td>\n' +
+                                '                    <td><input type="text" class="table-input reference_number" value=""></td>\n' +
+                                '                    <td><input type="text" class="table-input size_number" value="'+data.data.goods[i].size+'"></td>\n' +
+                                '                    <td><input type="text" class="table-input gross_weight" value="'+data.data.goods[i].grosswt+'"></td>\n' +
+                                '                    <td><input type="text" class="table-input product_enname" value=""></td>\n' +
+                                '                    <td><input type="text" class="table-input product_zhname" value="'+data.data.goods[i].name+'"></td>\n' +
+                                '                    <td><input type="text" class="table-input magnetic_or_not" value=""></td>\n' +
+                                '                    <td><input type="text" class="table-input electrified_or_not" value=""></td>\n' +
+                                '                    <td><input type="text" class="table-input material" value=""></td>\n' +
+                                '                    <td><input type="number" class="table-input product_piece_num" value="'+data.data.goods[i].package+'"></td>\n' +
+                                '                    <td><input type="number" class="table-input hs_code" value=""></td>\n' +
+                                '                    <td><input type="text" class="table-input product_price" value="'+data.data.goods[i].currency+' '+data.data.goods[i].price+'"></td>\n' +
+                                '                    <td><input type="text" class="table-input product_total_price" value="'+data.data.goods[i].currency+' '+data.data.goods[i].total_price+'"></td>\n';
+                            if (data.data.goods[i].picture != '') {
+                                html+='                    <td><img src="'+data.data.goods[i].picture+'" style="width:60px;height:60px;"></td>\n';
+                            }
+                            else{
+                                html +='                    <td><input type="file" accept="image/*" class="table-input product_pic" value=""></td>\n';
+                            }
+                            html+='                </tr>';
+                        }
+                    }
+
+                    $('.'+template).find('#packing-table').find('.table-body').html(html);
+                }
+            });
+        });
+
+        // 添加详情行，已判断是哪种模板格式
+        $('#add-row').click(function() {
+            var newRow = ``;
+            var template = $('#template').val();
+
+            if(template=='temp1'){
+                newRow = `
+                    <tr>
+                        <td><input type="text" class="table-input product_name"></td>
+                        <td><input type="file" accept="image/*" class="table-input product_pic"></td>
+                        <td><input type="text" class="table-input product_brand"></td>
+                        <td><input type="number" class="table-input product_boxPreNum"></td>
+                        <td><input type="number" class="table-input product_boxPrice"></td>
+                        <td><input type="text" class="table-input product_price"></td>
+                        <td><input type="text" class="table-input product_boxNum"></td>
+                        <td><input type="number" class="table-input product_num"></td>
+                        <td><input type="text" class="table-input product_option"></td>
+                        <td><input type="number" class="table-input product_weight"></td>
+                    </tr>
+                `;
+            }
+            else if(template=='temp2'){
+                //装箱单&发票模板一
+                newRow = `<tr>
+                    <td><input type="text" class="table-input product_number" value=""></td>
+                    <td><input type="text" class="table-input fba_number" value=""></td>
+                    <td><input type="text" class="table-input reference_number" value=""></td>
+                    <td><input type="text" class="table-input size_number" value=""></td>
+                    <td><input type="text" class="table-input gross_weight" value=""></td>
+                    <td><input type="text" class="table-input product_enname" value=""></td>
+                    <td><input type="text" class="table-input product_zhname" value=""></td>
+                    <td><input type="text" class="table-input magnetic_or_not" value=""></td>
+                    <td><input type="text" class="table-input electrified_or_not" value=""></td>
+                    <td><input type="text" class="table-input material" value=""></td>
+                    <td><input type="number" class="table-input product_piece_num" value=""></td>
+                    <td><input type="number" class="table-input hs_code" value=""></td>
+                    <td><input type="text" class="table-input product_price" value=""></td>
+                    <td><input type="text" class="table-input product_total_price" value=""></td>
+                    <td><input type="file" accept="image/*" class="table-input product_pic"  value=""></td>
+                </tr>`;
+            }
+
+            $('.'+template).find('.table-body').append(newRow);
+            updateTotals();
+        });
+
+        // 删除最后一行详情，已判断是哪种模板格式
+        $('#delete-row').click(function() {
+            let template = $('#template').val();
+
+            if ($('.'+template).find('.table-body tr').length > 1) {
+                $('.'+template).find('.table-body tr:last').remove();
+                updateTotals();
+            }
+        });
+
+        // 更新总计（待改）
+        function updateTotals() {
+            let template = $('#template').val();
+            let totalPieces = 0;
+            let grandValue = 0;
+            let totalM3 = 0;
+
+            // $('#table-body tr').each(function() {
+            //     const pieces = parseFloat($(this).find('td:eq(3) input').val()) || 0; // 每箱数量
+            //     const value = parseFloat($(this).find('td:eq(4) input').val()) || 0; // 每箱货值
+            //     const dimension = $(this).find('td:eq(7) input').val(); // 包装尺寸
+            //     totalPieces += pieces;
+            //     grandValue += value;
+            //     // 简化处理：假设尺寸格式为 "长*宽*高"，计算立方米
+            //     if (dimension) {
+            //         const dims = dimension.split('*').map(d => parseFloat(d) || 0);
+            //         if (dims.length === 3) {
+            //             totalM3 += (dims[0] * dims[1] * dims[2]) / 1000000; // 转换为立方米（cm³ -> m³）
+            //         }
+            //     }
+            // });
+            //
+            // $('#totalPieces').text(totalPieces);
+            // $('#grandValue').text(grandValue.toFixed(2));
+            // $('#totalM3').text(totalM3.toFixed(2));
+        }
+
+        // 监听输入变化更新总计
+        $('#table-body').on('input', 'input', updateTotals);
+
+        // 导出 PDF（待修改）
+
+        $('#export-pdf').click(function() {
+            let template = $('#template').val();
+            // 引入 jsPDF 和支持中文的字体
+            const { jsPDF } = window.jspdf;
+
+            if(template=='temp1'){
+                const doc = new jsPDF({
+                    orientation: 'portrait',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+
+                doc.addFileToVFS('msyh.ttf', 'font/msyh.ttf'); // 替换为实际字体文件路径
+                doc.addFont('font/msyh.ttf', 'msyh', 'normal');
+                doc.setFont('msyh'); // 设置默认字体为 Microsoft YaHei
+
+                // 添加固定信息（支持中文）
+                doc.setFontSize(20);
+                doc.text('装箱单', 95, 15);
+                doc.setFontSize(11);
+
+                //订单头部表格=============================================================start
+                // 准备头部表格数据
+                const tableData = [
+                    ['公司名称/COMPANY NAME.：', $('#companyName').val(), 'CONSIGNEE（收货人）.：',$('#consignee').val()],
+                    ['（发货人）PERSON IN-CHARGE.：', $('#shipper').val(), 'Country（国家）.：', $('#country').val()],
+                    ['（发货地址）SUPPLIER ADDRESS.：', $('#supplierAddress').val(), '唛头 / MARKING CODE ：',$('#markingCode').val()],
+                    ['联系电话 / CONTACT NUMBER.：', $('#contactNumber').val(), 'From（产地）.：',$('#from').val()],
+                    ['出货日期 / DATE.：', $('#date').val(), '快递单号 / TRANSPORT NUMBER.：',$('#transportNumber').val()]
+                ];
+
+                // 设置表格样式
+                const tableOptions = {
+                    startY: 20, // 表格在 PDF 页面上开始的 Y 坐标
+                    head: [], // 因为不需要表头，这里设为空数组
+                    body: tableData, // 表格主体数据
+                    styles: {
+                        font: 'msyh', // 使用中文字体
+                        fontSize: 9, // 字体大小
+                        halign: 'left', // 水平对齐方式为左对齐
+                        valign: 'middle', // 垂直对齐方式为居中
+                        border: 1, // 单元格边框
+                        lineWidth: 0.5, // 边框线宽
+                        lineColor: '#000000', // 边框颜色
+                        cellPadding: 2 // 单元格内边距
+                    },
+                    theme: 'plain', // 使用简单主题，无斑马线效果
+                    columnStyles: {
+                        0: { width: 80 }, // 第一列宽度
+                        1: { width: 80 }, // 第二列宽度
+                        2: { width: 80 }, // 第三列宽度
+                        3: { width: 80 } // 第四列宽度（如果有更多列，依次设置）
+                    }
+                };
+
+                // 生成表格
+                doc.autoTable(tableOptions);
+                //订单头部表格=============================================================end
+
+                //产品详情表格=============================================================start
+                // 定义表格列和数据
+                const columns = [
+                    { header: '中/英文品名 DESCRIPTION', dataKey: 'product_name' },
+                    { header: '产品照片 PRODUCT PHOTO', dataKey: 'product_pic' },
+                    { header: '牌子名称 BRAND NAME', dataKey: 'product_brand' },
+                    { header: '每箱数量 UNITS PER CARTON', dataKey: 'product_boxPreNum' },
+                    { header: '每箱货值 VALUE PER CARTON', dataKey: 'product_boxPrice' },
+                    { header: '单价 UNIT PRICE', dataKey: 'product_price' },
+                    { header: '箱号', dataKey: 'box_num' },
+                    { header: '件数 PACKAGE', dataKey: 'product_num' },
+                    { header: '单件规格 PER DIMENSION', dataKey: 'product_option' },
+                    { header: '单件重量 PER WEIGHT', dataKey: 'product_weight' }
+                ];
+
+                const rows = [];
+                $('.'+template).find('#packing-table #table-body tr').each(function() {
+                    const row = {};
+                    $(this).find('td').each(function(index) {
+                        const value = $(this).find('input').val() || '';
+                        row[columns[index].dataKey] = value;
+                    });
+                    rows.push(row);
+                });
+
+                // 使用 autoTable 生成表格，设置样式
+                const finalY = doc.autoTable.previous.finalY;
+                doc.autoTable({
+                    startY: finalY+1,
+                    head: [columns.map(col => col.header)],
+                    body: rows.map(row => columns.map(col => row[col.dataKey])),
+                    theme: 'grid',
+                    styles: {
+                        font: 'msyh', // 使用中文字体
+                        fontSize: 9,
+                        halign: 'center',
+                        valign: 'middle',
+                        border: 1, // 单元格边框
+                        lineWidth: 0.5, // 边框线宽
+                        lineColor: '#000000', // 边框颜色
+                        cellPadding: 2 // 单元格内边距
+                    },
+                    columnStyles: {
+                        0: { cellWidth: 20 }, // 中/英文品名
+                        1: { cellWidth: 20 }, // 产品照片
+                        2: { cellWidth: 20 }, // 牌子名称
+                        3: { cellWidth: 20 }, // 每箱数量
+                        4: { cellWidth: 20 }, // 每箱货值
+                        5: { cellWidth: 20 }, // 单价
+                        6: { cellWidth: 15 }, // 箱号
+                        7: { cellWidth: 12 }, // 件数
+                        8: { cellWidth: 20 }, // 包装尺寸
+                        9: { cellWidth: 15 }  // 单件重量
+                    },
+                    headStyles: {
+                        fillColor: [242, 242, 242], // 表头背景色
+                        textColor: [0, 0, 0], // 表头文字颜色
+                        fontStyle: 'bold'
+                    }
+                });
+                //产品详情表格=============================================================end
+
+                //订单尾部表格=============================================================start
+                // 准备头部表格数据
+                const tableFootData = [
+                    ['总数量 TOTAL PIECES.', $('#total_pieces').val(), 'CONSIGNEE（收货人）.',$('#grand_value').val()],
+                    ['（发货人）PERSON IN-CHARGE.', $('#total_packages').val(), 'Country（国家）.', $('#total_m3').val()],
+                ];
+
+                // 设置表格样式
+                const finalY2 = doc.autoTable.previous.finalY;//获取底部
+                const tableFootOptions = {
+                    startY: finalY2+1, // 表格在 PDF 页面上开始的 Y 坐标
+                    head: [], // 因为不需要表头，这里设为空数组
+                    body: tableFootData, // 表格主体数据
+                    styles: {
+                        font: 'msyh', // 使用中文字体
+                        fontSize: 9, // 字体大小
+                        halign: 'left', // 水平对齐方式为左对齐
+                        valign: 'middle', // 垂直对齐方式为居中
+                        border: 1, // 单元格边框
+                        lineWidth: 0.5, // 边框线宽
+                        lineColor: '#000000', // 边框颜色
+                        cellPadding: 2 // 单元格内边距
+                    },
+                    theme: 'plain', // 使用简单主题，无斑马线效果
+                    columnStyles: {
+                        0: { width: 80 }, // 第一列宽度
+                        1: { width: 80 }, // 第二列宽度
+                        2: { width: 80 }, // 第三列宽度
+                        3: { width: 80 } // 第四列宽度（如果有更多列，依次设置）
+                    }
+                };
+
+                // 生成表格
+                doc.autoTable(tableFootOptions);
+                //订单尾部表格=============================================================end
+
+                //尾部文字提示=============================================================start
+                const finalY3 = doc.autoTable.previous.finalY;//获取底部
+                doc.setFontSize(7);
+                doc.text('ABOVE COMMODITIES ARE LICENSED FOR THE ULTIMATE DESTINATION SHOWN DIVERSION COUNTRY TO UNITED STATES LAW IS PROHIBITED', 14, finalY3+4);
+                doc.text('以上货物为目的国所许可进口,不违反目的国法律', 14, finalY3+8);
+                doc.text('I DECLARE ALL THE INFORMATION CONTAINED IN THIS INVOICE TO BE TRUE AND CORRECT', 14, finalY3+12);
+                doc.text('我声明发票上内容真实无误', 14, finalY3+16);
+                //尾部文字提示=============================================================end
+
+                // 保存 PDF
+                doc.save('packing-list.pdf');
+            }
+            else if(template=='temp2'){
+                const doc = new jsPDF({
+                    orientation: 'landscape',
+                    unit: 'mm',
+                    format: 'a4'
+                });
+
+                doc.addFileToVFS('msyh.ttf', 'font/msyh.ttf'); // 替换为实际字体文件路径
+                doc.addFont('font/msyh.ttf', 'msyh', 'normal');
+                doc.setFont('msyh'); // 设置默认字体为 Microsoft YaHei
+
+                // 添加固定信息（支持中文）
+                doc.setFontSize(20);
+                doc.text('Commercial  Invoice &  PACKING  LIST', 82, 15);
+                doc.setFontSize(11);
+
+                //订单头部表格=============================================================start
+                // 准备头部表格数据
+                const tableData = [
+                    ['Date(日期)：', $('.'+template).find('#date').val(), '空格部分为必填项目 ',''],
+                    ['Shipper/Exporter(Complete name)：', $('.'+template).find('#shipper').val(), 'Consignee(Complete name)：', $('.'+template).find('#consignee').val()],
+                    ['Shipper/Exporter(Complete address)：', $('.'+template).find('#supplierAddress').val(), 'Consignee(Complete address)：',$('.'+template).find('#consigneeAddress').val()],
+                    ['Contact person:', $('.'+template).find('#contactPerson').val(), 'Postal Code：',$('.'+template).find('#postalCode').val()],
+                    ['Shipper TEL:', $('.'+template).find('#contactNumber').val(), 'ATTN: ',$('.'+template).find('#attn').val()],
+                    ['Consignee TEL:',$('.'+template).find('#consigneeTel').val(),'','']
+                ];
+
+                // 设置表格样式
+                const tableOptions = {
+                    startY: 20, // 表格在 PDF 页面上开始的 Y 坐标
+                    head: [], // 因为不需要表头，这里设为空数组
+                    body: tableData, // 表格主体数据
+                    styles: {
+                        font: 'msyh', // 使用中文字体
+                        fontSize: 9, // 字体大小
+                        halign: 'left', // 水平对齐方式为左对齐
+                        valign: 'middle', // 垂直对齐方式为居中
+                        border: 1, // 单元格边框
+                        lineWidth: 0.5, // 边框线宽
+                        lineColor: '#000000', // 边框颜色
+                        cellPadding: 2 // 单元格内边距
+                    },
+                    theme: 'plain', // 使用简单主题，无斑马线效果
+                    columnStyles: {
+                        0: { width: 80 }, // 第一列宽度
+                        1: { width: 80 }, // 第二列宽度
+                        2: { width: 80 }, // 第三列宽度
+                        3: { width: 80 } // 第四列宽度（如果有更多列，依次设置）
+                    }
+                };
+
+                // 生成表格
+                doc.autoTable(tableOptions);
+                //订单头部表格=============================================================end
+
+                //产品详情表格=============================================================start
+                // 定义表格列和数据
+                const columns = [
+                    { header: 'number(序号)', dataKey: 'product_name' },
+                    { header: 'FBA编号', dataKey: 'fba_number' },
+                    { header: 'Reference NO.', dataKey: 'reference_no' },
+                    { header: 'size（Long*wide*high）尺寸', dataKey: 'product_size' },
+                    { header: 'gross weight（总毛重）', dataKey: 'product_gross' },
+                    { header: 'Description（英文品名）', dataKey: 'product_enname' },
+                    { header: 'Chinese name（中文品名）', dataKey: 'product_zhname' },
+                    { header: 'magnetic or not（是否带磁）', dataKey: 'product_magnetic' },
+                    { header: 'electrified or not（是否带电）', dataKey: 'product_eletrified' },
+                    { header: 'Material(材质)', dataKey: 'product_material' },
+                    { header: 'Qty(PCS)（产品数量）', dataKey: 'product_num' },
+                    { header: 'HS code（海关编码）', dataKey: 'product_hscode' },
+                    { header: 'UnitValue（USD）（单价）', dataKey: 'product_price' },
+                    { header: 'TotalValue（USD）（总价）', dataKey: 'product_totalprice' },
+                    { header: 'Product pictures（产品图片）', dataKey: 'product_pic' }
+                ];
+
+                const rows = [];
+                $('.'+template).find('#packing-table #table-body tr').each(function() {
+                    const row = {};
+                    $(this).find('td').each(function(index) {
+                        const value = $(this).find('input').val() || '';
+                        row[columns[index].dataKey] = value;
+                    });
+                    rows.push(row);
+                });
+
+                // 使用 autoTable 生成表格，设置样式
+                const finalY = doc.autoTable.previous.finalY;
+                doc.autoTable({
+                    startY: finalY+1,
+                    head: [columns.map(col => col.header)],
+                    body: rows.map(row => columns.map(col => row[col.dataKey])),
+                    theme: 'grid',
+                    styles: {
+                        font: 'msyh', // 使用中文字体
+                        fontSize: 9,
+                        halign: 'center',
+                        valign: 'middle',
+                        border: 1, // 单元格边框
+                        lineWidth: 0.5, // 边框线宽
+                        lineColor: '#000000', // 边框颜色
+                        cellPadding: 2 // 单元格内边距
+                    },
+                    columnStyles: {
+                        0: { cellWidth: 15 }, // 序号
+                        1: { cellWidth: 20 }, // FBA
+                        2: { cellWidth: 20 }, // SIZE
+                        3: { cellWidth: 20 }, // GROSS
+                        4: { cellWidth: 20 }, // enname
+                        5: { cellWidth: 30 }, // zhname
+                        6: { cellWidth: 15 }, // magnetic
+                        7: { cellWidth: 12 }, // elec
+                        8: { cellWidth: 20 }, // material
+                        9: { cellWidth: 15 }, // qty
+                        10: { cellWidth: 15 }, // hscode
+                        11: { cellWidth: 15 }, // unitValue
+                        12: { cellWidth: 15 }, // totalValue
+                        13: { cellWidth: 10 }, // product_picture
+                    },
+                    headStyles: {
+                        fillColor: [242, 242, 242], // 表头背景色
+                        textColor: [0, 0, 0], // 表头文字颜色
+                        fontStyle: 'bold'
+                    }
+                });
+                //产品详情表格=============================================================end
+
+                //订单尾部表格=============================================================start
+                // 准备头部表格数据
+                const tableFootData = [
+                    ['合计', $('.'+template).find('#total_pieces').val()],
+                ];
+
+                // 设置表格样式
+                const finalY2 = doc.autoTable.previous.finalY;//获取底部
+                const tableFootOptions = {
+                    startY: finalY2+1, // 表格在 PDF 页面上开始的 Y 坐标
+                    head: [], // 因为不需要表头，这里设为空数组
+                    body: tableFootData, // 表格主体数据
+                    styles: {
+                        font: 'msyh', // 使用中文字体
+                        fontSize: 9, // 字体大小
+                        halign: 'left', // 水平对齐方式为左对齐
+                        valign: 'middle', // 垂直对齐方式为居中
+                        border: 1, // 单元格边框
+                        lineWidth: 0.5, // 边框线宽
+                        lineColor: '#000000', // 边框颜色
+                        cellPadding: 2 // 单元格内边距
+                    },
+                    theme: 'plain', // 使用简单主题，无斑马线效果
+                    columnStyles: {
+                        0: { width: 80 }, // 第一列宽度
+                        1: { width: 80 }, // 第二列宽度
+                        2: { width: 80 }, // 第三列宽度
+                        3: { width: 80 } // 第四列宽度（如果有更多列，依次设置）
+                    }
+                };
+
+                // 生成表格
+                doc.autoTable(tableFootOptions);
+                //订单尾部表格=============================================================end
+
+                // 保存 PDF
+                doc.save('packing-list.pdf');
+            }
+        });
+
+        //上传图片
+        $('#table-body').on('change', 'input[type="file"]', function(e) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            const t = $(this);
+
+            reader.onload = function(e) {
+                $(t).parents(':eq(0)').html('<img src="'+e.target.result+'" style="width:60px;height:60px;">'); // 存储 Base64
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+
+</script>
+</html>

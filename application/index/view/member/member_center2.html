@@ -1,0 +1,378 @@
+{include file="common/merchant_header"}
+<style>
+    .translate_div{width: 100%;height:27px;}
+    .translate_div #translate select{width: 100%;height:100%;}
+    body{overflow:hidden;}
+    .page{width:100%;}
+    .left{transition:all 0.3s ease;background:{$website['color']};height: 100%;position:absolute;border-right:1px solid {$website['color_word']};}
+    .left .logo{padding:42px 10px 0px 10px;box-sizing:border-box;text-align: right;}
+    .left .logo img{width:100%;}
+    .left .logo .logo_box{position:absolute;justify-content: center;top:6px;left:15px;}
+    .left .logo .logo_box .logo_title{color: {$website['color_word']};text-transform: none;text-shadow: -1px 0 4px {$website['color']}, 0 1px 4px {$website['color']}, 1px 0 {$website['color']}, 0 -1px {$website['color']};margin-left:5px;}
+    .left .logo .logo_img{width:25px;margin-bottom: 0px;}
+    .left .fold{position:absolute;top:7px;right:15px;background:{$website['color_word']};}
+    .left .fold img{width:20px;height:20px;cursor:pointer;}
+    .left .menu{border-top: 1px solid {$website['color_word']};height:90%;}
+    .left1{display:block;width:200px;}
+    .left2{display:none;width:45px;}
+    .menu ul{list-style:none;margin:0px;padding:0px;}
+    .menu .menu_ul{padding-top:10px;}
+    .menu .menu_li{margin-left:50%;position:relative;margin-top: 0px;transform: translate(-59%, 0px);}
+    .menu ul li{margin-left:35px;position:relative;}
+    .menu_ul2:before{content: '';width: 0px;height: 0%;background: {$website['color_word']};position: absolute;left: 7px;top: 23px;}
+    .menu_ul2 li:before{content:'';width:1px;height:30px;background:{$website['color_word']};position:absolute;left:-28px;}
+    .menu_ul2 li:after{content:'';width:15px;height:1px;background:{$website['color_word']};position:absolute;left:-28px;top:15px;}
+    .menu_ul .menu_li:before{content: '';width: 0px;height: 0px;background: {$website['color_word']};position: absolute;left: 7px;top: 23px;}
+    .menu_ul .menu_li:nth-of-type(5):before{content: '';width: 1px;height: 0px;background: {$website['color_word']};position: absolute;left: 7px;top: 23px;}
+    .menu ul li a{display:block;height:30px;width:80px;line-height:30px;text-decoration:none;padding-left:0px;color:{$website['color_word']};white-space:nowrap;}
+    .menu .no{display:none;}
+    .menu .yes{display:block;}
+
+    .menu .plus{background:url("/centralize_manager/plus.png") no-repeat left center;background-size:15px;padding-left:25px;color:{$website['color_word']};}
+    .menu .minus{background:url("/centralize_manager/minus.png?v=231") no-repeat left center;background-size:15px;padding-left:25px;color:{$website['color_word']};}
+
+    .right{width:calc(100% - 201px);position:absolute;left:201px;height:100%;text-align:left;}
+    .menu_head{width: 100%;height: 40px;background:{$website['color']};padding:10px;box-sizing:border-box;}
+    .menu_head .head_path{width:50%;height:100%;color:{$website['color_word']};white-space:nowrap;}
+    .menu_head .head_list{width:50%;height:100%;}
+    .menu_label{border:1px solid {$website['color_word']};border-left:0;height:30px;background:{$website['color']};display: flex;align-items: center;padding:0 10px;box-sizing:border-box;}
+    .left_label{width:97%;display: flex;align-items: center;overflow:auto;white-space:nowrap;padding-top:5px;box-sizing:border-box;scrollbar-width: none;}
+    .right_label{width:3%;font-size:20px;font-weight:600;cursor:pointer;text-align:right;color:{$website['color_word']};}
+    .menu_label .label_box{border:1px solid {$website['color_word']};width:fit-content;height:100%;display:inline-block;padding: 0 12px;box-sizing:border-box;cursor:pointer;border-top-left-radius: 30px;border-top-right-radius: 7px;color:{$website['color_word']};}
+    .menu_label .menu_label_active{background:{$website['color_word']};font-weight:600;border-bottom:1px solid {$website['color_word']};color:{$website['color']};}
+    .menu_body{width:100%;height:calc(100% - 32px);background:#fff;}
+    .menu_body .child_box{display:none;width:100%;height:100%;}
+    .menu_body .child-show{display:block;}
+
+    /*账户信息*/
+    .accountDiv{position:relative;float:right;}
+    .accountDiv span{color:{$website['color_word']};display:inline-block;}
+    .accountDiv .dropdown-toggle{margin-left:5px;display:inline-block;color:{$website['color_word']};text-align:right;}
+    .accountDiv .dropdown-toggle .caret{border-bottom-color: #000000;border-top-color: #000000;display: inline-block;width: 0;height: 0;margin-left: 2px;vertical-align: middle;border-top: 4px solid;border-right: 4px solid transparent;border-left: 4px solid transparent;}
+    .accountDiv .account_info{display: none;background:#fff;padding:10px 0;box-sizing: border-box;max-width: 140px;width:140px;position: absolute;right: 0;top: 30px;}
+    .accountDiv .account_info p{margin-bottom:5px;}
+    .accountDiv .account_info li{padding: 3px 12px;text-align: left;}
+    .accountDiv .account_info .account_opera{cursor:pointer;}
+    .accountDiv .account_info .account_opera:hover{background:{$website['color']};color:{$website['color_word']};}
+
+    @media screen and (max-width:768px) {
+        .left1{width:120px;}
+        .left2{width:45px;}
+        .right{width:calc(100% - 121px);left:121px;}
+        .left_label{width:90%;}
+        .right_label{width:10%;}
+        .accountDiv span{width: 90px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
+        .accountDiv .account_info{width:105px;right: -10px;}
+        .menu .menu_li{transform: translate(-75%, 0px);}
+    }
+</style>
+<style>
+    /**弹窗样式**/
+    .layer_frame .layui-layer-title{background:{$website['color']};color:{$website['color_word']};}
+    .layer_frame .layui-layer-content{overflow:unset !important;}
+    .layer_frame .layui-layer-setwin{top:12px;}
+    .layer_frame .layui-layer-title .disf{height:100%;}
+    .layer_frame .exclamation-circle {position: relative;margin-right:8px;}
+    .layer_frame .exclamation-circle span{font-size: 14px;font-weight:900;color: #fff;font-family: PingFang SC, Hiragino Sans GB, Heiti SC, Microsoft YaHei, Helvetica, Tahoma, Arial, SimHei, WenQuanYi Micro Hei !important;}
+    .layer_frame .exclamation-circle::after {content: '';position: absolute;left: 50%;top: 50%;transform: translate(-50%, -50%);width: 14px;height: 14px;background-color: #fff;border-radius: 50%;opacity:0.5;}
+    .layer_frame .page_innerhead{width:100%;border-bottom:1px solid #1f5188;}
+    .layer_frame .page_innerhead .pageBack{width:15%;text-align: center;padding:10px 0;font-size:15px;color:#000;font-weight:600;background:#bebebe;cursor:pointer;position:relative;}
+    .layer_frame .page_innerhead .pageSel{width:42.5%;text-align: center;padding:10px 0;font-size:15px;color:#000;font-weight:600;background:#fff;cursor:pointer;position:relative;}
+    .layer_frame .page_innerhead .pageSel:first-child{border-right:1px solid #fff;}
+    .layer_frame .page_innerhead .pageAct{background:#1f5188;color:#fff;}
+    .layer_frame .page_innerhead .pageAct:after {content: '';position: absolute;top: 15px;right: 35px;width: 8px;height: 8px;border-top: 2px solid #fff;border-right: 2px solid #fff;transform: rotate(135deg);}
+    .layer_frame .layui-layer-content .rightBox .page_content{height:88%;overflow-y: auto;}
+    .layer_frame .layui-layer-content .rightBox .page_content .rightContent{height:100%;}
+</style>
+</head>
+<script type="text/javascript" charset="utf-8">
+    var head= document.getElementsByTagName('head')[0]; var script= document.createElement('script'); script.type= 'text/javascript'; script.src= '//boss.gogo198.cn/js/res.zvo.cn_translate_inspector_v2.js?v=12<?php echo time();?>'; head.appendChild(script);
+</script>
+<body>
+<div class="page">
+    <div class="left left1">
+        <div class="logo">
+            <div class="fold" data-status="1" onclick="fold(1)"><img src="/centralize_manager/pick_off.png" class="fold_operation"></div>
+            <div class="translate_div">
+                <div id="translate" class="web_translate"></div>
+            </div>
+            <div class="disf logo_box">
+                <img src="//shop.gogo198.cn/{$website['sico']}" class="logo_img" title="Healink Hub">
+                <span class="f18 logo_title">BOSS</span>
+            </div>
+        </div>
+        <div class="menu">
+            <ul class="menu_ul">
+                {volist name="menu" key="k" id="v"}
+                {if(strstr($level['authList'],strval($v['id'])))}
+                <li class="menu_li">
+                    <a href="#" class="menu_a f15">{$v['title']}</a>
+                    <ul class="menu_ul2">
+                        {volist name="v['children']" key="k2" id="v2"}
+                        {if(strstr($level['authList'],strval($v2['id'])))}
+                        <li><a href="javascript:;" data-href="{$v2['url']}&pid={$v2['id']}" data-idx="{$v2['id']}" data-open="{$v2['is_open']}" class="menu_li2 f15">{$v2['title']}</a></li>
+                        {/if}
+                        {/volist}
+                    </ul>
+                </li>
+                {/if}
+                {/volist}
+            </ul>
+        </div>
+    </div>
+    <div class="left left2">
+        <div class="logo" style="padding: 31px 10px 10px 10px;">
+            <div class="fold" data-status="2" onclick="fold(2)" style="right: 13px;"><img src="/centralize_manager/pick_up.png" class="fold_operation"></div>
+        </div>
+        <div style="text-align: center;padding-bottom: 3px;"><img src="//shop.gogo198.cn/{$website['sico']}" class="logo_img" style="width: 25px;"></div>
+    </div>
+    <div class="right">
+        <div class="menu_head disf">
+            <div class="head_path"></div>
+            <div class="head_list">
+                <div class="accountDiv">
+<!--                    <span class="f15 companyName1"><?php echo session('account.nickname');?></span>-->
+<!--                    <span class="f15 nickname1">&nbsp;/&nbsp;</span>-->
+                    <a href="javascript:void(0);" class="dropdown dropdown-toggle f15">
+                        <span class="nickname2"><?php echo session('account.nickname');?></span>
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="account_info">
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="menu_label">
+            <div class="left_label"></div>
+            <div class="right_label f20" title="删除所有标签页">×</div>
+        </div>
+        <div class="menu_body">
+
+        </div>
+    </div>
+</div>
+</body>
+<script src="/centralize_manager/js/jquery.min.js"></script>
+<script src="/layuiadmin/layui/layui.js"></script>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index'], function(){
+        var $ = layui.$
+            ,admin = layui.admin
+            , layer = layui.layer;
+    });
+
+    $(function(){
+        if(isMobile()){
+            // $('.left .logo .logo_box').css({'justify-content':'flex-end'});
+            $('.companyName1,.nickname1,.nickname2,.logo_title').hide();
+            $('.companyName2').show();
+        }
+
+        //账户信息点击
+        $('.dropdown').click(function(){
+            if($(this).parent().find('.account_info').css('display')=='block'){
+                $(this).parent().find('.account_info').hide();
+            }else{
+                $(this).parent().find('.account_info').show();
+            }
+        });
+
+        $(".menu_li").each(function(){
+            if($(this).children("ul").length>0)//判断li下是否有ul列表
+            {
+                //如果有隐藏ul，添加样式
+                $(this).children("ul").eq(0).css("display","none");
+                $(this).children("a").first().addClass("plus");
+                //点击一级列表
+                $(this).find(".menu_a").click(function(){
+                    //判断ul是否隐藏
+                    if($(this).parent().children("ul").first().css("display")=="none")
+                    {
+                        $(this).parent().children("ul").first().css("display","block");
+                        $(this).removeClass();
+                        $(this).addClass("minus").addClass("f15");
+                    }
+                    else{
+                        $(this).parent().children("ul").first().css("display","none");
+                        $(this).removeClass();
+                        $(this).addClass("plus").addClass("f15");
+                    }
+                });
+            }
+        });
+
+        //左侧菜单点击添加
+        // var menu_index=1;
+        $('.menu_li2').click(function(){
+            let text = $(this).text();
+            let parent_text = $(this).parents(":eq(2)").find('.minus').text();
+            text = text.replace(">","");
+            let href = $(this).attr('data-href');
+            let menu_index = $(this).attr('data-idx');
+            let is_open = $(this).attr('data-open');
+
+            let all_text = $('.menu_label').find('.left_label').find('.label_box').text();
+
+            if(all_text.indexOf(text)!=-1){
+                $('.menu_label'+menu_index).siblings().removeClass('menu_label_active');
+                $('.menu_label'+menu_index).removeClass('menu_label_active');
+                $('.menu_label'+menu_index).addClass('menu_label_active');
+                // $('.menu_body').find('.child_box').hide();
+                $('.menu_body').find('.child_body'+menu_index).siblings().hide();
+                $('.menu_body').find('.child_body'+menu_index).show();
+            }else{
+                if(href.includes('https://') || href.includes('http://')){
+                    //如有https的链接则另窗打开，并附带商户
+                    if(href.includes('?')){
+                        href += "&uid=<?php echo base64_encode(session('shopping_user.user_id'));?>";
+                    }else{
+                        href += "?uid=<?php echo base64_encode(session('shopping_user.user_id'));?>";
+                    }
+                    window.open(href, '_blank');
+                    return false;
+                }
+
+                if(is_open==1){
+                    var footer = 0;
+                    if(menu_index==224){
+                        footer=1;
+                    }else if(menu_index==228){
+                        footer=2;
+                    }else if(menu_index==232){
+                        footer=3;
+                    }
+                    layer.open({
+                        type: 2,
+                        title: text,
+                        area:['80%','80%'],
+                        skin:'layer_frame',
+                        content: '/?s=member/member_center&cid=0&is_pc=1&footer='+footer
+                    });
+                }else{
+                    let html = '<div class="label_box menu_label'+menu_index+' menu_label_active" data-index="'+menu_index+'" data-parent="'+parent_text+'"><span class="f15" onclick="change_menu(this,'+menu_index+')">'+text+'</span>&nbsp;<span class="closeBtn f18" onclick="closeWindow(this)">×</span>';
+                    $('.menu_label').find('.left_label').find('.label_box').removeClass('menu_label_active');
+                    $('.menu_label').find('.left_label').append(html);
+                    $('.menu_body').find('.child_box').hide();
+                    let mb = '<div class="child_box child_body'+menu_index+' child-show">\n'+
+                        '<iframe src="'+href+'" width="100%" height="100%">\n'+
+                        '</iframe>\n'+
+                        '</div>';
+                    $('.menu_body').find('.child_box').removeClass('child-show');
+                    $('.menu_body').append(mb);
+                }
+            }
+            let path = '<span class="f15">'+parent_text+'</span>&nbsp;<span class="f15">/</span>&nbsp;<span class="f15">'+text+'</span>';
+            $('.menu_head').find('.head_path').html(path);
+
+            if(text=='切换企业'){
+                $(this).parent().hide();
+            }
+        });
+
+        $('.right_label').click(function(){
+            if(confirm("确认删除所有标签页吗？")){
+                $('.menu_label').find('.left_label').html('');
+                $('.menu_body').find('.child_box').remove();
+                $('.menu_head').find('.head_path').html('');
+            }
+        });
+    });
+
+    //关闭当前窗口
+    function closeWindow(t){
+        let idx = $(t).parent().attr('data-index');
+        let before_idx = $(t).parent().prev().attr('data-index');
+
+        if(typeof(before_idx)=='undefined'){
+            before_idx = $(t).parent().next().attr('data-index');
+        }
+
+        $(t).parent().siblings().removeClass('menu_label_active');
+        $('.menu_body').find('.child_body'+before_idx).siblings().hide();
+        $('.menu_body').find('.child_body'+before_idx).siblings().hide();
+
+        $('.menu_label'+before_idx).addClass('menu_label_active');
+        $('.child_body'+before_idx).show();
+        $('.menu_label'+idx).remove();
+        $('.child_body'+idx).remove();
+
+        if(typeof(before_idx)=='undefined'){
+            $('.menu_head').find('.head_path').html('');
+        }else{
+            let parent_text = $('.menu_label'+before_idx).attr('data-parent');
+            let text = $('.menu_label'+before_idx).find('span').eq(0).text();
+            let path = '<span class="f15">'+parent_text+'</span>&nbsp;<span class="f15">/</span>&nbsp;<span class="f15">'+text+'</span>';
+            $('.menu_head').find('.head_path').html(path);
+        }
+    }
+
+    //更换菜单显示
+    function change_menu(t,idx){
+        $(t).parent().siblings().removeClass('menu_label_active');
+        $(t).parent().removeClass('menu_label_active');
+        $(t).parent().addClass('menu_label_active');
+        $('.menu_body').find('.child_body'+idx).siblings().hide();
+        $('.menu_body').find('.child_body'+idx).show();
+
+        let parent_text = $(t).parent().attr('data-parent');
+        let text = $(t).parent().find('span').eq(0).text();
+        let path = '<span class="f15">'+parent_text+'</span>&nbsp;<span class="f15">/</span>&nbsp;<span class="f15">'+text+'</span>';
+        $('.menu_head').find('.head_path').html(path);
+    }
+
+    //折叠菜单操作
+    function fold(sta){
+        // let sta = $(this).attr('data-status');
+        var mobile = isMobile();
+        if(sta==1){
+            $('.left2').show();
+            $('.left1').hide();
+
+            if( mobile == true )
+            {
+                $('.right').css({'width':'calc(100% - 46px)','left':'46px'});
+            }else{
+                $('.right').css({'width':'calc(100% - 46px)','left':'46px'});
+            }
+
+            // $('.right').animate({'left':'61px'},'normal').css('width','calc(100% - 61px)');
+        }else if(sta==2){
+            $('.left2').hide();
+            $('.left1').show();
+            if( mobile == true )
+            {
+                $('.right').css({'width':'calc(100% - 121px)','left':'121px'});
+            }else{
+                $('.right').css({'width':'calc(100% - 201px)','left':'201px'});
+            }
+            // $('.right').animate({'left':'201px'},'normal').css('width','calc(100% - 201px)');
+        }
+
+    }
+
+    function isMobile() {
+        var userAgentInfo = navigator.userAgent;
+        var mobileAgents = [ "Android", "iPhone", "SymbianOS", "Windows Phone", "iPad","iPod"];
+        var mobile_flag = false;
+        //根据userAgent判断是否是手机
+        for (var v = 0; v < mobileAgents.length; v++) {
+            if (userAgentInfo.indexOf(mobileAgents[v]) > 0) {
+                mobile_flag = true;
+                break;
+            }
+        }
+        var screen_width = window.screen.width;
+        var screen_height = window.screen.height;
+        //根据屏幕分辨率判断是否是手机
+        if(screen_width < 500 && screen_height < 800){
+            mobile_flag = true;
+        }
+        return mobile_flag;
+    }
+    //https://wenku.baidu.com/view/25ab6f5601768e9951e79b89680203d8ce2f6a9a.html?_wkts_=1676793026783&bdQuery=jq%E5%A4%9A%E7%BA%A7%E6%A0%91%E8%8F%9C%E5%8D%95%E6%A0%8F
+</script>

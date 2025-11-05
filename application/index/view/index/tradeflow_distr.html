@@ -1,0 +1,38 @@
+{include file="common/header"}
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;}
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+    .content .box_content{background:{$website['color']};color:{$website['color_word']};border:1px solid {$website['color_word']};font-size:25px;text-align:center;padding:30px;width:100%;}
+    .content .box_content img{width:40px;margin-right:5px;}
+    .content .title{font-size:26px;color:{$website['color_word']};font-weight:800;text-align:center;line-height:normal !important;}
+    
+    .page_list{margin-top:15px;border:1px solid {$website['color_word']};border-radius:8px;padding:20px 20px;box-sizing:border-box;}
+    .page_list .tit{color:{$website['color_word']};font-size:15px;font-weight:800;}
+</style>
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="content" >
+            <div class="col-md-12">
+                <a href="javascript:history.back(-1);">
+                    <div style="display:flex;align-items:center;border: 1px solid #fff;width: fit-content;padding: 10px 20px;border-radius: 15px;background: #8f8b8b;margin-bottom:30px;color:#fff;">
+                        <img class="" src="./img/account/back.png" alt="" style="width: 18px;margin-right: 10px;"/>
+                        返回
+                    </div>
+                </a>
+                <div class="title">{if session('lang')=='zh'}分销交易{elseif(session('lang')=='cht')}分銷交易{elseif(session('lang')=='en')}Distribution transactions{/if}</div>
+                <div class="page_list">
+                    <div class="tit">下级名称：xxx</div>
+                    <div class="tit">手机号码：131xxxxxx</div>
+                    <div class="tit">电子邮箱：xxx@qq.com</div>
+                    <div class="tit">交易金额：CNY 38.00</div>
+                    <div class="tit">交易时间：2023-06-08 14:11</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{include file="common/footer"}

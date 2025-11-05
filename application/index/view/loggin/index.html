@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>日志记录</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <script src="layui/layui.js"></script>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header" style="padding-top:8px;">
+                    <!--<button class="layui-btn layui-btn-normal" onclick="save_account('添加账户','/?s=index/save_account');">添加账户</button>-->
+                    <p>日志记录【{$yesterday}】</p>
+                </div>
+                <div class="layui-card-body">
+                    <table class="layui-hide" id="mainTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    layui.use(['layer', 'form', 'table', 'upload'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , element = layui.element
+            , upload = layui.upload
+            , table = layui.table;
+
+        table.render({
+            elem: '#mainTable'
+            ,url: "/?s=log&pa=1"
+            ,cellMinWidth: 200
+            ,cols: [[
+                {field:'ip', title: 'IP', width:'140'}
+                ,{field:'times', title: '访问次数'}
+                ,{align:'center',  title: '操作',fixed:'right',width:120, templet: function(d){
+                        return [
+                            '<a onclick="openWindow('+"'"+ d.ip +"'" +','+"1"+ ');" class="layui-btn layui-btn-normal layui-btn-xs">查看详情</a>',
+                            // '<a onclick="openWindow('+"'"+ d.id +"'" +','+"2"+ ');" class="layui-btn layui-btn-danger layui-btn-xs">删除</a>',
+                        ].join('');
+                    } }
+            ]]
+            ,page: true
+        });
+    });
+
+    function openWindow(ip,typ) {
+        let url = '';
+        if (typ == 1) {
+            window.location.href = "/?s=log_detail&ip=" + ip;
+        }
+    }
+</script>
+</html>

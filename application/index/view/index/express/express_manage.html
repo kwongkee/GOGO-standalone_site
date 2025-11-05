@@ -1,0 +1,122 @@
+{include file="common/header"}
+<link rel="stylesheet" href="https://www.gogo198.net/layui/font/iconfont.woff?v=256">
+<link rel="stylesheet" href="layui/css/layui.css">
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;background:{$website['color_inner']};}
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+    .content .box_content{background:{$website['color']};color:{$website['color_word']};border:1px solid {$website['color_word']};font-size:25px;text-align:center;padding:30px;width:100%;}
+    .content .box_content img{width:40px;margin-right:5px;}
+    .inquiry_box{display:none;}
+    .navbar_menu{color: {$website['color_word']};font-size: 16px;margin-bottom:10px;}
+    .context,.navbar_menu a{color:{$website['color_word']};}
+    .context{margin-bottom:1cm;}
+    .layui-colla-title{color:{$website['color_word']};background-color:#0e2e68;}
+    .preamble_con,.layui-colla-content{color:{$website['color_word']};font-size:15px;}
+    .layui-colla-content p{margin-bottom:0.3cm;}
+
+    .navbar_menu{color:{$website['color_word']};font-size:16px;margin-bottom:10px;margin-top:15px;margin-left:10px;}
+    .navbar_menu a{color:{$website['color_word']};}
+    .navbar_menu a:last-child{color:#D2A778;font-weight:700;}
+</style>
+<script src="layui/layui.js"></script>
+<section id="content" class="non_topimg">
+    <div class="container">
+        <p class="navbar_menu"><a href="/?s=index/express&id={$id}">集运管理</a>&nbsp;<span style="color:#d1a575;">\</span>
+            <a href="/?s=index/express_list&typ={$type}&id={$id}">已处理运单列表</a>&nbsp;<span style="color:#d1a575;">\</span>
+            <a href="javascript:;">物流管理</a>&nbsp;<span style="color:#d1a575;">\</span>
+        </p>
+
+        <div class="content" style="padding:10px 10px;">
+            <div class="layui-fluid" style="padding:0;">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md12" style="padding:0;">
+                        <div class="layui-card">
+                            <div class="layui-card-header" style="padding-top:8px;">
+                                <button class="layui-btn layui-btn-normal" onclick="save('新增运单','/?s=index/save_expressno');">新增运单</button>
+                            </div>
+                            <div class="layui-card-body">
+                                <table class="layui-hide" id="mainTable"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{include file="common/footer"}
+<script>
+    layui.use(['layer', 'form', 'table', 'upload'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , element = layui.element
+            , upload = layui.upload
+            , table = layui.table;
+
+        form.render(null,'component-form-element');
+
+        table.render({
+            elem: '#mainTable'
+            ,url: "/?s=index/express_manage&pa=1&id={$id}&type={$type}"
+            ,cellMinWidth: 200
+            ,cols: [[
+                {field:'parag_num', title: '运单编号', width:100}
+                ,{field:'express_name', title: '物流商名称', width:100}
+                ,{field:'express_no', title: '物流单号', width:100}
+                ,{field:'createtime', title: '添加时间'}
+                ,{align:'center',  title: '操作',fixed:'right',width:110, templet: function(d){
+                        return [
+                            '<a onclick="openWindow('+"'"+ d.id +"'" +','+"1"+ ','+"'"+d.parag_num+"'"+');" class="layui-btn layui-btn-primary layui-btn-xs">修改</a>',
+                            '<a onclick="openWindow('+"'"+ d.id +"'" +','+"2"+ ','+"'"+d.parag_num+"'"+');" class="layui-btn layui-btn-danger layui-btn-xs">删除</a>',
+                        ].join('');
+                    }}
+            ]]
+            ,page: true
+        });
+    });
+
+    function save(){
+        window.location.href='/?s=index/save_expressno&type={$type}&id={$id}';
+    }
+
+    function openWindow(id,typ,parag_num=0){
+        if(typ==1){
+            window.location.href="/?s=index/save_expressno&type={$type}&id={$id}&parag_num="+parag_num+"&express_id2="+id;
+        }else if(typ==2){
+            layer.confirm('确认要删除该['+parag_num+']运单？', {
+                btn: ['确认','取消']
+            }, function(){
+                $.ajax({
+                    url: "/?s=index/del_expressno",
+                    data:{'id':id},
+                    type:'post',
+                    cache:false,
+                    dataType:'json',
+                    success:function(data){
+                        if(data.code==0)
+                        {
+                            layer.msg(data.msg, {
+                                icon: 1,
+                                time: 2000
+                            }, function(){
+                                window.location.reload();
+                            });
+                            return true;
+                        }else {
+                            layer.msg(data.msg, {icon:2, time:2000});
+                            return false;
+                        }
+                    },
+                    error:function() {
+                        layer.msg('系统出错,请重试',{icon:2,time:1000});
+                    }
+                });
+            }, function(){
+
+            });
+        }
+    }
+</script>

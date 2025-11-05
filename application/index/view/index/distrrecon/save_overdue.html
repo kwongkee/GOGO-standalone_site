@@ -1,0 +1,68 @@
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style>
+    .container{background:#a0a0a0;padding:15px;}
+    .layui-form-label{color:#fff;}
+    .disf{display:flex;align-items:center;}
+</style>
+
+<div class="container">
+    <form class="layui-form" action="" method="post" lay-filter="component-form-element">
+        <input type="hidden" name="id" value="{$id}">
+        <div class="layui-form-item">
+            <div class="layui-form-label">付款期限(天)</div>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" name="pay_term" placeholder="请输入付款期限" value="{$data['pay_term']}">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-form-label">逾期金额(%)</div>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" name="overdue_rate" placeholder="0.3%=0.003" value="{$data['overdue_rate']}">
+            </div>
+        </div>
+
+        <div class="layui-form-item" style="margin-top: 25px;text-align: center;">
+            <div>
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="component-form-element2">确认保存</button>
+                <!--                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>-->
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    layui.use(['layer', 'form', 'upload','element'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , element = layui.element
+            , upload = layui.upload;
+
+        form.render(null, 'component-form-element');
+
+        //保存区域
+        form.on('submit(component-form-element2)', function(data){
+            layer.load();
+            $.ajax({
+                url:"/?s=index/save_overdue",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            layer.closeAll('loading');
+                            parent.location.reload();
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+</script>

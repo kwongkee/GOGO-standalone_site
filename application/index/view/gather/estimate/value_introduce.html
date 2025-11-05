@@ -1,0 +1,64 @@
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style>
+    .format1,.format2,.url,.seo_content,.other_link,.other_navbar{display:none;}
+    .seo_content{border:1px solid #eee;padding:20px;box-sizing: border-box;}
+    .layui-form-label{font-weight:800;}
+    .layui-input-block{padding-top:7px;}
+    .layui-fluid{padding:0;}
+</style>
+<body style="padding: 10px;background-color: #f2f2f2;">
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <form class="layui-form" action="" method="post" lay-filter="component-form-element">
+
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">分类名称</div>
+                            <div class="layui-input-block">
+                                {$info['name']}
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">详情说明</div>
+                            <div class="layui-input-block">
+                                {$info['desc']}
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">详情标签</div>
+                            <div class="layui-input-block">
+                                {$info['keywords']}
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">适用渠道</div>
+                            <div class="layui-input-block">
+                                {$info['channel']}
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">适用国地</div>
+                            <div class="layui-input-block">
+                                {volist name="info.country" id="vo"}
+                                {$vo['param2']}
+                                {/volist}
+                            </div>
+                        </div>
+                        {if !empty($info['link'])}
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">详情链接</div>
+                            <div class="layui-input-block">
+                                <a href="{$info['link']}" target="_blank" style="text-decoration: underline;">立即跳转</a>
+                            </div>
+                        </div>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>

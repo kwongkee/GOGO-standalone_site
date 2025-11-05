@@ -1,0 +1,847 @@
+{include file="common/header2"}
+<link rel="stylesheet" href="layui/css/layui.css">
+<style>
+    /*.container{max-width: 1500px;}*/
+    /* 主内容区域 */
+    .main-content {
+        padding: 40px 0;
+        min-height: calc(100vh - 200px);
+    }
+
+    /* 管理面板 */
+    .management-panel {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 30px;
+        margin-top: 20px;
+    }
+
+    /* 侧边菜单 */
+    .sidebar-menu {
+        background: var(--card-bg);
+        border-radius: var(--border-radius);
+        padding: 25px;
+        box-shadow: var(--shadow);
+        height: 1050px;
+        overflow-y: auto;
+        border-radius: 20px;
+    }
+
+    .menu-section {
+        margin-bottom: 25px;
+    }
+
+    .menu-title {
+        font-size: 1.2rem;
+        color: var(--primary);
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--accent);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .menu-items {
+        list-style: none;
+    }
+
+    .menu-item {
+        padding: 12px 15px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+    }
+
+    .menu-item-content {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+    }
+
+    .menu-item:hover {
+        background: var(--accent);
+        color: var(--primary);
+    }
+
+    .menu-item.active {
+        background: var(--primary-light);
+        color: white;
+    }
+
+    .menu-item .toggle-icon {
+        transition: transform 0.3s ease;
+    }
+
+    .menu-item.expanded .toggle-icon {
+        transform: rotate(180deg);
+    }
+
+    .submenu {
+        list-style: none;
+        padding-left: 30px;
+        margin-top: 5px;
+        display: none;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .submenu.show {
+        display: block;
+    }
+
+    .submenu-item {
+        padding: 10px 15px;
+        border-radius: 6px;
+        margin-bottom: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .submenu-item:hover {
+        background: var(--accent);
+        color: var(--primary);
+    }
+
+    .submenu-item.active {
+        background: var(--primary-light);
+        color: white;
+    }
+
+    /* 内容区域 */
+    .content-area {
+        background: var(--card-bg);
+        border-radius: var(--border-radius);
+        padding: 30px;
+        box-shadow: var(--shadow);
+        min-height: 1050px;
+        max-height: 1100px;
+        border-radius: 20px;
+    }
+
+    .content-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .content-title {
+        font-size: 1.5rem;
+        color: var(--primary-dark);
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        border-radius: 50px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border: none;
+    }
+
+    .btn-primary {
+        background: var(--gradient);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-hover);
+    }
+
+    .btn-outline {
+        background: transparent;
+        color: var(--primary);
+        border: 2px solid var(--primary-light);
+    }
+
+    .btn-outline:hover {
+        background: var(--primary-light);
+        color: white;
+    }
+
+    /* 表单样式 */
+    .form-container {
+        max-width: 800px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--primary-dark);
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary);
+        outline: none;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    /* 表格样式 */
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+
+    .data-table th {
+        background: var(--accent);
+        color: var(--primary-dark);
+        font-weight: 600;
+    }
+
+    .data-table tr:hover {
+        background: #f9f9f9;
+    }
+
+    .table-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .action-icon {
+        padding: 8px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .edit-icon {
+        color: var(--primary);
+        background: rgba(139, 95, 191, 0.1);
+    }
+
+    .edit-icon:hover {
+        background: var(--primary);
+        color: white;
+    }
+
+    .delete-icon {
+        color: #e74c3c;
+        background: rgba(231, 76, 60, 0.1);
+    }
+
+    .delete-icon:hover {
+        background: #e74c3c;
+        color: white;
+    }
+
+    /* 卡片网格 */
+    .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 25px;
+        margin-top: 20px;
+    }
+
+    .card {
+        background: var(--card-bg);
+        border-radius: var(--border-radius);
+        padding: 25px;
+        box-shadow: var(--shadow);
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-hover);
+        border-color: var(--primary-light);
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .card-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--primary-dark);
+    }
+
+    .card-content {
+        color: var(--text-light);
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 992px) {
+        .management-panel {
+            grid-template-columns: 1fr;
+        }
+
+        .sidebar-menu {
+            order: 2;
+        }
+
+        .content-area {
+            order: 1;
+        }
+
+        .footer-content {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .nav-links {
+            display: none;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+
+        .card-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .footer-content {
+            grid-template-columns: 1fr;
+        }
+
+        .mobile-menu-btn {
+            display: block;
+        }
+    }
+
+    /* 移动菜单按钮 */
+    .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: white;
+        cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+        .mobile-menu-btn {
+            display: block;
+        }
+    }
+</style>
+
+<!-- 主内容区域 -->
+<main class="main-content">
+    <div class="container">
+        <h1 class="page-title">
+<!--            <i class="fas fa-store"></i>-->
+            电商网店管理
+        </h1>
+        <p class="page-description">配置和管理您的企业网店，包括店铺信息、页面内容、商品和交易等</p>
+
+        <div class="management-panel">
+            <!-- 侧边菜单 -->
+            <div class="sidebar-menu">
+                <div class="menu-section">
+                    <h3 class="menu-title"><i class="fas fa-info-circle"></i> 基本信息</h3>
+                    <ul class="menu-items">
+                        <li class="menu-item active website_basic" data-target="shop-info" onclick="openWindow('website_basic')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-store"></i> 店铺信息配置
+                            </div>
+                        </li>
+                        <li class="menu-item warehouse_manage" data-target="shop-info" onclick="openWindow('warehouse_manage')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-store"></i> 仓库管理
+                            </div>
+                        </li>
+                        <li class="menu-item description_manage" data-target="shop-info" onclick="openWindow('description_manage')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-store"></i> 规则管理
+                            </div>
+                        </li>
+<!--                        <li class="menu-item line_setting" data-target="shop-info" onclick="openWindow('line_setting')">-->
+<!--                            <div class="menu-item-content">-->
+<!--                                <i class="fas fa-store"></i> 线路管理-->
+<!--                            </div>-->
+<!--                        </li>-->
+                    </ul>
+                </div>
+
+                <div class="menu-section">
+                    <h3 class="menu-title"><i class="fas fa-header"></i> 页头管理</h3>
+                    <ul class="menu-items">
+                        <li class="menu-item shop_head_menu" data-target="header-menu" onclick="openWindow('shop_head_menu')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-bars"></i> 页头菜单管理
+                            </div>
+                        </li>
+                        <li class="menu-item shop_scroll_info" data-target="scrolling-info" onclick="openWindow('shop_scroll_info')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-scroll"></i> 滚动信息管理
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="menu-section">
+                    <h3 class="menu-title"><i class="fas fa-shoe-prints"></i> 页脚管理</h3>
+                    <ul class="menu-items">
+                        <li class="menu-item shop_foot_menu" data-target="footer-menu" onclick="openWindow('shop_foot_menu')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-bars"></i> 页脚菜单管理
+                            </div>
+                        </li>
+                        <li class="menu-item shop_social" data-target="social-media" onclick="openWindow('shop_social')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-share-alt"></i> 社交媒体管理
+                            </div>
+                        </li>
+                        <li class="menu-item shop_contact" data-target="contact-info" onclick="openWindow('shop_contact')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-address-book"></i> 联系信息配置
+                            </div>
+                        </li>
+                        <li class="menu-item shop_qualification" data-target="qualification-info" onclick="openWindow('shop_qualification')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-award"></i> 资质信息管理
+                            </div>
+                        </li>
+                        <li class="menu-item shop_copyright" data-target="copyright-info" onclick="openWindow('shop_copyright')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-copyright"></i> 版权信息配置
+                            </div>
+                        </li>
+                        <li class="menu-item shop_public" data-target="public-info" onclick="openWindow('shop_public')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-info-circle"></i> 公示信息管理
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="menu-section">
+                    <h3 class="menu-title"><i class="fas fa-home"></i> 店铺首页管理</h3>
+                    <ul class="menu-items">
+                        <li class="menu-item shop_rotate" data-target="home-carousel" onclick="openWindow('shop_rotate')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-images"></i> 首页轮播管理
+                            </div>
+                        </li>
+                        <li class="menu-item shop_guide" data-target="drainage-modules" onclick="openWindow('shop_guide')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-directions"></i> 导流模块管理
+                            </div>
+                        </li>
+                        <li class="menu-item has-submenu" data-submenu="recommendation-management">
+                            <div class="menu-item-content">
+                                <i class="fas fa-star"></i> 首页推荐管理
+                            </div>
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                            <ul class="submenu" id="recommendation-management">
+                                <li class="submenu-item" data-target="add-product" onclick="openWindow('shop_recommend')">
+                                    <i class="fas fa-images"></i> 发现轮播
+                                </li>
+                                <li class="submenu-item" data-target="manage-products" onclick="openWindow('shop_recommend2')">
+                                    <i class="fas fa-tasks"></i> 推荐资讯
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="menu-item search_result" data-target="search-results" onclick="openWindow('search_result')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-search"></i> 搜索结果管理
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="menu-section">
+                    <h3 class="menu-title"><i class="fas fa-box"></i> 库存管理</h3>
+                    <ul class="menu-items">
+                        <li class="menu-item has-submenu" data-submenu="product-management">
+                            <div class="menu-item-content">
+                                <i class="fas fa-cube"></i> 商品管理
+                            </div>
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                            <ul class="submenu" id="product-management">
+                                <li class="submenu-item" data-target="add-product" onclick="openWindow('save_product')">
+                                    <i class="fas fa-plus-circle"></i> 新增商品
+                                </li>
+                                <li class="submenu-item" data-target="manage-products"  onclick="openWindow('product_manage')">
+                                    <i class="fas fa-tasks"></i> 管理商品
+                                </li>
+                                <li class="submenu-item" data-target="quick-selection" onclick="openWindow('quicky_selgoods')">
+                                    <i class="fas fa-bolt"></i> 快速选品
+                                </li>
+                                <li class="submenu-item" data-target="product-series" onclick="openWindow('product_series')">
+                                    <i class="fas fa-bolt"></i> 商品系列
+                                </li>
+                                <!--库存-->
+                                <li class="submenu-item" data-target="in-out" onclick="openWindow('save_inventory')" style="border-top:1px solid #fff;">
+                                    <i class="fas fa-exchange-alt"></i> 出入库存
+                                </li>
+                                <li class="submenu-item" data-target="manage-inventory" onclick="openWindow('inventory_manage')">
+                                    <i class="fas fa-chart-bar"></i> 管理库存
+                                </li>
+                                <!--上架-->
+                                <li class="submenu-item" data-target="add-listing" onclick="openWindow('save_shelf')" style="border-top:1px solid #fff;">
+                                    <i class="fas fa-plus-square"></i> 新增上架
+                                </li>
+                                <li class="submenu-item" data-target="manage-listing" onclick="openWindow('shelf_manage')">
+                                    <i class="fas fa-list-alt"></i> 管理上架
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="menu-item has-submenu" data-submenu="gift-management">
+                            <div class="menu-item-content">
+                                <i class="fas fa-cube"></i> 赠品管理
+                            </div>
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                            <ul class="submenu" id="gift-management">
+                                <li class="submenu-item" data-target="add-product" onclick="openWindow('save_product','&type=1')">
+                                    <i class="fas fa-plus-circle"></i> 新增赠品
+                                </li>
+                                <li class="submenu-item" data-target="manage-products"  onclick="openWindow('product_manage','&type=1')">
+                                    <i class="fas fa-tasks"></i> 管理赠品
+                                </li>
+                                <!--库存-->
+                                <li class="submenu-item" data-target="in-out" onclick="openWindow('save_inventory','&type=1')" style="border-top:1px solid #fff;">
+                                    <i class="fas fa-exchange-alt"></i> 出入库存
+                                </li>
+                                <li class="submenu-item" data-target="manage-inventory" onclick="openWindow('inventory_manage','&type=1')">
+                                    <i class="fas fa-chart-bar"></i> 管理库存
+                                </li>
+                                <!--上架-->
+                                <li class="submenu-item" data-target="add-listing" onclick="openWindow('save_shelf','&type=1')" style="border-top:1px solid #fff;">
+                                    <i class="fas fa-plus-square"></i> 新增上架
+                                </li>
+                                <li class="submenu-item" data-target="manage-listing" onclick="openWindow('shelf_manage','&type=1')">
+                                    <i class="fas fa-list-alt"></i> 管理上架
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="menu-item procurement_manage" data-target="procurement-manage" onclick="openWindow('procurement_manage')" style="border-top:1px solid #fff;">
+                            <div class="menu-item-content">
+                                <i class="fas fa-info-circle"></i> 采购管理
+                            </div>
+                        </li>
+                        <li class="menu-item procurement_manage" data-target="procurement-manage" onclick="openWindow('transfer_manage')" style="border-top:1px solid #fff;">
+                            <div class="menu-item-content">
+                                <i class="fas fa-info-circle"></i> 调拨管理
+                            </div>
+                        </li>
+
+                        <li class="menu-item has-submenu" data-submenu="inventory-management" style="display: none;">
+                            <div class="menu-item-content">
+                                <i class="fas fa-warehouse"></i> 库存管理
+                            </div>
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                            <ul class="submenu" id="inventory-management">
+                                <li class="submenu-item" data-target="in-out" onclick="openWindow('save_inventory')">
+                                    <i class="fas fa-exchange-alt"></i> 出入库存
+                                </li>
+                                <li class="submenu-item" data-target="manage-inventory" onclick="openWindow('inventory_manage')">
+                                    <i class="fas fa-chart-bar"></i> 管理库存
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="menu-item has-submenu" data-submenu="listing-management" style="display: none;">
+                            <div class="menu-item-content">
+                                <i class="fas fa-tag"></i> 上架管理
+                            </div>
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                            <ul class="submenu" id="listing-management">
+                                <li class="submenu-item" data-target="add-listing" onclick="openWindow('save_shelf')">
+                                    <i class="fas fa-plus-square"></i> 新增上架
+                                </li>
+                                <li class="submenu-item" data-target="manage-listing" onclick="openWindow('shelf_manage')">
+                                    <i class="fas fa-list-alt"></i> 管理上架
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="menu-section">
+                    <h3 class="menu-title"><i class="fas fa-shopping-cart"></i> 买家管理</h3>
+                    <ul class="menu-items">
+                        <li class="menu-item" data-target="order-management" onclick="openWindow('member_manage')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-clipboard-list"></i> 信息管理
+                            </div>
+                        </li>
+                        <li class="menu-item" data-target="order-tracking" onclick="openWindow('grade_manage')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-file-invoice"></i> 等级管理
+                            </div>
+                        </li>
+                        <li class="menu-item" data-target="order-tracking" onclick="openWindow('tag_manage')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-file-invoice"></i> 标签管理
+                            </div>
+                        </li>
+                        <li class="menu-item" data-target="order-tracking" onclick="openWindow('member_grade_manage')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-file-invoice"></i> 买家分级
+                            </div>
+                        </li>
+                        <li class="menu-item" data-target="order-tracking" onclick="openWindow('member_tag_manage')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-file-invoice"></i> 买家标识
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="menu-section">
+                    <h3 class="menu-title"><i class="fas fa-shopping-cart"></i> 营销管理</h3>
+                    <ul class="menu-items">
+                        <li class="menu-item" data-target="order-management" onclick="openWindow('sale_panel_manage')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-clipboard-list"></i> 营销面板
+                            </div>
+                        </li>
+                        <li class="menu-item" data-target="order-management" onclick="openWindow('adv_manage')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-clipboard-list"></i> 宣传活动
+                            </div>
+                        </li>
+<!--                        <li class="menu-item" data-target="order-tracking" onclick="openWindow('result_manage')">-->
+<!--                            <div class="menu-item-content">-->
+<!--                                <i class="fas fa-file-invoice"></i> 归因-->
+<!--                            </div>-->
+<!--                        </li>-->
+<!--                        <li class="menu-item" data-target="order-tracking" onclick="openWindow('auto_manage')">-->
+<!--                            <div class="menu-item-content">-->
+<!--                                <i class="fas fa-file-invoice"></i> 自动化-->
+<!--                            </div>-->
+<!--                        </li>-->
+                    </ul>
+                </div>
+
+                <div class="menu-section">
+                    <h3 class="menu-title"><i class="fas fa-shopping-cart"></i> 内容管理</h3>
+                    <ul class="menu-items">
+                        <li class="menu-item" data-target="order-management" onclick="openWindow('artical_manage')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-clipboard-list"></i> 博客文章
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="menu-section">
+                    <h3 class="menu-title"><i class="fas fa-shopping-cart"></i> 市场管理</h3>
+                    <ul class="menu-items">
+                        <li class="menu-item" data-target="order-management" onclick="openWindow('market_manage')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-clipboard-list"></i> 市场管理
+                            </div>
+                        </li>
+                        <li class="menu-item" data-target="order-management" onclick="openWindow('directory_manage')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-clipboard-list"></i> 目录管理
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="menu-section">
+                    <h3 class="menu-title"><i class="fas fa-shopping-cart"></i> 交易管理</h3>
+                    <ul class="menu-items">
+                        <li class="menu-item" data-target="order-management" onclick="openWindow('sorder_manage')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-clipboard-list"></i> 选购管理
+                            </div>
+                        </li>
+                        <li class="menu-item" data-target="order-management" onclick="openWindow('porder_manage')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-clipboard-list"></i> 订购管理
+                            </div>
+                        </li>
+                        <li class="menu-item" data-target="order-tracking" onclick="openWindow('order_manage')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-file-invoice"></i> 支付单管理
+                            </div>
+                        </li>
+                        <li class="menu-item" data-target="order-tracking" onclick="openWindow('consolidation_manage')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-file-invoice"></i> 集运单管理
+                            </div>
+                        </li>
+                        <li class="menu-item" data-target="order-tracking" onclick="openWindow('discount_manage')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-file-invoice"></i> 折扣管理
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="menu-section">
+                    <h3 class="menu-title"><i class="fas fa-truck"></i> 物流管理</h3>
+                    <ul class="menu-items">
+                        <li class="menu-item" data-target="procurement" onclick="openWindow('procure_manage')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-shopping-basket"></i> 采购管理
+                            </div>
+                        </li>
+                        <li class="menu-item has-submenu" data-target="shipping" data-submenu="shipping-management">
+                            <div class="menu-item-content">
+                                <i class="fas fa-tag"></i> 发货集货
+                            </div>
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                            <ul class="submenu" id="shipping-management">
+                                <li class="submenu-item" data-target="first_logistics_manage" onclick="openWindow('first_logistics_manage')">
+                                    <i class="fas fa-plus-square"></i> 打包贴单
+                                </li>
+                                <li class="submenu-item" data-target="consolidation_manage" onclick="openWindow('consolidation_manage')">
+                                    <i class="fas fa-list-alt"></i> 国内集货
+                                </li>
+                                <li class="submenu-item" data-target="packing_list" onclick="openWindow('packing_list')">
+                                    <i class="fas fa-list-alt"></i> 装箱单
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="menu-item has-submenu" data-target="cross_border_shipping" data-submenu="cross_border_shipping">
+                            <div class="menu-item-content">
+                                <i class="fas fa-tag"></i> 跨境转运
+                            </div>
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                            <ul class="submenu" id="cross_border_shipping">
+                                <li class="submenu-item" data-target="first_logistics_manage" onclick="openWindow('transport_process1')">
+                                    <i class="fas fa-plus-square"></i> 出口申报
+                                </li>
+                                <li class="submenu-item" data-target="consolidation_manage" onclick="openWindow('transport_process1')">
+                                    <i class="fas fa-list-alt"></i> 跨境运输
+                                </li>
+                                <li class="submenu-item" data-target="packing_list" onclick="openWindow('transport_process1')">
+                                    <i class="fas fa-list-alt"></i> 进口申报
+                                </li>
+                                <li class="submenu-item" data-target="packing_list" onclick="openWindow('transport_process1')">
+                                    <i class="fas fa-list-alt"></i> 本地转运
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="menu-section">
+                    <h3 class="menu-title"><i class="fas fa-credit-card"></i> 支付管理</h3>
+                    <ul class="menu-items">
+                        <li class="menu-item" data-target="payment-management" onclick="openWindow('payment_manage')">
+                            <div class="menu-item-content">
+                                <i class="fas fa-money-check-alt"></i> 支付管理
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- 内容区域 -->
+            <div class="content-area" id="content-area">
+                <iframe src="" class="iframe_info" frameborder="0" style="width: 100%;height:100%;"></iframe>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="js/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        //页面跳转进来跳转到指定tab框
+        $(".{$tab}").click();
+
+        // 菜单项点击事件
+        $('.menu-item').click(function(e) {
+            // 阻止事件冒泡，避免触发父元素的点击事件
+            if ($(e.target).hasClass('toggle-icon') || $(e.target).parent().hasClass('toggle-icon')) {
+                return;
+            }
+
+            $('.menu-item').removeClass('active');
+            $(this).addClass('active');
+
+            // 处理子菜单显示
+            if ($(this).hasClass('has-submenu')) {
+                const submenuId = $(this).data('submenu');
+                $(this).find('.submenu').css({'opacity':1,'visibility':'visible','background':'var(--primary-light)'});
+                $(this).toggleClass('expanded');
+                $(`#${submenuId}`).slideToggle(300);
+            }
+        });
+
+        // 子菜单项点击事件
+        $('.submenu-item').click(function(e) {
+            e.stopPropagation();
+            $('.submenu-item').removeClass('active');
+            $(this).addClass('active');
+        });
+
+        // 移动端菜单按钮
+        $('.mobile-menu-btn').click(function() {
+            $('.nav-links').slideToggle();
+        });
+
+        // 初始化：默认收起所有子菜单
+        $('.submenu').hide();
+    });
+
+    function openWindow(siteurl,param=''){
+        var lang = getLanguageFromUrl();
+
+        if(lang!=''){
+            $('.content-area').find('.iframe_info').attr('src','/'+lang+'/?s=index/'+siteurl+'&company_id={$company_id}&company_type=0'+param);
+        }else{
+            $('.content-area').find('.iframe_info').attr('src','/?s=index/'+siteurl+'&company_id={$company_id}&company_type=0'+param);
+        }
+
+        var target = $('#content-area');
+
+        $('html, body').animate({
+            scrollTop: target.offset().top - 100
+        }, 800);
+    }
+</script>
+{include file="common/footer2"}

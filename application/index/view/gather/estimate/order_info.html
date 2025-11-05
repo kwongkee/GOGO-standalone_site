@@ -1,0 +1,1378 @@
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css">
+    body{background:#444444;}
+    .layui-upload-img{width: 92px; height: 92px; margin: 0 10px 10px 0;}
+    .layui-fluid{padding-top: 15px;}
+    .layui-card{background:unset;color: #fff;}
+    .layui-elem-field legend,.layui-form-item .layui-form-label,.parcel_info .layui-elem-quote{color:#fff;}
+    .parcel_info{background:#444444;}
+    .parcel_info .layui-input-inline{color:#000;}
+    .layui-form-checkbox[lay-skin=primary] span{color:#fff;}
+    .layui-form-item .layui-form-checkbox[lay-skin=primary]{height:fit-content !important;}
+    .parcel_info .layui-elem-quote,.layui-collapse .layui-elem-quote{background:#0e2e68;border-left: 5px solid #fff;color:#fff;}
+    .parcel_info_already .layui-input-inline{color:#fff;}
+    .layui-btn-primary{background-color: #fff !important;}
+    .layui-btn-primary:hover {border-color: #F7931E !important;}
+    .disf{display:flex;align-items:center;}
+    .volumn{margin-left:115px !important;}
+    .layui-colla-title{background:#f1be83;color:#fff;}
+    @media screen and (min-width: 992px){
+        .layui-form-label {margin-left: 10px!important;}
+        .layui-input-block{margin-left: 140px !important;}
+        .yulan{width: 700px !important;}
+        .layui-select-fs{width: 100%;}
+        .layui-select-fscon{width: 735px !important;}
+        .volumn{margin-left:95px !important;}
+    }
+    @media screen and (max-width: 450px){
+        .layui-form-label {width: 75px!important;margin-left: 10px!important;}
+        .layui-input-block{margin-left: 120px !important;}
+        .layui-form-label{padding: 9px 5px;}
+        .yulan{width: 72% !important;}
+        .layui-select-fs{width: 100%;}
+        .layui-select-fscon{width: 62%  !important;}
+        .layui-form-item .layui-input-inline {display: block;float: none;left: 4px;width: auto;margin: 0 0 10px 95px;}
+        .layui-form-item .layui-inline {margin-bottom:10px;}
+        .layui-form-item{margin-bottom:0 !important;}
+        .volumn{margin-left:99px !important;}
+    }
+    .layui-form-item .layui-input-inline{line-height: 38px}
+    .show{display:block;}
+    html{background:#e0d7d7;}
+    .chosen-container{width:100%;}
+    .layui-form-item .layui-form-label{padding-left:0 !important;margin-left:0 !important;}
+    .layui-form-item{margin-bottom:7px;}
+
+    .express_info,.logistics_info,.warehouse_info,.parcel_info,.platform_get,.myself,.brand_name,.select_brand_name,.online_desc{display:none;}
+    .layui-form-onswitch,.layui-form-switch{margin-top:0;}
+</style>
+<body>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-card-body" style="padding: 15px;">
+            <form class="layui-form" action="" lay-filter="component-form-group">
+                <input type="hidden" name="id" value="{$data['id']}">
+                <input type="hidden" name="task_id" value="{$data['task_id']}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">订单编号</label>
+                    <div class="layui-input-inline layui-select-fscon">
+                        {$data['ordersn']}
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">订单状态</label>
+                    <div class="layui-input-inline layui-select-fscon">
+                        {$data['status_name']}
+                    </div>
+                </div>
+                <fieldset class="layui-elem-field">
+                    <legend>仓库预订</legend>
+                    <div class="layui-field-box">
+                        {if !empty($data['warehouse_id'])}
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">仓库信息</label>
+                            <div class="layui-input-inline layui-select-fscon">
+                                <div class="layui-btn layui-btn-primary layui-btn-md" onclick="warehouse_info()">查看仓库</div>
+                            </div>
+                        </div>
+                        {/if}
+                        {if !empty($data['channel'])}
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">集运渠道</label>
+                            <div class="layui-input-inline layui-select-fscon">
+                                {if $data['channel']==1} 跨境专线，双清到门{/if}
+                                {if $data['channel']==2} 国际快递，双清到门{/if}
+                                {if $data['channel']==3} 国际邮政，双清到门{/if}
+                            </div>
+                        </div>
+                        {/if}
+                        {if !empty($data['line_info'])}
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">线路信息</label>
+                            <div class="layui-input-inline layui-select-fscon">
+                                <div class="layui-btn layui-btn-primary layui-btn-md" onclick="line_info()">查看线路</div>
+                            </div>
+                        </div>
+                        {/if}
+                    </div>
+                </fieldset>
+                <fieldset class="layui-elem-field">
+                    <legend>预报送仓</legend>
+                    <div class="layui-field-box">
+                        {if substr($data['ordersn'],-2) == '01'}
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">添加包裹</label>
+                            <div class="layui-input-inline layui-select-fscon">
+                                <div class="layui-btn layui-btn-primary layui-btn-md" onclick="parcel_info()">填写信息</div>
+                                <div class="parcel_info" style="padding:10px;">
+                                    {if $data['prediction_id']==1}
+                                    <fieldset class="layui-elem-field">
+                                        <legend>入仓方式</legend>
+                                        <div class="layui-field-box">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">送仓方式</label>
+                                                <div class="layui-input-inline layui-select-fscon">
+                                                    <select name="delivery_method" id="delivery_method" lay-filter="delivery_method" lay-verify="required">
+                                                        <option value="">请选择送仓方式</option>
+                                                        <option value="1">快递寄递</option>
+                                                        <option value="2">物流运抵</option>
+                                                        <option value="3">自送入仓</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="express_info">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">快递企业</label>
+                                                    <div class="layui-input-inline layui-select-fscon">
+                                                        <select name="express_id" id="express_id" lay-filter="express_id" lay-search>
+                                                            <option value="">请选择快递企业</option>
+                                                            {volist name="express" id="v"}
+                                                            <option value="{$v['id']}">{$v['name']}</option>
+                                                            {/volist}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">快递单号</label>
+                                                    <div class="layui-input-inline layui-select-fscon">
+                                                        <input type="text" class="layui-input" name="express_no" placeholder="请输入快递单号" value="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="logistics_info">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">物流企业</label>
+                                                    <div class="layui-input-inline layui-select-fscon">
+                                                        <select name="logistics_id" id="logistics_id" lay-filter="express_id" lay-search>
+                                                            <option value="">请选择物流企业</option>
+                                                            {volist name="express" id="v"}
+                                                            <option value="{$v['id']}">{$v['name']}</option>
+                                                            {/volist}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">物流单号</label>
+                                                    <div class="layui-input-inline layui-select-fscon">
+                                                        <input type="text" class="layui-input" name="logistics_no" placeholder="请输入快递单号" value="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="warehouse_info">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">入仓日期</label>
+                                                    <div class="layui-input-inline layui-select-fscon">
+                                                        <input type="text" class="layui-input" name="inwarehouse_date" id="inwarehouse_date" value="" placeholder="yymmddhhii">
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">联系人</label>
+                                                    <div class="layui-input-inline layui-select-fscon">
+                                                        <input type="text" class="layui-input" name="contact_name" placeholder="请输入入仓联系人" value="">
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">联系电话</label>
+                                                    <div class="layui-input-inline layui-select-fscon">
+                                                        <input type="text" class="layui-input" name="contact_mobile" placeholder="请输入入仓联系电话" value="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <fieldset class="layui-elem-field">
+                                        <legend>包裹信息</legend>
+                                        <div class="layui-field-box">
+                                            <blockquote class="layui-elem-quote">商品类别</blockquote>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">商品类别</label>
+                                                <div class="layui-input-inline layui-select-fscon">
+                                                    <select name="itemid" id="itemid" lay-filter="itemid" lay-search>
+                                                        <option value="">请选择商品类别</option>
+                                                        {volist name="goods_item" id="v"}
+                                                        <option value="{$v['id']}">{$v['name']}</option>
+                                                        {/volist}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <blockquote class="layui-elem-quote">商品信息</blockquote>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">商品信息</label>
+                                                <div class="layui-input-inline layui-select-fscon">
+                                                    <select name="ginfo" id="ginfo" lay-filter="ginfo">
+                                                        <option value="">请选择商品信息</option>
+                                                        <option value="1">在线获取</option>
+                                                        <option value="2">自主申报</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="platform_get">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">选择平台</label>
+                                                    <div class="layui-input-inline layui-select-fscon">
+                                                        <select name="platform_id" id="platform_id" lay-filter="platform_id">
+                                                            <option value="">请选择平台获取商品信息</option>
+                                                            <option value="1">淘宝</option>
+                                                            <option value="2">京东</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">商品ID</label>
+                                                    <div class="layui-input-inline layui-select-fscon">
+                                                        <input type="text" class="layui-input" name="good_id" id="good_id" placeholder="请输入商品ID">
+                                                        <a href="javascript:void(0);" style="color:#ff2222;">《获取商品ID教程》</a>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label"></label>
+                                                    <div class="layui-input-inline layui-select-fscon">
+                                                        <div class="layui-btn layui-btn-primary" onclick="get_desc(this,1)">在线获取</div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-form-item online_desc">
+                                                    <label class="layui-form-label">商品描述</label>
+                                                    <div class="layui-input-inline layui-select-fscon">
+                                                        <textarea name="online_desc" id="online_desc" placeholder="请输入商品名称、商品品牌" class="layui-textarea"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="myself">
+                                                <div class="layui-form-item">
+                                                    <label class="layui-form-label">商品描述</label>
+                                                    <div class="layui-input-inline layui-select-fscon">
+                                                        <textarea name="desc" id="desc" placeholder="请输入商品名称、商品品牌" class="layui-textarea"></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <blockquote class="layui-elem-quote">商品品牌</blockquote>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">商品品牌</label>
+                                                <div class="layui-input-inline layui-select-fscon">
+                                                    <select name="brand_type" id="brand_type" lay-filter="brand_type">
+                                                        <option value="">请选择商品品牌</option>
+                                                        <option value="1">无牌（无商标信息）</option>
+                                                        <option value="2">仿牌（商品无注册）</option>
+                                                        <option value="3">普通品牌（有注册非知名）</option>
+                                                        <option value="4">奢侈品牌（有注册且知名）</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item brand_name">
+                                                <label class="layui-form-label">品牌名称</label>
+                                                <div class="layui-input-inline layui-select-fscon">
+                                                    <input type="text" class="layui-input" name="brand_name" placeholder="请输入品牌名称">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item select_brand_name">
+                                                <label class="layui-form-label">品牌名称</label>
+                                                <div class="layui-input-inline layui-select-fscon">
+                                                    <select name="brand_name2" id="brand_name" lay-filter="brand_name" lay-search>
+                                                        <option value="">请选择品牌名称</option>
+                                                        {volist name="brand" id="v"}
+                                                        <option value="{$v['name']}">{$v['name']}</option>
+                                                        {/volist}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <blockquote class="layui-elem-quote">其他信息</blockquote>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">包装材质</label>
+                                                <div class="layui-input-inline layui-select-fscon">
+                                                    <select name="package" id="package" lay-filter="package" lay-search>
+                                                        <option value="">请选择包装材质</option>
+                                                        {volist name="package" id="v"}
+                                                        <option value="{$v['code_value']}">{$v['code_name']}</option>
+                                                        {/volist}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">包裹毛重KG</label>
+                                                <div class="layui-input-inline layui-select-fscon">
+                                                    <input type="number" class="layui-input" name="grosswt" placeholder="请输入包裹毛重KG">
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">包裹体积CM</label>
+                                                <div class="layui-input-block disf layui-select-fscon volumn">
+                                                    <input type="number" class="layui-input" name="long" placeholder="长" style="width:33%;">X<input  style="width:33%;" type="number" class="layui-input" name="width" placeholder="宽">X<input type="number" class="layui-input" name="height" placeholder="高" style="width:33%;">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label"></label>
+                                        <div class="layui-input-inline layui-select-fscon">
+                                            <div class="layui-btn layui-btn-success layui-btn-md close_win" style="margin-top:10px;"><i class="layui-icon">&#xe605;</i> 保存</div>
+                                        </div>
+                                    </div>
+                                    {/if}
+                                    {if $data['prediction_id']==2}
+                                    <input type="text" style="display:none;" name="yubao_num" id="yubao_num" value="1">
+                                    <div class="layui-collapse" lay-according>
+                                        <div class="layui-colla-item">
+                                            <h2 class="layui-colla-title">包裹1</h2>
+                                            <div class="layui-colla-content layui-show">
+                                                <fieldset class="layui-elem-field">
+                                                    <legend>入仓方式</legend>
+                                                    <div class="layui-field-box">
+                                                        <div class="layui-form-item">
+                                                            <label class="layui-form-label">送仓方式</label>
+                                                            <div class="layui-input-inline layui-select-fscon">
+                                                                <select name="delivery_method[]" id="delivery_method" lay-filter="delivery_method" lay-verify="required">
+                                                                    <option value="">请选择送仓方式</option>
+                                                                    <option value="1">快递寄递</option>
+                                                                    <option value="2">物流运抵</option>
+                                                                    <option value="3">自送入仓</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="express_info">
+                                                            <div class="layui-form-item">
+                                                                <label class="layui-form-label">快递企业</label>
+                                                                <div class="layui-input-inline layui-select-fscon">
+                                                                    <select name="express_id[]" id="express_id" lay-filter="express_id" lay-search>
+                                                                        <option value="">请选择快递企业</option>
+                                                                        {volist name="express" id="v"}
+                                                                        <option value="{$v['id']}">{$v['name']}</option>
+                                                                        {/volist}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="layui-form-item">
+                                                                <label class="layui-form-label">快递单号</label>
+                                                                <div class="layui-input-inline layui-select-fscon">
+                                                                    <input type="text" class="layui-input" name="express_no[]" placeholder="请输入快递单号" value="">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="logistics_info">
+                                                            <div class="layui-form-item">
+                                                                <label class="layui-form-label">物流企业</label>
+                                                                <div class="layui-input-inline layui-select-fscon">
+                                                                    <select name="logistics_id[]" id="logistics_id" lay-filter="express_id" lay-search>
+                                                                        <option value="">请选择物流企业</option>
+                                                                        {volist name="express" id="v"}
+                                                                        <option value="{$v['id']}">{$v['name']}</option>
+                                                                        {/volist}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="layui-form-item">
+                                                                <label class="layui-form-label">物流单号</label>
+                                                                <div class="layui-input-inline layui-select-fscon">
+                                                                    <input type="text" class="layui-input" name="logistics_no[]" placeholder="请输入快递单号" value="">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="warehouse_info">
+                                                            <div class="layui-form-item">
+                                                                <label class="layui-form-label">入仓日期</label>
+                                                                <div class="layui-input-inline layui-select-fscon">
+                                                                    <input type="text" class="layui-input" name="inwarehouse_date[]" id="inwarehouse_date" value="" placeholder="yymmddhhii">
+                                                                </div>
+                                                            </div>
+                                                            <div class="layui-form-item">
+                                                                <label class="layui-form-label">联系人</label>
+                                                                <div class="layui-input-inline layui-select-fscon">
+                                                                    <input type="text" class="layui-input" name="contact_name[]" placeholder="请输入入仓联系人" value="">
+                                                                </div>
+                                                            </div>
+                                                            <div class="layui-form-item">
+                                                                <label class="layui-form-label">联系电话</label>
+                                                                <div class="layui-input-inline layui-select-fscon">
+                                                                    <input type="text" class="layui-input" name="contact_mobile[]" placeholder="请输入入仓联系电话" value="">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                                <fieldset class="layui-elem-field">
+                                                    <legend>包裹信息</legend>
+                                                    <div class="layui-field-box">
+                                                        <blockquote class="layui-elem-quote">商品类别</blockquote>
+                                                        <div class="layui-form-item">
+                                                            <label class="layui-form-label">商品类别</label>
+                                                            <div class="layui-input-inline layui-select-fscon">
+                                                                <select name="itemid[]" id="itemid" lay-filter="itemid" lay-search>
+                                                                    <option value="">请选择商品类别</option>
+                                                                    {volist name="goods_item" id="v"}
+                                                                    <option value="{$v['id']}">{$v['name']}</option>
+                                                                    {/volist}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <blockquote class="layui-elem-quote">商品信息</blockquote>
+                                                        <div class="layui-form-item">
+                                                            <label class="layui-form-label">商品信息</label>
+                                                            <div class="layui-input-inline layui-select-fscon">
+                                                                <select name="ginfo[]" id="ginfo" lay-filter="ginfo">
+                                                                    <option value="">请选择商品信息</option>
+                                                                    <option value="1">在线获取</option>
+                                                                    <option value="2">自主申报</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="platform_get">
+                                                            <div class="layui-form-item">
+                                                                <label class="layui-form-label">选择平台</label>
+                                                                <div class="layui-input-inline layui-select-fscon">
+                                                                    <select name="platform_id[]" id="platform_id" lay-filter="platform_id">
+                                                                        <option value="">请选择平台获取商品信息</option>
+                                                                        <option value="1">淘宝</option>
+                                                                        <option value="2">京东</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="layui-form-item">
+                                                                <label class="layui-form-label">商品ID</label>
+                                                                <div class="layui-input-inline layui-select-fscon">
+                                                                    <input type="text" class="layui-input" name="good_id[]" id="good_id" placeholder="请输入商品ID">
+                                                                    <a href="javascript:void(0);" style="color:#ff2222;">《获取商品ID教程》</a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="layui-form-item">
+                                                                <label class="layui-form-label"></label>
+                                                                <div class="layui-input-inline layui-select-fscon">
+                                                                    <div class="layui-btn layui-btn-primary" onclick="get_desc(this,2)">在线获取</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="layui-form-item online_desc">
+                                                                <label class="layui-form-label">商品描述</label>
+                                                                <div class="layui-input-inline layui-select-fscon">
+                                                                    <textarea name="online_desc[]" id="online_desc" placeholder="请输入商品名称、商品品牌" class="layui-textarea"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="myself">
+                                                            <div class="layui-form-item">
+                                                                <label class="layui-form-label">商品描述</label>
+                                                                <div class="layui-input-inline layui-select-fscon">
+                                                                    <textarea name="desc[]" id="desc" placeholder="请输入商品名称、商品品牌" class="layui-textarea"></textarea>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <blockquote class="layui-elem-quote">签收确认</blockquote>
+                                                        <div class="layui-form-item">
+                                                            <label class="layui-form-label">验货方式</label>
+                                                            <div class="layui-input-inline layui-select-fscon">
+                                                                <select name="inspection_method[]" id="inspection_method" lay-filter="inspection_method">
+                                                                    <option value="">请选择验货方式</option>
+                                                                    <option value="1">拍照验货</option>
+                                                                    <option value="2">视频录制</option>
+                                                                    <option value="3">在线视频</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="layui-form-item">
+                                                            <label class="layui-form-label">验货事项</label>
+                                                            <div class="layui-input-inline layui-select-fscon">
+                                                                <input type="checkbox" name="inspection_matter[0][]" value="1" title="商品信息" lay-skin="primary">
+                                                                <input type="checkbox" name="inspection_matter[0][]" value="3" title="商品数量" lay-skin="primary">
+                                                                <input type="checkbox" name="inspection_matter[0][]" value="2" title="到仓状态" lay-skin="primary">
+                                                            </div>
+                                                        </div>
+                                                        <blockquote class="layui-elem-quote">商品品牌</blockquote>
+                                                        <div class="layui-form-item">
+                                                            <label class="layui-form-label">商品品牌</label>
+                                                            <div class="layui-input-inline layui-select-fscon">
+                                                                <select name="brand_type[]" id="brand_type" lay-filter="brand_type">
+                                                                    <option value="">请选择商品品牌</option>
+                                                                    <option value="1">无牌（无商标信息）</option>
+                                                                    <option value="2">仿牌（商品无注册）</option>
+                                                                    <option value="3">普通品牌（有注册非知名）</option>
+                                                                    <option value="4">奢侈品牌（有注册且知名）</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="layui-form-item brand_name">
+                                                            <label class="layui-form-label">品牌名称</label>
+                                                            <div class="layui-input-inline layui-select-fscon">
+                                                                <input type="text" class="layui-input" name="brand_name[]" placeholder="请输入品牌名称">
+                                                            </div>
+                                                        </div>
+                                                        <div class="layui-form-item select_brand_name">
+                                                            <label class="layui-form-label">品牌名称</label>
+                                                            <div class="layui-input-inline layui-select-fscon">
+                                                                <select name="brand_name2[]" id="brand_name" lay-filter="brand_name" lay-search>
+                                                                    <option value="">请选择品牌名称</option>
+                                                                    {volist name="brand" id="v"}
+                                                                    <option value="{$v['name']}">{$v['name']}</option>
+                                                                    {/volist}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <blockquote class="layui-elem-quote">其他信息</blockquote>
+                                                        <div class="layui-form-item">
+                                                            <label class="layui-form-label">包装材质</label>
+                                                            <div class="layui-input-inline layui-select-fscon">
+                                                                <select name="package[]" id="package" lay-filter="package" lay-search>
+                                                                    <option value="">请选择包装材质</option>
+                                                                    {volist name="package" id="v"}
+                                                                    <option value="{$v['code_value']}">{$v['code_name']}</option>
+                                                                    {/volist}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="layui-form-item">
+                                                            <label class="layui-form-label">包裹毛重KG</label>
+                                                            <div class="layui-input-inline layui-select-fscon">
+                                                                <input type="number" class="layui-input" name="grosswt[]" placeholder="请输入包裹毛重KG">
+                                                            </div>
+                                                        </div>
+                                                        <div class="layui-form-item">
+                                                            <label class="layui-form-label">包裹体积CM</label>
+                                                            <div class="layui-input-block disf layui-select-fscon volumn">
+                                                                <input type="number" class="layui-input" name="long[]" placeholder="长" style="width:33%;">X<input  style="width:33%;" type="number" class="layui-input" name="width[]" placeholder="宽">X<input type="number" class="layui-input" name="height[]" placeholder="高" style="width:33%;">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item" style="margin-top:10px;">
+                                        <label class="layui-form-label"></label>
+                                        <div class="layui-input-inline layui-select-fscon">
+                                            <div class="layui-btn layui-btn-success layui-btn-md close_win" style="margin-top:0px;"><i class="layui-icon">&#xe605;</i> 保存</div>
+                                            <div class="layui-btn layui-btn-primary layui-btn-md" onclick="add_parcel(this)">增加包裹</div>
+                                        </div>
+                                    </div>
+                                    {/if}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item layui-layout-admin" style="height: 0;margin: 0;text-align: center;">
+                            <div class="layui-input-block">
+                                <div class="layui-footer" style="left: 0;height:65px;padding-top:15px;">
+                                    <button class="layui-btn" lay-submit="" lay-filter="component-form-demo1">确认预报</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                </div>
+                            </div>
+                        </div>
+                        {/if}
+                        <div class="layui-form-item" style="display: none;">
+                            <label class="layui-form-label">阅读须知</label>
+                            <div class="layui-input-inline layui-select-fscon">
+                                <div class="layui-btn layui-btn-primary" onclick="view_guide(1,4)">查看须知</div>
+                                <div class="guide_detail" style="display: none;padding:10px;box-sizing: border-box;">
+                                    <div class="guide_content"></div>
+                                    <div class="guide_footer">
+                                        <div class="layui-form-item" style="margin-bottom:20px !important;">
+                                            <label class="layui-form-label" style="width:0 !important;"></label>
+                                            <div class="layui-input-block" style="margin-left:0 !important;text-align:center;">
+                                                <div style="display: flex;align-items: center;justify-content: center;">
+                                                    <span class="guide_times" style="color:#000;margin-right:8px;display: inline-block;"></span>
+                                                    <div class="guide_can_check" style="display: none;"><input type="checkbox" name="guide_sure" lay-skin="switch" lay-text="yes|no"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">确认须知</label>
+                            <div class="layui-input-inline layui-select-fscon">
+                                <div class="layui-btn layui-btn-primary" onclick="view_guide(2,3)">查看须知</div>
+                                <div class="sure_detail" style="display:none;padding:10px;box-sizing: border-box;color:#000;">
+                                    <div class="sure_content" style="padding:20px;">
+
+                                    </div>
+                                    {if $data['sure_prediction']==0}
+                                    <div class="sure_footer">
+                                        <div class="layui-form-item" style="margin-bottom:20px !important;">
+                                            <label class="layui-form-label" style="width:0 !important;"></label>
+                                            <div class="layui-input-block" style="margin-left:0 !important;text-align:center;">
+                                                <div>
+                                                    {if !empty(session('account')['email'])}
+                                                    <span class="f15">确认须知前需把验证码发送到邮箱“<span style="color:#ff2222;font-weight:600;"><?php echo session('account')['email'];?></span>”，然后把验证码输入下方文本框中。</span>
+                                                    <input type="text" name="number" id="number" value="<?php echo session('account')['email'];?>" style="display: none;">
+                                                    <input type="text" name="method" id="method" value="1" style="display: none;">
+                                                    {elseif(!empty(session('account')['phone']))}
+                                                    <span class="f15">确认须知前需把验证码发送到手机“<span style="color:#ff2222;font-weight:600;"><?php echo session('account')['phone'];?></span>”，然后把验证码输入下方文本框中。</span>
+                                                    <input type="text" name="number" id="number" value="<?php echo session('account')['phone'];?>" style="display: none;">
+                                                    <input type="text" name="method" id="method" value="2" style="display: none;">
+                                                    {/if}
+                                                    <div style="display: flex;align-items: center;justify-content: center;width: 50%;margin:0 auto;">
+                                                        <input type="number" class="layui-input" name="sure_code" placeholder="请输入验证码">
+                                                        <div class="layui-btn layui-btn-primary" id="sendCode" onclick="sendCode()">发送</div>
+                                                    </div>
+                                                    <div class="layui-btn layui-btn-success layui-btn-md close_win" style="margin-top:10px;"><i class="layui-icon">&#xe605;</i> 保存</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {/if}
+                                </div>
+                            </div>
+                        </div>
+                        {if $data['sure_prediction']==1}
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">预报信息</label>
+                            <div class="layui-input-inline layui-select-fscon">
+                                <div class="layui-btn layui-btn-primary" onclick="view_order()">查看预报</div>
+                                <div class="order_detail" style="display:none;padding:10px;box-sizing: border-box;color:#fff;background:#444444;">
+                                    <div class="layui-collapse parcel_info_already" lay-accordion>
+                                        {volist name="data.order_goods" key="k" id="v"}
+                                        <div class="layui-colla-item">
+                                            <h2 class="layui-colla-title">包裹信息<?php echo $k;?>：</h2>
+                                            <div class="layui-colla-content {if $k==1}layui-show{/if}">
+                                                <fieldset class="layui-elem-field" style="margin-top:10px;">
+                                                    <legend>入仓方式：</legend>
+                                                    <div class="layui-field-box" style="padding:2px 3px;">
+                                                        {if($v['delivery_method']==1 || $v['delivery_method']==2)}
+                                                            <div class="layui-form-item">
+                                                                <label class="layui-form-label">运输企业</label>
+                                                                <div class="layui-input-inline layui-select-fscon">
+                                                                    {$v['express_name']}
+                                                                </div>
+                                                            </div>
+                                                            <div class="layui-form-item">
+                                                                <label class="layui-form-label">运单编号</label>
+                                                                <div class="layui-input-inline layui-select-fscon">
+                                                                    {$v['express_no']}
+                                                                </div>
+                                                            </div>
+                                                        {/if}
+                                                        {if $v['delivery_method']==3}
+                                                            <div class="layui-form-item">
+                                                                <label class="layui-form-label">入仓日期</label>
+                                                                <div class="layui-input-inline layui-select-fscon">
+                                                                    {$v['inwarehouse_date']}
+                                                                </div>
+                                                            </div>
+                                                            <div class="layui-form-item">
+                                                                <label class="layui-form-label">联系人</label>
+                                                                <div class="layui-input-inline layui-select-fscon">
+                                                                    {$v['contact_name']}
+                                                                </div>
+                                                            </div>
+                                                            <div class="layui-form-item">
+                                                                <label class="layui-form-label">联系电话</label>
+                                                                <div class="layui-input-inline layui-select-fscon">
+                                                                    {$v['contact_mobile']}
+                                                                </div>
+                                                            </div>
+                                                        {/if}
+                                                    </div>
+                                                </fieldset>
+                                                <fieldset class="layui-elem-field" style="margin-top:10px;">
+                                                    <legend>包裹信息：</legend>
+                                                    <div class="layui-field-box" style="padding:2px 3px;">
+
+                                                        <blockquote class="layui-elem-quote">商品类别</blockquote>
+                                                        <div class="layui-form-item">
+                                                            <label class="layui-form-label">商品类别</label>
+                                                            <div class="layui-input-inline layui-select-fscon">
+                                                                {$v['itemid']}
+                                                            </div>
+                                                        </div>
+                                                        <blockquote class="layui-elem-quote">商品信息</blockquote>
+                                                        <div class="layui-form-item">
+                                                            <label class="layui-form-label">商品信息</label>
+                                                            <div class="layui-input-inline layui-select-fscon">
+                                                                {if $v['ginfo']==1}在线获取{elseif($v['ginfo']==2)}自主申报{/if}
+                                                            </div>
+                                                        </div>
+                                                        <div class="layui-form-item">
+                                                            <label class="layui-form-label">商品描述</label>
+                                                            <div class="layui-input-inline layui-select-fscon">
+                                                                {$v['brand_desc']}
+                                                            </div>
+                                                        </div>
+                                                        {if $data['prediction_id']==2}
+                                                            <blockquote class="layui-elem-quote">签收确认</blockquote>
+                                                            <div class="layui-form-item">
+                                                                <label class="layui-form-label">验货方式</label>
+                                                                <div class="layui-input-inline layui-select-fscon">
+                                                                    {if $v['inspection_method']==1}拍照验货{/if}
+                                                                    {if $v['inspection_method']==2}视频录制{/if}
+                                                                    {if $v['inspection_method']==3}在线视频{/if}
+                                                                </div>
+                                                            </div>
+                                                            <div class="layui-form-item">
+                                                                <label class="layui-form-label">验货事项</label>
+                                                                <div class="layui-input-inline layui-select-fscon">
+                                                                    {if isset($v['inspection_matter'][0])}商品信息&nbsp;{/if}
+                                                                    {if isset($v['inspection_matter'][1])}商品数量&nbsp;{/if}
+                                                                    {if isset($v['inspection_matter'][2])}到仓状态{/if}
+                                                                </div>
+                                                            </div>
+                                                        {/if}
+                                                        <blockquote class="layui-elem-quote">商品品牌</blockquote>
+                                                        <div class="layui-form-item">
+                                                            <label class="layui-form-label">商品品牌</label>
+                                                            <div class="layui-input-inline layui-select-fscon">
+                                                                {if $v['brand_type']==1}无牌（无商标信息）{/if}
+                                                                {if $v['brand_type']==2}仿牌（商品无注册）{/if}
+                                                                {if $v['brand_type']==3}普通品牌（有注册非知名）{/if}
+                                                                {if $v['brand_type']==4}奢侈品牌（有注册且知名）{/if}
+                                                            </div>
+                                                        </div>
+                                                        {if $v['brand_type']!=1}
+                                                        <div class="layui-form-item">
+                                                            <label class="layui-form-label">品牌名称</label>
+                                                            <div class="layui-input-inline layui-select-fscon">
+                                                                {$v['brand_name']}
+                                                            </div>
+                                                        </div>
+                                                        {/if}
+                                                        <blockquote class="layui-elem-quote">其他信息</blockquote>
+                                                        <div class="layui-form-item">
+                                                            <label class="layui-form-label">包装材质</label>
+                                                            <div class="layui-input-inline layui-select-fscon">
+                                                                {$v['package']}
+                                                            </div>
+                                                        </div>
+                                                        <div class="layui-form-item">
+                                                            <label class="layui-form-label">包裹毛重KG</label>
+                                                            <div class="layui-input-inline layui-select-fscon">
+                                                                {$v['grosswt']}
+                                                            </div>
+                                                        </div>
+                                                        <div class="layui-form-item">
+                                                            <label class="layui-form-label">包裹体积CM</label>
+                                                            <div class="layui-input-inline layui-select-fscon">
+                                                                {$v['true_volumn']}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                        {/volist}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/if}
+                    </div>
+                </fieldset>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">创建时间</label>
+                    <div class="layui-input-inline layui-select-fscon">
+                        {$data['createtime']}
+                    </div>
+                </div>
+
+                </form>
+            </form>
+        </div>
+    </div>
+
+    <!--仓库信息-->
+    <div class="warehouse_infoDIV" style="display:none;padding:15px;box-sizing: border-box;">
+        <table class="layui-table" style="table-layout: fixed;word-break: break-all;">
+            <thead>
+            <th>收件人名称</th>
+            <th>收件人电话</th>
+            <th>邮政编码</th>
+            <th>仓库地址1</th>
+            <th>仓库地址2</th>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{$data['warehouse_info']['name']}</td>
+                <td>{$data['warehouse_info']['area_code']}&nbsp;{$data['warehouse_info']['mobile']}</td>
+                <td>{$data['warehouse_info']['postal_code']}</td>
+                <td>{$data['warehouse_info']['province_code']}{$data['warehouse_info']['city_code']}{$data['warehouse_info']['address1']}</td>
+                <td>{$data['warehouse_info']['address2']}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--线路信息-->
+    <div class="line_info" style="display:none;padding:20px;box-sizing: border-box;">
+        <table class="layui-table" style="table-layout: fixed;word-break: break-all;">
+            <thead>
+            <th>线路名称</th>
+            <th>运输方式</th>
+            <th>签收时效(日)</th>
+            <th>接受货物属性</th>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{$data['line_info']['name']}</td>
+                <td>{$data['line_info']['transport_method']}</td>
+                <td>{$data['line_info']['sign_time']}</td>
+                <td>{$data['line_info']['accept_product']}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+<script src="js/jquery_3.3.1_jquery.min.js"></script>
+<script>
+    var time_name = '';
+    layui.use(['layer', 'form', 'table', 'upload','laydate','element'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , element = layui.element
+            , upload = layui.upload
+            , laydate = layui.laydate
+            , element = layui.element
+            , table = layui.table;
+
+        laydate.render({
+            elem: '#inwarehouse_date'
+            ,type: 'date'
+            ,format: 'MM月dd日'
+        });
+
+        form.render(null, 'component-form-group');
+
+        form.on('select(delivery_method)',function(data){
+            let val = data.value;
+            if(val==1){
+                $(this).parent().parent().parent().parent().siblings('.express_info').show();
+                $(this).parent().parent().parent().parent().siblings('.logistics_info').hide();
+                $(this).parent().parent().parent().parent().siblings('.warehouse_info').hide();
+            }else if(val==2){
+                $(this).parent().parent().parent().parent().siblings('.express_info').hide();
+                $(this).parent().parent().parent().parent().siblings('.logistics_info').show();
+                $(this).parent().parent().parent().parent().siblings('.warehouse_info').hide();
+            }else if(val==3){
+                $(this).parent().parent().parent().parent().siblings('.express_info').hide();
+                $(this).parent().parent().parent().parent().siblings('.logistics_info').hide();
+                $(this).parent().parent().parent().parent().siblings('.warehouse_info').show();
+            }
+
+            form.render(null, 'component-form-group');
+        });
+
+        //商品信息获取
+        form.on('select(ginfo)',function(data){
+            let val = data.value;
+            if(val==1){
+                $(this).parent().parent().parent().parent().siblings('.platform_get').show();
+                $(this).parent().parent().parent().parent().siblings('.myself').hide();
+            }else if(val==2){
+                $(this).parent().parent().parent().parent().siblings('.platform_get').hide();
+                $(this).parent().parent().parent().parent().siblings('.myself').show();
+                $(this).parent().parent().parent().parent().siblings('.online_desc').hide();
+                $(this).parent().parent().parent().parent().siblings('.online_desc').find('.layui-input-inline').html('');
+            }else{
+                $(this).parent().parent().parent().parent().siblings('.platform_get').hide();
+                $(this).parent().parent().parent().parent().siblings('.myself').hide();
+                $(this).parent().parent().parent().parent().siblings('.online_desc').hide();
+                $(this).parent().parent().parent().parent().siblings('.online_desc').find('.layui-input-inline').html('');
+            }
+        });
+
+        //商品品牌
+        form.on('select(brand_type)',function(data){
+            let val = data.value;
+            if(val==3 || val==2){
+                $(this).parent().parent().parent().parent().siblings('.brand_name').show();
+                $(this).parent().parent().parent().parent().siblings('.select_brand_name').hide();
+            }else if(val==4){
+                $(this).parent().parent().parent().parent().siblings('.brand_name').hide();
+                $(this).parent().parent().parent().parent().siblings('.select_brand_name').show();
+            }else{
+                $(this).parent().parent().parent().parent().siblings('.brand_name').hide();
+                $(this).parent().parent().parent().parent().siblings('.select_brand_name').hide();
+            }
+        });
+
+        /* 监听提交 */
+        form.on('submit(component-form-demo1)', function (data) {
+            $.ajax({
+                url: "/?s=gather/order_info",
+                method: 'post',
+                data: data.field,
+                dataType: 'JSON',
+                success: function (res) {
+                    layer.msg(res.msg, {time: 2000}, function () {
+                        if (res.code == 0) {
+                            // var index = parent.layer.getFrameIndex(window.name);
+                            // parent.layer.close(index);
+                            // parent.window.location.reload();
+                            window.location.reload();
+                        }
+                    });
+                },
+                error: function (data) {
+                    layer.msg('系统错误', {time: 2000});
+                }
+            });
+            return false;
+        });
+    });
+
+    //填写或查看包裹信息
+    function parcel_info(){
+        var $ = layui.$
+            , layer = layui.layer;
+        var index2 = layer.open({
+            type: 1,
+            title: "包裹信息",
+            content: $('.parcel_info'),
+            area:['100%','100%']
+        });
+        $('.close_win').click(function(){
+            layer.close(index2);
+        });
+    }
+
+    //获取商品描述
+    function get_desc(t,typ){
+        var $ = layui.$
+            , layer = layui.layer;
+        layer.load();
+        if(typ==1){
+            let platform_id = $('#platform_id').val();
+            let good_id = $('#good_id').val();
+            $('.online_desc').hide();
+            $('.online_desc').find('.layui-input-inline').html('');
+            $.ajax({
+                url: "/?s=gather/get_desc",
+                method: 'post',
+                data: {'platform_id':platform_id,'good_id':good_id},
+                dataType: 'JSON',
+                success: function (res) {
+                    layer.closeAll('loading');
+                    layer.msg(res.msg, {time: 2000}, function () {
+                        if (res.code == 0) {
+                            let html = '<textarea name="online_desc" id="online_desc" placeholder="请输入商品描述" class="layui-textarea">商品标题：'+res.data.title+'；商品品牌：'+res.data.nick+'</textarea>\n'+
+                                '           <a class="other_link" target="_blank" href="'+res.data.detail_url+'" style="color:#ff2222;text-decoration: underline;">跳转到商品详情页</a>';
+                            $('.online_desc').find('.layui-input-inline').html(html);
+                            $('.online_desc').show();
+                        }
+                    });
+                },
+                error: function (data) {
+                    layer.msg('系统错误', {time: 2000});
+                }
+            });
+        }else{
+            let platform_id = $(t).parent().parent().parent().find('#platform_id').val();
+            let good_id = $(t).parent().parent().parent().find('#good_id').val();
+            $(t).parent().parent().parent().find('.online_desc').hide();
+            $(t).parent().parent().parent().find('.online_desc').find('.layui-input-inline').html('');
+            $.ajax({
+                url: "/?s=gather/get_desc",
+                method: 'post',
+                data: {'platform_id':platform_id,'good_id':good_id},
+                dataType: 'JSON',
+                success: function (res) {
+                    layer.closeAll('loading');
+                    layer.msg(res.msg, {time: 2000}, function () {
+                        if (res.code == 0) {
+                            let html = '<textarea name="online_desc[]" id="online_desc" placeholder="请输入商品描述" class="layui-textarea">商品标题：'+res.data.title+'；商品品牌：'+res.data.nick+'</textarea>\n'+
+                                '           <a class="other_link" target="_blank" href="'+res.data.detail_url+'" style="color:#ff2222;text-decoration: underline;">跳转到商品详情页</a>';
+                            $(t).parent().parent().parent().find('.online_desc').find('.layui-input-inline').html(html);
+                            $(t).parent().parent().parent().find('.online_desc').show();
+                        }
+                    });
+                },
+                error: function (data) {
+                    layer.msg('系统错误', {time: 2000});
+                }
+            });
+        }
+    }
+
+    //查看仓库信息
+    function warehouse_info(){
+        var $ = layui.$
+            , layer = layui.layer;
+
+        layer.open({
+            type: 1,
+            title: "仓库信息",
+            content: $('.warehouse_infoDIV'),
+            area:['80%','80%']
+        });
+    }
+
+    //查看预报详情
+    function view_order() {
+        var $ = layui.$
+            , layer = layui.layer;
+
+        layer.open({
+            type: 1,
+            title: "预报信息",
+            content: $('.order_detail'),
+            area:['80%','80%']
+        });
+    }
+    //查看线路信息
+    function line_info(){
+        var $ = layui.$
+            , layer = layui.layer;
+        var index = layer.open({
+            type: 1,
+            title: "线路信息",
+            content: $('.line_info'),
+            area:['80%','80%']
+        });
+    }
+
+    //添加包裹
+    function add_parcel(t){
+        var $ = layui.$
+            , layer = layui.layer
+            , laydate = layui.laydate
+            , form = layui.form;
+        let yubao_num = parseInt($('#yubao_num').val()) + 1;
+        $('#yubao_num').val(yubao_num);
+        let sub_num=yubao_num-1;
+        let html = '<div class="layui-colla-item">\n' +
+            '                                                    <h2 class="layui-colla-title">包裹'+yubao_num+'<div class="layui-btn layui-btn-danger layui-btn-xs" onclick="del_parcel(this)" style="margin-left:10px;">删除</div></h2>\n' +
+            '                                                    <div class="layui-colla-content layui-show">\n' +
+            '                                                        <fieldset class="layui-elem-field">\n' +
+            '                                                            <legend>入仓方式</legend>\n' +
+            '                                                            <div class="layui-field-box">\n' +
+            '                                                                <div class="layui-form-item">\n' +
+            '                                                                    <label class="layui-form-label">送仓方式</label>\n' +
+            '                                                                    <div class="layui-input-inline layui-select-fscon">\n' +
+            '                                                                        <select name="delivery_method[]" id="delivery_method" lay-filter="delivery_method" lay-verify="required">\n' +
+            '                                                                            <option value="">请选择送仓方式</option>\n' +
+            '                                                                            <option value="1">快递寄递</option>\n' +
+            '                                                                            <option value="2">物流运抵</option>\n' +
+            '                                                                            <option value="3">自送入仓</option>\n' +
+            '                                                                        </select>\n' +
+            '                                                                    </div>\n' +
+            '                                                                </div>\n' +
+            '                                                                <div class="express_info">\n' +
+            '                                                                    <div class="layui-form-item">\n' +
+            '                                                                        <label class="layui-form-label">快递企业</label>\n' +
+            '                                                                        <div class="layui-input-inline layui-select-fscon">\n' +
+            '                                                                            <select name="express_id[]" id="express_id" lay-filter="express_id" lay-search>\n' +
+            '                                                                                <option value="">请选择快递企业</option>\n';
+    {volist name="express" id="v"}
+        html += '                                                                           <option value="{$v[\'id\']}">{$v[\'name\']}</option>\n';
+    {/volist}
+        html += '                                                                    </select>\n' +
+            '                                                                        </div>\n' +
+            '                                                                    </div>\n' +
+            '                                                                    <div class="layui-form-item">\n' +
+            '                                                                        <label class="layui-form-label">快递单号</label>\n' +
+            '                                                                        <div class="layui-input-inline layui-select-fscon">\n' +
+            '                                                                            <input type="text" class="layui-input" name="express_no[]" placeholder="请输入快递单号" value="">\n' +
+            '                                                                        </div>\n' +
+            '                                                                    </div>\n' +
+            '                                                                </div>\n' +
+            '                                                                <div class="logistics_info">\n' +
+            '                                                                    <div class="layui-form-item">\n' +
+            '                                                                        <label class="layui-form-label">物流企业</label>\n' +
+            '                                                                        <div class="layui-input-inline layui-select-fscon">\n' +
+            '                                                                            <select name="logistics_id[]" id="logistics_id" lay-filter="express_id" lay-search>\n' +
+            '                                                                                <option value="">请选择物流企业</option>\n';
+    {volist name="express" id="v"}
+        html += '                                                                             <option value="{$v[\'id\']}">{$v[\'name\']}</option>\n';
+    {/volist}
+        html += '                                                                    </select>\n' +
+            '                                                                        </div>\n' +
+            '                                                                    </div>\n' +
+            '                                                                    <div class="layui-form-item">\n' +
+            '                                                                        <label class="layui-form-label">物流单号</label>\n' +
+            '                                                                        <div class="layui-input-inline layui-select-fscon">\n' +
+            '                                                                            <input type="text" class="layui-input" name="logistics_no[]" placeholder="请输入快递单号" value="">\n' +
+            '                                                                        </div>\n' +
+            '                                                                    </div>\n' +
+            '                                                                </div>\n' +
+            '                                                                <div class="warehouse_info">\n' +
+            '                                                                    <div class="layui-form-item">\n' +
+            '                                                                        <label class="layui-form-label">入仓日期</label>\n' +
+            '                                                                        <div class="layui-input-inline layui-select-fscon">\n' +
+            '                                                                            <input type="text" class="layui-input" name="inwarehouse_date[]" id="inwarehouse_date'+yubao_num+'" value="" placeholder="yymmddhhii">\n' +
+            '                                                                        </div>\n' +
+            '                                                                    </div>\n' +
+            '                                                                    <div class="layui-form-item">\n' +
+            '                                                                        <label class="layui-form-label">联系人</label>\n' +
+            '                                                                        <div class="layui-input-inline layui-select-fscon">\n' +
+            '                                                                            <input type="text" class="layui-input" name="contact_name[]" placeholder="请输入入仓联系人" value="">\n' +
+            '                                                                        </div>\n' +
+            '                                                                    </div>\n' +
+            '                                                                    <div class="layui-form-item">\n' +
+            '                                                                        <label class="layui-form-label">联系电话</label>\n' +
+            '                                                                        <div class="layui-input-inline layui-select-fscon">\n' +
+            '                                                                            <input type="text" class="layui-input" name="contact_mobile[]" placeholder="请输入入仓联系电话" value="">\n' +
+            '                                                                        </div>\n' +
+            '                                                                    </div>\n' +
+            '                                                                </div>\n' +
+            '                                                            </div>\n' +
+            '                                                        </fieldset>\n' +
+            '                                                        <fieldset class="layui-elem-field">\n' +
+            '                                                            <legend>包裹信息</legend>\n' +
+            '                                                            <div class="layui-field-box">\n' +
+            '                                                                <blockquote class="layui-elem-quote">商品类别</blockquote>\n' +
+            '                                                                <div class="layui-form-item">\n' +
+            '                                                                    <label class="layui-form-label">商品类别</label>\n' +
+            '                                                                    <div class="layui-input-inline layui-select-fscon">\n' +
+            '                                                                        <select name="itemid[]" id="itemid" lay-filter="itemid" lay-search >\n' +
+            '                                                                            <option value="">请选择商品类别</option>\n';
+    {volist name="goods_item" id="v"}
+        html += '                                                                         <option value="{$v[\'id\']}">{$v[\'name\']}</option>\n';
+    {/volist}
+        html += '                                                                </select>\n' +
+            '                                                                    </div>\n' +
+            '                                                                </div>\n' +
+            '                                                                <blockquote class="layui-elem-quote">商品信息</blockquote>\n' +
+            '                                                                <div class="layui-form-item">\n' +
+            '                                                                    <label class="layui-form-label">商品信息</label>\n' +
+            '                                                                    <div class="layui-input-inline layui-select-fscon">\n' +
+            '                                                                        <select name="ginfo[]" id="ginfo" lay-filter="ginfo">\n' +
+            '                                                                            <option value="">请选择商品信息</option>\n' +
+            '                                                                            <option value="1">在线获取</option>\n' +
+            '                                                                            <option value="2">自主申报</option>\n' +
+            '                                                                        </select>\n' +
+            '                                                                    </div>\n' +
+            '                                                                </div>\n' +
+            '                                                                <div class="platform_get">\n' +
+            '                                                                    <div class="layui-form-item">\n' +
+            '                                                                        <label class="layui-form-label">选择平台</label>\n' +
+            '                                                                        <div class="layui-input-inline layui-select-fscon">\n' +
+            '                                                                            <select name="platform_id[]" id="platform_id" lay-filter="platform_id">\n' +
+            '                                                                                <option value="">请选择平台获取商品信息</option>\n' +
+            '                                                                                <option value="1">淘宝</option>\n' +
+            '                                                                                <option value="2">京东</option>\n' +
+            '                                                                            </select>\n' +
+            '                                                                        </div>\n' +
+            '                                                                    </div>\n' +
+            '                                                                    <div class="layui-form-item">\n' +
+            '                                                                        <label class="layui-form-label">商品ID</label>\n' +
+            '                                                                        <div class="layui-input-inline layui-select-fscon">\n' +
+            '                                                                            <input type="text" class="layui-input" name="good_id[]" id="good_id" placeholder="请输入商品ID">\n' +
+            '                                                                            <a href="javascript:void(0);" style="color:#ff2222;">《获取商品ID教程》</a>\n' +
+            '                                                                        </div>\n' +
+            '                                                                    </div>\n' +
+            '                                                                    <div class="layui-form-item">\n' +
+            '                                                                        <label class="layui-form-label"></label>\n' +
+            '                                                                        <div class="layui-input-inline layui-select-fscon">\n' +
+            '                                                                            <div class="layui-btn layui-btn-primary" onclick="get_desc(this,2)">在线获取</div>\n' +
+            '                                                                        </div>\n' +
+            '                                                                    </div>\n' +
+            '                                                                    <div class="layui-form-item online_desc">\n' +
+            '                                                                        <label class="layui-form-label">商品描述</label>\n' +
+            '                                                                        <div class="layui-input-inline layui-select-fscon">\n' +
+            '                                                                            <textarea name="online_desc[]" id="online_desc" placeholder="请输入商品名称、商品品牌" class="layui-textarea"></textarea>\n' +
+            '                                                                        </div>\n' +
+            '                                                                    </div>\n' +
+            '                                                                </div>\n' +
+            '                                                                <div class="myself">\n' +
+            '                                                                    <div class="layui-form-item">\n' +
+            '                                                                        <label class="layui-form-label">商品描述</label>\n' +
+            '                                                                        <div class="layui-input-inline layui-select-fscon">\n' +
+            '                                                                            <textarea name="desc[]" id="desc" placeholder="请输入商品名称、商品品牌" class="layui-textarea"></textarea>\n' +
+            '                                                                        </div>\n' +
+            '                                                                    </div>\n' +
+            '                                                                </div>\n' +
+            '                                                                <blockquote class="layui-elem-quote">签收确认</blockquote>\n' +
+            '                                                                <div class="layui-form-item">\n' +
+            '                                                                    <label class="layui-form-label">验货方式</label>\n' +
+            '                                                                    <div class="layui-input-inline layui-select-fscon">\n' +
+            '                                                                        <select name="inspection_method[]" id="inspection_method" lay-filter="inspection_method">\n' +
+            '                                                                            <option value="">请选择验货方式</option>\n' +
+            '                                                                            <option value="1">拍照验货</option>\n' +
+            '                                                                            <option value="2">视频录制</option>\n' +
+            '                                                                            <option value="3">在线视频</option>\n' +
+            '                                                                        </select>\n' +
+            '                                                                    </div>\n' +
+            '                                                                </div>\n' +
+            '                                                                <div class="layui-form-item">\n' +
+            '                                                                    <label class="layui-form-label">验货事项</label>\n' +
+            '                                                                    <div class="layui-input-inline layui-select-fscon">\n' +
+            '                                                                        <input type="checkbox" name="inspection_matter['+sub_num+'][]" value="1" title="商品信息" lay-skin="primary">\n' +
+            '                                                                        <input type="checkbox" name="inspection_matter['+sub_num+'][]" value="3" title="商品数量" lay-skin="primary">\n' +
+            '                                                                        <input type="checkbox" name="inspection_matter['+sub_num+'][]" value="2" title="到仓状态" lay-skin="primary">\n' +
+            '                                                                    </div>\n' +
+            '                                                                </div>\n'+
+            '                                                                <blockquote class="layui-elem-quote">商品品牌</blockquote>\n' +
+            '                                                                <div class="layui-form-item">\n' +
+            '                                                                    <label class="layui-form-label">商品品牌</label>\n' +
+            '                                                                    <div class="layui-input-inline layui-select-fscon">\n' +
+            '                                                                        <select name="brand_type[]" id="brand_type" lay-filter="brand_type">\n' +
+            '                                                                            <option value="">请选择商品品牌</option>\n' +
+            '                                                                            <option value="1">无牌（无商标信息）</option>\n' +
+            '                                                                            <option value="2">仿牌（商品无注册）</option>\n' +
+            '                                                                            <option value="3">普通品牌（有注册非知名）</option>\n' +
+            '                                                                            <option value="4">奢侈品牌（有注册且知名）</option>\n' +
+            '                                                                        </select>\n' +
+            '                                                                    </div>\n' +
+            '                                                                </div>\n' +
+            '                                                                <div class="layui-form-item brand_name">\n' +
+            '                                                                    <label class="layui-form-label">品牌名称</label>\n' +
+            '                                                                    <div class="layui-input-inline layui-select-fscon">\n' +
+            '                                                                        <input type="text" class="layui-input" name="brand_name[]" placeholder="请输入品牌名称">\n' +
+            '                                                                    </div>\n' +
+            '                                                                </div>\n' +
+            '                                                                <div class="layui-form-item select_brand_name">\n' +
+            '                                                                    <label class="layui-form-label">品牌名称</label>\n' +
+            '                                                                    <div class="layui-input-inline layui-select-fscon">\n' +
+            '                                                                        <select name="brand_name2[]" id="brand_name" lay-filter="brand_name" lay-search>\n' +
+            '                                                                            <option value="">请选择品牌名称</option>\n';
+    {volist name="brand" id="v"}
+        html += '                                                                         <option value="{$v[\'name\']}">{$v[\'name\']}</option>\n';
+    {/volist}
+        html += '                                                                </select>\n' +
+            '                                                                    </div>\n' +
+            '                                                                </div>\n' +
+            '                                                                <blockquote class="layui-elem-quote">其他信息</blockquote>\n' +
+            '                                                                <div class="layui-form-item">\n' +
+            '                                                                    <label class="layui-form-label">包装材质</label>\n' +
+            '                                                                    <div class="layui-input-inline layui-select-fscon">\n' +
+            '                                                                        <select name="package[]" id="package" lay-filter="package" lay-search>\n' +
+            '                                                                            <option value="">请选择包装材质</option>\n';
+    {volist name="package" id="v"}
+        html += '                                                                        <option value="{$v[\'code_value\']}">{$v[\'code_name\']}</option>\n';
+    {/volist}
+        html += '                                                                </select>\n' +
+            '                                                                    </div>\n' +
+            '                                                                </div>\n' +
+            '                                                                <div class="layui-form-item">\n' +
+            '                                                                    <label class="layui-form-label">包裹毛重KG</label>\n' +
+            '                                                                    <div class="layui-input-inline layui-select-fscon">\n' +
+            '                                                                        <input type="number" class="layui-input" name="grosswt[]" placeholder="请输入包裹毛重KG">\n' +
+            '                                                                    </div>\n' +
+            '                                                                </div>\n' +
+            '                                                                <div class="layui-form-item">\n' +
+            '                                                                    <label class="layui-form-label">包裹体积CM</label>\n' +
+            '                                                                    <div class="layui-input-block disf layui-select-fscon volumn">\n' +
+            '                                                                        <input type="number" class="layui-input" name="long[]" placeholder="长" style="width:33%;">X<input  style="width:33%;" type="number" class="layui-input" name="width[]" placeholder="宽">X<input type="number" class="layui-input" name="height[]" placeholder="高" style="width:33%;">\n' +
+            '                                                                    </div>\n' +
+            '                                                                </div>\n' +
+            '                                                            </div>\n' +
+            '                                                        </fieldset>\n' +
+            '                                                    </div>\n' +
+            '                                                </div>';
+        $(t).parent().parent().siblings('.layui-collapse').find('.layui-colla-content').removeClass('layui-show');
+        $(t).parent().parent().siblings('.layui-collapse').append(html);
+        laydate.render({
+            elem: '#inwarehouse_date'+yubao_num
+            ,type: 'date'
+            ,format: 'MM月dd日'
+        });
+        form.render(null, 'component-form-group');
+        layui.element.render();
+    }
+
+    //删除包裹
+    function del_parcel(t){
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form;
+        let yubao_num = parseInt($('#yubao_num').val()) - 1;
+        $('#yubao_num').val(yubao_num);
+
+        $(t).parent().parent().remove();
+        form.render(null, 'component-form-group');
+        layui.element.render();
+    }
+
+    //查看阅读须知
+    function view_guide(typ,id){
+        var $ = layui.$
+            , layer = layui.layer;
+        if(typ==1){
+            $.ajax({
+                url: "/?s=gather/get_guide",
+                method: 'post',
+                data: { 'val': id},
+                dataType: 'JSON',
+                async: false,
+                success: function (res) {
+                    timers('guide_times','guide_can_check');
+                    $('.guide_detail').find('.guide_content').html(res.info.content);
+                }
+            });
+            var index = layer.open({
+                type: 1,
+                title: '阅读须知',
+                content: $('.guide_detail'),
+                area:['80%','80%']
+            });
+        }else if(typ==2){
+            $.ajax({
+                url: "/?s=gather/get_guide",
+                method: 'post',
+                data: {'val': id},
+                dataType: 'JSON',
+                async: false,
+                success: function (res) {
+                    $('.sure_detail').find('.sure_content').html(res.info.content);
+                }
+            });
+            var index2 = layer.open({
+                type: 1,
+                title: '确认须知',
+                content: $('.sure_detail'),
+                area:['80%','80%']
+            });
+            $('.close_win').click(function(){
+                clearTimeout(time_name);
+                layer.close(index2);
+            });
+
+            $('.layui-layer-close').click(function(){
+                clearTimeout(time_name);
+            });
+        }
+    }
+
+    var n=10;
+    function timers(times,check){
+        n-=1;
+        if(n==0){
+            n=10;
+            $("."+times).html("我已了解");
+            $('.'+check).show();
+        }else{
+            $("."+times).html("我已了解（"+n+"秒)");
+            time_name = setTimeout(function () {
+                timers(times,check);
+            },1000);
+        }
+    }
+
+    //发送数字验证码
+    function sendCode(obj) {
+        var number = $("#number").val();
+        var method = $("#method").val();
+        // 发送成功倒计时
+        $.ajax({
+            url:"/?s=gather/sendcode",
+            type:"POST",
+            dataType:"json",
+            data:{
+                "number":number,
+                'method':method,
+                'code_name':'sure_code',
+                'msg':'尊敬的客户，您正在集运网确认须知，确认验证码：'
+            },
+            success:function (res) {
+                layer.msg(res.msg, {time: 2000}, function () {
+                    if (res.code == 0) {
+                        settime();
+                    }
+                });
+            },
+            error:function (xhr) {
+                var res = JSON.parse(xhr.responseText);
+            }
+        })
+    }
+
+    var num=60;
+    function settime() {
+        if (num == 0) {
+            $("#sendCode").html("发送");
+            num = 60;
+        } else {
+            $("#sendCode").html(num+"重试");
+            num--;
+            time_name = setTimeout(function() {
+                settime()
+            },1000)
+        }
+    }
+</script>

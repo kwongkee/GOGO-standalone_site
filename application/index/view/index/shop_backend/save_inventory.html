@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>独立站平台 - website.gogo198.net</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="layui/css/layui.css">
+
+    <style>
+        html{height:100%;}
+        :root {--primary: #8a2be2;--primary-dark: #6a1cb9;--primary-light: #9b4de3;--secondary: #bb86fc;--accent: #e6d7f5;--text: #333333;--text-light: #f8f8f8;--background: #f9f5fd;--card-bg: #ffffff;--gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));--gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary));--shadow: 0 10px 30px rgba(138, 43, 226, 0.15);--shadow-hover: 0 15px 35px rgba(138, 43, 226, 0.25);}
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        body {color: var(--text);line-height: 1.6;overflow-x: hidden;}
+        h1, h2, h3, h4, h5, h6 {font-family: 'Montserrat', sans-serif;font-weight: 700;}
+
+        /* 导航栏样式 */
+        header {background: rgba(255, 255, 255, 0.95);color: var(--text);padding: 15px 0;box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);position: sticky;top: 0;z-index: 1000;backdrop-filter: blur(10px);}
+        nav {display: flex;justify-content: space-between;align-items: center;position: relative;}
+        .logo {font-size: 1.8rem;font-weight: 700;display: flex;align-items: center;background: var(--gradient);-webkit-background-clip: text;background-clip: text;color: transparent;z-index: 1001;}
+        .logo i {margin-right: 10px;color: var(--primary);}
+        .nav-links {display: flex;list-style: none;}
+        .nav-links li {margin-left: 25px;position: relative;}
+        .nav-links a {color: var(--text);text-decoration: none;font-weight: 500;transition: all 0.3s ease;padding: 8px 12px;border-radius: 4px;position: relative;display: flex;align-items: center;}
+        .nav-links a::after {content: '';position: absolute;bottom: 0;left: 50%;width: 0;height: 2px;background: var(--gradient);transition: all 0.3s ease;transform: translateX(-50%);}
+        .nav-links a:hover {color: var(--primary);}
+        .nav-links a:hover::after {width: 80%;}
+        .auth-buttons {display: flex;align-items: center;}
+        .btn {padding: 12px 25px;border-radius: 50px;text-decoration: none;font-weight: 600;transition: all 0.3s ease;cursor: pointer;display: inline-block;text-align: center;border: none;font-family: 'Montserrat', sans-serif;}
+        .btn-outline {border: 2px solid var(--primary);color: var(--primary);background: transparent;margin-right: 15px;}
+        .btn-outline:hover {background: var(--primary);color: white;transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-primary {background: var(--gradient);color: white;border: 2px solid transparent;}
+        .btn-primary:hover {background: transparent;border-color: var(--primary);color: var(--primary);transform: translateY(-3px);box-shadow: var(--shadow);}
+
+        /* 表单样式 */
+        .form-section {margin-bottom: 30px;}
+        .form-title {font-size: 1.3rem;margin-bottom: 20px;color: var(--primary-dark);display: flex;align-items: center}
+        .form-title i {margin-right: 10px;}
+        .form-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));gap: 20px;}
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select,
+        .form-group textarea {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;}
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {border-color: var(--primary);outline: none;}
+        .form-group textarea {min-height: 120px;resize: vertical;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
+
+
+        /* 模态框样式 */
+        .modal {display: none;position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.5);backdrop-filter: blur(5px);z-index: 2000;align-items: center;justify-content: center;}
+        .modal-content {background: white;border-radius: 20px;padding: 30px;width: 90%;max-width: 90%;box-shadow: var(--shadow-hover);position: relative;}
+        .close-modal {position: absolute;top: 20px;right: 20px;font-size: 1.5rem;color: #999;cursor: pointer;transition: color 0.3s ease;}
+        .close-modal:hover {color: var(--primary);}
+        .modal-title {font-size: 1.5rem;margin-bottom: 20px;color: var(--primary);}
+
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}
+        .form-group input:focus,
+        .form-group select:focus {border-color: var(--primary);outline: none;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
+
+        .disf{display: flex;align-items: center;}
+        .layui-form-label{width: 100px;}
+
+        /* 动画 */
+        @keyframes fadeIn {
+            from {opacity: 0;transform: translateY(10px);}
+            to {opacity: 1;transform: translateY(0);}
+        }
+
+        @media (max-width: 576px) {
+            .btn {padding: 10px 20px;font-size: 0.9rem;}
+            /*.form-actions {flex-direction: column;}*/
+        }
+    </style>
+</head>
+<body>
+<form class="layui-form" id="siteForm" action="" method="post" lay-filter="component-form-rotate" style="padding:10px;">
+    <input type="hidden" name="company_id" value="{$company_id}">
+    <input type="hidden" name="company_type" value="{$company_type}">
+    <input type="hidden" name="id" value="{$id}">
+    <input type="hidden" name="type" value="{$type2}">
+
+    <div class="form-group" style="padding:10px;">
+        <div class="layui-form-item" style="display: none;">
+            <label class="layui-form-label">类型</label>
+            <div class="layui-input-block">
+                <select name="type_id" id="type_id" lay-search lay-verify="">
+                    <option value="0" {if 0==$data['type_id']}selected{/if}>新增入库</option>
+                    <option value="1" {if 1==$data['type_id']}selected{/if}>新增出库</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">选择商品</label>
+            <div class="layui-input-block">
+                {if $id>0}
+                <div style="line-height: 38px">
+                    <div class="disf">
+                        {$data['goods_name']}
+                        <a href="javascript:window.location.href='/?s=index/save_inventory&company_id={$company_id}&company_type={$company_type}';" style="display: none;">
+<!--                            <img src="/img/refresh.png" alt="" style="padding:5px 10px;width:23px;text-align: center;border:2px solid #5c5a5a;margin-left:5px;">-->
+                            <i class="fas fa-refresh" style="padding:5px;text-align: center;border:2px solid #e0e0e0;margin-left:5px;"></i>
+                        </a>
+                    </div>
+                    <input type="hidden" name="goods_id" value="{$data['id']}">
+                </div>
+                {else}
+                <div class="disf">
+                    <select name="goods_id" id="goods_id" lay-search lay-verify="required">
+                        {volist name="type['goods']" id="vo"}
+                        <option value="{$vo['id']}">{$vo['goods_name']}</option>
+                        {/volist}
+                    </select>
+                    <a href="javascript:window.location.reload();">
+<!--                        <img src="/img/refresh.png" alt="" style="padding:5px 10px;width:23px;text-align: center;border:2px solid #5c5a5a;">-->
+                        <i class="fas fa-refresh" style="padding:5px;text-align: center;border:2px solid #e0e0e0;margin-left:5px;"></i>
+                    </a>
+                </div>
+
+                <div id="name_result1" class="result_div"></div>
+                {/if}
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">发货国家</label>
+            <div class="layui-input-block">
+                <select name="shipping_country" id="shipping_country" lay-search lay-verify="required" lay-filter="shipping_country">
+                    <option value="">请选择国家地区</option>
+                    {volist name="type['country']" id="vo"}
+                    <option value="{$vo['id']}" {if $vo['id']==$data['shipping_country']}selected{/if}>{$vo['param2']}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item currency">
+            <label class="layui-form-label">商品币种</label>
+            <div class="layui-input-block">
+                {if $id>0}
+                <select name="goods_currency" id="goods_currency" lay-search lay-verify="required">
+                    <option value="{$data['currency']['id']}">{$data['currency']['currency_symbol_standard']}</option>
+                </select>
+                {/if}
+            </div>
+        </div>
+        <div class="layui-form-item areas">
+            <label class="layui-form-label">行政区域</label>
+            <div class="layui-input-block">
+                <div class="disf">
+                    <div class="area1">
+                        {if $id>0}
+                        {if isset($data['areas2'][0])}
+                        <select name="areas[]" lay-search lay-verify="required" lay-filter="area1">
+                            <option value="{$data['areas2'][0]['id']}">{$data['areas2'][0]['code_name']}</option>
+                        </select>
+                        {/if}
+                        {/if}
+                    </div>
+                    <div class="area2">
+                        {if $id>0}
+                        {if isset($data['areas2'][1])}
+                        <select name="areas[]" lay-search lay-verify="required" lay-filter="area2">
+                            <option value="{$data['areas2'][1]['id']}">{$data['areas2'][1]['code_name']}</option>
+                        </select>
+                        {/if}
+                        {/if}
+                    </div>
+                    <div class="area3">
+                        {if $id>0}
+                        {if isset($data['areas2'][2])}
+                        <select name="areas[]" lay-search lay-verify="required" lay-filter="area3">
+                            <option value="{$data['areas2'][2]['id']}">{$data['areas2'][2]['code_name']}</option>
+                        </select>
+                        {/if}
+                        {/if}
+                    </div>
+                    <div class="area4">
+                        {if $id>0}
+                        {if isset($data['areas2'][3])}
+                        <select name="areas[]" lay-search lay-verify="required" lay-filter="area4">
+                            <option value="{$data['areas2'][3]['id']}">{$data['areas2'][3]['code_name']}</option>
+                        </select>
+                        {/if}
+                        {/if}
+                    </div>
+                    <div class="area5">
+                        {if $id>0}
+                        {if isset($data['areas2'][4])}
+                        <select name="areas[]" lay-search lay-verify="required" lay-filter="area5">
+                            <option value="{$data['areas2'][4]['id']}">{$data['areas2'][4]['code_name']}</option>
+                        </select>
+                        {/if}
+                        {/if}
+                    </div>
+                    <div class="area6">
+                        {if $id>0}
+                        {if isset($data['areas2'][5])}
+                        <select name="areas[]" lay-search lay-verify="required" lay-filter="area6">
+                            <option value="{$data['areas2'][5]['id']}">{$data['areas2'][5]['code_name']}</option>
+                        </select>
+                        {/if}
+                        {/if}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item" style="display: none;">
+            <label class="layui-form-label">事由</label>
+            <div class="layui-input-block">
+                <select name="reason_id" id="reason_id" lay-search lay-verify="">
+                    <option value="0" {if 0==$data['reason_id']}selected{/if}>入库拟售</option>
+                    <option value="1" {if 1==$data['reason_id']}selected{/if}>停售退库</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item" style="display: none;">
+            <label class="layui-form-label">选择仓库</label>
+            <div class="layui-input-block">
+                <select name="warehouse_id" id="warehouse_id" lay-search lay-verify="" lay-filter="warehouse_id">
+                    <option value="">请选择</option>
+                    {volist name="type['warehouse']" id="vo"}
+                    <option value="{$vo['id']}" {if $vo['id']==$data['warehouse_id']}selected{/if}>{$vo['warehouse_name']}</option>
+                    {/volist}
+                    <option value="-1">新增仓库</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    {if $data['have_specs']==1}
+        <!--有规格-->
+        <div class="have_specs_div">
+            <table class="layui-table">
+                <thead>
+                <th>型号</th>
+                <th>库存数</th>
+                </thead>
+                <tbody>
+                {volist name="data['havespecs']" id="vo"}
+                <tr>
+                    <td>
+                        {$vo['spec_names']}
+                    </td>
+                    <td>
+                        <input type="number" class="layui-input" name="goods_number[]" placeholder="库存数" value="{$vo['goods_number']}">
+                    </td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+    {elseif($data['have_specs']==2)}
+        <!--无规格-->
+        <div class="no_specs_div">
+            <table class="layui-table">
+                <thead>
+                <th>货号</th>
+                <th>条码</th>
+                <th>库码</th>
+                <th>库存数</th>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>
+                        <input type="text" class="layui-input" placeholder="货号" value="{$data['sku_info']['goods_sn']}" disabled style="background:#eee;">
+                    </td>
+                    <td>
+                        <input type="text" class="layui-input" placeholder="条码" value="{$data['sku_info']['goods_barcode']}" disabled style="background:#eee;">
+                    </td>
+                    <td>
+                        <input type="text" class="layui-input" placeholder="库码" value="{$data['sku_info']['goods_stockcode']}" disabled style="background:#eee;">
+                    </td>
+                    <td>
+                        <input type="number" class="layui-input" name="goods_number" placeholder="库存数" value="{$data['sku_info']['sku_prices']['goods_number']}">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    {/if}
+
+    <div class="form-actions">
+        <!--        <button type="button" class="btn btn-outline" id="cancelBtn" style="background:transparent;border: 2px solid var(&#45;&#45;primary);color: var(&#45;&#45;primary);">取消</button>-->
+        <button type="submit" class="btn btn-primary" lay-submit lay-filter="component-form-rotate">立即保存</button>
+    </div>
+</form>
+
+<!-- 添加轮播图·模态框 -->
+<div class="modal" id="saveMenuModal">
+    <div class="modal-content" style="min-height:600px;max-height:600px;overflow-y:auto;">
+        <span class="close-modal close-modal-menu">&times;</span>
+        <h2 class="modal-title">保存信息</h2>
+        <iframe src="" class="menu_iframe" frameborder="0" style="width: 100%;height:800px;"></iframe>
+    </div>
+</div>
+</body>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    layui.use(['layer','form','laydate','upload','colorpicker'],function() {
+        laydate = layui.laydate;
+        layer = layui.layer;
+        var form = layui.form;
+        $ = layui.jquery;
+        var upload = layui.upload;
+        var colorpicker = layui.colorpicker;
+
+        //菜单弹窗关闭事件===start
+        const menu_modal = document.getElementById('saveMenuModal');
+        const menu_closeBtn = document.querySelector('.close-modal-menu');
+
+        // 关闭模态框
+        function closeModalMenu() {
+            menu_modal.style.display = 'none';
+        }
+        menu_closeBtn.addEventListener('click', closeModalMenu);
+        // 点击模态框外部关闭
+        window.addEventListener('click', function(event) {
+            if (event.target === menu_modal) {
+                closeModalMenu();
+            }
+        });
+        //菜单弹窗关闭事件===end
+
+        form.on('select(shipping_country)',function(data){
+            let val = data.value;
+            if(val!=''){
+                layer.load();
+                $.post('/?s=index/get_country_info2',{'id':val},function(res){
+                    layer.closeAll('loading');
+                    //币种
+                    let currency_html = '<select name="goods_currency" id="goods_currency" lay-search lay-verify="required">\n' +
+                        '                        <option value="'+res.data.currency.id+'">'+res.data.currency.currency_symbol_standard+'</option>\n'+
+                        '                </select>';
+
+                    $('.currency').find('.layui-input-block').html(currency_html);
+
+                    //行政区
+                    let area1_html = '<select name="areas[]" lay-search lay-verify="required" lay-filter="area1">\n'+
+                        '                     <option value="">请选择</option>\n';
+                    for(let i=0;i<res.data.addr.length;i++){
+                        area1_html += '<option value="'+res.data.addr[i].id+'">'+res.data.addr[i].code_name+'</option>\n';
+                    }
+                    area1_html += '</select>';
+                    $('.areas').find('.area1').html(area1_html);
+                    $('.areas').find('.area2').html('');
+                    $('.areas').find('.area3').html('');
+                    $('.areas').find('.area4').html('');
+                    $('.areas').find('.area5').html('');
+                    $('.areas').find('.area6').html('');
+
+                    form.render(null,'component-form-rotate');
+                });
+            }
+        });
+
+        form.on('select(area1)',function(data){
+            let val = data.value;
+
+            if(val!=''){
+                layer.load();
+                $.post('/?s=index/getarea',{'val':val,'type':2},function(res) {
+                    layer.closeAll('loading');
+
+                    get_area(res,2);
+                    $('.areas').find('.area3').html('');
+                    $('.areas').find('.area4').html('');
+                    $('.areas').find('.area5').html('');
+                    $('.areas').find('.area6').html('');
+                });
+            }
+        });
+
+        form.on('select(area2)',function(data){
+            let val = data.value;
+
+            if(val!=''){
+                layer.load();
+                $.post('/?s=index/getarea',{'val':val,'type':2},function(res) {
+                    layer.closeAll('loading');
+
+                    get_area(res,3);
+                    $('.areas').find('.area4').html('');
+                    $('.areas').find('.area5').html('');
+                    $('.areas').find('.area6').html('');
+                });
+            }
+        });
+
+        form.on('select(area3)',function(data){
+            let val = data.value;
+
+            if(val!=''){
+                layer.load();
+                $.post('/?s=index/getarea',{'val':val,'type':2},function(res) {
+                    layer.closeAll('loading');
+
+                    get_area(res,4);
+                    $('.areas').find('.area5').html('');
+                    $('.areas').find('.area6').html('');
+                });
+            }
+        });
+
+        form.on('select(area4)',function(data){
+            let val = data.value;
+
+            if(val!=''){
+                layer.load();
+                $.post('/?s=index/getarea',{'val':val,'type':2},function(res) {
+                    layer.closeAll('loading');
+
+                    get_area(res,5);
+                    $('.areas').find('.area6').html('');
+                });
+            }
+        });
+
+        form.on('select(area5)',function(data){
+            let val = data.value;
+
+            if(val!=''){
+                layer.load();
+                $.post('/?s=index/getarea',{'val':val,'type':2},function(res) {
+                    layer.closeAll('loading');
+
+                    get_area(res,6);
+                    $('.areas').find('.area6').html('');
+                });
+            }
+        });
+
+        form.on('select(warehouse_id)',function(data){
+            let val = data.value;
+            if(val==-1){
+                //新增仓库
+                var modal = document.getElementById('saveMenuModal');
+                modal.style.display = 'flex';
+
+                $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_warehouse&company_id={$company_id}&company_type={$company_type}');
+            }
+        });
+
+        form.on('submit(component-form-rotate)', function(data){
+            layer.load();
+            $.ajax({
+                url:"/?s=index/save_inventory",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.closeAll('loading');
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            window.location.href='/?s=index/save_inventory&company_id={$company_id}&company_type={$company_type}&id='+res.id;
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+
+    function get_area(res,area_id){
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form;
+
+        if(res.data.length>0){
+            let area_html = '<select name="areas[]" lay-search lay-verify="required" lay-filter="area'+area_id+'">\n'+
+                '                     <option value="">请选择</option>\n';
+            for(let i=0;i<res.data.length;i++){
+                area_html += '<option value="'+res.data[i].id+'">'+res.data[i].code_name+'</option>\n';
+            }
+            area_html += '</select>';
+            $('.areas').find('.area'+area_id).html(area_html);
+
+            form.render(null,'component-form-rotate');
+        }
+    }
+
+    function select_name(t){
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form;
+
+        let name = $(t).attr('data-name');
+        let en_name = $(t).attr('data-en_name');
+        $('#name').val(name);
+        $('#en_name').val(en_name);
+        $('.result_div').hide();
+    }
+</script>
+</html>

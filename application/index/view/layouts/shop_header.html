@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <link rel="icon" href="{$data['source_link']}{$data['websites']['info']['slogo']}" type="image/x-icon" />
+    <title>{$data['websites']['info']['name']}</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
+    <!--<meta name="viewport" content="width=device-width, initial-scale=1.0" />-->
+    <meta name="description" content="{$data['websites']['info']['desc']}" />
+    <meta name="keywords" content="{$data['websites']['info']['keywords']}" />
+    <!-- 头部元数据 -->
+<!--    <meta name="csrf-param" content="_csrf">-->
+<!--    <meta name="csrf-token" content="csrf_token()">-->
+    <!-- css -->
+    <link href="shop/home_css/bootstrap.min.css" rel="stylesheet" />
+    <link href="shop/home_css/fancybox/jquery.fancybox.css" rel="stylesheet">
+    <link href="shop/home_css/flexslider.css" rel="stylesheet" />
+    <link href="shop/home_css/style.css?v=333" rel="stylesheet" />
+    <link href="shop/css/swiper.min.css?v=2" rel="stylesheet">
+    <script src="shop/js/swiper.min.js?v=2"></script>
+    <style>
+        *{padding:0;margin:0;font-family:{$data['websites']['info']['font_family']} !important;}
+        .disf{display: flex;align-items: center;}
+        body{background:{$data['websites']['info']['color_inner']} !important;}
+        a:hover{text-decoration: none;}
+        /*滚动指向样式*/
+        .swiper-button-prev, .swiper-button-next {color: #fff;background: rgba(94, 95, 94, 0.5);box-shadow: 0px 0px 10px 0 #fff;border: 1px solid #fff;border-radius: 50%;width: 30px;height: 30px;}
+        .swiper-button-prev:after, .swiper-button-next:after {font-size: 14px;}
+        /**翻译时更改字体**/
+        .f32{font-size: 32px !important;}
+        .f26{font-size:26px !important;}
+        .f22{font-size:22px !important;}
+        .f20{font-size:20px !important;}
+        .f18{font-size:18px !important;}
+        .f16{font-size:16px !important;}
+        .f15{font-size:15px !important;}
+        .f13{font-size:13px !important;}
+        .fweight{font-weight: 800;}
+    </style>
+</head>
+<script src="shop/js/jquery.js"></script>
+<script src="shop/bootstrap/js/bootstrap.min.js?v=5"></script>

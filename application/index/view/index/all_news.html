@@ -1,0 +1,315 @@
+{include file="common/header"}
+<link href="css/gallery-1.css" rel="stylesheet">
+<style type="text/css" media="all">
+    /**轮播图修改样式**/
+    .swiper-button-prev, .swiper-button-next{color: #fff;background: #5e5f5e;}
+    .swiper-button-prev:after, .swiper-button-next:after {font-size: 16px;}
+    .swiper-pagination-bullet {width: 6px;height: 6px;background-color: #FFFFFF;opacity: 1;}
+    .swiper-pagination-bullet-active {width: 14px;height: 6px;border-radius: 3px;opacity: 1;background-color: #FFFFFF;}
+
+    .navbar_menu{color:{$website['color_word']};}
+    .navbar_menu a{color:{$website['color_word']};}
+    #gallery-1 .active a{color:#D2A778;}
+    .isotope-hidden{display:none;}
+    #content{padding-top:20px;}
+    #content .color_word{font-size:16px;padding: 15px 10px;box-sizing:border-box;}
+    .filter li:before{color:{$website['color_word']};}
+    .filter li a{color:{$website['color_word']};}
+    .filter li a:hover, .filter li a:focus, .filter li a.active{color:#d1a575;}
+    h3, h4, h5, h6{color:{$website['color_word']};}
+    .about-logo img{width:100%;}
+    @media (min-width: 993px) {
+        .about-logo img{width:500px;}
+    }
+    .navbar_menu{font-size:16px;}
+    .navbar_menu a:last-child{color:#D2A778;font-weight:700;}
+    .filter li a{font-size:16px;}
+    .gallery-thumb{box-shadow:1px 1px 10px #000;border-radius:6px;}
+    .gallery-item .gallery-thumb img{width:100%;height:200px;}
+    .gallery-item .gallery-details h5{font-size:16px;}
+    .gallery-item .gallery-details{background:unset;}
+
+    /**跨境电商**/
+    .cross-border{padding-top: 20px;padding-bottom:20px;border-top:2px solid #0B2074;}
+    .cross-border .section-title{text-indent:2rem;text-align:left;}
+    .cross-border .section-title p{font-size: 15px;text-align:left;text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 3;line-clamp: 3;-webkit-box-orient: vertical;font-weight:600;}
+    .cross-border .row .cross-section{background-position: center;background-size: cover;position:relative;transform-style: preserve-3d;box-shadow: 0px 0px 10px #666;border-radius:15px;overflow:hidden;}
+    .cross-border .row .cross-section .in_mask{background-color: #000; opacity: 0.4;position: absolute;left: 0;top: 0;height: 100%;width: 100%;z-index:1;}
+    .cross-border .row .cross-section .cross-content{padding:20px 30px 60px 30px;z-index:2;position:relative;font-size: 15px;height:100%;}
+    .cross-border .row .cross-section .cross-content h3{color:#fff;margin-bottom:0px;padding-bottom:0;line-height: 20px;margin-top:0;}
+    .cross-border .row .cross-section .cross-content hr{border-bottom:1px solid #fff;width:100%;margin:10px 0;}
+    .cross-border .row .cross-section .cross-content .title{color:#fff;text-align:left;text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 3;line-clamp: 3;-webkit-box-orient: vertical;height:60px;font-weight:unset;}
+    .cross-border .row .cross-section .cross-content .descs{color:#fff;text-align:left;text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 3;line-clamp: 3;-webkit-box-orient: vertical;height:68px;font-weight:unset;}
+    .cross-border .row .cross-section .cross-content .withArrow{margin-bottom:30px;}
+    .cross-border .row .cross-section .cross-content .withArrow span{color:#fff;}
+    .cross-border .row .cross-section .cross-content .withArrow a{font-weight:unset;}
+    .cross-border .row .cross-section .cross-content .view_detail {background: rgba(255,255,255,0.5);color: #fff;position: absolute;bottom: 0px;left: 50%;transform: translate(-50%,-50%);padding: 2px 10px;border-radius: 7px;font-weight: 600;}
+    .day_btn{text-align: center;margin-bottom:5px;}
+    .day{cursor:pointer;color:{$website['color_word']};background:#0e2e68;padding:6px 10px;border:1px solid #fff;border-radius:8px;width:fit-content;display:inline-block;margin-right:8px;}
+
+    @media (min-width: 1000px){
+        .main_img,.color_word{width:400px;height:280px;text-align:center;margin:20px auto;}
+    }
+    @media (max-width: 992px){
+        .main_img,.color_word{width:100%;height:250px;text-align:center;margin:20px auto;}
+        .color_word{padding:30px;box-sizing:border-box;}
+        .cross-border .row .cross-content{padding-top:0 !important;margin-top:10px !important;}
+    }
+
+    .detail_container .row .about-logo *{background:{$website['color_inner']} !important;font-size:16px;}
+    .detail_container .row .about-logo img{box-shadow:1px 1px 15px #000;}
+    .black{background: #444444;}
+    .nowordwrap{color:{$website['color_word']};margin-bottom:5px;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;}
+</style>
+<section id="banner">
+    <!-- 轮播图开始 -->
+    <div class="swiper-container"  id="carousel-container">
+        <!--轮播内容-->
+        <div class="swiper-wrapper">
+            {volist name="rotate" id="vo"}
+            <!--<div class="swiper-slide" style="background:url(https://admin.gogo198.cn/$vo.url);width: 100%;height: 100%;background-repeat: no-repeat;background-size: cover;background-position: center center;max-height: 500px !important;height: 500px;"></div>-->
+            <!--<div class="swiper-slide"><a href="?s=index/detail&id={$vo.id}&isrotate=2"><img src="https://admin.gogo198.cn/{$vo.thumb}" alt="" style="width:100%;" class="carousel-image"/></a></div>-->
+            {if $vo.go_other==1}
+            <div class="swiper-slide"><a href="{$vo.other_link}" target="_blank"><img src="https://admin.gogo198.cn/{$vo.thumb}" alt="" style="width:100%;" class="carousel-image"/></a></div>
+            {elseif($vo.go_other==2)}
+            <div class="swiper-slide"><a href="?s=index/detail&id={$vo.other_navbar}"><img src="https://admin.gogo198.cn/{$vo.thumb}" alt="" style="width:100%;" class="carousel-image"/></a></div>
+            {else}
+            <div class="swiper-slide"><a href="javascript:;"><img src="https://admin.gogo198.cn/{$vo.thumb}" alt="" style="width:100%;" class="carousel-image"/></a></div>
+            {/if}
+            {/volist}
+        </div>
+        <!--左右切换-->
+        <!--<div class="swiper-button-next sn1"></div>-->
+        <!--<div class="swiper-button-prev sp1"></div>-->
+        <!--分页器-->
+        <div class="swiper-pagination"></div>
+    </div>
+    <!-- 轮播图结束 -->
+</section>
+<section id="content" style="background:{$website['color_inner']};">
+    <div class="container detail_container">
+        {if !empty($navbar_menu)}
+        <p class="navbar_menu"><i class="fa fa-sign-in" style="margin-right:5px;display:none;"></i><a href="/">HOME</a>&nbsp;<span style="color:#d1a575;">\</span>&nbsp;{$navbar_menu}</p>
+        {/if}
+    </div>
+    <div class="container detail_container cross-border">
+        <div class="day_btn">
+<!--            <div class="prev_day day" onclick="change_date(1)">上一篇</div>-->
+<!--            <div class="prev_day day sn">上一篇</div>-->
+<!--            <div class="day current_day"><?php echo $news[0]['release_date'];?></div>-->
+<!--            <div class="next_day day" onclick="change_date(2)">下一篇</div>-->
+<!--            <div class="next_day day sprv">下一篇</div>-->
+        </div>
+        <div class="row">
+            <div class="swiper-container-news swiper-container-horizontal" style="overflow:hidden;position:relative;padding:10px 60px;box-sizing:border-box;">
+                {if !empty($news)}
+                <div class="swiper-wrapper">
+                    {volist name="news" id="vo"}
+                    <div class="swiper-slide" style="height:100%;" data-date="{$vo.release_date}">
+                        <div class="cross-content">
+                            <div class="about-text">
+                                <div class="cross-section" style="background-image:url(https://www.gogo198.net/img/crossborder_news_bg.png);position:relative;">
+                                    <div class="in_mask"></div>
+                                    <div class="cross-content">
+                                        <div class="title" style="text-align: center;"><h3 class="f18">{$vo['name']}</h3></div>
+                                        <hr/>
+                                        <p class="f15 descs" style="height:fit-content;margin-bottom:0;color:{$website['color_word']};">
+                                        <p class="nowordwrap">发文机关：{$vo.issuing_authority}</p>
+                                        <p class="nowordwrap">文　　号：{$vo.document_number}</p>
+                                        <p class="nowordwrap">发布日期：{$vo['release_date']}</p>
+                                        </p>
+                                        <a href="/?s=index/news_detail&id={$vo.id}" target="_blank" class="f15 view_detail">查看政策</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/volist}
+                </div>
+                {else}
+                <p style="color:#fff;font-size:22px;text-align: center;">——暂无内容——</p>
+                {/if}
+                <!--左右切换-->
+                <div class="swiper-button-next sn"></div>
+                <div class="swiper-button-prev sprv"></div>
+            </div>
+        </div>
+    </div>
+</section>
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+{include file="common/footer"}
+<script type="text/javascript" charset="utf-8">
+    //更换日期
+    function change_date(typ){
+        $.ajax({
+            url: "?s=index/change_date",
+            method: 'post',
+            data: {'typ':typ,'current_day':$('.current_day').text(),'news_type':1},
+            dataType: 'JSON',
+            success: function (res) {
+                if(res.code==0){
+                    //有内容
+                    $('.current_day').text(res.date);
+                    let html = '';
+                    for(let i=0;i<res.data.length;i++){
+                        html += '<div class="swiper-slide" style="height:100%;">\n' +
+                            '                                <div class="cross-content">\n' +
+                            '                                    <div class="about-text">\n' +
+                            '                                        <div class="cross-section" style="background-image:url(https://www.gogo198.net/img/crossborder_news_bg.png);position:relative;">\n' +
+                            '                                            <div class="in_mask"></div>\n' +
+                            '                                            <div class="cross-content">\n' +
+                            '                                                <div class="title"><h3 class="f18">'+res.data[i].name+'</h3></div>\n' +
+                            '                                                <hr/>\n' +
+                            '                                                <p class="f15 descs" style="height:fit-content;margin-bottom:0;color:{$website[\'color_word\']};">发文机关:'+res.data[i].issuing_authority+'<br/>文号:'+res.data[i].document_number+'</p>\n' +
+                            '                                                <a href="/?s=index/news_detail&id='+res.data[i].id+'" target="_blank" class="f15 view_detail">查看详情</a>\n' +
+                            '                                            </div>\n' +
+                            '                                        </div>\n' +
+                            '                                    </div>\n' +
+                            '                                </div>\n' +
+                            '                            </div>';
+                    }
+                    if($('.swiper-container-news').find('.swiper-wrapper').length>0){
+                        $('.swiper-container-news').find('.swiper-wrapper').html(html);
+                    }else{
+                        $('.swiper-container-news').html('<div class="swiper-wrapper">'+html+'</div><div class="swiper-button-next sn"></div><div class="swiper-button-prev sprv"></div>');
+                    }
+
+                    //删除balck
+                    $('.prev_day').removeClass('black');
+                    $('.next_day').removeClass('black');
+
+                    if(window.screen.width < 992){
+                        new Swiper('.swiper-container-news', {
+                            loop: true, // 循环模式选项
+                            autoplay: true,
+                            speed:2000,
+                            slidesPerView: 1,
+                            paginationClickable: true,
+                            spaceBetween: 60,
+                            // 如果需要前进后退按钮
+                            navigation: {
+                                nextEl: '.sn',
+                                prevEl: '.sprv',
+                            },
+                        });
+                    }else{
+                        new Swiper('.swiper-container-news', {
+                            slidesPerView: 3,
+                            loop: true, // 循环模式选项
+                            autoplay: true,
+                            speed:2000,
+                            paginationClickable: true,
+                            spaceBetween: 60,
+                            // 如果需要前进后退按钮
+                            navigation: {
+                                nextEl: '.sn',
+                                prevEl: '.sprv',
+                            },
+                        });
+                    }
+                }else if(res.code==-1){
+                    //无内容
+                    $('.current_day').text(res.date);
+                    $('.swiper-container-news').html('<p style="color:#fff;font-size:22px;text-align: center;">——暂无内容——</p>');
+                    if(typ==1){
+                        $('.prev_day').addClass('black');
+                    }else if(typ==2){
+                        $('.next_day').addClass('black');
+                    }
+                }else if(res.code==-2){
+                    $('.swiper-container-news').html('<p style="color:#fff;font-size:22px;text-align: center;">——'+res.msgg+'——</p>');
+                }
+            },
+            error: function (data) {
+
+            }
+        });
+    }
+
+    //轮播图开始
+    var mySwiper = new Swiper ('.swiper-container', {
+        // direction: 'vertical', // 垂直切换选项（不设置默认是水平切换）
+        loop: true, // 循环模式选项
+        autoplay: true,
+        // 如果需要分页器
+        pagination: {
+            el: '.swiper-pagination',
+        },
+
+        // 如果需要前进后退按钮
+        // navigation: {
+        //   nextEl: '.sn1',
+        //   prevEl: '.sp1',
+        // },
+    });
+
+    //板块开始
+    if(window.screen.width < 992){
+        var mySwiper = new Swiper ('.swiper-container2', {
+            // direction: 'vertical', // 垂直切换选项（不设置默认是水平切换）
+            loop: true, // 循环模式选项
+            autoplay: true,
+            // 如果需要分页器
+            pagination: {
+                el: '.swiper-pagination2',
+            },
+
+            // 如果需要前进后退按钮
+            // navigation: {
+            //   nextEl: '.sn1',
+            //   prevEl: '.sp1',
+            // },
+        });
+
+        new Swiper('.swiper-container-news', {
+            loop: true, // 循环模式选项
+            autoplay: true,
+            speed:2000,
+            slidesPerView: 1,
+            paginationClickable: true,
+            spaceBetween: 60,
+            // 如果需要前进后退按钮
+            navigation: {
+                nextEl: '.sn',
+                prevEl: '.sprv',
+            },
+        });
+    }
+    else{
+        var mySwiper = new Swiper ('.swiper-container2', {
+            // direction: 'vertical', // 垂直切换选项（不设置默认是水平切换）
+            loop: true, // 循环模式选项
+            autoplay: true,
+            // 如果需要分页器
+            pagination: {
+                el: '.swiper-pagination2',
+            },
+            slidesPerView: 3,
+            paginationClickable: true,
+            spaceBetween: 60,
+
+            // 如果需要前进后退按钮
+            // navigation: {
+            //   nextEl: '.sn1',
+            //   prevEl: '.sp1',
+            // },
+        });
+
+        new Swiper('.swiper-container-news', {
+            slidesPerView: 3,
+            loop: true, // 循环模式选项
+            autoplay: true,
+            speed:2000,
+            paginationClickable: true,
+            spaceBetween: 60,
+            // 如果需要前进后退按钮
+            navigation: {
+                nextEl: '.sn',
+                prevEl: '.sprv',
+            },
+        });
+    }
+</script>
+
+ 

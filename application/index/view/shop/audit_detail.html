@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>订购信息</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <script src="layui/layui.js"></script>
+    <style>
+        .layui-col-space15{margin:0;}
+        .layui-fluid{padding-top:15px;}
+        .layui-form-item{margin-bottom: 10px;}
+        .inline{line-height: 38px;}
+        .disf{display:flex;align-items: center;}
+        .link{text-decoration: underline;color:#1790FF;}
+        .head{padding-bottom: 5px;padding-left: 5px;border-bottom: 1px solid #666;margin-bottom: 10px;}
+        .f15{font-size:15px;}
+        .layui-form-item .layui-form-label{text-align: left;}
+
+        /*订购清单表格*/
+        .buy_list{padding:10px;box-sizing: border-box;}
+        .buy_list .list_title{font-size:15px;text-align: center;margin-bottom:5px;}
+        .fix-table{table-layout: fixed;}
+        .fix-table td {white-space: nowrap; /* 自适应宽度*/overflow:hidden;text-overflow:ellipsis;/*省略号显示*/}
+        .layui-layer-content{height:fit-content !important;}
+        .layui-table td, .layui-table th{padding:5px;}
+        .layui-fluid{padding-left:5px;padding-right:5px;}
+        .layui-table thead tr{background:#1E9FFF;color:#fff;}
+
+        /*合计*/
+        .unit_div{white-space: nowrap;}
+        .totalPrice_div{color:#db1d18;font-weight: 800;white-space: nowrap;}
+        .split_line{margin:0 20px;}
+
+        /*分流方式*/
+        .shuntMethod{padding:10px;box-sizing: border-box;}
+    </style>
+</head>
+<body style="background: #eee;">
+    <div class="layui-fluid">
+        <div class="head">
+            <a href="javascript:history.back(-1);" class="f15">&lt; 返回</a>
+        </div>
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md12">
+                <form class="layui-form" action="" id="bill" method="post" lay-filter="component-form-element">
+                    <input type="text" style="display:none;" name="id" id="id" value="{$id}">
+                    <input type="text" style="display:none;" name="pa" id="pa" value="1">
+                    <div class="layui-card">
+                        <div class="buy_list">
+                            <p class="list_title">订购清单【{$order['ordersn']}】</p>
+                            <table class="layui-table fix-table">
+                                <thead align="center">
+<!--                                    <th class="ltd" width="10%"></th>-->
+                                    <th class="ltd" width="25%">品名</th>
+                                    <th class="ltd" width="25%">规格</th>
+                                    <th class="ltd" width="20%">数量</th>
+                                    <th class="ltd" width="20%">总价</th>
+                                    {if($order['status']==-9 || $order['status']==-10 || $order['status']==-11)}
+                                        <th class="ltd" width="10%">操作</th>
+                                    {/if}
+                                </thead>
+                                <tbody id="tbody">
+                                    <?php $num=1;?>
+                                    <?php $goods_num=0;?>
+                                    <?php $goods_key=0;?>
+                                    {volist name="goods" key="key" id="vo"}
+                                        {volist name="vo.sku_info" key="k" id="vo2"}
+                                            <tr>
+<!--                                                <td class="ltd" width="10%">{$num}</td>-->
+                                                <td class="ltd" width="25%">{$vo['goods_info']['goods_name']}</td>
+                                                <td class="ltd" width="25%">{$vo2['sku_info']['spec_names']}</td>
+                                                <td class="ltd" width="20%">{$vo2['goods_num']}</td>
+                                                <td class="ltd" width="20%">{$vo2['price']}</td>
+                                                {if($order['status']==-9 || $order['status']==-10 || $order['status']==-11)}
+                                                    <td class="ltd" width="10%">
+                                                        <div class="layui-btn layui-btn-warm layui-btn-xs" onclick="edit_sku({$vo['good_id']},{$goods_key},{$k},{$vo2['sku_id']},{$vo2['cart_id']})">查看</div>
+                                                    </td>
+                                                {/if}
+                                            </tr>
+                                        <?php $num+=1;?>
+                                        <?php $goods_num=$goods_num + $vo2['goods_num'];?>
+                                        {/volist}
+                                        <?php $goods_key+=1;?>
+                                    {/volist}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="layui-card">
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">合计：</div>
+                            <div class="layui-input-block disf" style="box-sizing:border-box;padding:0 10px;justify-content: right;">
+                                <div class="unit_div">{$goods_num}件</div>
+                                <span class="split_line">/</span>
+                                <div class="totalPrice_div"><span class="currency">CNY</span>&nbsp;<span class="price">{$order['true_money']}</span>（含服务费用）</div>
+                            </div>
+                        </div>
+                    </div>
+<!--                    <div class="layui-card">-->
+<!--                        <div class="layui-form-item">-->
+<!--                            <div class="layui-form-label">收货信息</div>-->
+<!--                            <div class="layui-input-block">-->
+<!--                                <div>收货地址: $address['address']}</div>-->
+<!--                                <div>邮编: $address['postal']}</div>-->
+<!--                                <div>收件人: $address['user_name']}</div>-->
+<!--                                <div>电话: $address['area_mobile']} $address['mobile']} $address['mobile2']}</div>-->
+<!--                                <div>电邮: $address['email']}</div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                    {if(empty($order['buyer_id']))}
+                        <input type="hidden" name="send" value="1">
+                        <div class="layui-card shuntMethod">
+                            <div class="layui-form-item">
+                                <div class="layui-form-label">分流方式</div>
+                                <div class="layui-input-block inline">
+                                    <select name="shunt_type" id="shunt_type" lay-filter="shunt_type">
+                                        <option value="1">同意分流</option>
+                                        <option value="2">拒绝分流</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-form-item buyer">
+                                <div class="layui-form-label">选择买手</div>
+                                <div class="layui-input-block inline">
+                                    <select name="buyer_id" id="buyer_id" lay-search lay-verify="">
+                                        <option value="">请选择买手</option>
+                                        {volist name="buyer" id="vo"}
+                                        <option value="{$vo['id']}">{$vo['typename']}：{$vo['name']}</option>
+                                        {/volist}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="margin-top: 25px;text-align: center;">
+                            <div>
+                                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="component-form-element2">立即分流</button>
+                            </div>
+                        </div>
+                    {elseif(!empty($order['buyer_id']) && $order['status']==-2)}
+                        <input type="hidden" name="send" value="2">
+                        <div class="layui-form-item" style="margin-top: 25px;text-align: center;">
+                            <div>
+                                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="component-form-element3">撤回分流</button>
+                            </div>
+                        </div>
+                    {elseif($order['status']==-9 || $order['status']==-10 || $order['status']==-11)}
+                        <input type="hidden" name="send" value="3">
+                        <div class="layui-card">
+                            <div class="layui-form-item buyer">
+                                <div class="layui-form-label">清单状态</div>
+                                <div class="layui-input-block inline" style="text-align: right;">
+                                    {$order['status_name']}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item" style="margin-top: 25px;text-align: center;">
+                            <div>
+                                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="component-form-element4">确认信息，通知买家</button>
+                            </div>
+                        </div>
+                    {/if}
+
+                    {if($order['status']==99 && $order['type']==0 && $order['issend']==0)}
+                        <div class="layui-card" style="display: none;">
+                            <div class="layui-form-item">
+                                <div class="layui-form-label">采购方式</div>
+                                <div class="layui-input-block inline">
+                                    <select name="type" id="type" lay-verify="">
+                                        <option value="">请选择</option>
+                                        <option value="1">自主采购</option>
+                                        <option value="2">接口采购</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-form-label">商品状态</div>
+                                <div class="layui-input-block inline">
+                                    <select name="status" id="status" lay-verify="">
+                                        <option value="1">确认有货，等待付款</option>
+                                        <option value="2">确认无货，无需付款</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-form-item" style="margin-top: 25px;text-align: center;">
+                            <div>
+                                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="component-form-element2">保存信息</button>
+                            </div>
+                        </div>
+                    {/if}
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    layui.use(['layer', 'form', 'table', 'upload'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , upload = layui.upload
+            , table = layui.table;
+
+        showAndHideMsg();
+
+        form.on('select(shunt_type)',function(data){
+            let val = data.value;
+
+            if(val==1){
+                $('.buyer').show();
+            }else if(val==2){
+                $('.buyer').hide();
+            }
+        });
+
+        form.on('submit(component-form-element2)',function(data){
+            layer.load();
+            $.ajax({
+                url:"/?s=shop/audit_detail",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.closeAll('loading');
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            window.location.reload();
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+           return false;
+        });
+
+        form.on('submit(component-form-element3)',function(data){
+            layer.load();
+            $.ajax({
+                url:"/?s=shop/audit_detail",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.closeAll('loading');
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            window.location.reload();
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+
+        //确认信息，通知买家
+        form.on('submit(component-form-element4)',function(data) {
+            layer.load();
+            $.ajax({
+                url:"/?s=shop/audit_detail",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.closeAll('loading');
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            window.location.reload();
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+
+    function edit_sku(gid,gkey,skey,sku_id,cart_id){
+        var $ = layui.$
+            , layer = layui.layer;
+
+        let arr = "{$id},"+gid+','+gkey+','+skey+','+sku_id+','+cart_id;
+
+        layer.open({
+            type: 2,
+            title: '修改内容',
+            shadeClose: true,
+            shade: 0.3,
+            area: ['100%', '100%'],
+            content: "/?s=shop/shunt_edit&is_manage=1&arr="+arr,
+        });
+    }
+
+    var tip_index;
+    /**
+     * 页面表格内容超出宽度显示...
+     * 鼠标放上去之后回显具体内容
+     * 移开鼠标内容消失
+     */
+    function showAndHideMsg(){
+        var $ = layui.$
+            , layer = layui.layer;
+
+        $(document).on("mouseenter","td",function(){
+            if (this.offsetWidth < this.scrollWidth) {
+                let that = this;
+                let text = $(this).text();
+                let wid;
+
+                if(text.length>1000){
+                    wid = '900px';
+                }else if(text.length>600){
+                    wid = '700px';
+                }else if(text.length>150){
+                    wid = '500px';
+                }else if(text.length>100){
+                    wid = '250px';
+                }else if(text.length>50){
+                    wid = '150px';
+                }
+                layui.use('layer', function(layer) {
+                    tip_index = layer.tips('<span style="word-wrap: break-word;">'+text+'</span>', that, {
+                        tips: [4, "#000000"],
+                        time: 0,
+                        area: [wid, 'auto']
+                    });
+                });
+            }
+        });
+        $(document).on("mouseout","td",function(){
+            layui.use('layer', function(layer) {
+                layer.close(tip_index);
+            });
+        });
+    }
+
+    function openWindow(ip,typ) {
+        let url = '';
+        if (typ == 1) {
+            window.location.href = "/?s=log_detail&ip=" + ip;
+        }
+    }
+</script>
+</html>

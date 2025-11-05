@@ -1,0 +1,209 @@
+{include file="common/header"}
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;}
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+    .content .box_content{background:{$website['color']};color:{$website['color_word']};border:1px solid {$website['color_word']};font-size:25px;text-align:center;padding:30px;width:100%;}
+    .content .box_content img{width:40px;margin-right:5px;}
+    .layui-form-label{width:100px !important;}
+</style>
+
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="content" style="padding:0;">
+            <form class="layui-form" action="" method="post" lay-filter="component-form-element">
+                <input type="text" style="display:none;" name="id" id="id" value="{$id}">
+                <div class="layui-col-md12">
+                    <a href="javascript:history.back(-1);">
+                            <div style="display:flex;align-items:center;border: 1px solid #fff;width: fit-content;padding: 10px 20px;border-radius: 15px;background: #8f8b8b;margin-bottom:30px;color:#fff;">
+                                <img class="" src="./img/account/back.png" alt="" style="width: 18px;margin-right: 10px;"/>
+                                返回
+                            </div>
+                        </a>
+                    <div class="layui-card">
+                        <div class="layui-card-body">
+                            <div class="layui-form-item">
+                                <div class="layui-form-label">收款类型</div>
+                                <div class="layui-input-block">
+                                    <select name="type" id="type" lay-search lay-verify="required" lay-filter="type">
+                                        <option value="1" {if 1==$data['type']}selected{/if}>银行转账账户</option>
+                                        <option value="2" {if 2==$data['type']}selected{/if}>网络支付账户</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="type1" {if $data['type']==2}style="display:none;"{/if}>
+                                <div class="layui-form-item">
+                                    <div class="layui-form-label">开户银行</div>
+                                    <div class="layui-input-block">
+                                        <select name="bank_id" id="bank_id" lay-search>
+                                            {volist name="bank_list" id="vo"}
+                                                <option value="{$vo.id}" {if $vo.id==$data['bank_id']}selected{/if}>{$vo.bank_name}</option>
+                                            {/volist}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-form-label">账号名称</div>
+                                    <div class="layui-input-block">
+                                        <input type="text" class="layui-input" name="bank_name" value="{$data['bank_name']}">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-form-label">账号号码</div>
+                                    <div class="layui-input-block">
+                                        <input type="text" class="layui-input" name="bank_account" value="{$data['bank_account']}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="type2" {if $data['type']==1}style="display:none;"{/if}>
+                                <div class="layui-form-item">
+                                    <div class="layui-form-label">平台名称</div>
+                                    <div class="layui-input-block">
+                                        <input type="text" class="layui-input" name="platform_name" value="{$data['platform_name']}">
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-form-label">网络账号</div>
+                                    <div class="layui-input-block">
+                                        <select name="type2" id="type2" lay-search lay-verify="required" lay-filter="type2">
+                                            <option value="1" {if 1==$data['type2']}selected{/if}>收款条码</option>
+                                            <option value="2" {if 2==$data['type2']}selected{/if}>收款账户</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="type3" {if $data['type2']==2}style="display:none;"{/if}>
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">收款条码</div>
+                                        <div class="layui-input-block">
+                                            <div class="layui-upload" style="margin-top: 10px;">
+                                                <button type="button" class="layui-btn" id="img_file-upload">上传图片(一张)</button>
+                                                <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                                                    预览图：
+                                                    <div class="layui-upload-list" id="img_file-upload-list">
+                                                        {if !empty($data['platform_code'])}
+                                                        <div style="display: inline-block;">
+                                                            <img onclick="seePic(this);" src="https://shop.gogo198.cn/{$data['platform_code']}" class="layui-upload-img" style="width:80px;height:80px;">
+                                                            <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
+                                                            <input type="hidden" name="platform_code[]" value="{$data['platform_code']}">
+                                                        </div>
+                                                        {/if}
+                                                    </div>
+                                                </blockquote>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="type4" {if $data['type2']==1}style="display:none;"{/if}>
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">平台收款账号</div>
+                                        <div class="layui-input-block">
+                                            <input type="text" class="layui-input" name="platform_account" value="{$data['platform_account']}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="layui-form-item" style="margin-top: 25px;text-align: center;">
+                    <div>
+                        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="component-form-element">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<script>
+    layui.use(['layer', 'form', 'table', 'upload'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , element = layui.element
+            , upload = layui.upload
+            , table = layui.table;
+
+        form.on('select(type)',function(data){
+            let val = data.value;
+            if(val==1){
+                $('.type1').show();
+                $('.type2').hide();
+            }else if(val==2){
+                $('.type1').hide();
+                $('.type2').show();
+            }
+        });
+
+        form.on('select(type2)',function(data){
+            let val = data.value;
+            if(val==1){
+                $('.type3').show();
+                $('.type4').hide();
+            }else if(val==2){
+                $('.type3').hide();
+                $('.type4').show();
+            }
+        });
+        
+        // 收款条码
+        upload.render({
+            elem: '#img_file-upload'
+            ,url: 'https://admin.gogo198.cn/collect_website/public/?s=api/uploadfile/index'
+            ,accept: 'image'
+            ,data: { folder: 'centralize', type: 'website_collect'}
+            ,multiple: false
+            ,number:1
+            ,before: function(obj){
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                if(res.code == 1)
+                {
+
+                    $('#img_file-upload-list').append('<div style="display: inline-block;"><img onclick="seePic(this);" src="https://shop.gogo198.cn/'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="platform_code[]" value="'+res.file_path+'"></div>')
+                }
+            }
+        });
+
+        form.on('submit(component-form-element)', function(data){
+            $.ajax({
+                url:"/?s=index/save_account",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            parent.location.reload();
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+    
+    function delPic(obj)
+    {
+        var layer = layui.layer,$ = layui.$;
+        layer.confirm('确认要删除该附件？', {
+            btn: ['删除','取消']
+        }, function(){
+            $(obj).parent().remove();
+            layer.closeAll();
+        }, function(){
+
+        });
+    }
+</script>
+{include file="common/footer"}

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>订购信息</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <script src="layui/layui.js"></script>
+    <style>
+        .layui-fluid{padding-top:15px;}
+        .layui-form-item{margin-bottom: 10px;}
+        .inline{line-height: 38px;}
+        .disf{display:flex;align-items: center;}
+        .link{text-decoration: underline;color:#1790FF;}
+        .head{padding-bottom: 5px;padding-left: 5px;border-bottom: 1px solid #666;margin-bottom: 10px;}
+        .f15{font-size:15px;}
+
+        .edit_sku,.edit_services,.edit_num{display: none;padding:10px 0;}
+        .origin_data{background: #bebebe;margin-bottom:5px;}
+        .origin_data .origin{background: #fff;}
+        .layui-form-label {padding: 9px 10px;width: 90px;}
+        {if $is_manage==1}
+         .layui-input-block{line-height: 38px !important;}
+        {/if}
+    </style>
+</head>
+<body style="background: #eee;">
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <form class="layui-form" action="" id="bill" method="post" lay-filter="component-form-element">
+                <input type="text" style="display:none;" name="id" id="id" value="{$id}">
+                <input type="text" style="display:none;" name="gid" id="gid" value="{$gid}">
+                <input type="text" style="display:none;" name="gkey" id="gkey" value="{$gkey}">
+                <input type="text" style="display:none;" name="skey" id="skey" value="{$skey}">
+                <input type="text" style="display:none;" name="sku_id" id="sku_id" value="{$sku_id}">
+                <input type="text" style="display:none;" name="cart_id" id="cart_id" value="{$cart_id}">
+                <input type="text" style="display:none;" name="pa" value="1">
+                <div class="layui-card">
+                    <div class="layui-form-item">
+                        <div class="layui-form-label">请选择</div>
+                        <div class="layui-input-block">
+                            <select name="edit_type" lay-filter="edit_type" lay-verify="required">
+                                <option value="">请选择</option>
+                                <option value="1" {if empty($origin_skuinfo)}disabled{/if}>{if $is_manage==1}查看{else}修改{/if}商品规格参数</option>
+                                <option value="2">{if $is_manage==1}查看{else}修改{/if}费用项目价格</option>
+                                <option value="3">{if $is_manage==1}查看{else}修改{/if}商品数量</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="edit_sku">
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">商品规格</div>
+                            <div class="layui-input-block">
+                                <div class="origin_data disf">
+                                    <div class="origin">{if $is_manage==1}{else}原{/if}规格：</div>
+                                    <span>{$origin_skuinfo}</span>
+                                </div>
+                                {if(!empty($other_skuinfo) && $is_manage==0)}
+                                <select name="new_skuid" lay-search>
+                                    <option value="">请选择新的规格</option>
+                                    {volist name="other_skuinfo" id="vo"}
+                                    <option value="{$vo['sku_id']}" {if $vo['spec_names']==$origin_skuinfo}disabled{/if}>{$vo['spec_names']}</option>
+                                    {/volist}
+                                </select>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="edit_services">
+                        {if $origin_services['reduction_money']>0}
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">减免金额</div>
+                            <div class="layui-input-block">
+                                <div class="origin_data disf">
+                                    <div class="origin">{if $is_manage==1}{else}原{/if}金额：</div>
+                                    <span>{$origin_services['otherfee_currency']} {$origin_services['reduction_money']}</span>
+                                </div>
+                                {if $is_manage==0}
+                                <input type="number" name="new_reduction" value="{$origin_services['reduction_money']}" placeholder="请输入减免金额" id="new_reduction" class="layui-input">
+                                {/if}
+                            </div>
+                        </div>
+                        {/if}
+                        {if $origin_services['gift_money']>0}
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">优惠随赠金额</div>
+                            <div class="layui-input-block">
+                                <div class="origin_data disf">
+                                    <div class="origin">{if $is_manage==1}{else}原{/if}金额：</div>
+                                    <span>{$origin_services['otherfee_currency']} {$origin_services['gift_money']}</span>
+                                </div>
+                                {if $is_manage==0}
+                                <input type="number" name="new_gift" value="{$origin_services['gift_money']}" placeholder="请输入优惠随赠金额" id="new_gift" class="layui-input">
+                                {/if}
+                            </div>
+                        </div>
+                        {/if}
+                        {if $origin_services['otherfee_total']>0}
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">其他费用金额</div>
+                            <div class="layui-input-block">
+                                <div class="origin_data disf">
+                                    <div class="origin">{if $is_manage==1}{else}原{/if}金额：</div>
+                                    <span>{$origin_services['otherfee_currency']} {$origin_services['otherfee_total']}</span>
+                                </div>
+                                {if $is_manage==0}
+                                <input type="number" name="new_otherfee_total" value="{$origin_services['otherfee_total']}" placeholder="请输入优惠随赠金额" id="new_otherfee_total" class="layui-input">
+                                {/if}
+                            </div>
+                        </div>
+                        {/if}
+                        {if $origin_services['services_money']>0}
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">更多服务金额</div>
+                            <div class="layui-input-block">
+                                <div class="origin_data disf">
+                                    <div class="origin">{if $is_manage==1}{else}原{/if}金额：</div>
+                                    <span>{$origin_services['otherfee_currency']} {$origin_services['services_money']}</span>
+                                </div>
+                                {if $is_manage==0}
+                                <input type="number" name="new_services_money" value="{$origin_services['services_money']}" placeholder="请输入优惠随赠金额" id="new_services_money" class="layui-input">
+                                {/if}
+                            </div>
+                        </div>
+                        {/if}
+                    </div>
+
+                    <div class="edit_num">
+                        <div class="layui-form-item">
+                            <div class="layui-form-label">商品数量</div>
+                            <div class="layui-input-block">
+                                <div class="origin_data disf">
+                                    <div class="origin">{if $is_manage==1}{else}原{/if}数量：</div>
+                                    <span>{$sku_data['goods_num']}</span>
+                                </div>
+                                {if $is_manage==0}
+                                <input type="number" name="new_num" value="{$sku_data['goods_num']}" placeholder="请输入商品数量" id="gnum" class="layui-input">
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {if $is_manage==0}
+                <div class="layui-form-item" style="margin-top: 25px;text-align: center;">
+                    <div>
+                        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="component-form-element2">保存信息</button>
+                    </div>
+                </div>
+                {/if}
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    layui.use(['layer', 'form', 'table', 'upload'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , upload = layui.upload
+            , table = layui.table;
+
+
+        form.on('select(edit_type)',function(data){
+            let val = data.value;
+            if(val==1){
+                $('.edit_sku').show();
+                $('.edit_services').hide();
+                $('.edit_num').hide();
+            }
+            else if(val==2){
+                $('.edit_sku').hide();
+                $('.edit_services').show();
+                $('.edit_num').hide();
+            }
+            else if(val==3){
+                $('.edit_sku').hide();
+                $('.edit_services').hide();
+                $('.edit_num').show();
+            }
+            else{
+                $('.edit_sku').hide();
+                $('.edit_services').hide();
+                $('.edit_num').hide();
+            }
+        });
+
+        form.on('submit(component-form-element2)',function(data){
+            layer.load();
+            $.ajax({
+                url:"/?s=shop/shunt_edit",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.closeAll('loading');
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            parent.location.reload();
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+</script>

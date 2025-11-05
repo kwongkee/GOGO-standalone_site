@@ -1,0 +1,169 @@
+<!--滚动栏信息-->
+<style>
+    .rotateBox{border:1px solid {$data['websites']['info']['color']};height:35px;z-index: 99;}
+    /*新闻内容*/
+    .rotateBox .newsContainer {max-width: 350px;justify-content: center;transition: all 0.3s ease;padding-right: 5px;height:100%;}
+    .rotateBox .newsContainer .news {height: 20px;overflow: hidden;width: 100%;}
+    .rotateBox .newsContainer .news a {color: {$data['websites']['info']['color_word']};font-weight: 800;}
+    .rotateBox .newsContainer .news a p {color: {$data['websites']['info']['color_word']};font-weight: 800;line-height: 20px;width: 100%;white-space: nowrap;text-overflow: unset;overflow: unset;}
+    /*时间内容*/
+    .rotateBox .time,.rotateBox  .mtime {margin: 0px 0px 0;color: {$data['websites']['info']['color_word']};font-size: 15px;}
+    .rotateBox .time span,.rotateBox .mtime span {font-size: 15px;white-space: nowrap;font-weight: 800;}
+    .rotateBox .time .chosen-container, .rotateBox .mtime .chosen-container {width: 120px;margin-right: 3px;}
+    .rotateBox .time #selectCity, .rotateBox .mtime #selectCity {width: 90px;font-size: 15px;border: 0;background: #fff;text-align: center;color: #000;}
+    .rotateBox .time .chosen-container,.rotateBox .mtime .chosen-container{width: 120px;margin-right:3px;}
+    .chosen-container-single .chosen-search input[type="text"]{color: {$data['websites']['info']['color_word']};}
+    /*汇率内容*/
+    .rotateBox .rate {margin-top: 0px;padding-left: 0px;justify-content: center;}
+    .rotateBox .rate .leftTxt {color: {$data['websites']['info']['color_word']};display: inline-block;font-weight: 800;width: fit-content;white-space: nowrap;font-size: 15px;}
+    .rotateBox .rate .rightTxt {display: inline-block;width: fit-content;font-size: 15px;font-weight: 800;}
+    .rotateBox .rate .rate_swiper,.rotateBox .rate .mrate_swiper {height: 18px;overflow: hidden;width: 100%;}
+    .rotateBox .rate_swiper a p, .rotateBox .mrate_swiper a p {color: {$data['websites']['info']['color_word']};font-weight: 800;line-height: 20px;width: 100%;white-space: nowrap;text-overflow: ellipsis;overflow: hidden;font-size: 15px;}
+
+    .pc_news_box{width: 100%;}
+    .mobile_news_box{display:none;}
+    @media (max-width: 992px){
+        .pc_news_box{display:none;}
+
+        /*手机版：口号+时间+汇率+浏览量+新闻*/
+        .rotateBox{height:35px;position: relative;top:unset;left:0;z-index: 99;}
+        .rotateBox .newsContainer{padding:0 5px;}
+        .mobile_news_box{display: block;width: 100%;z-index: 9;}
+        .mobile_news_box .news_box{text-align: center;width: calc(100% + 10px);padding: 0px;box-sizing: border-box;box-shadow: 0px 0px 15px 4px #555353;border-radius: unset !important;}
+        #mobileNewsBox-container{overflow:hidden;height: 35px;width: 100%;}
+        /*新闻*/
+        #mobileNewsBox-container .newsContainer{max-width:100%;}
+        #mobileNewsBox-container .newsContainer .news{height:100%;}
+        #mobileNewsBox-container .news a {color: {$data['websites']['info']['color_word']};font-weight: 800;}
+    #mobileNewsBox-container .news a p{color: {$data['websites']['info']['color_word']};font-weight: 800;line-height: 35px;}
+    /*汇率*/
+    /*#mobileNewsBox-container .rate{margin-top:2px;}*/
+    .mobile_news_box .news_box .rate{margin: 0px 0;margin-top:0;}
+    .rotateBox .rate_swiper a p, .rotateBox .mrate_swiper a p{line-height: 16px;}
+    /*时间*/
+    #mobileNewsBox-container .mtime{margin-top:5px;}
+    /*阅读量+口号*/
+    #mobileNewsBox-container .readNumBox,#mobileNewsBox-container .slogan_div{margin-top:7px;}
+    #mobileNewsBox-container .scrollable-div-child{height:35px;}
+    }
+</style>
+<link rel="stylesheet" href="/assets/d2eace91/js/chosen/chosen.css?v=1.2"/>
+<div class="rotateBox">
+    <div class="disf" style="height:100%;">
+        {if !empty($data['websites']['rotate_info']['content_id'])}
+        <div class="pc_news_box">
+            <div class="disf" style="justify-content: space-around;">
+                {volist name="data['websites']['rotate_info']['content_id']" key="k" id="v"}
+                {if $v==1}
+                <!--新闻内容-->
+                <div class="newsContainer">
+                    <div class="swiper-container news">
+                        <div class="swiper-wrapper">
+                            {volist name="data['websites']['rotate_info']['content'][$k]" key="k2" id="v2"}
+                            <div class="swiper-slide">
+                                <a href="{$v2['link']}" target="_blank"><p class="f15">{$v2['title']}</p></a>
+                            </div>
+                            {/volist}
+                        </div>
+                    </div>
+                </div>
+                {elseif($v==2)}
+                <!--时间内容-->
+                <div class="time">
+                    <div class="drop-down beijing-time disf">
+                        <select id="selectCity" onchange="selectCity(this)" class="chosen-select city-select">
+                            {volist name="data['websites']['rotate_info']['content'][$k]" key="k2" id="v2")
+                            <optgroup label="{{$k2}}">
+                                {volist name="v2" key="k3" id="v3"}
+                                <option value="{$v3['city_en']}"><?php echo strtoupper($v3['cityEn']);?></option>
+                                {/volist}
+                            </optgroup>
+                            {/volist}
+                        </select>
+                        <span class="beijing_date"><?php echo date('Y/m/d');?></span>&nbsp;<span class="beijing_sec" style="width:60px;"></span>
+                    </div>
+                </div>
+                {elseif($v==3)}
+                <!--汇率内容-->
+                <div class="rate disf">
+                    <div class="leftTxt">实时汇率：</div>
+                    <div class="rightTxt">
+                        <div class="swiper-container rate_swiper">
+                            <div class="swiper-wrapper">
+                                {volist name="data['websites']['rotate_info']['content'][$k]['rate']" key="k2" id="v2"}
+                                <div class="swiper-slide">
+                                    <a href="/?s=merch/rate_detail&id={$v2['id']}&company_type={$company_type}&company_id={$company_id}" target="_blank"><p>1CNY&nbsp;≈&nbsp;<?php echo number_format(1*$v2['rate'],3);?>{$v2['symbol']}</p></a>
+                                </div>
+                                {/volist}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/if}
+                {/volist}
+            </div>
+        </div>
+
+        <div class="mobile_news_box">
+            <div class="swiper-container" id="mobileNewsBox-container">
+                <div class="swiper-wrapper">
+                    {volist name="data['websites']['rotate_info']['content_id']" key="k" id="v"}
+                    {if $v==1}
+                    <!--新闻内容-->
+                    <div class="swiper-slide">
+                        <div class="newsContainer">
+                            <div class="swiper-container news">
+                                <div class="swiper-wrapper">
+                                    {volist name="data['websites']['rotate_info']['content'][$k]" key="k2" id="v2"}
+                                    <div class="swiper-slide">
+                                        <a href="{$v2['link']}" target="_blank"><p class="f15">{$v2['title']}</p></a>
+                                    </div>
+                                    {/volist}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {elseif($v==2)}
+                    <!--时间内容-->
+                    <div class="swiper-slide">
+                        <div class="scrollable-div-child mtime">
+                            <div class="drop-down beijing-time disf" style="justify-content: center;">
+                                <select id="selectCity" onchange="selectCity(this)" class="chosen-select city-select">
+                                    {volist name="data['websites']['rotate_info']['content'][$k]" key="k2" id="v2"}
+                                    <optgroup label="{$k2}">
+                                        {volist name="v2" key="k3" id="v3"}
+                                        <option value="{$v3['city_en']}"><?php echo strtoupper($v3['cityEn']);?></option>
+                                        {/volist}
+                                    </optgroup>
+                                    {/volist}
+                                </select>
+                                <span class="beijing_date"><?php echo date('Y/m/d');?></span>&nbsp;<span class="beijing_sec" style="width:60px;"></span>
+                            </div>
+                        </div>
+                    </div>
+                    {elseif($v==3)}
+                    <!--汇率内容-->
+                    <div class="swiper-slide">
+                        <div class="scrollable-div-child rate disf" style="justify-content: center;">
+                            <div class="leftTxt">实时汇率：</div>
+                            <div class="rightTxt" style="text-align: left;">
+                                <div class="swiper-container mrate_swiper">
+                                    <div class="swiper-wrapper">
+                                        {volist name="data['websites']['rotate_info']['content'][$k]['rate']" key="k2" id="v2"}
+                                        <div class="swiper-slide">
+                                            <a href="/?=merch/rate_detail&id={$v2['id']}&company_id={$company_id}&company_type={$company_type}" target="_blank"><p>1CNY&nbsp;≈&nbsp;<?php echo number_format(1*$v2['rate'],3);?>{$v2['symbol']}</p></a>
+                                        </div>
+                                        {/volist}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/if}
+                    {/volist}
+                </div>
+            </div>
+        </div>
+        {/if}
+    </div>
+</div>

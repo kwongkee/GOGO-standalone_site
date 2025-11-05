@@ -1,0 +1,1123 @@
+{include file="common/header"}
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style>
+    @font-face {
+        font-family: "gald_iconfont";
+        src: url("/img/customers/font_2860232_zp4hx1jamq.woff2?t=1684402191373") format("woff2"),url("/img/customers/font_2860232_zp4hx1jamq.woff?t=1684402191373") format("woff"),url("/img/customers/font_2860232_zp4hx1jamq.ttf?t=1684402191373") format("truetype")
+    }
+    .gald_iconfont {
+        font-family: "gald_iconfont" !important;
+        font-size: 16px;
+        font-style: normal;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale
+    }
+    .home_box {
+        width: 100%;
+        background: #fff
+    }
+
+    .home_box .searchBox {
+        padding-top: 70px;
+        width: 100%;
+        height: 350px;
+        background: url("/img/customers/hw_banner_bg.jpg") no-repeat;
+        background-size: 100% 100%
+    }
+
+    .home_box .searchBox .title {
+        width: 100%;
+        text-align: center;
+        font-size: 46px;
+        font-weight: bold;
+        color: #FFFFFF;
+        text-shadow: 0px 1px 8px rgba(0,0,0,0.2)
+    }
+
+    .home_box .searchBox .subtitle {
+        width: 100%;
+        text-align: center;
+        font-size: 20px;
+        color: #FFFFFF;
+        text-shadow: 0px 1px 8px rgba(0,0,0,0.2)
+    }
+
+    .home_box .searchBox .searchContentBox {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 30px auto 0;
+        width: 850px;
+        position: relative
+    }
+
+    .home_box .searchBox .hotCountry {
+        width: 920px;
+        display: flex;
+        font-size: 14px;
+        color: #A9DFFE;
+        align-items: center;
+        justify-content: center;
+        margin: 20px auto 0
+    }
+
+    .home_box .searchBox .hotCountry .label {
+        margin-left: 190px
+    }
+
+    .home_box .searchBox .hotCountry .hotEnterpriseItem {
+        margin-right: 10px;
+        cursor: pointer;
+        color: #A9DFFE
+    }
+
+    .home_box .searchBox .hotCountry .hotEnterpriseItem:hover {
+        color: #fff !important
+    }
+
+    .home_box .searchBox .input_box {
+        width: 160px;
+        height: 50px
+    }
+
+    .home_box .searchBox .country_box {
+        /*background: #fff url("/img/customers/drop-down.png") no-repeat 135px center;*/
+        border-radius: 6px;
+        border: 1px solid #448bd2;
+        cursor: pointer;
+        width: 160px;
+        height: 50px;
+        border: none;
+        padding: 0 27px 0 20px
+    }
+
+    .home_box .searchBox .search_content {
+        display: flex;
+        align-items: center;
+        height: 50px;
+        width: 670px;
+        border-right: none;
+        border-radius: 6px;
+        margin-left: 10px;
+        background: #fff
+    }
+
+    .home_box .searchBox .search_content .search_icon {
+        width: 16px;
+        height: 16px;
+        background: url("/img/customers/icon_se.png") no-repeat;
+        background-size: 100% 100%;
+        margin-left: 20px
+    }
+
+    .home_box .searchBox .search_content .search_input {
+        width: 515px;
+        height: 45px;
+        border: none;
+        padding: 0 10px
+    }
+
+    .home_box .searchBox .search_content .search_input::-webkit-input-placeholder {
+        font-size: 15px;
+        color: #666666
+    }
+
+    .home_box .searchBox .search_content .search_input::-moz-placeholder {
+        font-size: 15px;
+        color: #666666;
+        opacity: 1
+    }
+
+    .home_box .searchBox .search_content .getReport {
+        width: 120px;
+        height: 50px;
+        background: linear-gradient(0deg, #E0B06E, #F5D7A5);
+        font-size: 16px;
+        color: #694B28;
+        text-align: center;
+        margin-left: -1px;
+        border: none;
+        border-radius: 0 6px 6px 0 !important;
+    }
+
+    .home_box .searchBox .sel-box {
+        width: 840px;
+        border: 1px solid #e6ebf0;
+        box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.15);
+        border-radius: 2px;
+        position: absolute;
+        left: 5px;
+        top: 50px;
+        z-index: 999;
+        margin-top: 10px;
+        display: none
+    }
+
+    .home_box .searchBox .sel-box .sel-common {
+        background: #f7f7f7;
+        width: 840px;
+        height: 80px;
+        padding-left: 30px;
+        padding-top: 18px;
+        border-bottom: 1px solid #dce0e0
+    }
+
+    .home_box .searchBox .sel-box .sel-common .sel-tit {
+        width: 85px;
+        float: left;
+        color: #565a5c;
+        font-weight: bold
+    }
+
+    .home_box .searchBox .sel-box .sel-common .sel-cont {
+        width: 705px;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        float: left
+    }
+
+    .home_box .searchBox .sel-box .sel-common .sel-cont li {
+        float: left;
+        padding: 2px 5px;
+        margin: 0 10px 5px 10px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        cursor: pointer
+    }
+
+    .home_box .searchBox .sel-box .sel-common .sel-cont li:hover {
+        background: #448bd2;
+        color: #fff
+    }
+
+    .home_box .searchBox .sel-box .country-item {
+        width: 840px;
+        padding-left: 30px;
+        padding-top: 16px;
+        border-bottom: 1px solid #dce0e0;
+        background: #fff;
+        display: flex
+    }
+
+    .home_box .searchBox .sel-box .country-item .sel-tit {
+        width: 85px;
+        color: #565a5c;
+        font-weight: bold
+    }
+
+    .home_box .searchBox .sel-box .country-item .sel-cont {
+        width: 765px;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        display: flex;
+        flex-wrap: wrap
+    }
+
+    .home_box .searchBox .sel-box .country-item li {
+        padding: 2px 5px;
+        margin: 0 10px 5px 10px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        cursor: pointer
+    }
+
+    .home_box .searchBox .sel-box .country-item li:hover {
+        background: #448bd2;
+        color: #fff
+    }
+
+    .home_box .searchBox .sel-box .sel-bottom {
+        color: #d69137;
+        background: #f7f7f7;
+        border-radius: 2px;
+        width: 840px;
+        height: 40px;
+        line-height: 40px;
+        padding-left: 30px
+    }
+
+    .home_box .searchBox .matchCountryBox {
+        display: none;
+        max-height: 180px;
+        width: 160px;
+        background: #fff;
+        position: absolute;
+        left: 5px;
+        top: 50px;
+        z-index: 10;
+        overflow-y: auto;
+        border: 1px solid #c4c4c4
+    }
+
+    .home_box .searchBox .matchCountryBox .matchCountryItem {
+        width: 100%;
+        height: 30px;
+        text-indent: 5px;
+        line-height: 30px;
+        margin-top: 10px;
+        font-size: 14px;
+        color: #303133;
+        cursor: pointer
+    }
+
+    .home_box .searchBox .matchCountryBox .matchCountryItem:hover {
+        color: #fff;
+        background: #448bd2
+    }
+
+    .home_box .searchBox .matchCountryBox .matchCountryItem:nth-of-type(1) {
+        margin-top: 0px
+    }
+
+    .home_box .reportType_box {
+        width: 100%;
+        background: #F4F6FB;
+        padding: 60px 0
+    }
+
+    .home_box .reportType_box .report_type_title {
+        width: 100%;
+        text-align: center;
+        font-size: 28px;
+        color: #303133
+    }
+
+    .home_box .reportType_box .report_type_subtitle {
+        width: 100%;
+        text-align: center;
+        font-size: 16px;
+        color: #666666;
+        margin-top: 15px
+    }
+
+    .home_box .reportType_box .report_img_box {
+        width: 1200px;
+        display: flex;
+        justify-content: space-between;
+        margin: 50px auto 0
+    }
+
+    .home_box .reportType_box .report_img_box .report_type_item {
+        width: 580px;
+        height: 536px;
+        background: #FFFFFF;
+        border-radius: 10px;
+        overflow: hidden
+    }
+
+    .home_box .reportType_box .report_img_box .report_type_item .report_title_box {
+        width: 100%;
+        height: 90px;
+        padding-left: 40px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background: linear-gradient(90deg, #6098F4, #3F79DB)
+    }
+
+    .home_box .reportType_box .report_img_box .report_type_item .report_title_box .title {
+        font-size: 20px;
+        font-weight: bold;
+        color: #FFFFFF
+    }
+
+    .home_box .reportType_box .report_img_box .report_type_item .report_title_box .subtitle {
+        font-size: 14px;
+        color: #C9DDFF;
+        margin-top: 5px
+    }
+
+    .home_box .reportType_box .report_img_box .report_type_item .item_bottom .info_box {
+        width: 100%;
+        padding: 0 30px;
+        height: 90px;
+        display: flex;
+        flex-wrap: wrap
+    }
+
+    .home_box .reportType_box .report_img_box .report_type_item .item_bottom .info_box .info_item {
+        display: flex;
+        align-items: center;
+        margin-right: 25px
+    }
+
+    .home_box .reportType_box .report_img_box .report_type_item .item_bottom .info_box .info_item .item_icon {
+        width: 14px;
+        height: 14px;
+        background: url("/img/customers/hw_icon_arrow.png") no-repeat;
+        background-size: 100% 100%
+    }
+
+    .home_box .reportType_box .report_img_box .report_type_item .item_bottom .info_box .info_item .item_label {
+        font-size: 15px;
+        color: #303133;
+        margin-left: 5px
+    }
+
+    .home_box .reportType_box .report_img_box .report_type_item .item_bottom .info_box .info_item .item_label span {
+        font-size: 16px;
+        color: #3F79DB;
+        font-weight: bold
+    }
+
+    .home_box .reportType_box .report_img_box .report_type_item .item_bottom .type_img {
+        display: block;
+        width: 522px;
+        height: 262px;
+        margin: 0 auto
+    }
+
+    .home_box .reportType_box .report_img_box .report_type_item .item_bottom .button_list {
+        width: 522px;
+        margin: 20px auto 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center
+    }
+
+    .home_box .reportType_box .report_img_box .report_type_item .item_bottom .button_list .search_button_box {
+        width: 140px;
+        height: 44px;
+        background: linear-gradient(90deg, #FC8E70, #F67653);
+        border-radius: 4px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer
+    }
+
+    .home_box .reportType_box .report_img_box .report_type_item .item_bottom .button_list .search_button_box .icon_search {
+        font-size: 20px;
+        color: #fff
+    }
+
+    .home_box .reportType_box .report_img_box .report_type_item .item_bottom .button_list .search_button_box span {
+        font-size: 15px;
+        color: #fff;
+        margin-left: 10px
+    }
+
+    .home_box .reportType_box .report_img_box .report_type_item .item_bottom .button_list .demo_button_box {
+        display: flex;
+        justify-content: center;
+        align-items: center
+    }
+
+    .home_box .reportType_box .report_img_box .report_type_item .item_bottom .button_list .demo_button_box .icon_demo {
+        width: 19px;
+        height: 18px;
+        background: url("/img/customers/icon_document.png") no-repeat;
+        background-size: 100% 100%
+    }
+
+    .home_box .reportType_box .report_img_box .report_type_item .item_bottom .button_list .demo_button_box .demo_label {
+        font-size: 15px;
+        color: #3F79DB;
+        margin-left: 10px
+    }
+
+    .home_box .reportFeatures_box {
+        width: 100%;
+        height: 408px;
+        background: url("/img/customers/hw_td_bg.jpg") no-repeat;
+        background-size: 100% 100%;
+        padding-top: 60px
+    }
+
+    .home_box .reportFeatures_box .reportFeatures_title {
+        width: 100%;
+        text-align: center;
+        font-size: 28px;
+        color: #FFFFFF
+    }
+
+    .home_box .reportFeatures_box .reportFeatures_list {
+        width: 1200px;
+        display: flex;
+        justify-content: space-between;
+        margin: 50px auto 0
+    }
+
+    .home_box .reportFeatures_box .reportFeatures_list .reportFeatures_item {
+        width: 216px;
+        height: 210px;
+        background: #FFFFFF;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center
+    }
+
+    .home_box .reportFeatures_box .reportFeatures_list .reportFeatures_item .reportFeatures_img {
+        display: block;
+        width: 80px;
+        height: 80px;
+        margin: 30px 0 20px 0
+    }
+
+    .home_box .reportFeatures_box .reportFeatures_list .reportFeatures_item .reportFeatures_label {
+        font-size: 16px;
+        color: #334265;
+        font-weight: bold
+    }
+
+    .home_box .reportFeatures_box .reportFeatures_list .reportFeatures_item .reportFeatures_label .num {
+        font-size: 22px
+    }
+
+    .home_box .reportDimension_box {
+        width: 100%;
+        padding: 60px
+    }
+
+    .home_box .reportDimension_box .reportDimension_title {
+        width: 100%;
+        text-align: center;
+        font-size: 28px;
+        color: #303133
+    }
+
+    .home_box .reportDimension_box .reportDimension_subtitle {
+        width: 100%;
+        text-align: center;
+        font-size: 16px;
+        color: #666666;
+        margin-top: 10px
+    }
+
+    .home_box .reportDimension_box .reportDimension_list {
+        width: 1200px;
+        display: flex;
+        justify-content: space-between;
+        margin: 40px auto 0
+    }
+
+    .home_box .reportDimension_box .reportDimension_list .reportDimension_item {
+        width: 278px;
+        height: 250px;
+        background: #EFF5FF;
+        border-radius: 8px;
+        overflow: hidden
+    }
+
+    .home_box .reportDimension_box .reportDimension_list .reportDimension_item .item_top {
+        width: 100%;
+        text-align: center;
+        height: 60px;
+        line-height: 60px;
+        font-size: 16px;
+        font-weight: bold;
+        color: #FFFFFF;
+        background: #3F79DB
+    }
+
+    .home_box .reportDimension_box .reportDimension_list .reportDimension_item .item_bottom {
+        width: 100%;
+        height: 190px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 10px
+    }
+
+    .home_box .reportDimension_box .reportDimension_list .reportDimension_item .item_bottom p {
+        font-size: 16px;
+        font-family: A-OTF Jun Pro 34;
+        color: #334265;
+        margin-top: 15px
+    }
+
+    .home_box .reportDimension_box .reportDimension_list .reportDimension_item:nth-of-type(2) .item_bottom p {
+        width: 140px
+    }
+
+    .home_box .reportDimension_box .reportDimension_list .reportDimension_item:nth-of-type(4) .item_bottom p {
+        width: 200px
+    }
+
+    .home_box .report_effect {
+        width: 100%;
+        padding: 60px 0
+    }
+
+    .home_box .report_effect .report_effect_title {
+        width: 100%;
+        text-align: center;
+        font-size: 28px;
+        color: #303133
+    }
+
+    .home_box .report_effect .report_effect_img {
+        width: 1199px;
+        height: 331px;
+        display: block;
+        margin: 40px auto 0
+    }
+
+    .home_box .report_advantage {
+        width: 100%;
+        height: 570px;
+        background: url("/img/customers/report_effect.jpg") no-repeat;
+        background-size: 100% 100%;
+        overflow: hidden
+    }
+
+    .home_box .report_advantage .report_advantage_box {
+        width: 1200px;
+        height: 100%;
+        display: flex;
+        justify-content: space-between;
+        margin: 0 auto;
+        align-items: center
+    }
+
+    .home_box .report_advantage .report_advantage_box .report_advantage_label {
+        width: 218px;
+        height: 87px;
+        background: url("/img/customers/wsmxz.png") no-repeat;
+        background-size: 100% 100%
+    }
+
+    .home_box .report_advantage .report_advantage_box .advantage_info {
+        width: 850px;
+        height: 450px;
+        background: #FFFFFF;
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        padding: 40px 80px
+    }
+
+    .home_box .report_advantage .report_advantage_box .advantage_info .advantage_item {
+        width: 310px
+    }
+
+    .home_box .report_advantage .report_advantage_box .advantage_info .advantage_item .item_icon {
+        display: block;
+        width: 70px;
+        height: 70px
+    }
+
+    .home_box .report_advantage .report_advantage_box .advantage_info .advantage_item .title {
+        font-size: 16px;
+        font-weight: bold;
+        color: #303133;
+        margin-top: 15px
+    }
+
+    .home_box .report_advantage .report_advantage_box .advantage_info .advantage_item .explain {
+        font-size: 14px;
+        color: #909399;
+        line-height: 26px;
+        margin-top: 10px
+    }
+    .hotCountry{display:none !important;}
+    /**手机版**/
+    @media (max-width: 992px){
+        .home_box .searchBox {padding-top: 80px;}
+        .home_box .searchBox .title {font-size: 30px;margin-top: 50px;}
+        .home_box .searchBox .searchContentBox{width:100%;padding:0 20px;}
+        .home_box .searchBox .input_box {width: 30%;}
+        .home_box .searchBox .country_box{width: 100%;padding:0 10px;}
+        .home_box .searchBox .search_content{width:100%;}
+        .home_box .searchBox .search_content .search_icon{margin-left:10px;height:10px;width:15px;}
+        .home_box .searchBox .search_content .search_input{width:100%;padding: 0 5px;}
+        .home_box .searchBox .search_content .getReport{width:100px;font-size:14px;}
+        .home_box .reportType_box{padding:30px 20px;}
+        .home_box .reportType_box .report_type_title{font-size: 20px;}
+        .home_box .reportType_box .report_type_subtitle{font-size: 15px;}
+        .home_box .reportType_box .report_img_box {width: 100%;display: block;margin:20px auto 0;height:fit-content;}
+        .home_box .reportType_box .report_img_box .report_type_item{width: 100%;height:fit-content;margin-bottom:10px;padding-bottom:10px;}
+        .home_box .reportType_box .report_img_box .report_type_item .report_title_box{padding-left: 10px;}
+        .home_box .reportType_box .report_img_box .report_type_item .report_title_box .title{font-size:18px;}
+        .home_box .reportType_box .report_img_box .report_type_item .item_bottom .info_box .info_item .item_label {font-size: 14px;}
+        .home_box .reportType_box .report_img_box .report_type_item .item_bottom .type_img {display: block;width: 100%;height: 230px;}
+        .home_box .reportType_box .report_img_box .report_type_item .item_bottom .button_list{width:100%;justify-content: center;}
+        .home_box .reportType_box .report_img_box .report_type_item .item_bottom .button_list .search_button_box {width: 80px;}
+        .home_box .reportType_box .report_img_box .report_type_item .item_bottom .button_list .search_button_box .icon_search {font-size: 18px;}
+        .home_box .reportFeatures_box{padding:30px 20px;height:fit-content;}
+        .home_box .reportFeatures_box .reportFeatures_title {font-size: 20px;}
+        .home_box .reportFeatures_box .reportFeatures_list {width: 100%;align-items:center;flex-wrap: wrap;margin-top: 20px;justify-content: center;}
+        .home_box .reportFeatures_box .reportFeatures_list .reportFeatures_item {width: 47%;margin-bottom:10px;height:180px;margin-right: 10px;}
+        .home_box .reportFeatures_box .reportFeatures_list .reportFeatures_item .reportFeatures_img {width: 60px;height: 60px;}
+        .home_box .reportFeatures_box .reportFeatures_list .reportFeatures_item .reportFeatures_label {font-size: 14px;}
+        .home_box .report_effect{padding:30px 0;display: none;}
+        .home_box .report_effect .report_effect_title{font-size:20px;}
+        .home_box .report_effect .report_effect_img {width: 100%;height: 150px;padding:0 20px;}
+        .home_box .report_advantage{background:rgb(224,237,254);height:fit-content;}
+        .home_box .report_advantage .report_advantage_box{width:100%;display: block;padding:0 20px;}
+        .home_box .report_advantage .report_advantage_box .report_advantage_label{display: none;}
+        .home_box .report_advantage .report_advantage_box .advantage_info {width: 100%;padding: 20px 40px;margin:20px 0;height:fit-content;}
+        .home_box .report_advantage .report_advantage_box .advantage_info .advantage_item {width: 100%;display: flex;align-items: center;padding-bottom:20px;}
+        .home_box .report_advantage .report_advantage_box .advantage_info .advantage_item:last-child{padding-bottom: 0;}
+        .home_box .report_advantage .report_advantage_box .advantage_info .advantage_item .item_icon {display: inline-block;width: 50px;height: 50px;margin-right:10px;}
+        .home_box .report_advantage .report_advantage_box .advantage_info .advantage_item .title {font-size: 15px;display: none;}
+        .home_box .report_advantage .report_advantage_box .advantage_info .advantage_item .explain{line-height: 14px;}
+        .home_box .reportFeatures_box .reportFeatures_list .reportFeatures_item .reportFeatures_label .num {font-size: 18px;}
+    }
+</style>
+<div id="main">
+    <div class="home_box">
+        <div class="searchBox">
+            <h1 class="title">全球信用报告</h1>
+            <div class="subtitle">全球216个国家企业信用调查，为外贸安全保驾护航</div>
+            <div class="searchContentBox">
+                <div class="input_box">
+                    <input type="text" class="country_box" id="country_box" value="" placeholder="国家名称" autocomplete="off">
+                </div>
+                <div class="search_content">
+                    <div class="search_icon"></div>
+                    <input type="text" placeholder="请输入海外企业的英文名称搜索" class="search_input" id="search_input" autocomplete="off">
+                    <button class="getReport buttonStyle2" id="getReport">获取报告</button>
+                </div>
+
+                <div id="country_drop" class="sel-box">
+                    <div class="sel-common">
+                        <div class="sel-tit">常用国家</div>
+                        <ul id="immediately" class="sel-cont">
+
+                            <li hasonline="1" countrycode="US">美国</li>
+
+                            <li hasonline="1" countrycode="DE">德国</li>
+
+                            <li hasonline="1" countrycode="GB">英国</li>
+
+                            <li hasonline="1" countrycode="FR">法国</li>
+
+                            <li hasonline="1" countrycode="IT">意大利</li>
+
+                            <li hasonline="1" countrycode="NL">荷兰</li>
+
+                            <li hasonline="1" countrycode="SE">瑞典</li>
+
+                            <li hasonline="1" countrycode="BE">比利时</li>
+
+                            <li hasonline="1" countrycode="IE">爱尔兰</li>
+
+                            <li hasonline="1" countrycode="NO">挪威</li>
+
+                            <li hasonline="1" countrycode="DK">丹麦</li>
+
+                            <li hasonline="1" countrycode="LU">卢森堡</li>
+
+                        </ul>
+                    </div>
+                    <div class="country-item">
+                        <div class="sel-tit">亚洲</div>
+                        <ul class="sel-cont">
+
+                            <li hasonline="1" countrycode="KR">韩国</li>
+
+                            <li hasonline="1" countrycode="SG">新加坡</li>
+
+                            <li hasonline="1" countrycode="IN">印度</li>
+
+                            <li hasonline="1" countrycode="TH">泰国</li>
+
+                            <li hasonline="1" countrycode="TW">台湾（中国）</li>
+
+                            <li hasonline="1" countrycode="HK">香港（中国）</li>
+
+                            <li hasonline="1" countrycode="AF">阿富汗</li>
+
+                            <li hasonline="1" countrycode="TR">土耳其</li>
+
+                            <li hasonline="1" countrycode="JO">约旦</li>
+
+                        </ul>
+                    </div>
+                    <div class="country-item">
+                        <div class="sel-tit">欧洲</div>
+                        <ul class="sel-cont">
+
+                            <li hasonline="1" countrycode="RU">俄罗斯</li>
+
+                            <li hasonline="1" countrycode="ES">西班牙</li>
+
+                            <li hasonline="1" countrycode="PT">葡萄牙</li>
+
+                            <li hasonline="1" countrycode="CH">瑞士</li>
+
+                            <li hasonline="1" countrycode="FI">芬兰</li>
+
+                            <li hasonline="1" countrycode="CZ">捷克</li>
+
+                            <li hasonline="1" countrycode="GR">希腊</li>
+
+                            <li hasonline="1" countrycode="AT">奥地利</li>
+
+                            <li hasonline="1" countrycode="PL">波兰</li>
+
+                        </ul>
+                    </div>
+                    <div class="country-item">
+                        <div class="sel-tit">美洲</div>
+                        <ul class="sel-cont">
+
+                            <li hasonline="1" countrycode="CA">加拿大</li>
+
+                            <li hasonline="1" countrycode="MX">墨西哥</li>
+
+                            <li hasonline="1" countrycode="BR">巴西</li>
+
+                            <li hasonline="1" countrycode="AR">阿根廷</li>
+
+                            <li hasonline="1" countrycode="CL">智利</li>
+
+                            <li hasonline="" countrycode="UY">乌拉圭</li>
+
+                            <li hasonline="1" countrycode="CO">哥伦比亚</li>
+
+                            <li hasonline="" countrycode="CU">古巴</li>
+
+                            <li hasonline="" countrycode="PA">巴拿马</li>
+
+                            <li hasonline="" countrycode="PE">秘鲁</li>
+
+                        </ul>
+                    </div>
+                    <div class="country-item">
+                        <div class="sel-tit">大洋洲</div>
+                        <ul class="sel-cont">
+
+                            <li hasonline="1" countrycode="AU">澳大利亚</li>
+
+                            <li hasonline="1" countrycode="NZ">新西兰</li>
+
+                            <li hasonline="" countrycode="FJ">斐济</li>
+
+                        </ul>
+                    </div>
+                    <div class="country-item">
+                        <div class="sel-tit">非洲</div>
+                        <ul class="sel-cont">
+
+                            <li hasonline="1" countrycode="ZA" placeholder="请输入海外企业英文名称或注册号进行搜索">南非</li>
+
+                            <li hasonline="1" countrycode="TN" placeholder="">突尼斯</li>
+
+                            <li hasonline="1" countrycode="KE" placeholder="">肯尼亚</li>
+
+                            <li hasonline="1" countrycode="TZ" placeholder="">坦桑尼亚</li>
+
+                            <li hasonline="1" countrycode="ZM" placeholder="">赞比亚</li>
+
+                            <li hasonline="1" countrycode="EG" placeholder="请输入英文/阿拉伯文的企业名称或注册号进行搜索">埃及</li>
+
+                            <li hasonline="1" countrycode="RW" placeholder="">卢旺达</li>
+
+                            <li hasonline="1" countrycode="UG" placeholder="">乌干达</li>
+
+                            <li hasonline="1" countrycode="NG" placeholder="">尼日利亚</li>
+
+                            <li hasonline="1" countrycode="LY" placeholder="">利比亚</li>
+
+                        </ul>
+                    </div>
+                    <div class="sel-bottom">小提示：输入国家中文关键字，查到全球更多国家</div>
+                </div>
+
+                <div class="matchCountryBox" id="matchCountryBox"></div>
+            </div>
+            <div class="hotCountry">
+                <div class="label">热搜：</div>
+
+                <a class="hotEnterpriseItem" href="/overseasreport/search?keyword=Apple&amp;countryCode=US" target="_blabk">Apple</a>
+
+                <a class="hotEnterpriseItem" href="/overseasreport/search?keyword=Audi&amp;countryCode=DE" target="_blabk">Audi</a>
+
+                <a class="hotEnterpriseItem" href="/overseasreport/search?keyword=Dyson&amp;countryCode=GB" target="_blabk">Dyson</a>
+
+                <a class="hotEnterpriseItem" href="/overseasreport/search?keyword=CHANEL&amp;countryCode=FR" target="_blabk">CHANEL</a>
+
+                <a class="hotEnterpriseItem" href="/overseasreport/search?keyword=ARMANI&amp;countryCode=IT" target="_blabk">ARMANI</a>
+
+                <a class="hotEnterpriseItem" href="/overseasreport/search?keyword=Friso&amp;countryCode=NL" target="_blabk">Friso</a>
+
+                <a class="hotEnterpriseItem" href="/overseasreport/search?keyword=IKEA&amp;countryCode=SE" target="_blabk">IKEA</a>
+
+                <a class="hotEnterpriseItem" href="/overseasreport/search?keyword=Dexia&amp;countryCode=BE" target="_blabk">Dexia</a>
+
+                <a class="hotEnterpriseItem" href="/overseasreport/search?keyword=CRH&amp;countryCode=IE" target="_blabk">CRH</a>
+
+                <a class="hotEnterpriseItem" href="/overseasreport/search?keyword=Telenor&amp;countryCode=NO" target="_blabk">Telenor</a>
+
+                <a class="hotEnterpriseItem" href="/overseasreport/search?keyword=LOGO&amp;countryCode=DK" target="_blabk">LOGO</a>
+
+                <a class="hotEnterpriseItem" href="/overseasreport/search?keyword=ArcelorMittal&amp;countryCode=LU" target="_blabk">ArcelorMittal</a>
+
+            </div>
+
+        </div>
+        <div class="reportType_box">
+            <div class="report_type_title">一份报告，轻松搞定买家背景，确保货款安全</div>
+            <div class="report_type_subtitle">国家+企业名称，一键购买报告</div>
+            <div class="report_img_box">
+                <div class="report_type_item">
+                    <div class="report_title_box">
+                        <div class="title">KYB-信用概览报告</div>
+                        <div class="subtitle">KYB（Know Your Business Report）了解你的商业伙伴</div>
+                    </div>
+                    <div class="item_bottom">
+                        <div class="info_box">
+                            <div class="info_item">
+                                <div class="item_icon"></div>
+                                <div class="item_label">
+                                    <span class="important_label">11</span>大信息维度
+                                </div>
+                            </div>
+                            <div class="info_item">
+                                <div class="item_icon"></div>
+                                <div class="item_label">
+                                    <span class="important_label">130</span>国在线实时生成
+                                </div>
+                            </div>
+                            <div class="info_item">
+                                <div class="item_icon"></div>
+                                <div class="item_label">
+                                    更快了解你的交易客户
+                                </div>
+                            </div>
+                        </div>
+                        <img src="/img/customers/hw_pic_01.png" alt="" class="type_img">
+                        <div class="button_list">
+                            <div class="search_button_box">
+                                <i class="gald_iconfont icon_search"></i>
+                                <span>搜索</span>
+                            </div>
+<!--                            /?s=index/KYBreport-->
+                            <a href="https://www.gogo198.net/img/customers/样本详情.pdf" target="_blank" class="demo_button_box" data="0502">
+                                <div class="icon_demo"></div>
+                                <div class="demo_label">KYB报告样本</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="report_type_item">
+                    <div class="report_title_box">
+                        <div class="title">BCR-信用决策报告</div>
+                        <div class="subtitle">BCR（Business Credit Report）助力有效决策</div>
+                    </div>
+                    <div class="item_bottom">
+                        <div class="info_box">
+                            <div class="info_item">
+                                <div class="item_icon"></div>
+                                <div class="item_label">
+                                    <span class="important_label">13</span>大信息维度
+                                </div>
+                            </div>
+                            <div class="info_item">
+                                <div class="item_icon"></div>
+                                <div class="item_label">全球
+                                    <span class="important_label">216+</span>国家企业报告生成能力
+                                </div>
+                            </div>
+                            <div class="info_item">
+                                <div class="item_icon"></div>
+                                <div class="item_label">
+                                    数据更加详实，助您进行高效商业决策
+                                </div>
+                            </div>
+                        </div>
+                        <img src="/img/customers/hw_pic_02.png" alt="" class="type_img">
+                        <div class="button_list">
+                            <div class="search_button_box">
+                                <i class="gald_iconfont icon_search"></i>
+                                <span>搜索</span>
+                            </div>
+                            <a href="https://www.gogo198.net/img/customers/样本国家.pdf" target="_blank" class="demo_button_box" data="0504">
+                                <div class="icon_demo"></div>
+                                <div class="demo_label">BCR报告样本</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="reportFeatures_box">
+            <div class="reportFeatures_title">报告特点</div>
+            <div class="reportFeatures_list">
+                <div class="reportFeatures_item">
+                    <img src="/img/customers/icon_hw_01.png" alt="" class="reportFeatures_img">
+                    <p class="reportFeatures_label">
+                        快速了解海外买家
+                    </p>
+                </div>
+                <div class="reportFeatures_item">
+                    <img src="/img/customers/icon_hw_02.png" alt="" class="reportFeatures_img">
+                    <p class="reportFeatures_label">
+                        综合实力、付款信用、
+                    </p>
+                    <p class="reportFeatures_label">
+                        还款能力
+                    </p>
+                </div>
+                <div class="reportFeatures_item">
+                    <img src="/img/customers/icon_hw_03.png" alt="" class="reportFeatures_img">
+                    <p class="reportFeatures_label">
+                        覆盖<span class="num">216</span>个国家和地区
+                    </p>
+                </div>
+                <div class="reportFeatures_item">
+                    <img src="/img/customers/icon_hw_04.png" alt="" class="reportFeatures_img">
+                    <p class="reportFeatures_label">
+                        收录<span class="num">3</span>亿+企业
+                    </p>
+                </div>
+                <div class="reportFeatures_item">
+                    <img src="/img/customers/icon_hw_05.png" alt="" class="reportFeatures_img">
+                    <p class="reportFeatures_label">支持瞬间查询</p>
+                    <p class="reportFeatures_label">
+                        130个国家最快<span class="num">10</span>秒获取
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="report_effect">
+            <div class="report_effect_title">全球信用报告有什么作用？</div>
+            <img src="/img/customers/hw_pic_effect.png" class="report_effect_img" alt="全球信用报告有什么作用？">
+        </div>
+        <div class="report_advantage">
+            <div class="report_advantage_box">
+                <div class="report_advantage_label"></div>
+                <div class="advantage_info">
+                    <div class="advantage_item">
+                        <img src="/img/customers/icon_hw_06.png" alt="" class="item_icon">
+                        <div class="title">130个国家报告10秒生成</div>
+                        <div class="explain">全球130个国家，任意企业的报告生成仅需10秒。 平均报告获取时间比同行节省1-3天。</div>
+                    </div>
+                    <div class="advantage_item">
+                        <img src="/img/customers/icon_hw_07.png" alt="" class="item_icon">
+                        <div class="title">专业分析师，有效识别风险</div>
+                        <div class="explain">Gogo拥有10年以上行业经验的专业信用分析师团队，对企业状况进行详细分析、全面核实。</div>
+                    </div>
+                    <div class="advantage_item">
+                        <img src="/img/customers/icon_hw_08.png" alt="" class="item_icon">
+                        <div class="title">把握商机，迅速决策</div>
+                        <div class="explain">短至1天的信用报告生成速度，及时提供准确的企业信息情报，助您把握商机，迅速决策。</div>
+                    </div>
+                    <div class="advantage_item">
+                        <img src="/img/customers/icon_hw_09.png" alt="" class="item_icon">
+                        <div class="title">超乎想象的性价比</div>
+                        <div class="explain">海外信用报告比同行业价格低40%-50%，内容丰富、时效性强，低价高品质。</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="country_tips_box hide">
+            <div class="country_tips_content">
+                <div class="dialog_title">
+                    <div class="title_label">由于时差及服务时段限制，当前无法查询KYB报告</div>
+                    <div class="dialog_close"></div>
+                </div>
+                <div class="dialog_content">
+                    <div class="dialog_content_title">您可以在开放时间内购买KYB报告，或
+                        <a href="/overseasreport/abroadReportOffline?countryCode=IT" target="_blank">直接购买BCR报告</a>
+                    </div>
+                    <div class="kfsj">
+                        <p>开放时间：</p>
+                        <p>每天15:00-3:00，每月最后一个工作日15:00-2:00（北京时间）</p>
+                        <p>*意大利法定假日不开放</p>
+                    </div>
+                    <div class="holiday_box">
+                        <div class="holiday_title">意大利法定假日：</div>
+                        <div class="holiday_list">
+                            <div class="holiday_item">January, 1</div>
+                            <div class="holiday_item">May, 1</div>
+                            <div class="holiday_item">December, 8</div>
+                            <div class="holiday_item">January, 6</div>
+                            <div class="holiday_item">June, 2</div>
+                            <div class="holiday_item">December, 25</div>
+                            <div class="holiday_item">复活节</div>
+                            <div class="holiday_item">August, 15</div>
+                            <div class="holiday_item">December, 26</div>
+                            <div class="holiday_item">April, 25</div>
+                            <div class="holiday_item">November, 1</div>
+                        </div>
+                    </div>
+                    <div class="buy_button">购买BCR报告</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{include file="common/footer"}
+<script type="text/javascript">
+    layui.use(['layer','form','laydate','upload'],function() {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , laydate = layui.laydate
+            , upload = layui.upload;
+
+        $('#getReport').click(function(){
+            $.ajax({
+                url:"/?s=index/background_overseasreport",
+                method:'post',
+                data:{},
+                dataType:'JSON',
+                success:function(res){
+                    if(res.code == 0)
+                    {
+                        if(res.jump_gld==0) {
+                            layer.confirm('是否同意授权跳转到第三方网站[格兰德]？', {
+                                btn: ['同意', '拒绝']
+                            }, function () {
+                                $.ajax({
+                                    url: "/?s=index/goto_gld",
+                                    method: 'post',
+                                    data: {'is_jump': 1, 'firsttimes': 1, 'type': 11},
+                                    dataType: 'JSON',
+                                    success: function (res) {
+                                        if (res.code == 0) {
+                                            window.location.href = res.url;
+                                        }
+                                    }
+                                });
+                            }, function () {
+
+                            });
+                        }else{
+                        $.ajax({
+                            url: "/?s=index/goto_gld",
+                            method: 'post',
+                            data: {'is_jump': 1,'firsttimes':0,'type':11},
+                            dataType: 'JSON',
+                            success: function (res) {
+                                if(res.code==0){
+                                    window.location.href=res.url;
+                                }
+                            }
+                        });
+                        }
+                    }else if(res.code == -1){
+                        layer.msg(res.msg,{time:2000}, function () {
+                            layer.open({
+                                type: 2,
+                                title: '请先登录',
+                                shadeClose: true,
+                                shade: 0.3,
+                                area: ['100%', '100%'],
+                                content: "/?s=index/customer_login&open=3",
+                            });
+                        });
+                    }else if(res.code==-2){
+
+                    }
+
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+        });
+    });
+</script>

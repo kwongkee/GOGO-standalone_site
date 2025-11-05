@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>独立站平台 - website.gogo198.net</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="layui/css/layui.css">
+
+    <style>
+        html{height:100%;}
+        :root {--primary: #8a2be2;--primary-dark: #6a1cb9;--primary-light: #9b4de3;--secondary: #bb86fc;--accent: #e6d7f5;--text: #333333;--text-light: #f8f8f8;--background: #f9f5fd;--card-bg: #ffffff;--gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));--gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary));--shadow: 0 10px 30px rgba(138, 43, 226, 0.15);--shadow-hover: 0 15px 35px rgba(138, 43, 226, 0.25);}
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        body {color: var(--text);line-height: 1.6;overflow-x: hidden;}
+        h1, h2, h3, h4, h5, h6 {font-family: 'Montserrat', sans-serif;font-weight: 700;}
+
+        /* 导航栏样式 */
+        header {background: rgba(255, 255, 255, 0.95);color: var(--text);padding: 15px 0;box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);position: sticky;top: 0;z-index: 1000;backdrop-filter: blur(10px);}
+        nav {display: flex;justify-content: space-between;align-items: center;position: relative;}
+        .logo {font-size: 1.8rem;font-weight: 700;display: flex;align-items: center;background: var(--gradient);-webkit-background-clip: text;background-clip: text;color: transparent;z-index: 1001;}
+        .logo i {margin-right: 10px;color: var(--primary);}
+        .nav-links {display: flex;list-style: none;}
+        .nav-links li {margin-left: 25px;position: relative;}
+        .nav-links a {color: var(--text);text-decoration: none;font-weight: 500;transition: all 0.3s ease;padding: 8px 12px;border-radius: 4px;position: relative;display: flex;align-items: center;}
+        .nav-links a::after {content: '';position: absolute;bottom: 0;left: 50%;width: 0;height: 2px;background: var(--gradient);transition: all 0.3s ease;transform: translateX(-50%);}
+        .nav-links a:hover {color: var(--primary);}
+        .nav-links a:hover::after {width: 80%;}
+        .auth-buttons {display: flex;align-items: center;}
+        .btn {padding: 0px 5px;border-radius: 50px;text-decoration: none;font-weight: 600;transition: all 0.3s ease;cursor: pointer;display: inline-block;text-align: center;border: none;font-family: 'Montserrat', sans-serif;}
+        .btn-outline {border: 2px solid var(--primary);color: var(--primary);background: transparent;margin-right: 15px;}
+        .btn-outline:hover {background: var(--primary);color: white;transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-primary {background: var(--gradient);color: white;border: 2px solid transparent;}
+        .btn-primary:hover {background: transparent;border-color: var(--primary);color: var(--primary);transform: translateY(-3px);box-shadow: var(--shadow);}
+
+        /* 模态框样式 */
+        .modal {display: none;position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.5);backdrop-filter: blur(5px);z-index: 2000;align-items: center;justify-content: center;}
+        .modal-content {background: white;border-radius: 20px;padding: 30px;width: 90%;max-width: 90%;box-shadow: var(--shadow-hover);position: relative;}
+        .close-modal {position: absolute;top: 20px;right: 20px;font-size: 1.5rem;color: #999;cursor: pointer;transition: color 0.3s ease;}
+        .close-modal:hover {color: var(--primary);}
+        .modal-title {font-size: 1.5rem;margin-bottom: 20px;color: var(--primary);}
+
+        /* 表单样式 */
+        .form-section {margin-bottom: 30px;}
+        .form-title {font-size: 1.3rem;margin-bottom: 20px;color: var(--primary-dark);display: flex;align-items: center}
+        .form-title i {margin-right: 10px;}
+        .form-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));gap: 20px;}
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select,
+        .form-group textarea {width: 100%;padding: 2px 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;}
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {border-color: var(--primary);outline: none;}
+        .form-group textarea {min-height: 120px;resize: vertical;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
+
+
+        /*.form-group {margin-bottom: 20px;}*/
+        /*.form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}*/
+        /*.form-group input,*/
+        /*.form-group select {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}*/
+        /*.form-group input:focus,*/
+        /*.form-group select:focus {border-color: var(--primary);outline: none;}*/
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
+
+        .disf{display: flex;align-items: center;}
+        .btn{background:var(--primary-light);color: white;border: none;}
+        .btn-edit {background: var(--primary-light);color: white;border: none;}
+        .btn-edit:hover {background: var(--primary);}
+        .btn-waring {background: #f8ac59;color: white;border: none;}
+        .btn-delete {background: transparent;color: #ff4757;border: 2px solid #ff4757;}
+        .btn-delete:hover {background: #ff4757;color: white;}
+        /*.layui-btn-xs{line-height:21px;}*/
+        .layui-table th{background: var(--accent);color: var(--primary-dark);font-weight: 600;}
+
+        .process_div{width:100%;overflow-x:auto;padding-bottom:10px;border-bottom:1px solid #e6e6e6;cursor:pointer;}
+        .process_child{margin-left:5px;width:60px;text-align: center;margin-right:35px;padding:5px 10px;background:var(--primary);opacity:0.5;border-radius:5px;}
+        .process_active{color:#fff;border-radius: 5px;background:var(--primary);opacity:1;}
+        .no_active{background: #a0a0a0;opacity:1;}
+
+        .process_child .process_img{width:100%;}
+        .process_child:last-child .process_arrow_box{display:none;}
+        /*.process_child:first-child{margin-left:10px;}*/
+        .process_child .process_text{color:#fff;line-height:18px;}
+        .process_child .process_arrow{width:18px;height:18px;border-top:2px solid var(--primary);border-right:2px solid var(--primary);transform: rotate(45deg);}
+
+        /* 动画 */
+        @keyframes fadeIn {
+            from {opacity: 0;transform: translateY(10px);}
+            to {opacity: 1;transform: translateY(0);}
+        }
+
+        @media (max-width: 576px) {
+            .btn {padding: 10px 20px;font-size: 0.9rem;}
+            /*.form-actions {flex-direction: column;}*/
+        }
+    </style>
+
+</head>
+<body>
+<div class="form-group" style="padding:20px;">
+    <div class="disf process_div">
+        {volist name="process" key="key" id="vo"}
+            <div {if($vo['id']!=16)}onclick="show_process(this,{$vo['id']},'{$vo['link']}','{$vo['id']}',1)"{/if}
+            class="f18 process_child {if($process_ids['process1']==$vo['id'])}process_active{/if} {if($vo['id']==16)}no_active{/if}" style="position: relative;">
+            <div class="f13 process_text">{$vo['step']}</div>
+            <div class="f13 process_text">{$vo['content']}</div>
+            <div class="process_arrow_box" style="position: absolute;top: 14px;right: -25px;">
+                <div class="process_arrow"></div>
+            </div>
+        </div>
+        {/volist}
+    </div>
+    <div class="main-table-reload-btn" style="margin: 10px 0 8px;float: right;">
+        搜索包裹编号：
+        <div class="layui-inline">
+            <input class="layui-input" placeholder="要搜索的包裹编号"  id="keywords" autocomplete="off">
+        </div>
+        <button class="layui-btn layui-btn-normal" data-type="reload">搜索</button>
+    </div>
+    <div style="padding-top:0px;">
+        <table id="table" class="layui-table" lay-filter="table"></table>
+    </div>
+</div>
+
+<!-- 添加轮播图·模态框 -->
+<div class="modal" id="saveMenuModal">
+    <div class="modal-content" style="/**min-height:600px;max-height:600px;**/overflow-y:auto;">
+        <span class="close-modal close-modal-menu">&times;</span>
+        <h2 class="modal-title">查看包裹</h2>
+        <iframe src="" class="menu_iframe" frameborder="0" style="width: 100%;height:600px;"></iframe>
+    </div>
+</div>
+</body>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    function IsPhone() {
+        var info = navigator.userAgent;
+        var isPhone = /mobile/i.test(info);
+        return isPhone;
+    }
+
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+        treetable: 'treetable-lay/treetable'
+    }).use(['index', 'form','upload', 'colorpicker','treetable'], function() {
+        var laydate = layui.laydate
+            ,layer = layui.layer
+            ,form = layui.form
+            ,$ = layui.jquery
+            ,upload = layui.upload
+            ,colorpicker = layui.colorpicker
+            ,table = layui.table
+            ,treetable = layui.treetable;
+
+        //菜单弹窗关闭事件===start
+        const menu_modal = document.getElementById('saveMenuModal');
+        const menu_closeBtn = document.querySelector('.close-modal-menu');
+
+        // 关闭模态框
+        function closeModalMenu() {
+            menu_modal.style.display = 'none';
+        }
+        menu_closeBtn.addEventListener('click', closeModalMenu);
+        // 点击模态框外部关闭
+        window.addEventListener('click', function(event) {
+            if (event.target === menu_modal) {
+                closeModalMenu();
+            }
+        });
+        //菜单弹窗关闭事件===end
+
+        {volist name="process" key="key" id="vo"}
+            if(IsPhone() && ({$process_ids['process1']}=={$vo['id']})){
+                {if($key==2)}
+                    $('.process_div').animate({ scrollLeft: '120px' }, 500);
+                {elseif($key==3)}
+                    $('.process_div').animate({ scrollLeft: '180px' }, 500);
+                {elseif($key==4)}
+                    $('.process_div').animate({ scrollLeft: '250px' }, 500);
+                {/if}
+            }
+        {/volist}
+
+    // 渲染表格
+    layer.load(2);
+    var treetable_width = 200;
+    var treetable_width2 = '60%';
+    if(IsPhone()){
+        treetable_width = 145;
+        treetable_width2 = 130;
+    }
+    treetable.render({
+        treeColIndex: 2,
+        treeSpid: 0,
+        treeIdName: 'id',
+        treePidName: 'orderid',
+        elem: '#table',
+        url: "/?s=index/consolidation_manage&process1={$process_ids['process1']}&pa=1&company_id={$company_id}&company_type={$company_type}&uid={$uid}",
+        page: true,
+        treeDefaultClose:true,
+        cols: [[
+            {type: 'numbers'},
+            {field: 'process_name', align: 'left', width:treetable_width, title: '业务名称'},
+            {field: 'ordersn', align: 'left', width:treetable_width, title: '编号'},
+            {field: 'createtime', align: 'left', width:treetable_width, title: '创建日期'},
+            {align: 'center', title: '业务操作',width:treetable_width2, templet:function (d) {
+                    if(d.oid==0){
+                        return '';
+                    }else{
+                        return '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="del" onclick="save(1,\'/?s=index/waybill_info&company_id={$company_id}&company_type={$company_type}&id='+d.oid+'\',3,{$process_ids['process1']},{$process_ids['process1']},{$process_ids['process1']})">查看包裹</a>'
+                    }
+                }}
+        ]],
+        done: function (data) {
+            {if($process_ids['process1']!=16)}
+            for (let i = 0; i < data.data.length; i++) {
+                if (data.data[i].orderid == 0) {
+                    $('.layui-table').find('tr').eq(i + 1).find('td').eq(4).find('div a').hide();
+                }else{
+                    $('.layui-table').find('tr').eq(i + 1).find('td').eq(2).find('span').on('click',function(){
+                        window.location.href="/?s=index/waybill_info&id="+data.data[i].oid+"&company_id={$company_id}&company_type={$company_type}&process1={$process_ids['process1']}&process2={$process_ids['process1']}&process3={$process_ids['process1']}";
+                    });
+                }
+            }
+            {elseif($process_ids['process1']==16)}
+            <!--仓库预订-->
+            for (let i = 0; i < data.data.length; i++) {
+                if (data.data[i].sure_prediction == 1) {
+                    $('.layui-table').find('tr').eq(i + 1).find('td').eq(4).find('div a').eq(0).hide();
+                    $('.layui-table').find('tr').eq(i + 1).find('td').eq(4).find('div a').eq(1).css('margin', 0);
+                    $('.layui-table').find('tr').eq(i + 1).find('td').eq(4).find('div a').eq(2).hide();
+                }
+            }
+            {/if}
+                $('.treeTable .layui-icon-layer').css('display', 'none');
+                $('.treeTable .layui-icon-file').css('display', 'none');
+                layer.closeAll('loading');
+            }
+        });
+
+        var $ = layui.$, active = {
+            reload: function(){
+                //执行重载
+                treetable.render({
+                    treeColIndex: 2,
+                    treeSpid: 0,
+                    treeIdName: 'id',
+                    treePidName: 'orderid',
+                    elem: '#table',
+                    url: "/?s=index/consolidation_manage&company_id={$company_id}&company_type={$company_type}&process1={$process_ids['process1']}&pa=1&keywords="+$("#keywords").val(),
+                    page: true,
+                    treeDefaultClose:true,
+                    cols: [[
+                        {type: 'numbers'},
+                        {field: 'process_name', align: 'left', width:treetable_width, title: '业务名称'},
+                        {field: 'ordersn', align: 'left', width:treetable_width, title: '编号'},
+                        {field: 'createtime', align: 'left', width:treetable_width, title: '创建日期'},
+                        {align: 'center', title: '业务操作',width:treetable_width2, templet:function (d) {
+                                if(d.oid==0){
+                                    return '';
+                                }else{
+                                    return '<a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="del" onclick="save(1,\'/?s=index/waybill_info&company_id={$company_id}&company_type={$company_type}&id='+d.oid+'\',3,{$process_ids['process1']},{$process_ids['process1']},{$process_ids['process1']})">查看包裹</a>'
+                                }
+                            }}
+                    ]],
+                    done: function (data) {
+                        {if($process_ids['process1']!=16)}
+                        for (let i = 0; i < data.data.length; i++) {
+                            if (data.data[i].orderid == 0) {
+                                $('.layui-table').find('tr').eq(i + 1).find('td').eq(4).find('div a').hide();
+                            }else{
+                                $('.layui-table').find('tr').eq(i + 1).find('td').eq(2).find('span').on('click',function(){
+                                    window.location.href="/?s=index/waybill_info&id="+data.data[i].oid+"&company_id={$company_id}&company_type={$company_type}&process1={$process_ids['process1']}&process2={$process_ids['process1']}&process3={$process_ids['process1']}";
+                                });
+                            }
+                        }
+                        {elseif($process_ids['process1']==16)}
+                        <!--仓库预订-->
+                        for (let i = 0; i < data.data.length; i++) {
+                            if (data.data[i].sure_prediction == 1) {
+                                $('.layui-table').find('tr').eq(i + 1).find('td').eq(4).find('div a').eq(0).hide();
+                                $('.layui-table').find('tr').eq(i + 1).find('td').eq(4).find('div a').eq(1).css('margin', 0);
+                                $('.layui-table').find('tr').eq(i + 1).find('td').eq(4).find('div a').eq(2).hide();
+                            }
+                        }
+                        {/if}
+                            $('.treeTable .layui-icon-layer').css('display', 'none');
+                            $('.treeTable .layui-icon-file').css('display', 'none');
+                            layer.closeAll('loading');
+                        }
+                    });
+            }
+        };
+
+        $('.main-table-reload-btn .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+
+    function show_process(t,id,link,id1,level) {
+        var $ = layui.$
+            , layer = layui.layer;
+        window.location.href='/?s=index/consolidation_manage&company_id={$company_id}&company_type={$company_type}&process1='+id1+'&process2='+id;
+    }
+
+    function save(type,url) {
+        if(type==1){
+            //轮播图
+            var modal = document.getElementById('saveMenuModal');
+            modal.style.display = 'flex';
+
+            $('#saveMenuModal .menu_iframe').attr('src',url);
+        }
+    }
+</script>
+</html>

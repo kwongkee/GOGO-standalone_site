@@ -1,0 +1,90 @@
+<style>
+    .footer {color: rgba(255, 255, 255, 0.63);background-color: #0e2e68;}
+    .footer .footer-top {width: 80%;max-width: 1200px;padding: 40px 0;margin: 0 auto;}
+    .footer .footer-top .footer-nav {display: grid;grid-template-columns: 1fr 1fr 1fr 1fr 2fr 1fr 1fr;}
+    li, ul {padding: 0;margin: 0;list-style: none;}
+    .footer .footer-top li {font-size: 14px;line-height: 30px;}
+    .footer .footer-top .footer-contact {color: #aaa;}
+    .footer .footer-top .footer-nav .wei-xin, .footer .footer-top .footer-nav .xiao-cheng-xu {text-align: center;}
+    .footer .footer-top .footer-nav .wei-xin img, .footer .footer-top .footer-nav .xiao-cheng-xu img {width: 110px;}
+    .footer .footer_head{color:#f1be83;}
+    .footer .footer-bottom {padding: 20px 0;background-color: #0e2e68;}
+    .footer .footer-bottom .footer-content {color: #a5a5a5;font-size: 12px;line-height: 30px;text-align: center;}
+    a {text-decoration: none;color: inherit;font: inherit;background-color: transparent;}
+    @media (max-width: 768px) {
+        .footer .footer-top {
+            grid-template-columns:1fr
+        }
+
+        .footer .footer-top .footer-nav {
+            grid-template-columns: repeat(2,1fr);
+            border-right: none;
+            gap: 20px;
+            text-align: center
+        }
+    }
+</style>
+<div class="footer" id="footer">
+    <div class="footer">
+        <div class="footer-top">
+            <div class="footer-nav">
+                <ul>
+                    <li class="footer_head">国际集运</li>
+                    <li><a href="/?s=gather/freight_estimation"> 运费估算</a></li>
+                    <li><a href="/?s=gather/package_forecast"> 我要集运</a></li>
+                </ul>
+                <ul>
+                    <li class="footer_head">国际集运</li>
+                    <li><a href="/?s=gather/service_center"> 服务中心</a></li>
+                </ul>
+                <ul>
+                    <li class="footer_head">国际集运</li>
+                    <li><a href="/?s=gather/article"> 服务介绍</a></li>
+                </ul>
+                <ul>
+                    <li>&nbsp;</li>
+<!--                    <li><a href="/?s=gather/appraise">用户评价</a></li>-->
+<!--                    <li><a href="/?s=gather/suggest">投诉建议</a></li>-->
+                </ul>
+                <div class="footer-contact">
+                    <ul>
+                        <li style="color: rgb(221, 221, 221);">联络我们</li>
+                        <li class="contact"><span>联系电话：</span><span class="number">+86 757-86329911</span></li>
+                        <li class="contact"><span>工作时间：</span><span class="work-time">09：30—18：00 </span></li>
+                        <li class="contact"><span>电子邮箱：</span><a href="mailto:198@gogo198.net" class="email">198@gogo198.net</a></li>
+                        <li style="display: none;">1.0.0</li></ul></div> <ul class="xiao-cheng-xu"><li></li>
+<!--                        <li>小程序下单</li>-->
+<!--                        <li><img src="https://api-jiyun.beegoplus.com/storage/admin/20210820-eSlxnQF8jG5FGMy1.jpg" alt=""></li>-->
+                        <li>关注公众号</li>
+                        <li><img src="/img/qrcode_for_gogo.jpg" alt=""></li>
+                    </ul>
+<!--                    <ul class="wei-xin">-->
+<!--                        <li>关注公众号</li>-->
+<!--                        <li><img src="/img/qrcode_for_gogo.jpg" alt=""></li>-->
+<!--                    </ul>-->
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-content">
+                <div>
+                    <div>Copyright © 2003 - 2023  購購網 版权所有&nbsp; |&nbsp;&nbsp;<a href="" target="_blank">营业执照</a>&nbsp; |&nbsp; &nbsp;版权所有 <a href="https://beian.miit.gov.cn/" target="_blank">粤ICP备09003656号-35</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!--<script src="js/jquery.js"></script>-->
+<script src="js/jquery_3.3.1_jquery.min.js"></script>
+<script>
+    $(function(){
+       $('.menu').click(function(){
+           $('#aside').show();
+       });
+       $('.el-icon-close').click(function(){
+           $('#aside').hide();
+       });
+    });
+</script>
+</html>

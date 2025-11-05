@@ -1,0 +1,302 @@
+<!-- 菜单栏开始 -->
+<style>
+    header{background:{$data['websites']['info']['color']};border:1px solid {$data['websites']['info']['color']};}
+    header .navbar-default {width: 100%;box-shadow: 1px 1px 1px rgba(156, 156, 156, 0.36);background:unset;}
+    header .navbar {min-height: 82px;background:unset;}
+    header .container {width: 1210px;margin-right: auto;margin-left: auto;padding-left: 15px;padding-right: 15px;}
+    header .navbar-header {float: left;margin-right: 0;margin-left: 0;}
+    header .navbar>.container .navbar-brand,header .navbar>.container-fluid .navbar-brand {margin-left: -15px;}
+    header .navbar-brand img {width: 150px;height:66px;}
+    header .navbar-toggle {display: none;}
+    header .container>.navbar-collapse{margin-right: 0;margin-left: 0;}
+    header .navbar-collapse.pc_navbar {display: block !important;height: auto !important;padding-bottom: 0;overflow: visible !important;}
+    header .mobile_hr {display: none;}
+    header .navbar .hkex_lang {display: none;}
+    header .navbar-collapse ul.navbar-nav {margin-top: 10px;float: right;margin-right: 0;}
+    header ul.nav li {border: none;margin: 0;padding: 0 !important;}
+    header .navbar-nav>li {float: left;}
+    header .nav>li {position: relative;display: block;}
+    header .navbar-default .navbar-nav>.active>a{color: {$data['websites']['info']['color_word']};}
+    header ul.nav li {border: none;margin: 0;}
+    header .navbar-default .navbar-nav>li>a{color: {$data['websites']['info']['color_word']};}
+    header .nav li a:hover,header .nav li a:focus{color:{$data['websites']['info']['color_word']} !important;background:{$data['websites']['info']['color']} !important;}
+    header .navbar-default .navbar-nav > .open > a,header .navbar-default .navbar-nav > .open > a:hover,header .navbar-default .navbar-nav > .open > a:focus{background:{$data['websites']['info']['color']} !important;color:{$data['websites']['info']['color_word']} !important;}
+    header .open2>.dropdown-menu{display:block !important;}
+    header ul.nav li.dropdown a {z-index: 1000;display: block;color: {$data['websites']['info']['color_word']};}
+    header .nav .caret {border-bottom-color: {$data['websites']['info']['color_word']};border-top-color: {$data['websites']['info']['color_word']};}
+    header .caret {display: inline-block;width: 0;height: 0;margin-left: 2px;vertical-align: middle;border-top: 4px solid;border-right: 4px solid transparent;border-left: 4px solid transparent;}
+    header .navbar .nav li .dropdown-menu {z-index: 2000;}
+    header .nav li .dropdown-menu {padding: 0;}
+    header .navbar-nav>li>.dropdown-menu {margin-top: 0;border-top-right-radius: 0;border-top-left-radius: 0;}
+    header ul.nav li {border: none;margin: 0;}
+    header .nav li .dropdown-menu li a {line-height: 28px;padding: 3px 12px;}
+    header .nav li .dropdown-menu li a:hover{background:{$data['websites']['info']['color']};}
+    header .dropdown-menu>li>a {color: #000000;}
+
+    .mobile_navbar{display:none;}
+    @media (max-width: 992px){
+        header{position:relative;top: unset;left: 0;width: 100%;z-index: 9;}
+        header .navbar-header{width: 100%;}
+        /*#banner{margin-top:85px;}*/
+        .dropdown-menu{top:40px;left:20px;}
+        .navbar-collapse{margin-bottom: 20px;}
+        section.section-padding.gray-bg{padding:30px;}
+        .cross-border .row .cross-content{margin-top:24px;}
+        .foot-menu .col-md-4{padding-left:0;}
+        .cross-border .section-title p{margin-bottom:0 !important;}
+        .cross-gather .section-title p{margin-bottom:24px !important;}
+        /*手机版三扛start*/
+        .navbar-default .navbar-toggle{margin-top:30px;display:block;margin-right: -15px;}
+        .navbar-toggle{padding:5px;}
+        .navbar-toggle .icon-bar{width:20px;}
+        /*手机版三扛end*/
+
+        /**头部样式**/
+        .home-page header .navbar-default{background:{$data['websites']['info']['color']} !important;border-bottom:1px solid #fff;}
+    .navbar-default .navbar-toggle{border-color: {$data['websites']['info']['color_word']};}
+    .navbar-default .navbar-toggle .icon-bar{background-color:{$data['websites']['info']['color_word']};}
+    .navbar-default .navbar-collapse2{background:{$data['websites']['info']['color']};margin-top:20px;border-color:{$data['websites']['info']['color_word']};box-shadow: 0px 0px 10px 1px #000;}
+    .navbar-static-top .container{width:100%;}
+    header .nav .caret{border-bottom-color: {$data['websites']['info']['color_word']};border-top-color: {$data['websites']['info']['color_word']};}
+    .navbar-default .navbar-nav .open .dropdown-menu>li>a{color:{$data['websites']['info']['color_word']};}
+    .appsDiv{left:15px;}
+    header .container .containerDiv{width: 100%;}
+    header .container .containerDiv .navbar-header{width: 100%;}
+
+
+    /*手机版菜单*/
+    header .navbar-collapse.pc_navbar {display: none !important;}
+    .pc_menu,.pc_navbar{display:none;}
+    .navbar-collapse2{width: 100%;position: absolute;top: 77%;padding: 20px;left:0;}
+    .navbar-collapse2 .searchBox{width: 100%;margin:15px 0;}
+    header ul.nav li{border-bottom:1px solid #dbdada;}
+    header .navbar-nav>li{float:unset;}
+    .navbar-default .navbar-nav .open .dropdown-menu>li>a{padding:10px 15px 10px 25px;}
+    .navbar-collapse{max-height: 600px;}
+    }
+</style>
+<header style="z-index:999;">
+    <div class="navbar navbar-default navbar-static-top">
+        <div class="container" style="font-size:16px;">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse2">
+                    <div class="open">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </div>
+                    <div class="close" style="display:none;">
+                        ×
+                    </div>
+                </button>
+                <a class="navbar-brand" href="javascript:void(0);"><img src="{$data['source_link']}{$data['websites']['info']['logo']}" alt="logo"/></a>
+            </div>
+
+            <!--PC版：-->
+            <div class="navbar-collapse collapse pc_navbar">
+                <ul class="nav navbar-nav">
+                    {if !empty($data['websites']['menu'])}
+                    {volist name="data['websites']['menu']" key="k" id="v"}
+                    {if !empty($v['children'])}
+                    <li class="dropdown dd_parent" onclick="javascript:removeclass(this);">
+                        <a href="#" data-toggle="dropdown" class="dropdown-toggle f20">{$v['name']} <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            {volist name="v['children']" id="v2"}
+                            {if !empty($v2['children'])}
+                            <li class="dropdown">
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle haschild f18 common_inner_background" style="padding-left:22px;">{$v2['name']} <b class="caret"></b></a>
+                                <ul class="dropdown-menu" style="background:#eee;">
+                                    {volist name="v2['children']" id="v3"}
+                                    {if $v3['type']==0}
+                                    <!--下级卡片-->
+                                    <li><a href="javascript:void(0);" class="f18 common_inner_background">&nbsp;&nbsp;{$v3['name']}</a></li>
+                                    {elseif($v3['type']==1)}
+                                    <!--详情内容-->
+                                    <li><a href="/?s=index/detail&id={$v3['id']}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v3['name']}</a></li>
+                                    {elseif($v3['type']==2)}
+                                    <!--跳转其它-->
+                                    {if $v3['go_other']==0}
+                                    <!--不选择跳转-->
+                                    <li><a href="javascript:void(0);" class="f18 common_inner_background">&nbsp;&nbsp;{$v3['name']}</a></li>
+                                    {elseif($v3['go_other']==1)}
+                                    <!--跳转第三方-->
+                                    <li><a href="{$v3['other_link']}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v3['name']}</a></li>
+                                    {elseif($v3['go_other']==2)}
+                                    <!--跳转其它菜单-->
+                                    <li><a href="/?s=index/detail&id={$v3['other_navbar']}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v3['name']}</a></li>
+                                    {/if}
+                                    {/if}
+                                    {/volist}
+                                </ul>
+                            </li>
+                            {else}
+                            {if $v2['type']==0)}
+                            <!--下级卡片-->
+                            <li><a href="javascript:void(0);" class="f18 common_inner_background">&nbsp;&nbsp;{$v2['name']}</a></li>
+                            {elseif($v2['type']==1)}
+                            <!--详情内容-->
+                            <li><a href="/?s=index/detail&id={$v2['id']}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v2['name']}</a></li>
+                            {elseif($v2['type']==2)}
+                            <!--跳转其它-->
+                            {if $v2['go_other']==0)}
+                            <!--不选择跳转-->
+                            <li><a href="javascript:void(0);" class="f18 common_inner_background">&nbsp;&nbsp;{$v2['name']}</a></li>
+                            {elseif($v2['go_other']==1)}
+                            <!--跳转第三方-->
+                            <li><a href="{$v2['other_link']}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v2['name']}</a></li>
+                            {elseif($v2['go_other']==2)}
+                            <!--跳转其它菜单-->
+                            <li><a href="/?s=index/detail&id={$v2['other_navbar']}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v2['name']}</a></li>
+                            {/if}
+                            {/if}
+                            {/if}
+                            {/volist}
+                        </ul>
+                    </li>
+                    {else}
+                    {if $v['type']==0)
+                    <!--下级卡片-->
+                    <li><a href="javascript:void(0);" class="f20 common_inner_background">&nbsp;&nbsp;{$v['name']}</a></li>
+                    {elseif($v['type']==1)}
+                    <!--详情内容-->
+                    <li><a href="/?s=index/detail&id={$v['id']}" class="f20 common_inner_background" target="_blank">&nbsp;&nbsp;{$v['name']}</a></li>
+                    {elseif($v['type']==2)}
+                    <!--跳转其它-->
+                    {if $v['go_other']==0)}
+                    <!--不选择跳转-->
+                    <li><a href="javascript:void(0);" class="f20 common_inner_background">&nbsp;&nbsp;{$v['name']}</a></li>
+                    {elseif($v['go_other']==1)}
+                    <!--跳转第三方-->
+                    <li><a href="{$v['other_link']}" class="f20 common_inner_background" target="_blank">&nbsp;&nbsp;{$v['name']}</a></li>
+                    {elseif($v['go_other']==2)}
+                    <!--跳转其它菜单-->
+                    <li><a href="/?s=index/detail&id={$v['other_navbar']}" class="f20 common_inner_background" target="_blank">&nbsp;&nbsp;{$v['name']}</a></li>
+                    {/if}
+                    {/if}
+                    {/if}
+                    {/volist}
+                    {/if}
+                    {if !empty(session('user'))}
+                    <style>
+                        .haccount_info{padding: 3px 12px;border-bottom: 1px solid #000;}
+                        .haccount_info p{font-size:15px;margin-bottom:5px;}
+                    </style>
+                    <li class="dropdown dd_parent" onclick="javascript:removeclass(this);">
+                        <a href="#" data-toggle="dropdown" class="dropdown-toggle f20" style="text-transform:unset;">GoFriend <b class="caret"></b></a>
+                        <ul class="dropdown-menu" style="min-width: 200px;">
+                            <li><a href="//boss.gogo198.cn/?s=index/member_login&shop_uid=<?php echo base64_encode(session('account.id'));?>" class="f15 common_inner_background" target="_blank">&gt;个人中心</a></li>
+                            <li><a href="/?s=index/change_account" class="f15 common_inner_background">&gt;切换账号</a></li>
+                        </ul>
+                    </li>
+                    {else}
+                    <li><a href="/?s=index/customer_login&company_id={$company_id}&company_type={$company_type}" class="f20" style="font-weight:unset;">登录/注册</a></li>
+                    {/if}
+                </ul>
+            </div>
+
+            <!--Mob版：-->
+            <div class="navbar-collapses collapse navbar-collapse2 mobile_navbar">
+                <ul class="nav navbar-nav">
+                    {if !empty($data['websites']['menu'])}
+                    {volist name="data['websites']['menu']" key="k" id="v"}
+                    {if !empty($v['children'])}
+                    <li class="dropdown dd_parent" onclick="javascript:removeclass(this);">
+                        <a href="#" data-toggle="dropdown" class="dropdown-toggle f20">{$v['name']} <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            {volist name="v['children']" id="v2"}
+                            {if !empty($v2['children'])}
+                            <li class="dropdown">
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle haschild f18 common_inner_background" style="padding-left:22px;">{$v2['name']} <b class="caret"></b></a>
+                                <ul class="dropdown-menu" style="background:#eee;">
+                                    {volist name="v2['children']" id="v3"}
+                                    {if $v3['type']==0}
+                                    <!--下级卡片-->
+                                    <li><a href="javascript:void(0);" class="f18 common_inner_background">&nbsp;&nbsp;{$v3['name']}</a></li>
+                                    {elseif($v3['type']==1)}
+                                    <!--详情内容-->
+                                    <li><a href="/?s=index/detail&id={$v3['id']}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v3['name']}</a></li>
+                                    {elseif($v3['type']==2)}
+                                    <!--跳转其它-->
+                                    {if $v3['go_other']==0)}
+                                    <!--不选择跳转-->
+                                    <li><a href="javascript:void(0);" class="f18 common_inner_background">&nbsp;&nbsp;{$v3['name']}</a></li>
+                                    {elseif($v3['go_other']==1)}
+                                    <!--跳转第三方-->
+                                    <li><a href="{$v3['other_link']}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v3['name']}</a></li>
+                                    {elseif($v3['go_other']==2)}
+                                    <!--跳转其它菜单-->
+                                    <li><a href="/?s=index/detail&id={$v3['other_navbar']}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v3['name']}</a></li>
+                                    {/if}
+                                    {/if}
+                                    {/volist}
+                                </ul>
+                            </li>
+                            {else}
+                            {if $v2['type']==0}
+                            <!--下级卡片-->
+                            <li><a href="javascript:void(0);" class="f18 common_inner_background">&nbsp;&nbsp;{$v2['name']}</a></li>
+                            {elseif($v2['type']==1)}
+                            <!--详情内容-->
+                            <li><a href="/?s=index/detail&id={$v2['id']}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v2['name']}</a></li>
+                            {elseif($v2['type']==2)}
+                            <!--跳转其它-->
+                            {if $v2['go_other']==0}
+                            <!--不选择跳转-->
+                            <li><a href="javascript:void(0);" class="f18 common_inner_background">&nbsp;&nbsp;{$v2['name']}</a></li>
+                            {elseif($v2['go_other']==1)}
+                            <!--跳转第三方-->
+                            <li><a href="{$v2['other_link']}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v2['name']}</a></li>
+                            {elseif($v2['go_other']==2)}
+                            <!--跳转其它菜单-->
+                            <li><a href="/?s=index/detail&id={$v2['other_navbar']}" class="f18 common_inner_background" target="_blank">&nbsp;&nbsp;{$v2['name']}</a></li>
+                            {/if}
+                            {/if}
+                            {/if}
+                            {/volist}
+                        </ul>
+                    </li>
+                    {else}
+                    {if $v['type']==0}
+                    <!--下级卡片-->
+                    <li><a href="javascript:void(0);" class="f20 common_inner_background">&nbsp;&nbsp;{$v['name']}</a></li>
+                    {elseif($v['type']==1)}
+                    <!--详情内容-->
+                    <li><a href="/?s=index/detail&id={$v['id']}" class="f20 common_inner_background" target="_blank">&nbsp;&nbsp;{$v['name']}</a></li>
+                    {elseif($v['type']==2)}
+                    <!--跳转其它-->
+                    {if $v['go_other']==0}
+                    <!--不选择跳转-->
+                    <li><a href="javascript:void(0);" class="f20 common_inner_background">&nbsp;&nbsp;{$v['name']}</a></li>
+                    {elseif($v['go_other']==1)}
+                    <!--跳转第三方-->
+                    <li><a href="{$v['other_link']}" class="f20 common_inner_background" target="_blank">&nbsp;&nbsp;{$v['name']}</a></li>
+                    {elseif($v['go_other']==2)}
+                    <!--跳转其它菜单-->
+                    <li><a href="/?s=index/detail&id={$v['other_navbar']}" class="f20 common_inner_background" target="_blank">&nbsp;&nbsp;{$v['name']}</a></li>
+                    {/if}
+                    {/if}
+                    {/if}
+                    {/volist}
+                    {/if}
+
+                    {if !empty(session('account'))}
+                    <style>
+                        .haccount_info{padding: 3px 12px;border-bottom: 1px solid #000;}
+                        .haccount_info p{font-size:15px;margin-bottom:5px;}
+                    </style>
+                    <li class="dropdown dd_parent" onclick="javascript:removeclass(this);">
+                        <a href="#" data-toggle="dropdown" class="dropdown-toggle f20" style="text-transform:unset;">GoFriend <b class="caret"></b></a>
+                        <ul class="dropdown-menu" style="min-width: 200px;">
+                            <li><a href="//boss.gogo198.cn/?s=index/member_login&shop_uid=<?php echo base64_encode(session('account.id'));?>" class="f15 common_inner_background" target="_blank">&gt;个人中心</a></li>
+                            <li><a href="/?s=index/change_account" class="f15 common_inner_background">&gt;切换账号</a></li>
+                        </ul>
+                    </li>
+                    {else}
+                    <li><a href="/?s=index/customer_login&company_id={$company_id}&company_type={$company_type}" class="f20" style="font-weight:unset;">登录/注册</a></li>
+                    {/if}
+                </ul>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- 菜单栏结束 -->

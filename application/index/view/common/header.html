@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="https://shop.gogo198.cn/{$website['sico']}" type="image/x-icon" />
+<title>{$website['title']}</title>
+<meta name="facebook-domain-verification" content="g8f97gl1a53q5kfh649b8x1ro6w752" />
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
+<!--<meta name="viewport" content="width=device-width, initial-scale=1.0" />-->
+<meta name="description" content="{$website['description']}" />
+<meta name="keywords" content="{$website['keywords']}" />
+<!-- css -->
+<link href="css/bootstrap.min.css" rel="stylesheet" />
+<link href="css/fancybox/jquery.fancybox.css" rel="stylesheet">
+<link href="css/flexslider.css" rel="stylesheet" />
+<link href="css/style.css?v=333" rel="stylesheet" />
+<link href="css/swiper.min.css" rel="stylesheet">
+<script src="js/swiper.min.js"></script>
+<style type="text/css" media="all">
+    div,p,span,a,li{font-family:"Microsoft JhengHei", 微軟正黑體, "Arial", sans-serif !important;}
+    a{color:#fff;text-decoration:unset;}
+    a:hover{color:#fff;text-decoration:unset;}
+    .about-logo{color:#fff;}
+    .navbar-brand img{width:150px;}
+    header{width:100%;position:fixed;top:0;}
+    header .navbar{min-height:82px;}
+    .home-page header .navbar-default{background:{$website['color_head']};}
+    header .navbar-collapse ul.navbar-nav{margin-top:10px;}
+    .navbar-default .navbar-toggle{margin-top:24px;}
+    .open2>.dropdown-menu{display:block !important;}
+    .disf{display:flex;align-items:center;}
+    /**头部和头部字体start**/
+    .topbar{background:{$website['color']};}
+    .navbar .nav > li > a{color:#000000;}
+    .navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:hover, .navbar-default .navbar-nav>.active>a:focus{color:#000000;}
+    .dropdown-menu li a:hover{background:#000000 !important;}
+    .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus{color:#d17107;}
+    .dropdown-menu>li>a{color:#000000;}
+    /***头部和头部字体end*/
+    #content{background:unset;}
+    /*.pull-left{list-style:none;margin-bottom:0;padding-left:0;}*/
+    /*.pull-left li{display:inline-block;margin: 0 5px;border: 1px solid #FFEB3B;padding: 3px 0 0;width: 28px;text-align: center;height: 28px;vertical-align: baseline;}*/
+    /*.pull-right{height:28px;line-height:28px;}*/
+    /*header ul.nav li a{font-size:18px;}*/
+    /*header ul.nav li ul li a{font-size:18px;}*/
+    /**多语言字体**/
+    .hkex_lang {padding: 0px 10px;}
+    .navbar .hkex_lang{display:none;}
+    .hkex_lang a {border-right: 1px solid #fff;padding-right: 15px;display: inline-block;padding-left: 15px;color: inherit;text-decoration: none;}
+    .hkex_lang a:last-child{border-right:0;}
+    .hkex_lang span{color:#fff;}
+    .mobile_hr{display:none;}
+    .lang_active{font-weight:unset;}
+    h2, .h2{font-size:26px;}
+    footer ul.link-list li a{font-size:18px;}
+    footer a {font-size: 18px;}
+    .copyright2{margin-top:20px;}
+    @media (max-width: 992px) {
+        header{position:fixed;top: 0;left: 0;width: 100%;z-index: 9;}
+        #banner{margin-top:83px;}
+        .dropdown-menu{top:40px;left:20px;}
+        .navbar-collapse{margin-bottom: 20px;}
+        section.section-padding.gray-bg{padding:30px;}
+        .cross-border .row .cross-content{margin-top:12%;}
+        .foot-menu .col-md-4{padding-left:0;}
+        .cross-border .section-title p{margin-bottom:0 !important;}
+        .cross-gather .section-title p{margin-bottom:24px !important;}
+        /**多语言字体**/
+        .hkex_lang{text-align:right;padding-top:15px;}
+        .hkex_lang span{color:#000000;}
+        .hkex_lang a {border-right: 1px solid #000000;padding-right: 15px;}
+        .mobile_hr{display:block;}
+        .navbar .hkex_lang{display:block;}
+
+        /**内页头部图片**/
+        .detail_topimg,.non_topimg{margin-top:63px;}
+
+        /**友情链接**/
+        #content .container .title2{margin-right:30px !important;}
+
+        .foot-menu{margin-top:22px;}
+
+        .copyright{margin-top:40px;}
+        .copyright2{margin-top:20px;}
+    }
+    hr{border-top:1px solid #000000;}
+    .social-network{float:unset !important;padding-left:0;overflow-x:scroll;white-space:nowrap;scrollbar-width: none; -ms-overflow-style: none; }
+    .social-network::-webkit-scrollbar {display: none; /* Chrome Safari */}
+
+    footer .other_website a,footer .copyright a{font-size:16px;}
+
+    #translate{position:relative !important;left:unset !important;bottom:unset !important;}
+    .contact_contain .box{border-bottom: 0;}
+
+    /**小程序打开隐藏事项**/
+    {if session('miniprogram')==1}
+        header,.navbar_menu,footer{display: none !important;}
+        #content{padding-top:0;background:#a0a0a0 !important;}
+        .detail_topimg, .non_topimg{margin-top:0;}
+        body{background:#a0a0a0 !important;}
+        #main{margin-top:0 !important;}
+        html{background:#a0a0a0 !important;}
+    {/if}
+
+    /**翻译时更改字体**/
+    .f26{font-size:26px !important;}
+    .f22{font-size:22px !important;}
+    .f20{font-size:20px !important;}
+    .f18{font-size:18px !important;}
+    .f16{font-size:16px !important;}
+    .f15{font-size:15px !important;}
+    .f13{font-size:13px !important;}
+
+</style>
+<!--<script type="text/javascript" charset="utf-8">-->
+<!--    var head= document.getElementsByTagName('head')[0]; var script= document.createElement('script'); script.type= 'text/javascript'; script.src= 'https://www.gogo198.net/js/res.zvo.cn_translate_inspector_v2.js?v=12<?php echo time();?>'; head.appendChild(script);-->
+<!--</script>-->
+</head>
+<body style="background:{$website['color']};">
+<div id="wrapper" class="home-page">
+	<!-- 菜单栏开始 -->
+	<header style="z-index:999;">
+        <div class="navbar navbar-default navbar-static-top">
+            <div class="container" style="font-size:16px;">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <div class="open">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </div>
+                        <div class="close" style="display:none;">
+                            ×
+                        </div>
+                    </button>
+                    <a class="navbar-brand" href="/"><img src="https://shop.gogo198.cn/{$website['ico']}" alt="logo"/></a>
+                </div>
+                <div class="navbar-collapse collapse">
+                    <div class="hkex_lang">
+                        <div id="translate" class="mobile_translate"></div>
+                    </div>
+                    <hr class="mobile_hr" style="margin:15px 0 0;"/>
+                    <ul class="nav navbar-nav">
+                        {volist name="menu" id="vo"}
+                            {if !empty($vo.childMenu)}
+                                <li class="dropdown dd_parent" onclick="javascript:removeclass(this);">
+                                    <a href="#" data-toggle="dropdown" class="dropdown-toggle f18">{$vo.name} <b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        {volist name="vo.childMenu" id="vo2"}
+                                            {if !empty($vo2.childMenu)}
+                                                <li class="dropdown">
+                                                    <a href="#" data-toggle="dropdown" class="dropdown-toggle haschild f18">{$vo2.name} <b class="caret"></b></a>
+                                                    <ul class="dropdown-menu" style="background:#eee;">
+                                                        {volist name="vo2.childMenu" id="vo3"}
+                                                            {if $vo3.go_other==1}
+                                                                <li><a href="{$vo3.other_link}" class="f18" target="_blank">&nbsp;&nbsp;{$vo3.name}</a></li>
+                                                            {elseif($vo3.go_other==2)}
+                                                                <li><a href="?s=index/detail&id={$vo3.other_navbar}" class="f18" target="_blank">&nbsp;&nbsp;{$vo3.name}</a></li>
+                                                            {else}
+                                                                <li><a href="?s=index/detail&id={$vo3.id}" class="f18">&nbsp;&nbsp;{$vo3.name}</a></li>
+                                                            {/if}
+                                                        {/volist}
+                                                    </ul>
+                                                </li>
+                                            {else}
+                                                {if $vo2.go_other==1}
+                                                    <li><a href="{$vo2.other_link}" target="_blank" class="f18">&nbsp;&nbsp;{$vo2.name}</a></li>
+                                                {elseif($vo2.go_other==2)}
+                                                    <li><a href="?s=index/detail&id={$vo2.other_navbar}" target="_blank" class="f18">&nbsp;&nbsp;{$vo2.name}</a></li>
+                                                {else}
+                                                    <li><a href="?s=index/detail&id={$vo2.id}" class="f18">&nbsp;&nbsp;{$vo2.name}</a></li>
+                                                {/if}
+                                            {/if}
+                                        {/volist}
+                                    </ul>
+                                </li>
+                            {else}
+                                {if $vo.go_other==1}
+                                    <li><a href="{$vo.other_link}" target="_blank" class="f18">&nbsp;&nbsp;{$vo.name}</a></li>
+                                {elseif($vo.go_other==2)}
+                                    <li><a href="?s=index/detail&id={$vo.other_navbar}" target="_blank" class="f18">&nbsp;&nbsp;{$vo.name}</a></li>
+                                {else}
+                                    <li><a href="?s=index/detail&id={$vo.id}" class="f18">&nbsp;&nbsp;{$vo.name}</a></li>
+                                {/if}
+                            {/if}
+                        {/volist}
+
+                        {if(!empty(session('account')))}
+                            <style>
+                                .haccount_info{padding: 3px 12px;border-bottom: 1px solid #000;}
+                                .haccount_info p{font-size:15px;margin-bottom:5px;}
+                            </style>
+                            <li class="dropdown dd_parent" onclick="javascript:removeclass(this);">
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle f18" style="text-transform:unset;">GoFriend <b class="caret"></b></a>
+                                <ul class="dropdown-menu" style="min-width: 200px;">
+                                    <li style="display:none;">
+                                        <div class="haccount_info">
+                                            <p>个人账户：<?php echo session('account.custom_id');?></p>
+                                            <p>个人昵称：<?php echo session('account.nickname');?></p>
+                                            {if(!empty(session('company')))}
+                                                <p>关联企业：<?php echo session('company.company');?></p>
+                                                <p>企业角色：{if(session('company.role')==0)}超级管理员{elseif(session('company.role')==1)}普通员工{/if}</p>
+                                            {/if}
+                                        </div>
+                                    </li>
+
+                                    <li><a href="https://boss.gogo198.cn/?s=index/member_login&uid=<?php echo base64_encode(session('account.id'));?>" target="_blank" class="f15" style="{if($_SERVER['REQUEST_URI']=='/?s=index/account_manage')}background:#000;color:#fff;{/if}">&gt;个人中心</a></li>
+                                    <li><a href="/?s=index/change_account" class="f15">&gt;切换账号</a></li>
+                                </ul>
+                            </li>
+                        {else}
+                            <!--未登录-->
+                            <li><a href="?s=index/customer_login" class="f18">&nbsp;&nbsp;登录/注册</a></li>
+                        {/if}
+                    </ul>
+                </div>
+            </div>
+        </div>
+	</header>
+	<!-- 菜单栏结束 -->

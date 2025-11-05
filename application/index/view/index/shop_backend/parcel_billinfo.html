@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>独立站平台 - website.gogo198.net</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="layui/css/layui.css">
+
+    <style>
+        html{height:100%;}
+        :root {--primary: #8a2be2;--primary-dark: #6a1cb9;--primary-light: #9b4de3;--secondary: #bb86fc;--accent: #e6d7f5;--text: #333333;--text-light: #f8f8f8;--background: #f9f5fd;--card-bg: #ffffff;--gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));--gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary));--shadow: 0 10px 30px rgba(138, 43, 226, 0.15);--shadow-hover: 0 15px 35px rgba(138, 43, 226, 0.25);}
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        body {background-color: var(--background);color: var(--text);line-height: 1.6;overflow-x: hidden;background-image: radial-gradient(circle at 5% 10%, rgba(187, 134, 252, 0.1) 0%, transparent 20%), radial-gradient(circle at 95% 5%, rgba(187, 134, 252, 0.1) 0%, transparent 20%), radial-gradient(circle at 50% 90%, rgba(187, 134, 252, 0.1) 0%, transparent 20%);}
+        h1, h2, h3, h4, h5, h6 {font-family: 'Montserrat', sans-serif;font-weight: 700;}
+
+        /* 导航栏样式 */
+        header {background: rgba(255, 255, 255, 0.95);color: var(--text);padding: 15px 0;box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);position: sticky;top: 0;z-index: 1000;backdrop-filter: blur(10px);}
+        nav {display: flex;justify-content: space-between;align-items: center;position: relative;}
+        .logo {font-size: 1.8rem;font-weight: 700;display: flex;align-items: center;background: var(--gradient);-webkit-background-clip: text;background-clip: text;color: transparent;z-index: 1001;}
+        .logo i {margin-right: 10px;color: var(--primary);}
+        .nav-links {display: flex;list-style: none;}
+        .nav-links li {margin-left: 25px;position: relative;}
+        .nav-links a {color: var(--text);text-decoration: none;font-weight: 500;transition: all 0.3s ease;padding: 8px 12px;border-radius: 4px;position: relative;display: flex;align-items: center;}
+        .nav-links a::after {content: '';position: absolute;bottom: 0;left: 50%;width: 0;height: 2px;background: var(--gradient);transition: all 0.3s ease;transform: translateX(-50%);}
+        .nav-links a:hover {color: var(--primary);}
+        .nav-links a:hover::after {width: 80%;}
+        .auth-buttons {display: flex;align-items: center;}
+        .btn {padding: 12px 25px;border-radius: 50px;text-decoration: none;font-weight: 600;transition: all 0.3s ease;cursor: pointer;display: inline-block;text-align: center;border: none;font-family: 'Montserrat', sans-serif;}
+        .btn-outline {border: 2px solid var(--primary);color: var(--primary);background: transparent;margin-right: 15px;}
+        .btn-outline:hover {background: var(--primary);color: white;transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-primary {background: var(--gradient);color: white;border: 2px solid transparent;}
+        .btn-primary:hover {background: transparent;border-color: var(--primary);color: var(--primary);transform: translateY(-3px);box-shadow: var(--shadow);}
+
+        /* 表单样式 */
+        .form-section {margin-bottom: 30px;}
+        .form-title {font-size: 1.3rem;margin-bottom: 20px;color: var(--primary-dark);display: flex;align-items: center}
+        .form-title i {margin-right: 10px;}
+        .form-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));gap: 20px;}
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select,
+        .form-group textarea {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;}
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {border-color: var(--primary);outline: none;}
+        .form-group textarea {min-height: 120px;resize: vertical;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
+
+
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}
+        .form-group input:focus,
+        .form-group select:focus {border-color: var(--primary);outline: none;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
+
+        .disf{display: flex;align-items: center;}
+        .layui-form-label{width: 100px;}
+
+        /*自定义多选框样式======START*/
+        .xm-label-block,xm-select > .xm-body .xm-option.selected{background-color:{$website['color']} !important;color:{$website['color_word']} !important;}
+        xm-select .diy_search.active{border-color:{$website['color']} !important;color: {$website['color_word']} !important;background:{$website['color']} !important;}
+        /*自定义多选框样式======END*/
+        xm-select > .xm-body .xm-search > i{right:15px;}
+
+        /* 模态框样式 */
+        .modal {display: none;position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.5);backdrop-filter: blur(5px);z-index: 2000;align-items: center;justify-content: center;}
+        .modal-content {background: white;border-radius: 20px;padding: 30px;width: 90%;max-width: 90%;box-shadow: var(--shadow-hover);position: relative;}
+        .close-modal {position: absolute;top: 20px;right: 20px;font-size: 1.5rem;color: #999;cursor: pointer;transition: color 0.3s ease;}
+        .close-modal:hover {color: var(--primary);}
+        .modal-title {font-size: 1.5rem;margin-bottom: 20px;color: var(--primary);}
+
+
+        .common_part{background:#fff;margin-top:10px;margin-bottom:5px;}
+        .common_part .info{padding:10px;box-sizing:border-box;}
+        .common_part .disf{padding:10px 0;border-bottom:1px solid #eee;box-sizing: border-box;}
+
+        .common_part .disf .title{color:#666;text-align: left;}
+        .common_part .disf .val_red{color:#ff2222;}
+        .common_part .disf .val img{width:50px;height:50px;margin:8px;border:1px solid #eee;}
+        .common_part .common_head{color:#fff;text-align: center;border-bottom:1px solid #eee;background:#1790FF;padding:10px 0;box-sizing: border-box;}
+        .details_part .common_head{padding:10px;background:#009688;}
+        .details_part2 .common_head{padding:10px;background:#1790FF;}
+        .details_part .common_head span,.details_part2 .common_head span{color:#fff;}
+        .common_part .right_arrow{width:12px;height:12px;border-top:2px solid #fff;border-right:2px solid #fff;border-radius:3px;transform: rotate(45deg)}
+        .submit_part{margin-bottom:20px;}
+        .goods_info{border-bottom:2px solid #1790FF;}
+        .goods_info:last-child{border:0;}
+
+        .layui-layer-hui .layui-layer-content{color:#fff;}
+        /**checkbox**/
+        .layui-form-checkbox{line-height: 23px;margin-top:5px;}
+        .layui-form-checkbox i{border-left:1px solid #d2d2d2;width:23px;height:23px;}
+
+        .layui-tab-content{padding:0;}
+        .layui-tab-brief>.layui-tab-title .layui-this{color:#1790FF;}
+        .layui-tab-brief>.layui-tab-title .layui-this:after{border-bottom:2px solid #1790FF;}
+        .layui-tab-title{background:#fff;}
+
+        .layui-border-red{border:1px solid #ff2222;color:#ff2222;margin:10px auto;}
+        .parcel_info{color: #fff;text-align: center;padding: 30px !important;box-sizing: border-box;justify-content: space-between;}
+        .parcel_left{background:linear-gradient(to bottom,#5151E5,#BC78EC);}
+        .parcel_right{background: linear-gradient(to LEFT,#1790FF,#BC78EC);}
+        .services{position:relative;}
+        .services .red_spot{position:absolute;top:0px;right:-5px;width:10px;height:10px;border-radius:50%;background:#ff2222;}
+
+        /* 动画 */
+        @keyframes fadeIn {
+            from {opacity: 0;transform: translateY(10px);}
+            to {opacity: 1;transform: translateY(0);}
+        }
+
+        @media (max-width: 576px) {
+            .btn {padding: 10px 20px;font-size: 0.9rem;}
+            /*.form-actions {flex-direction: column;}*/
+        }
+    </style>
+</head>
+<body>
+    <div class="form-group" style="padding:10px;">
+        <!--预报信息部分-->
+        <div class="layui-col-xs12 declare_part common_part">
+            <!--订单表头-->
+            <div class="common_head layui-col-xs12">订单信息</div>
+            <div class="info">
+                <div class="disf layui-col-xs12">
+                    <div class="layui-col-xs3 title">包裹编号</div>
+                    <div class="layui-col-xs9 val">{$info['ordersn']}</div>
+                </div>
+                <div class="disf layui-col-xs12">
+                    <div class="layui-col-xs3 title">订单编号</div>
+                    <div class="layui-col-xs9 val">{$order_feelog['ordersn']}</div>
+                </div>
+                <div class="disf layui-col-xs12">
+                    <div class="layui-col-xs3 title">仓库名称</div>
+                    <div class="layui-col-xs9 val">
+                        <div style="display:flex;align-items: center;">
+                            <span>{$info['warehouse_name']}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="disf layui-col-xs12">
+                    <div class="layui-col-xs3 title">支付金额</div>
+                    <div class="layui-col-xs9 val">
+                        <div style="display:flex;align-items: center;">
+                            {if(isset($paylog['paytype_name']))}
+                            <span>{$paylog['paytype_name']}</span>,<span>CNY {$order_feelog['service_price']}</span>
+                            {else}
+                            <span>CNY {$order_feelog['service_price']}</span>
+                            {/if}
+                        </div>
+                    </div>
+                </div>
+                {if(isset($paylog['paytype_name']))}
+                <div class="disf layui-col-xs12">
+                    <div class="layui-col-xs3 title">订单状态</div>
+                    <div class="layui-col-xs9 val">
+                        <div style="display:flex;align-items: center;">
+                            <span>{$paylog['status_name']}</span>
+                        </div>
+                    </div>
+                </div>
+                {/if}
+                <div class="disf layui-col-xs12">
+                    <div class="layui-col-xs3 title">包裹状态</div>
+                    <div class="layui-col-xs9 val">
+                        <div style="display:flex;align-items: center;">
+                            <span>{$order_feelog['status_name']}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="disf layui-col-xs12">
+                    <div class="layui-col-xs3 title">订单备注</div>
+                    <div class="layui-col-xs9 val">{$order_feelog['remark']}</div>
+                </div>
+            </div>
+        </div>
+
+        {if($info['sign_method']==2 && ($info['unpack_method']==2 || $info['unpack_method']==1) && ($order_feelog['service_status']==2 || $order_feelog['service_status']==3 || $order_feelog['service_status']==4))}
+        <!--仓库验货信息部分-->
+        {if($info['unpack_method']==2 && $info['exam_method']==1 && !empty($info['pic_file']))}
+        <div class="layui-col-xs12 declare_part common_part">
+            <div class="common_head layui-col-xs12">视频查验</div>
+            <div class="layui-col-xs12" style="padding:5px 10px;box-sizing: border-box;">
+                {volist name="info['pic_file']" id="v"}
+                <video src="/{$v}" controls="controls" id="control_video_demo" class="layui-upload-img" style="width:100%;height:200px;margin-bottom:10px;">
+                    您的浏览器不支持 video 标签。
+                </video>
+                {/volist}
+            </div>
+        </div>
+        {elseif($info['unpack_method']==1 && !empty($info['pic_file']))}
+        <div class="layui-col-xs12 declare_part common_part">
+            <div class="common_head layui-col-xs12">拍照查验</div>
+            <div class="layui-col-xs12" style="padding:5px 10px;box-sizing: border-box;">
+                {volist name="info['pic_file']" key="k" id="v"}
+                <a href="javascript:show_img('/{$v}');">
+                    <img src="/{$v}" alt="" style="width:50px;height:50px;">
+                </a>
+                {/volist}
+            </div>
+        </div>
+        {/if}
+        {/if}
+        {if($order_feelog['service_status']==6 || $order_feelog['service_status']==7 || $order_feelog['service_status']==18)}
+        <!--转运信息-->
+        <div class="layui-col-xs12 declare_part common_part">
+            <div class="common_head layui-col-xs12">转运信息</div>
+            <div class="layui-col-xs12" style="padding:5px 10px;box-sizing: border-box;">
+                <div class="disf layui-col-xs12">
+                    <div class="layui-col-xs3 title">支付方式</div>
+                    <div class="layui-col-xs9 val">
+                        {if($order_feelog['fee_method']==1)}
+                        集运商代付，寄件人支付
+                        {elseif($order_feelog['fee_method']==2)}
+                        收件人到付
+                        {/if}
+                    </div>
+                </div>
+                <div class="disf layui-col-xs12">
+                    <div class="layui-col-xs3 title">收件信息</div>
+                    <div class="layui-col-xs9 val">
+                        {$order_feelog['zhuanyun_content']['zhuanyun_name']}<br>
+                        {$order_feelog['zhuanyun_content']['zhuanyun_tel']}<br>
+                        {$order_feelog['zhuanyun_content']['zhuanyun_address']}
+                    </div>
+                </div>
+                {if($order_feelog['order_status']==11 || $order_feelog['order_status']==12 || $order_feelog['order_status']==51 || $order_feelog['order_status']==52)}
+                <div class="disf layui-col-xs12">
+                    <div class="layui-col-xs3 title">物流企业</div>
+                    <div class="layui-col-xs9 val">{$order_feelog['express_content'][0]}</div>
+                </div>
+                <div class="disf layui-col-xs12">
+                    <div class="layui-col-xs3 title">运单编号</div>
+                    <div class="layui-col-xs9 val">
+                        {$order_feelog['express_content'][1]}
+                        <div class="layui-btn layui-btn-xs" onclick="javascript:express_detail('{$order_feelog['express_content'][1]}',{$info['id']});">物流轨迹</div>
+                    </div>
+                </div>
+                {/if}
+            </div>
+        </div>
+        {/if}
+        {if($order_feelog['service_status']==9 || $order_feelog['service_status']==10)}
+        <!--弃货信息-->
+        <div class="layui-col-xs12 declare_part common_part">
+            <div class="common_head layui-col-xs12">弃货信息</div>
+            <div class="layui-col-xs12" style="padding:5px 10px;box-sizing: border-box;">
+                {if($order_feelog['fee_method']>0)}
+                <div class="disf layui-col-xs12">
+                    <div class="layui-col-xs3 title">支付方式</div>
+                    <div class="layui-col-xs9 val">
+                        {if($order_feelog['fee_method']==1)}
+                        集运商代付，寄件人支付
+                        {elseif($order_feelog['fee_method']==2)}
+                        收件人到付
+                        {/if}
+                    </div>
+                </div>
+                {/if}
+                <div class="disf layui-col-xs12">
+                    <div class="layui-col-xs3 title">收件信息</div>
+                    <div class="layui-col-xs9 val">
+                        {$order_feelog['qihuo_content']['qihuo_addressee']}<br/>
+                        {$order_feelog['qihuo_content']['qihuo_tel']}<br/>
+                        {$order_feelog['qihuo_content']['qihuo_address']}
+                    </div>
+                </div>
+                {if($order_feelog['order_status']==17 || $order_feelog['order_status']==18)}
+                <div class="disf layui-col-xs12">
+                    <div class="layui-col-xs3 title">物流企业</div>
+                    <div class="layui-col-xs9 val">{$order_feelog['express_content'][0]}</div>
+                </div>
+                <div class="disf layui-col-xs12">
+                    <div class="layui-col-xs3 title">运单编号</div>
+                    <div class="layui-col-xs9 val">
+                        {$order_feelog['express_content'][1]}
+                        <div class="layui-btn layui-btn-xs" onclick="javascript:express_detail('{$order_feelog['express_content'][1]}',{$info['id']});">物流轨迹</div>
+                    </div>
+                </div>
+                {/if}
+            </div>
+        </div>
+        {/if}
+        {if($order_feelog['service_status']==13)}
+        <div class="layui-col-xs12 declare_part common_part">
+            <div class="common_head layui-col-xs12" style="margin-bottom:10px;">需分拆货物</div>
+            <table class="layui-table">
+                <thead>
+                <th>来源包裹单号</th>
+                <th>货物申报名称</th>
+                <th>货物价值￥</th>
+                <th>货物数量</th>
+                <th>货物单位</th>
+                </thead>
+                <tbody>
+                {volist name="order_feelog['spin_content']['spin_info']" key="k" id="v"}
+                <tr>
+                    <td>{$v['parcel_no']}</td>
+                    <td>{$v['ginfo']['name']}</td>
+                    <td>{$v['ginfo']['money']}</td>
+                    <td>{$v['num']}</td>
+                    <td>{$v['ginfo']['unit']}</td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+        {/if}
+        {if($order_feelog['service_status']==14)}
+        <div class="layui-col-xs12 declare_part common_part">
+            <div class="common_head layui-col-xs12" style="margin-bottom:10px;">需合并包裹及货物</div>
+            <div class="layui-tab layui-col-xs12 layui-tab-brief">
+                <ul class="layui-tab-title">
+                    {volist name="order_feelog['merge_parcel']" key="k" id="v"}
+                    <li class="{if($k==0)}layui-this{/if}">{$v['ordersn']}</li>
+                    {/volist}
+                </ul>
+                <div class="layui-tab-content">
+                    {volist name="order_feelog['merge_parcel']" key="key" id="val"}
+                    {volist name="val['goods']" key="k" id="v"}
+                    <div class="layui-tab-item {if($key==0)}layui-show{/if}">
+                        <div class="layui-tab layui-col-xs12 layui-tab-brief">
+                            <ul class="layui-tab-title">
+                                {volist name="val['goods']" key="k" id="v"}
+                                <li class="{if($k==0)}layui-this{/if}">{$v['name']}</li>
+                                {/volist}
+                            </ul>
+                            <div class="layui-tab-content">
+                                {volist name="val['goods']" key="k" id="v"}
+                                <div class="layui-tab-item {if($k==0)}layui-show{/if}">
+                                    <div class="info layui-col-xs12 goods_info">
+                                        <div class="disf layui-col-xs12">
+                                            <div class="layui-col-xs3 title">包裹名称</div>
+                                            <div class="layui-col-xs9 val">{$v['name']}</div>
+                                        </div>
+                                        <div class="disf layui-col-xs12">
+                                            <div class="layui-col-xs3 title">包裹金额(￥)</div>
+                                            <div class="layui-col-xs9 val">{$v['money']}</div>
+                                        </div>
+                                        <div class="disf layui-col-xs12">
+                                            <div class="layui-col-xs3 title">包裹品牌</div>
+                                            <div class="layui-col-xs9 val">{$v['brand']}</div>
+                                        </div>
+                                        <div class="disf layui-col-xs12">
+                                            <div class="layui-col-xs3 title">包裹类别</div>
+                                            <div class="layui-col-xs9 val">{$v['cate_item']}</div>
+                                        </div>
+                                        <div class="disf layui-col-xs12">
+                                            <div class="layui-col-xs3 title">包裹属性</div>
+                                            <div class="layui-col-xs9 val">{$v['good_item']}</div>
+                                        </div>
+                                        <div class="disf layui-col-xs12">
+                                            <div class="layui-col-xs3 title">商品数量</div>
+                                            <div class="layui-col-xs9 val">{$v['num']} {$v['unit']}</div>
+                                        </div>
+                                        <div class="disf layui-col-xs12">
+                                            <div class="layui-col-xs3 title">包裹净重(kg)</div>
+                                            <div class="layui-col-xs9 val">{$v['netwt']}</div>
+                                        </div>
+                                        <div class="disf layui-col-xs12">
+                                            <div class="layui-col-xs3 title">包裹毛重(kg)</div>
+                                            <div class="layui-col-xs9 val">{$v['grosswt']}</div>
+                                        </div>
+                                        {if(!empty($v['true_volumn']))}
+                                        <div class="disf layui-col-xs12">
+                                            <div class="layui-col-xs3 title">包裹体积(cm)</div>
+                                            <div class="layui-col-xs9 val">{$v['true_volumn']}(长*宽*高)</div>
+                                        </div>
+                                        {/if}
+                                    </div>
+                                </div>
+                                {/volist}
+                            </div>
+                        </div>
+                    </div>
+                    {/volist}
+                    {/volist}
+                </div>
+            </div>
+        </div>
+        {/if}
+        {if($order_feelog['service_status']==15)}
+        <div class="layui-col-xs12 declare_part common_part">
+            <div class="common_head layui-col-xs12" style="margin-bottom:10px;">需转移货物</div>
+            <table class="layui-table">
+                <thead>
+                <th>来源包裹单号</th>
+                <th>货物申报名称</th>
+                <th>货物价值￥</th>
+                <th>货物数量</th>
+                <th>货物单位</th>
+                </thead>
+                <tbody>
+                {volist name="order_feelog['transfer_content']['spin_info']" key="k" id="v"}
+                <tr>
+                    <td>{$v['parcel_no']}</td>
+                    <td>{$v['ginfo']['name']}</td>
+                    <td>{$v['ginfo']['money']}</td>
+                    <td>{$v['num']}</td>
+                    <td>{$v['ginfo']['unit']}</td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+        {/if}
+
+        {if($info['status']==17)}
+        <!--跨境集运信息-->
+        <div class="layui-col-xs12 declare_part common_part">
+            <div class="common_head layui-col-xs12">跨境集运信息</div>
+            <div class="layui-col-xs12" style="padding:5px 10px;box-sizing: border-box;">
+                {if($order_feelog['fee_method']>0)}
+                <div class="disf layui-col-xs12">
+                    <div class="layui-col-xs3 title">支付方式</div>
+                    <div class="layui-col-xs9 val">
+                        {if($order_feelog['fee_method']==1)}
+                        集运商代付，寄件人支付
+                        {elseif($order_feelog['fee_method']==2)}
+                        收件人到付
+                        {/if}
+                    </div>
+                </div>
+                {/if}
+                <div class="disf layui-col-xs12">
+                    <div class="layui-col-xs3 title">收件信息</div>
+                    <div class="layui-col-xs9 val">
+                        {$order_feelog['address_info']['user_name']}<br/>
+                        {$order_feelog['address_info']['mobile']}<br/>
+                        {$order_feelog['address_info']['country_id']}{$order_feelog['address_info']['address']}
+                    </div>
+                </div>
+                <div class="disf layui-col-xs12">
+                    <div class="layui-col-xs3 title">线路信息</div>
+                    <div class="layui-col-xs9 val">
+                        <div onclick="view({$order_feelog['produce_info']['id']})"  style="cursor:pointer;">{$order_feelog['produce_info']['name']}(点击查看)</div>
+                    </div>
+                </div>
+                {if($order_feelog['order_status']==56)}
+                <div class="disf layui-col-xs12">
+                    <div class="layui-col-xs3 title">物流企业</div>
+                    <div class="layui-col-xs9 val">{$order_feelog['express_content'][0]}</div>
+                </div>
+                <div class="disf layui-col-xs12">
+                    <div class="layui-col-xs3 title">运单编号</div>
+                    <div class="layui-col-xs9 val">
+                        {$order_feelog['express_content'][1]}
+                        <div class="layui-btn layui-btn-xs" onclick="javascript:express_detail('{$order_feelog['express_content'][1]}',{$info['id']});">物流轨迹</div>
+                    </div>
+                </div>
+                {/if}
+            </div>
+        </div>
+        {/if}
+    </div>
+
+</body>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    layui.use(['layer','form','laydate','upload','colorpicker'],function() {
+        laydate = layui.laydate;
+        layer = layui.layer;
+        var form = layui.form;
+        $ = layui.jquery;
+        var upload = layui.upload;
+        var colorpicker = layui.colorpicker;
+
+
+    });
+
+</script>
+</html>

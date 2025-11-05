@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>IP日志记录</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <script src="layui/layui.js"></script>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <a href="javascript:history.back(-1);">
+                <div style="display:flex;align-items:center;border: 1px solid #fff;width: fit-content;padding: 8px 20px;background: #1E9FFF;margin-top:10px;color:#fff;">
+                    <img class="" src="./img/account/back.png" alt="" style="width: 18px;margin-right: 10px;"/>
+                    返回
+                </div>
+            </a>
+            <div class="layui-card">
+                <div class="layui-card-header" style="padding-top:8px;">
+                    <!--<button class="layui-btn layui-btn-normal" onclick="save_account('添加账户','/?s=index/save_account');">添加账户</button>-->
+                    <p>IP【{$ip}】日志记录【{$yesterday}】</p>
+                </div>
+                <div class="layui-card-body">
+                    <table class="layui-hide" id="mainTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    layui.use(['layer', 'form', 'table', 'upload'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , element = layui.element
+            , upload = layui.upload
+            , table = layui.table;
+
+        table.render({
+            elem: '#mainTable'
+            ,url: "/?s=log_detail&pa=1&ip={$ip}"
+            ,cellMinWidth: 200
+            ,cols: [[
+                {field:'user', title: '访问者', width:'80'}
+                ,{field:'device', title: '访问设备', width:'110'}
+                ,{field:'time', title: '访问时间', width:'160'}
+                // ,{field:'url', title: '访问链接'}
+                ,{align:'center',  title: '操作',fixed:'right',width:100, templet: function(d){
+                        return [
+                            '<a onclick="openWindow('+"'"+ d.url +"'" +','+"1"+ ');" class="layui-btn layui-btn-normal layui-btn-xs">打开链接</a>',
+                            // '<a onclick="openWindow('+"'"+ d.id +"'" +','+"2"+ ');" class="layui-btn layui-btn-danger layui-btn-xs">删除</a>',
+                        ].join('');
+                    } }
+            ]]
+            ,page: true
+        });
+    });
+
+    function openWindow(url,typ) {
+        if (typ == 1) {
+            window.location.href = url;
+        }
+    }
+</script>
+</html>

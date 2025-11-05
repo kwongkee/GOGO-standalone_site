@@ -1,0 +1,172 @@
+{include file="common/new_member_header"}
+<style type="text/css">
+    .layui-upload-img{width: 92px; height: 92px; margin: 0 10px 10px 0;}
+    .layui-btn{background-color: #F7931E !important;}
+    .layui-btn-primary{background-color: #fff !important;}
+    .layui-btn-primary:hover {border-color: #F7931E !important;}
+    .layui-fluid{padding:0;}
+    .info_div{display: grid;grid-template-columns: repeat(2,1fr);-moz-column-gap: 0px;column-gap: 0px;row-gap: 0px;}
+    .layui-table th{background: {$website['color']};color:{$website['color_word']};}
+    .layui-colla-content{padding:10px;}
+    .type2{display:none;}
+    @media screen and (min-width: 992px){
+        .layui-form-label {margin-left: 0px!important;}
+        .layui-input-block{margin-left: 140px !important;}
+        .yulan{width: 700px !important;}
+        .layui-select-fs{width: 100%;}
+        .layui-select-fscon{width: 735px !important;}
+    }
+    @media screen and (max-width: 450px){
+        .layui-form-label {width: 60px!important;margin-left: 0px!important;}
+        .layui-input-block{margin-left: 75px !important;}
+        .layui-form-label{padding: 9px 5px;}
+        .yulan{width: 80% !important;}
+        .layui-select-fs{width: 100%;}
+        .layui-select-fscon{width: 62%  !important;}
+        .layui-form-item .layui-input-inline {display: block;float: none;left: 4px;width: auto;margin: 0 0 10px 95px;}
+        .layui-form-item .layui-inline {margin-bottom:10px;}
+        .layui-form-item{margin-bottom:5px !important;}
+        .info_div{display: grid;grid-template-columns: repeat(1,1fr);-moz-column-gap: 0px;column-gap: 0px;row-gap: 0px;}
+    }
+    html{background:#fff;}
+    .layui-btn{background:{$website['color']} !important;padding:0 8px !important;}
+    .layui-btn-danger{background:#e60000 !important;}
+    .layui-btn-primary{background:{$website['color']} !important;color:#fff !important;}
+    .sel_box{width: 50%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;}
+    .sel_div .layui-form-selected dl{width: 100%;}
+    .result_div{display:none;width: calc(100% - 0px);height: 200px;position: absolute;background: #fff;color: #000;font-size: 13px;overflow-y: scroll;z-index: 9;border: 1px solid #c7c6c6;padding: 5px 10px;box-sizing: border-box;}
+    .result_div li{border-bottom:1px solid #000;padding:5px 0;box-sizing: border-box;}
+    .result_div li:hover{background:{$website['color']};color:{$website['color_word']};cursor:pointer;}
+    .layui-layer-nobg{background:#fff;}
+    .layui-colla-content{border:1px solid #000;}
+    /**状态颜色START**/
+    .r_blue{background:{$website['color']} !important;color:#fff !important;}
+    .r_grey{background:#757373 !important;color:#fff !important;}
+    .r_red1{background:#e58686 !important;color:#fff !important;}
+    .r_red2{background:#e60000 !important;color:#fff !important;}
+    .r_green1{background:#66da66 !important;color:#fff !important;}
+    .r_green2{background:#05af05 !important;color:#fff !important;}
+    /**状态颜色END**/
+    /*箭头方向更改*/
+    .layui-collapse{border-width:0;}
+    .layui-colla-item{margin: 10px 0 20px;box-shadow: 0px 0px 10px 0px #999;}
+    .layui-colla-title2{position: relative;height: 42px;line-height: 42px;color: rgb(51, 51, 51);background-color: rgb(242, 242, 242);cursor: pointer;font-size: 14px;padding: 0;overflow: visible;}
+    .layui-colla-title2 .num{width:20%;text-align: center;margin-right: 3%;border-right: 1px solid {$website['color_word']};white-space: nowrap;}
+    .layui-colla-title2 .title{width:65%;overflow:hidden;white-space: nowrap;text-overflow: ellipsis;border-right: 1px solid {$website['color_word']};}
+    .arrow_div{width: 15%;height:100%;text-align: center;display: flex;align-items: center;justify-content: center;}
+    .arrow_div .arrow{width:8px;height:8px;border-top:1px solid {$website['color_word']};border-right:1px solid {$website['color_word']};transform:rotate(45deg);}
+    .arrow_div .arrow2{width:8px;height:8px;border-top:1px solid {$website['color_word']};border-right:1px solid {$website['color_word']};transform:rotate(135deg);}
+    /*箭头方向更改*/
+    @media screen and (max-width: 450px) {
+        .change_topics_btn {margin-left: 0 !important;margin-top: 10px !important;}
+    }
+    {if($pid==35 || $pid==36)}
+        .layui-card-body{padding:15px !important;}
+    {/if}
+</style>
+<script src="/centralize_manager/js/jquery.min.js"></script>
+<script src="/layuiadmin/layui/layui.js"></script>
+<script src="/layuiadmin/qrcode/jquery-3.2.1.min.js"></script>
+</head>
+<body>
+<div class="layui-fluid" style="margin-top:0;">
+    <div class="layui-card">
+        <div class="layui-card-body" style="padding: 0px;">
+            <div class="layui-btn-group test-table-operate-btn" style="margin-bottom: 10px;">
+                <button class="layui-btn layui-btn-normal" onclick="openWindow('关联企业','/?s=members/connect_enterprise');">关联企业</button>
+<!--                <button class="layui-btn layui-btn-normal" onclick="location.reload()">刷新</button>-->
+            </div>
+            <form class="layui-form" action="" lay-filter="component-form-group">
+                <input type="hidden" name="pa" value="1">
+
+                <div class="layui-collapse" lay-accordion="now" style="margin:10px 0 30px 0;">
+                    {if(!empty($list))}
+                    {volist name="list" key="key" id="vo"}
+                    <div class="layui-colla-item">
+                        <h2 class="layui-colla-title2 disf r_blue">
+                            <div class="num">企业{$key}.</div>
+                            <div class="title">{$vo['company']}</div>
+                            <div class="arrow_div" onclick="change_colla(this)">
+                                <div class="arrow"></div>
+                            </div>
+                        </h2>
+                        <div class="layui-colla-content ">
+                            <div class="layui-btn layui-btn-primary" onclick="merchant_login({$vo['id']})">登录</div>
+                            <div class="layui-btn layui-btn-primary" onclick="bind_opera({$vo['id']})">解绑</div>
+                        </div>
+                    </div>
+                    {/volist}
+                    {else}
+                    <p class="f15" style="text-align: center;">——暂无信息——</p>
+                    {/if}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form','upload','element','laydate'], function() {
+        var $ = layui.$
+            , admin = layui.admin
+            , element = layui.element
+            , layer = layui.layer
+            , form = layui.form
+            , laydate = layui.laydate
+            , upload = layui.upload;
+
+        form.render(null, 'component-form-group');
+
+    });
+
+    function openWindow(title,url,type)
+    {
+        var layer = layui.layer;
+        var index = layer.open({
+            type: 2,
+            title: title,
+            content: url,
+            area:['100%','100%']
+        });
+        // layer.full(index);
+    }
+
+    function change_colla(t){
+        var layer = layui.layer,$ = layui.$;
+        if($(t).parents(":eq(1)").find('.layui-colla-content').hasClass('layui-show')){
+            $(t).parents(":eq(1)").find('.layui-colla-content').removeClass('layui-show');
+            $(t).find('.arrow2').removeClass('arrow2').addClass('arrow');
+        }else{
+            $(t).parents(":eq(1)").find('.layui-colla-content').addClass('layui-show');
+            $(t).find('.arrow').removeClass('arrow').addClass('arrow2');
+        }
+    }
+
+    //登录企业
+    function merchant_login(id){
+        parent.parent.open('//healink.gogo198.com/?s=merchant/merchant_center&cid='+btoa(id));
+    }
+
+    function bind_opera(id){
+        var layer = layui.layer
+            ,$ = layui.$;
+
+        layer.confirm('确认要解绑该企业吗？', {
+            btn: ['确认','取消']
+        }, function() {
+            $.post('/?s=members/connect_enterprise_list',{'id':id,'pa':1},function(res){
+                layer.msg(res.msg, {time: 3000}, function () {
+                    if (res.code == 0) {
+                        window.location.reload();
+                    }
+                });
+            });
+        }, function(){
+
+        });
+    }
+</script>

@@ -1,0 +1,112 @@
+{include file="common/header"}
+<link rel="stylesheet" href="layui/font/iconfont.woff?v=256">
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;background:{$website['color_inner']};}
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+    .content .box_content{background:{$website['color']};color:{$website['color_word']};border:1px solid {$website['color_word']};font-size:25px;text-align:center;padding:30px;width:100%;}
+    .content .box_content img{width:40px;margin-right:5px;}
+    .inquiry_box{display:none;}
+    .navbar_menu{color: {$website['color_word']};font-size: 16px;margin-bottom:10px;}
+    .navbar_menu a{color:{$website['color_word']};}
+    .layui-table-page{background:#f2f2f2;}
+    .layui-card{background:unset;}
+    .layui-table thead tr{background:#0e2e68;color:#fff;}
+    .layui-table-view .layui-table td{color:#0e2e68;}
+    /*.xm-select-demo .xm-label{overflow: hidden;}*/
+    /*.xm-select-demo .xm-label-block{white-space: nowrap;}*/
+</style>
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="content" >
+            <div class="layui-fluid" style="padding:0;">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md12" style="padding:0;">
+                        {if !empty($navbar_menu)}
+                        <p class="navbar_menu"><i class="fa fa-sign-in" style="margin-right:5px;display:none;"></i><a href="/">HOME</a>&nbsp;<span style="color:#d1a575;">\</span>&nbsp;{$navbar_menu}</p>
+                        {/if}
+                        <div class="layui-card">
+                            <div class="layui-card-body">
+                                <table class="layui-hide" id="mainTable"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    layui.use(['layer', 'form', 'table', 'upload'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            // , element = layui.element
+            , upload = layui.upload
+            , table = layui.table;
+
+        // form.render(null,'component-form-element');
+
+        table.render({
+            elem: '#mainTable'
+            ,url: "/?s=index/version_list&pa=1&pid={$pid}"
+            ,cellMinWidth: 200
+            ,cols: [[
+                {field:'createtime', title: '发布日期'}
+                ,{field:'effecttime', title: '生效日期'}
+                ,{field:'version', title: '版本编号'}
+                ,{align:'center',  title: '规则',fixed:'right',width:120, templet: function(d){
+                        return [
+                            '<a onclick="openWindow('+"'"+ d.id +"'" +','+"1"+ ');" class="layui-btn layui-btn-primary layui-btn-xs" style="color:#0e2e68;border:1px solid #0e2e68;">查看规则</a>',
+                            // '<a onclick="openWindow('+"'"+ d.id +"'" +','+"1"+ ');" class="layui-btn layui-btn-primary layui-btn-xs">历史版本</a>',
+                        ].join('');
+                    } }
+            ]]
+            ,page: true
+        });
+    });
+
+    function openWindow(id,typ,type_id){
+        let url = '';
+        if(typ==1){
+            window.location.href="/?s=index/rule&pid={$pid}&id="+id;
+        }else if(typ==2){
+            window.location.href="/?s=index/inquiry_quote&inquiry_id="+id;
+        }
+        else if(typ==3){
+            layer.confirm('确认删除该账号吗？',function(index){
+                $.ajax({
+                    url: "/?s=index/del_account",
+                    data:{'id':id},
+                    type:'post',
+                    cache:false,
+                    dataType:'json',
+                    success:function(data){
+                        if(data.code==1)
+                        {
+                            layer.msg(data.msg, {
+                                icon: 1,
+                                time: 2000
+                            }, function(){
+                                window.location.reload();
+                            });
+                            return true;
+                        }else {
+                            layer.msg(data.message, {icon:2, time:2000});
+                            return false;
+                        }
+                    },
+                    error:function() {
+                        layer.msg('系统出错,请重试',{icon:2,time:1000});
+                    }
+                });
+            });
+        }
+    }
+</script>
+{include file="common/footer"}

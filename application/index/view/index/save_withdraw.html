@@ -1,0 +1,102 @@
+{include file="common/header"}
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;}
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+    .content .box_content{background:{$website['color']};color:{$website['color_word']};border:1px solid {$website['color_word']};font-size:25px;text-align:center;padding:30px;width:100%;}
+    .content .box_content img{width:40px;margin-right:5px;}
+    .layui-form-label{width:100px;}
+</style>
+
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="content" style="padding:0;">
+            <form class="layui-form" action="" method="post" lay-filter="component-form-element">
+                <div class="layui-col-md12">
+                    <a href="javascript:history.back(-1);">
+                            <div style="display:flex;align-items:center;border: 1px solid #fff;width: fit-content;padding: 10px 20px;border-radius: 15px;background: #8f8b8b;margin-bottom:20px;color:#fff;">
+                                <img class="" src="./img/account/back.png" alt="" style="width: 18px;margin-right: 10px;"/>
+                                返回
+                            </div>
+                        </a>
+                    <div class="layui-card">
+                        <div class="layui-card-body">
+                            <div class="layui-form-item">
+                                <div class="layui-form-label">提款金额</div>
+                                <div class="layui-input-block">
+                                    <input type="number" class="layui-input" name="withdraw_money" id="withdraw_money" value="{$can_usemoney}" lay-verify="required" />
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-form-label">提款账号</div>
+                                <div class="layui-input-block">
+                                    <select name="account_id" id="account_id" lay-search lay-verify="required">
+                                        <option value="">请选择提款账号</option>
+                                        {volist name="account" id="vo"}
+                                            <option value="{$vo.id}">{if $vo.type==1}账号名称：{$vo.bank_name},账号：{$vo.bank_account}{else}收款平台：{$vo.platform_name},平台账号：{$vo.platform_account}{/if}</option>
+                                        {/volist}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <div class="layui-form-item" style="margin-top: 25px;text-align: center;">
+                    <div>
+                        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="component-form-element">立即提交</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<script>
+    layui.use(['layer', 'form', 'table', 'upload'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , element = layui.element
+            , upload = layui.upload
+            , table = layui.table;
+
+        form.on('submit(component-form-element)', function(data){
+            $.ajax({
+                url:"/?s=index/save_withdraw",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            parent.location.reload();
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+    
+    function delPic(obj)
+    {
+        var layer = layui.layer,$ = layui.$;
+        layer.confirm('确认要删除该附件？', {
+            btn: ['删除','取消']
+        }, function(){
+            $(obj).parent().remove();
+            layer.closeAll();
+        }, function(){
+
+        });
+    }
+</script>
+{include file="common/footer"}

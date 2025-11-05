@@ -1,0 +1,283 @@
+{include file="common/header"}
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;}
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+    .content .box_content{background:{$website['color']};color:{$website['color_word']};border:1px solid {$website['color_word']};font-size:25px;text-align:center;padding:30px;width:100%;}
+    .content .box_content img{width:40px;margin-right:5px;}
+
+    .layui-form-label{width:100px;}
+    .layui-input-block{line-height:36px;}
+    .ordertype2,.type1_h,.type1,.type2,.create_user,.type2_h,.type3,.sms{display:none;}
+</style>
+
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="content" style="padding:0;">
+            <div class="layui-fluid">
+                <div class="layui-row layui-col-space15">
+                    <a href="javascript:history.back(-1);">
+                        <div style="display:flex;align-items:center;border: 1px solid #fff;width: fit-content;padding: 10px 20px;border-radius: 15px;background: #8f8b8b;margin-bottom:0px;color:#fff;">
+                            <img class="" src="./img/account/back.png" alt="" style="width: 18px;margin-right: 10px;"/>
+                            返回
+                        </div>
+                    </a>
+
+                    <div class="layui-col-md12">
+                        <div class="layui-card">
+                            <div class="layui-card-body">
+                                <div class="layui-form-item">
+                                    <div class="layui-form-label">订单编号</div>
+                                    <div class="layui-input-block">
+                                        {$order['ordersn']}
+                                    </div>
+                                </div>
+
+                                {if($order['origin_type']==0)}
+                                    <!--商城订单-->
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">商品详情</div>
+                                        <div class="layui-input-block">
+                                            <table class="layui-table">
+                                                <thead>
+                                                    <tr>
+                                                        {if $goods['have_specs']==1}
+                                                        <th>规格名称</th>
+                                                        {/if}
+                                                        <th>购买数量</th>
+                                                        <th>商品总额</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {volist name="order['content']['buy_attr']" id="vo"}
+                                                    <tr>
+                                                        {if $goods['have_specs']==1}
+                                                        <td>{$vo['attr_name']}</td>
+                                                        {/if}
+                                                        <td>{$vo['buy_num']} {$order['unit']}</td>
+                                                        <td>{$order['currency']} {$vo['now_gprice']}</td>
+                                                    </tr>
+                                                    {/volist}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">商品数量</div>
+                                        <div class="layui-input-block">
+                                            {$order['total_num']} {$order['unit']}
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">商品总额</div>
+                                        <div class="layui-input-block">
+                                            {$order['currency']} {$order['total_price']}
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">其他费用</div>
+                                        <div class="layui-input-block">
+                                            {$order['content']['other_fee']['otherfee_currency']} {$order['content']['other_fee']['otherfee_total']}
+                                            <table class="layui-table">
+                                                <thead>
+                                                <tr>
+                                                    <th>费用名称</th>
+                                                    <th>费用说明</th>
+                                                    <th>计费标准</th>
+                                                    <th>计费价格</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {volist name="order['content']['other_fee']['otherfee_content']['name']" key="key" id="vo"}
+                                                <tr>
+                                                    <td>{$vo}</td>
+                                                    <td>{$order['content']['other_fee']['otherfee_content']['desc'][$key-1]}</td>
+                                                    <td>
+                                                        {if(isset($order['content']['other_fee']['otherfee_content']['otherfee_standard_name'][$key-1]))}
+                                                            {$order['content']['other_fee']['otherfee_content']['otherfee_standard_name'][$key-1]}
+                                                        {else}
+                                                            其它
+                                                        {/if}
+                                                    </td>
+                                                    <td>{$order['content']['other_fee']['otherfee_currency']} {$order['content']['other_fee']['otherfee_content']['price'][$key-1]}</td>
+                                                </tr>
+                                                {/volist}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">减免金额</div>
+                                        <div class="layui-input-block">
+                                            - {$order['currency']} {$order['content']['reduction_money']}
+                                        </div>
+                                    </div>
+                                    {if isset($order['content']['gift_money'])}
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">抵扣费用</div>
+                                        <div class="layui-input-block">
+                                            - {$order['currency']} {$order['content']['gift_money']}
+                                        </div>
+                                    </div>
+                                    {/if}
+                                    {if !empty($order['content']['prefe_gift'])}
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">订单随赠</div>
+                                        <div class="layui-input-block">
+                                            <table class="layui-table">
+                                                <thead>
+                                                <tr>
+                                                    <th>类别</th>
+                                                    <th>内容</th>
+                                                    <th>数量</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {volist name="order['content']['prefe_gift']" key="key" id="vo"}
+                                                <tr>
+                                                    <td>{$vo['accgift_typeName']}</td>
+                                                    <td>{$vo['accgift_content']}</td>
+                                                    <td>{$vo['accgift_num']}</td>
+                                                </tr>
+                                                {/volist}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    {/if}
+
+                                    {if(!empty($order['content']['file']))}
+                                        <div class="layui-form-item">
+                                            <div class="layui-form-label">监管文件</div>
+                                            <div class="layui-input-block">
+                                            {volist name="order['content']['file']" id="vo"}
+                                                <a href="https://shop.gogo198.cn/{$vo}" target="_blank" style="margin-right:5px;">
+                                                    <img src="https://shop.gogo198.cn/{$vo}" alt="" style="width: 100px;border:2px solid #a3a3a3;">
+                                                </a>
+                                            {/volist}
+                                            </div>
+                                        </div>
+                                    {/if}
+
+                                    {if(!empty($prescription))}
+                                        <div class="layui-form-item">
+                                            <div class="layui-form-label">处方详情</div>
+                                            <div class="layui-input-block">
+                                                <button type="button" class="layui-btn layui-btn-normal" onclick="goto_prescription()">查看处方</button>
+                                            </div>
+                                        </div>
+                                    {/if}
+                                {elseif($order['origin_type']==1)}
+                                    <!--其他订单-->
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">商品名称</div>
+                                        <div class="layui-input-block">
+                                            {$goods['goods_name']}
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">商品平台</div>
+                                        <div class="layui-input-block disf">
+                                            {$goods['other_platform']}&nbsp;<a class="link layui-btn layui-btn-normal" href="https://shopping.gogo198.cn/goods-{$goods['goods_id']}.html" target="_blank">查看商品</a>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">商品详情</div>
+                                        <div class="layui-input-block">
+                                            <table class="layui-table">
+                                                <thead>
+                                                <tr>
+                                                    {if $goods['have_specs']==1}
+                                                    <th>规格名称</th>
+                                                    {/if}
+                                                    <th>购买数量</th>
+                                                    <th>商品总额</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                {volist name="goods_sku" id="v"}
+                                                <tr>
+                                                    {if $goods['have_specs']==1}
+                                                    <td>{$v['value_name']}</td>
+                                                    {/if}
+                                                    <td>x&nbsp;{$v['good_num']}</td>
+                                                    <td>{$order['currency']} {$v['good_price']}</td>
+                                                </tr>
+                                                {/volist}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                {/if}
+
+                                <div class="layui-form-item">
+                                    <div class="layui-form-label">实付金额</div>
+                                    <div class="layui-input-block">
+                                        RMB￥ {$order['true_money']}
+                                    </div>
+                                </div>
+
+                                {if $order['status']==0}
+                                <div class="layui-form-item">
+                                    <div class="layui-form-label">支付码</div>
+                                    <div class="layui-input-block">
+                                        <img src="{$order['code_url']}?v=<?php echo time();?>" alt="" style="width:150px;height:150px;">
+                                    </div>
+                                </div>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="/js/doc/jquery.min.js"></script>
+<script src="/js/doc/html2canvas.min.js"></script>
+<script src="/js/doc/jspdf.min.js"></script>
+<script type="text/javascript">
+    layui.use(['layer','form','laydate','upload'],function(){
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , laydate = layui.laydate
+            , upload = layui.upload;
+
+        form.render(null, 'component-form-element');
+
+        form.on('submit(component-form-element2)', function(data){
+            // JSON.stringify()
+            // console.log(data.field);return false;
+            $.ajax({
+                url:"/?s=index/save_collect",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            window.location.reload();
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+
+    function goto_prescription(){
+        window.open("/?s=index/prescription_detail&id={$order['id']}", '_blank');
+    }
+
+
+</script>
+{include file="common/footer"}

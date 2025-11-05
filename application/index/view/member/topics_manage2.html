@@ -1,0 +1,90 @@
+{include file="common/merchant_header"}
+<style type="text/css">
+    html{background:#fff;}
+    @media (max-width: 768px){
+        .layui-form-item .layui-form-label{padding: 9px 10px;width: 60px;}
+        .layui-input-block {margin-left: 90px;}
+    }
+</style>
+<script src="/layuiadmin/layui/layui.js"></script>
+<div class="layui-fluid" style="padding: 0;">
+    <div class="layui-card">
+        <div class="layui-card-body" style="padding: 10px;">
+            <form class="layui-form" action="" lay-filter="component-form-group">
+                <input type="hidden" name="id" value="{$topics_id}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">管理决策</label>
+                    <div class="layui-input-block">
+                        <select name="manage_topics" lay-filter="manage_topics">
+                            <option value="">选择操作</option>
+                            {if $info['is_ending']==1}
+                            {if $info['is_join']==0}
+                            <option value="1">参与决策</option>
+                            {elseif($info['is_join']==1)}
+                            <option value="2">更改决策</option>
+                            {/if}
+                            {/if}
+
+                            {if $info['is_empty']==1}
+                            <option value="3">更改议题</option>
+                            {/if}
+                            {if $info['is_date']==1}
+                            <option value="4">更改时效</option>
+                            {/if}
+                            {if $info['is_share_topics']==1}
+                            <option value="5">分享决策</option>
+                            {/if}
+                            {if $info['is_share_chat']==1}
+                            <option value="6">分享决议</option>
+                            {/if}
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'form','upload','element','laydate'], function() {
+        var $ = layui.$
+            , admin = layui.admin
+            , element = layui.element
+            , layer = layui.layer
+            , form = layui.form
+            , laydate = layui.laydate
+            , upload = layui.upload;
+
+        form.render(null, 'component-form-group');
+
+        form.on('select(manage_topics)',function(data){
+            let val = data.value;
+
+            if(val==1 || val==2){
+                //参与决策&更改决策
+                window.location.href='/?s=member/topics_detail&id={$topics_id}&is_edit=<?php echo base64_encode(1)?>';
+            }
+            else if(val==3){
+                //更改议题
+                window.location.href='/?s=member/save_topics&id={$topics_id}&method='+val;
+            }
+            else if(val==4){
+                //更改时效
+                window.location.href='/?s=member/save_topics&id={$topics_id}&method='+val;
+            }
+            else if(val==5){
+                //分享决策
+
+            }
+            else if(val==6){
+                //分享决议
+
+            }
+        });
+    });
+</script>
+</body>
+</html>

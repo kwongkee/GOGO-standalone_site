@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>独立站平台 - website.gogo198.net</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://admin.gogo198.cn/collect_website/public/static/cklein/css/fontawesome-iconpicker.min.css">
+    <style>
+        :root {--primary: #8a2be2;--primary-dark: #6a1cb9;--primary-light: #9b4de3;--secondary: #bb86fc;--accent: #e6d7f5;--text: #333333;--text-light: #f8f8f8;--background: #f9f5fd;--card-bg: #ffffff;--gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));--gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary));--shadow: 0 10px 30px rgba(138, 43, 226, 0.15);--shadow-hover: 0 15px 35px rgba(138, 43, 226, 0.25);}
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        body {color: var(--text);line-height: 1.6;overflow-x: hidden;}
+        h1, h2, h3, h4, h5, h6 {font-family: 'Montserrat', sans-serif;font-weight: 700;}
+
+        /* 导航栏样式 */
+        header {background: rgba(255, 255, 255, 0.95);color: var(--text);padding: 15px 0;box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);position: sticky;top: 0;z-index: 1000;backdrop-filter: blur(10px);}
+        nav {display: flex;justify-content: space-between;align-items: center;position: relative;}
+        .logo {font-size: 1.8rem;font-weight: 700;display: flex;align-items: center;background: var(--gradient);-webkit-background-clip: text;background-clip: text;color: transparent;z-index: 1001;}
+        .logo i {margin-right: 10px;color: var(--primary);}
+        .nav-links {display: flex;list-style: none;}
+        .nav-links li {margin-left: 25px;position: relative;}
+        .nav-links a {color: var(--text);text-decoration: none;font-weight: 500;transition: all 0.3s ease;padding: 8px 12px;border-radius: 4px;position: relative;display: flex;align-items: center;}
+        .nav-links a::after {content: '';position: absolute;bottom: 0;left: 50%;width: 0;height: 2px;background: var(--gradient);transition: all 0.3s ease;transform: translateX(-50%);}
+        .nav-links a:hover {color: var(--primary);}
+        .nav-links a:hover::after {width: 80%;}
+        .auth-buttons {display: flex;align-items: center;}
+        .btn {padding: 12px 25px;border-radius: 50px;text-decoration: none;font-weight: 600;transition: all 0.3s ease;cursor: pointer;display: inline-block;text-align: center;border: none;font-family: 'Montserrat', sans-serif;}
+        .btn-outline {border: 2px solid var(--primary);color: var(--primary);background: transparent;margin-right: 15px;}
+        .btn-outline:hover {background: var(--primary);color: white;transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-primary {background: var(--gradient);color: white;border: 2px solid transparent;}
+        .btn-primary:hover {background: transparent;border-color: var(--primary);color: var(--primary);transform: translateY(-3px);box-shadow: var(--shadow);}
+
+        /* 表单样式 */
+        .form-section {margin-bottom: 30px;}
+        .form-title {font-size: 1.3rem;margin-bottom: 20px;color: var(--primary-dark);display: flex;align-items: center}
+        .form-title i {margin-right: 10px;}
+        .form-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));gap: 20px;}
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select,
+        .form-group textarea {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;}
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {border-color: var(--primary);outline: none;}
+        .form-group textarea {min-height: 120px;resize: vertical;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
+
+
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}
+        .form-group input:focus,
+        .form-group select:focus {border-color: var(--primary);outline: none;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
+
+
+        /* 动画 */
+        @keyframes fadeIn {
+            from {opacity: 0;transform: translateY(10px);}
+            to {opacity: 1;transform: translateY(0);}
+        }
+
+
+        @media (max-width: 576px) {
+            .btn {padding: 10px 20px;font-size: 0.9rem;}
+            /*.form-actions {flex-direction: column;}*/
+        }
+
+        /*自定义颜色配置*/
+        .layui-colorpicker.layui-colorpicker-lg,.layui-colorpicker-trigger-i.layui-icon-close{line-height: 24px;}
+        .layui-colorpicker, .layui-colorpicker-trigger-span{border-color:#777;}
+        .layui-colorpicker-main-input .layui-btn-container .layui-btn {margin: 0 0 0 5px;}
+
+        .edui-editor{z-index: 1 !important;}
+    </style>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style>
+        .layui-form-label{width:90px;}
+    </style>
+</head>
+
+<body>
+<form id="siteForm" class="layui-form" action="" method="post" lay-filter="component-form-index">
+    <input type="hidden" name="company_id" value="{$company_id}">
+    <input type="hidden" name="company_type" value="{$company_type}">
+    <input type="hidden" name="id" value="{$id}">
+
+    <div class="form-group" style="padding:10px;">
+        <div class="form-group">
+            <label for="displayorder">菜单排序</label>
+            <input type="number" id="displayorder" name="displayorder2" placeholder="" value="{$data['displayorder']}" lay-verify="required">
+        </div>
+        <div class="form-group">
+            <label for="connect_menus">菜单板块</label>
+            <div id="connect_menus" class="xm-select-demo"></div>
+        </div>
+        <div class="form-group">
+            <label for="format_type">展示样式</label>
+            <select name="format_type" id="format_type" lay-filter="format_type">
+                <option value="1" {if $data['format_type']==1}selected{/if}>大轮播图内容（引用菜单里的导向图）</option>
+                <option value="2" {if $data['format_type']==2}selected{/if}>切换框内容（在本页添加内容）</option>
+                <option value="3" {if $data['format_type']==3}selected{/if}>发现轮播+信息切换框（前往“发现轮播管理”添加内容）</option>
+                <option value="4" {if $data['format_type']==4}selected{/if}>标题+描述折叠框（在本页添加内容）</option>
+                <option value="5" {if $data['format_type']==5}selected{/if}>一问一答图文内容（在本页添加内容）</option>
+                <option value="6" {if $data['format_type']==6}selected{/if}>标题+描述+图片（一行四个）卡片（在本页添加内容）</option>
+                <option value="7" {if $data['format_type']==7}selected{/if}>标题+图标（两行各五个）卡片（在本页添加内容）</option>
+                <option value="8" {if $data['format_type']==8}selected{/if}>标题+描述+图片（两行各两个）卡片（在本页添加内容）</option>
+            </select>
+        </div>
+        <!--切换框内容（在本页添加内容）-->
+        <div class="change_box" style="display:{if $data['format_type']==2}block{else}none{/if};">
+            <div class="form-group">
+                <label for="format_type">文本展示</label>
+                <table class="layui-table change_box_table">
+                    <thead>
+                    <th>下级菜单</th>
+                    <th>图标</th>
+                    <th>标题</th>
+                    <th>描述</th>
+                    <th>操作</th>
+                    </thead>
+                    <tbody>
+                    {if($id>0 && !empty($data['content']))}
+                    {volist name="data.content" key="k" id="vo"}
+                    <tr>
+                        <td class="next_menu">
+                            <input type="hidden" name="fnavbar[]" value="{$vo['fnavbar']}">
+                            {$vo['fnavbar_name']}
+                        </td>
+                        <td>
+                            <input class="form-control icp icp-auto layui-input" value="{$vo['ficon']}" placeholder="请选择图标" type="text" name="ficon[]"/>
+                        </td>
+                        <td>
+                            <input type="text" class="layui-input" placeholder="请输入标题" name="ftitle[]" value="{$vo['ftitle']}">
+                        </td>
+                        <td>
+                            <input type="text" class="layui-input" placeholder="请输入描述" name="fdesc[]" value="{$vo['fdesc']}">
+                        </td>
+                        <td>
+                            {if $k>0}
+                            <div class="closeBtn layui-btn-danger layui-btn" onclick="closeThis(this)">×</div>
+                            {/if}
+                        </td>
+                    </tr>
+                    {/volist}
+                    {else}
+                    <tr>
+                        <td class="next_menu" title="如果没选择框，请重新选择板块">
+                            <span style="font-size: 12px;color:#444;">如果没选择框，请重新选择板块</span>
+                        </td>
+                        <td>
+                            <input class="form-control icp icp-auto layui-input" value="" placeholder="请选择图标" type="text" name="ficon[]"/>
+                        </td>
+                        <td>
+                            <input type="text" class="layui-input" placeholder="请输入标题" name="ftitle[]">
+                        </td>
+                        <td>
+                            <input type="text" class="layui-input" placeholder="请输入描述" name="fdesc[]">
+                        </td>
+                        <td>
+                            <!--<div class="closeBtn layui-btn-danger layui-btn" onclick="closeThis(this)">×</div>-->
+                        </td>
+                    </tr>
+                    {/if}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="5" style="text-align: right;">
+                            <div class="closeBtn layui-btn-success layui-btn" onclick="addThis(this,1)">+</div>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="form-group">
+                <label for="format_type">自定义按键</label>
+                <table class="layui-table change_box_diybtn_table">
+                    <thead>
+                    <th>下级菜单</th>
+                    <th>按键名称</th>
+                    <th>跳转方式</th>
+                    <th>按键链接</th>
+                    <th>操作</th>
+                    </thead>
+                    <tbody>
+                    {if($id>0 && !empty($data['btn_content']))}
+                    {volist name="data.btn_content" key="k" id="vo"}
+                    <tr>
+                        <td class="next_menu">
+                            <input type="hidden" name="btn_navbar[]" value="{$vo['btn_navbar']}">
+                            {$vo['btn_navbar_name']}
+                        </td>
+                        <td>
+                            <input class="layui-input" value="{$vo['btn_title']}" placeholder="请输入按键名称" type="text" name="btn_title[]"/>
+                        </td>
+                        <td>
+                            <select name="go_other[]" lay-filter="go_other">
+                                <option value="0">否</option>
+                                <option value="1" {if $vo['go_other']==1}selected{/if}>第三方链接</option>
+                                <option value="2" {if $vo['go_other']==2}selected{/if}>应用链接</option>
+                                <option value="3" {if $vo['go_other']==3}selected{/if}>图文链接</option>
+                                <option value="4" {if $vo['go_other']==4}selected{/if}>消息链接</option>
+                                <option value="5" {if $vo['go_other']==5}selected{/if}>关键字搜索</option>
+                            </select>
+                        </td>
+                        <td>
+                            <div class="other_link" style="display:{if $vo['go_other']==1}block{else}none{/if};">
+                                <input type="text" class="layui-input" name="other_link[]" placeholder="请输入第三方链接" value="{$vo['other_link']}">
+                            </div>
+                            <div class="other_navbar" style="display:{if $vo['go_other']==2}block{else}none{/if};">
+                                <select name="other_navbar[]" lay-search>
+                                    <option value="">请选择应用</option>
+                                    {volist name="btn_list" id="vo2"}
+                                        <option value="{$vo2.id}" {if $vo['other_navbar']==$vo2.id}selected{/if}>{$vo2.name}</option>
+                                        {if !empty($vo2.childMenu)}
+                                            {volist name="vo2.childMenu" id="vo3"}
+                                                <option value="{$vo3.id}" {if $vo['other_navbar']==$vo3.id}selected{/if}>--{$vo3.name}</option>
+                                                {if !empty($vo3.childMenu)}
+                                                    {volist name="vo3.childMenu" id="vo4"}
+                                                        <option value="{$vo4.id}" {if $vo['other_navbar']==$vo4.id}selected{/if}>----{$vo4.name}</option>
+                                                        {if !empty($vo4.childMenu)}
+                                                            {volist name="vo4.childMenu" id="vo5"}
+                                                                <option value="{$vo5.id}" {if $vo['other_navbar']==$vo5.id}selected{/if}>------{$vo5.name}</option>
+                                                            {/volist}
+                                                        {/if}
+                                                    {/volist}
+                                                {/if}
+                                            {/volist}
+                                        {/if}
+                                    {/volist}
+                                </select>
+                            </div>
+                            <div class="other_pic" style="display:{if $vo['go_other']==3}block{else}none{/if};">
+                                <select name="other_pic[]" lay-search>
+                                    <option value="">请选择图文</option>
+                                    {volist name="pic_list" id="vo2"}
+                                        <option value="{$vo2.id}" {if $vo['other_pic']==$vo2.id}selected{/if}>{$vo2.name}</option>
+                                    {/volist}
+                                </select>
+                            </div>
+                            <div class="other_msg" style="display:{if $vo['go_other']==4}block{else}none{/if};">
+                                <select name="other_msg[]" lay-search>
+                                    <option value="">请选择消息</option>
+                                    {volist name="msg_list" id="vo2"}
+                                        <option value="{$vo2.id}" {if $vo['other_msg']==$vo2.id}selected{/if}>{$vo2.name}</option>
+                                    {/volist}
+                                </select>
+                            </div>
+                            <div class="other_keywords" style="display:{if $vo['go_other']==5}block{else}none{/if};">
+                                <input type="text" class="layui-input" name="other_keywords[]" value="{$vo['other_keywords']}" placeholder="更多关键字用顿号“、”分割">
+                            </div>
+                        </td>
+                        <td>
+                            {if $k>0}
+                            <div class="closeBtn layui-btn-danger layui-btn" onclick="closeThis(this)">×</div>
+                            {/if}
+                        </td>
+                    </tr>
+                    {/volist}
+                    {else}
+                    <tr>
+                        <td class="next_menu" title="如果没选择框，请重新选择板块">
+                            <span style="font-size: 12px;color:#444;">如果没选择框，请重新选择板块</span>
+                        </td>
+                        <td>
+                            <input class="layui-input" value="" placeholder="请输入按键名称" type="text" name="btn_title[]"/>
+                        </td>
+                        <td>
+                            <select name="go_other[]" lay-filter="go_other">
+                                <option value="0">否</option>
+                                <option value="1">第三方链接</option>
+                                <option value="2">应用链接</option>
+                                <option value="3">图文链接</option>
+                                <option value="4">消息链接</option>
+                                <option value="5">关键字搜索</option>
+                            </select>
+                        </td>
+                        <td>
+                            <div class="other_link" style="display:none;">
+                                <input type="text" class="layui-input" name="other_link[]" placeholder="请输入第三方链接" value="">
+                            </div>
+                            <div class="other_navbar" style="display:none;">
+                                <select name="other_navbar[]" lay-search>
+                                    <option value="">请选择应用</option>
+                                    {volist name="btn_list" id="vo2"}
+                                        <option value="{$vo2.id}">{$vo2.name}</option>
+                                        {if !empty($vo2.childMenu)}
+                                            {volist name="vo2.childMenu" id="vo3"}
+                                                <option value="{$vo3.id}">--{$vo3.name}</option>
+                                                {if !empty($vo3.childMenu)}
+                                                    {volist name="vo3.childMenu" id="vo4"}
+                                                        <option value="{$vo4.id}">----{$vo4.name}</option>
+                                                        {if !empty($vo4.childMenu)}
+                                                            {volist name="vo4.childMenu" id="vo5"}
+                                                                <option value="{$vo5.id}">------{$vo5.name}</option>
+                                                            {/volist}
+                                                        {/if}
+                                                    {/volist}
+                                                {/if}
+                                            {/volist}
+                                        {/if}
+                                    {/volist}
+                                </select>
+                            </div>
+                            <div class="other_pic" style="display:none;">
+                                <select name="other_pic[]" lay-search>
+                                    <option value="">请选择图文</option>
+                                    {volist name="pic_list" id="vo2"}
+                                        <option value="{$vo2.id}">{$vo2.name}</option>
+                                    {/volist}
+                                </select>
+                            </div>
+                            <div class="other_msg" style="display:none;">
+                                <select name="other_msg[]" lay-search>
+                                    <option value="">请选择消息</option>
+                                    {volist name="msg_list" id="vo2"}
+                                        <option value="{$vo2.id}">{$vo2.name}</option>
+                                    {/volist}
+                                </select>
+                            </div>
+                            <div class="other_keywords" style="display:none;">
+                                <input type="text" class="layui-input" name="other_keywords[]" value="" placeholder="更多关键字用顿号“、”分割">
+                            </div>
+                        </td>
+                        <td>
+                            <!--<div class="closeBtn layui-btn-danger layui-btn" onclick="closeThis(this)">×</div>-->
+                        </td>
+                    </tr>
+                    {/if}
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="5" style="text-align: right;">
+                            <div class="closeBtn layui-btn-success layui-btn" onclick="addThis(this,3)">+</div>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <!--标题+描述折叠框（在本页添加内容）-->
+        <div class="fq_box" style="display:{if $data['format_type']==4}block{else}none{/if};">
+            <div class="layui-form-item">
+                <div class="layui-form-label">文本展示</div>
+                <div class="layui-input-block">
+                    <table class="layui-table fq_box_table">
+                        <thead>
+                        <th>标题</th>
+                        <th>描述</th>
+                        <th>操作</th>
+                        </thead>
+                        <tbody>
+                        {if($id>0 && !empty($data['fq_content']))}
+                        {volist name="data.fq_content" key="k" id="vo"}
+                        <tr>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入标题" name="fq_title[]" value="{$vo['fq_title']}">
+                            </td>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入描述" name="fq_desc[]" value="{$vo['fq_desc']}">
+                            </td>
+                            <td>
+                                {if $k>0}
+                                <div class="closeBtn layui-btn-danger layui-btn" onclick="closeThis(this)">×</div>
+                                {/if}
+                            </td>
+                        </tr>
+                        {/volist}
+                        {else}
+                        <tr>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入标题" name="fq_title[]">
+                            </td>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入描述" name="fq_desc[]">
+                            </td>
+                            <td>
+                                <!--<div class="closeBtn layui-btn-danger layui-btn" onclick="closeThis(this)">×</div>-->
+                            </td>
+                        </tr>
+                        {/if}
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="5" style="text-align: right;">
+                                <div class="closeBtn layui-btn-success layui-btn" onclick="addThis(this,2)">+</div>
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!--一问一答图文内容（在本页添加内容）-->
+        <div class="fq_picBox" style="display:{if $data['format_type']==5}block{else}none{/if};">
+            <div class="layui-form-item">
+                <div class="layui-form-label">分类图文</div>
+                <div class="layui-input-block">
+                    <table class="layui-table">
+                        <thead>
+                        <th>分类名称</th>
+                        <th>选择图文</th>
+                        <th>操作</th>
+                        </thead>
+                        <tbody>
+                        {if($id>0 && !empty($data['fq_category_content']))}
+                        {volist name="data.fq_category_content" key="k" id="vo"}
+                        <tr>
+                            <td>
+                                <input type="text" class="layui-input" name="fq_ctitle[]" value="{$vo['fq_ctitle']}" placeholder="请输入分类名称">
+                            </td>
+                            <td>
+                                <div class="xm-select-demo fq_menus{$k}"></div>
+                            </td>
+                            <td>
+                                {if $k>0}
+                                <div class="closeBtn layui-btn-danger layui-btn" onclick="closeThis(this)">×</div>
+                                {/if}
+                            </td>
+                        </tr>
+                        {/volist}
+                        {else}
+                        <tr>
+                            <td>
+                                <input type="text" class="layui-input" name="fq_ctitle[]" value="" placeholder="请输入分类名称">
+                            </td>
+                            <td>
+                                <div class="xm-select-demo fq_menus0"></div>
+                            </td>
+                            <td>
+                            </td>
+                        </tr>
+                        {/if}
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="3" style="text-align: right;">
+                                <div class="closeBtn layui-btn-success layui-btn" onclick="addThis(this,5)">+</div>
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!--标题+描述+图片（一行四个）卡片（在本页添加内容）-->
+        <div class="card1" style="display:{if $data['format_type']==6}block{else}none{/if};">
+            <div class="layui-form-item">
+                <div class="layui-form-label"></div>
+                <div class="layui-input-block">
+                    <table class="layui-table card1_table">
+                        <thead>
+                        <th>标题</th>
+                        <th>描述</th>
+                        <th>图片</th>
+                        </thead>
+                        <tbody>
+                        <?php $fff = [0,1,2,3];?>
+                        {volist name="fff" key="k" id="i"}
+                        <tr>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入标题" name="card1_title[{$i}]" value="{if isset($data['card1_content'][$i]['card1_title'])}{$data['card1_content'][$i]['card1_title']}{/if}">
+                            </td>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入描述" name="card1_desc[{$i}]" value="{if isset($data['card1_content'][$i]['card1_desc'])}{$data['card1_content'][$i]['card1_desc']}{/if}">
+                            </td>
+                            <td>
+                                <div class="layui-upload" style="margin-top: 10px;">
+                                    <button type="button" class="layui-btn" id="card1_file{$i}-upload">上传图片(一张：250*150px)</button>
+                                    <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                                        预览图：
+                                        <div class="layui-upload-list" id="card1_file{$i}-upload-list">
+                                            {if isset($data['card1_content'][$i]['card1_img'])}
+                                            {if !empty($data['card1_content'][$i]['card1_img'])}
+                                            <div style="display: inline-block;">
+                                                <img onclick="seePic(this);" src="/{$data['card1_content'][$i]['card1_img']}" class="layui-upload-img" style="width:80px;height:80px;">
+                                                <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
+                                                <input type="hidden" name="card1_img[{$i}]" value="{$data['card1_content'][$i]['card1_img']}">
+                                            </div>
+                                            {/if}
+                                            {/if}
+                                        </div>
+                                    </blockquote>
+                                </div>
+                            </td>
+                        </tr>
+                        {/volist}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!--标题+图标（两行各五个）卡片（在本页添加内容）-->
+        <div class="card2" style="display:{if $data['format_type']==7}block{else}none{/if};">
+            <div class="layui-form-item">
+                <div class="layui-form-label"></div>
+                <div class="layui-input-block">
+                    <table class="layui-table card2_table">
+                        <thead>
+                        <th>行数</th>
+                        <th>第一个</th>
+                        <th>第二个</th>
+                        <th>第三个</th>
+                        <th>第四个</th>
+                        <th>第五个</th>
+                        </thead>
+                        <tbody>
+
+                        <tr>
+                            <td>第1行</td>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入标题" name="card2_title[0]" value="{if isset($data['card2_content'][0]['card2_title'])}{$data['card2_content'][0]['card2_title']}{/if}">
+                                <input class="form-control icp icp-auto layui-input" value="{if isset($data['card2_content'][0]['card2_icon'])}{$data['card2_content'][0]['card2_icon']}{/if}" placeholder="请选择图标" type="text" name="card2_icon[0]"/>
+                            </td>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入标题" name="card2_title[1]" value="{if isset($data['card2_content'][1]['card2_title'])}{$data['card2_content'][1]['card2_title']}{/if}">
+                                <input class="form-control icp icp-auto layui-input" value="{if isset($data['card2_content'][1]['card2_icon'])}{$data['card2_content'][1]['card2_icon']}{/if}" placeholder="请选择图标" type="text" name="card2_icon[1]"/>
+                            </td>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入标题" name="card2_title[2]" value="{if isset($data['card2_content'][2]['card2_title'])}{$data['card2_content'][2]['card2_title']}{/if}">
+                                <input class="form-control icp icp-auto layui-input" value="{if isset($data['card2_content'][2]['card2_icon'])}{$data['card2_content'][2]['card2_icon']}{/if}" placeholder="请选择图标" type="text" name="card2_icon[2]"/>
+                            </td>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入标题" name="card2_title[3]" value="{if isset($data['card2_content'][3]['card2_title'])}{$data['card2_content'][3]['card2_title']}{/if}">
+                                <input class="form-control icp icp-auto layui-input" value="{if isset($data['card2_content'][3]['card2_icon'])}{$data['card2_content'][3]['card2_icon']}{/if}" placeholder="请选择图标" type="text" name="card2_icon[3]"/>
+                            </td>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入标题" name="card2_title[4]" value="{if isset($data['card2_content'][4]['card2_title'])}{$data['card2_content'][4]['card2_title']}{/if}">
+                                <input class="form-control icp icp-auto layui-input" value="{if isset($data['card2_content'][4]['card2_icon'])}{$data['card2_content'][4]['card2_icon']}{/if}" placeholder="请选择图标" type="text" name="card2_icon[4]"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>第2行</td>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入标题" name="card2_title[5]" value="{if isset($data['card2_content'][5]['card2_title'])}{$data['card2_content'][5]['card2_title']}{/if}">
+                                <input class="form-control icp icp-auto layui-input" value="{if isset($data['card2_content'][5]['card2_icon'])}{$data['card2_content'][5]['card2_icon']}{/if}" placeholder="请选择图标" type="text" name="card2_icon[5]"/>
+                            </td>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入标题" name="card2_title[6]" value="{if isset($data['card2_content'][6]['card2_title'])}{$data['card2_content'][6]['card2_title']}{/if}">
+                                <input class="form-control icp icp-auto layui-input" value="{if isset($data['card2_content'][6]['card2_icon'])}{$data['card2_content'][6]['card2_icon']}{/if}" placeholder="请选择图标" type="text" name="card2_icon[6]"/>
+                            </td>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入标题" name="card2_title[7]" value="{if isset($data['card2_content'][7]['card2_title'])}{$data['card2_content'][7]['card2_title']}{/if}">
+                                <input class="form-control icp icp-auto layui-input" value="{if isset($data['card2_content'][7]['card2_icon'])}{$data['card2_content'][7]['card2_icon']}{/if}" placeholder="请选择图标" type="text" name="card2_icon[7]"/>
+                            </td>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入标题" name="card2_title[8]" value="{if isset($data['card2_content'][8]['card2_title'])}{$data['card2_content'][8]['card2_title']}{/if}">
+                                <input class="form-control icp icp-auto layui-input" value="{if isset($data['card2_content'][8]['card2_icon'])}{$data['card2_content'][8]['card2_icon']}{/if}" placeholder="请选择图标" type="text" name="card2_icon[8]"/>
+                            </td>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入标题" name="card2_title[9]" value="{if isset($data['card2_content'][9]['card2_title'])}{$data['card2_content'][9]['card2_title']}{/if}">
+                                <input class="form-control icp icp-auto layui-input" value="{if isset($data['card2_content'][9]['card2_icon'])}{$data['card2_content'][9]['card2_icon']}{/if}" placeholder="请选择图标" type="text" name="card2_icon[9]"/>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!--标题+描述+图片（两行各两个）卡片（在本页添加内容）-->
+        <div class="card3" style="display:{if $data['format_type']==8}block{else}none{/if};">
+            <div class="layui-form-item">
+                <div class="layui-form-label"></div>
+                <div class="layui-input-block">
+                    <table class="layui-table card3_table">
+                        <thead>
+                        <th>行数</th>
+                        <th>标题</th>
+                        <th>描述</th>
+                        <th>图片</th>
+                        </thead>
+                        <tbody>
+                        <?php $fff = [0,1,2,3];?>
+                        {volist name="fff" key="k" id="i"}
+                        <tr>
+                            <td>第{if $i<=1}1{else}2{/if}行</td>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入标题" name="card3_title[{$i}]" value="{if isset($data['card3_content'][$i]['card3_title'])}{$data['card3_content'][$i]['card3_title']}{/if}">
+                            </td>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入描述" name="card3_desc[{$i}]" value="{if isset($data['card3_content'][$i]['card3_desc'])}{$data['card3_content'][$i]['card3_desc']}{/if}">
+                            </td>
+                            <td>
+                                <div class="layui-upload" style="margin-top: 0px;">
+                                    <button type="button" class="layui-btn" id="card3_file{$i}-upload">上传图片(一张：200*200px)</button>
+                                    <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                                        预览图：
+                                        <div class="layui-upload-list" id="card3_file{$i}-upload-list">
+                                            {if isset($data['card3_content'][$i]['card3_img'])}
+                                            {if !empty($data['card3_content'][$i]['card3_img'])}
+                                            <div style="display: inline-block;">
+                                                <img onclick="seePic(this);" src="/{$data['card3_content'][$i]['card3_img']}" class="layui-upload-img" style="width:80px;height:80px;">
+                                                <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
+                                                <input type="hidden" name="card3_img[{$i}]" value="{$data['card3_content'][$i]['card3_img']}">
+                                            </div>
+                                            {/if}
+                                            {/if}
+                                        </div>
+                                    </blockquote>
+                                </div>
+                            </td>
+                        </tr>
+                        {/volist}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!--背景选择-->
+        <div class="layui-form-item">
+            <div class="layui-form-label">背景选择</div>
+            <div class="layui-input-block">
+                <select name="bg_type" id="bg_type" lay-filter="bg_type">
+                    <option value="1" {if $data['bg_type']==1}selected{/if}>色块</option>
+                    <option value="2" {if $data['bg_type']==2}selected{/if}>图片</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item bg_color" style="display: {if $data['bg_type']==1}block{else}none{/if};">
+            <div class="layui-form-label">选择色块</div>
+            <div class="layui-input-block">
+                <div id="bg_color"></div>
+                <input type="hidden" name="bg_color" value="{$data['bg_color']}">
+            </div>
+        </div>
+        <div class="layui-form-item bg_img" style="display: {if $data['bg_type']==2}block{else}none{/if};">
+            <div class="layui-form-label">上传图片（1920*900）</div>
+            <div class="layui-input-block">
+                <div class="layui-upload" style="margin-top: 10px;">
+                    <button type="button" class="layui-btn" id="img_file2-upload">上传图片(一张)</button>
+                    <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                        预览图：
+                        <div class="layui-upload-list" id="img_file2-upload-list">
+                            {if !empty($data['bg_img'])}
+                            <div style="display: inline-block;">
+                                <img onclick="seePic(this);" src="/{$data['bg_img']}" class="layui-upload-img" style="width:80px;height:80px;">
+                                <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
+                                <input type="hidden" name="bg_img[]" value="{$data['bg_img']}">
+                            </div>
+                            {/if}
+                        </div>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="button" class="btn btn-outline" id="cancelBtnIndex" style="background:transparent;border: 2px solid var(--primary);color: var(--primary);">取消</button>
+        <button type="submit" class="btn btn-primary" lay-submit lay-filter="component-form-index">立即保存</button>
+    </div>
+</form>
+</body>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="layui/layui.js"></script>
+<script src="./layui/xm-select.js"></script>
+<script src="//shop.gogo198.cn/collect_website/public/static/cklein/js/fontawesome-iconpicker.js"></script>
+<script src="//shop.gogo198.cn/collect_website/public/static/cklein/js/fontawesome-iconpicker.min.js"></script>
+
+<script>
+    var fnavbar = [];
+    $(document).ready(function() {
+        setTimeout(function(){
+            $('.icp-auto').iconpicker();
+        },1000);
+
+    });
+
+    layui.use(['layer','form','laydate','upload','colorpicker'],function() {
+        laydate = layui.laydate;
+        layer = layui.layer;
+        var form = layui.form;
+        $ = layui.jquery;
+        var upload = layui.upload;
+        var colorpicker = layui.colorpicker;
+
+        //菜单弹窗关闭事件
+        const modal = parent.document.getElementById('saveIndexModal');
+        const cancelBtn = document.getElementById('cancelBtnIndex');
+        // 关闭模态框
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+        cancelBtn.addEventListener('click', closeModal);
+
+        {if !empty($data['bg_color'])}
+            colorpicker.render({
+                elem:'#bg_color',
+                alpha:true,
+                size:'lg',
+                predefine:true,
+                color:'{$data["bg_color"]}',
+                done:function(color){
+                    $('input[name="bg_color"]').val(color);
+                }
+            });
+        {else}
+            colorpicker.render({
+                elem:'#bg_color',
+                alpha:true,
+                size:'lg',
+                done:function(color){
+                    $('input[name="bg_color"]').val(color);
+                }
+            });
+        {/if}
+
+        form.on('select(go_other)',function(data){
+            let val = data.value;
+
+            if(val==0){
+                $(this).parents(":eq(3)").find('td').eq(3).find('.other_link,.other_navbar,.other_pic,.other_msg,.other_keywords').hide();
+            }else if(val==1){
+                $(this).parents(":eq(3)").find('td').eq(3).find('.other_link').show();
+                $(this).parents(":eq(3)").find('td').eq(3).find('.other_navbar,.other_pic,.other_msg,.other_keywords').hide();
+            }else if(val==2){
+                $(this).parents(":eq(3)").find('td').eq(3).find('.other_link,.other_pic,.other_msg,.other_keywords').hide();
+                $(this).parents(":eq(3)").find('td').eq(3).find('.other_navbar').show();
+            }else if(val==3){
+                $(this).parents(":eq(3)").find('td').eq(3).find('.other_pic').show();
+                $(this).parents(":eq(3)").find('td').eq(3).find('.other_link,.other_navbar,.other_msg,.other_keywords').hide();
+            }else if(val==4){
+                $(this).parents(":eq(3)").find('td').eq(3).find('.other_msg').show();
+                $(this).parents(":eq(3)").find('td').eq(3).find('.other_link,.other_navbar,.other_pic,.other_keywords').hide();
+            }else if(val==5){
+                $(this).parents(":eq(3)").find('td').eq(3).find('.other_keywords').show();
+                $(this).parents(":eq(3)").find('td').eq(3).find('.other_link,.other_navbar,.other_pic,.other_msg').hide();
+            }
+        });
+
+        form.on('select(bg_type)',function(data){
+            let val = data.value;
+
+            if(val==1){
+                $('.bg_color').show();
+                $('.bg_img').hide();
+            }else{
+                $('.bg_color').hide();
+                $('.bg_img').show();
+            }
+        });
+
+        form.on('select(format_type)',function(data){
+            let val = data.value;
+
+            if(val==1 || val==3){
+                $('.change_box,.fq_box,.fq_picBox,.card1,.card2,.card3').hide();
+            }
+            else if(val==2){
+                $('.change_box').show();
+                $('.fq_box,.fq_picBox,.card1,.card2,.card3').hide();
+            }
+            else if(val==4){
+                $('.fq_box').show();
+                $('.change_box,.fq_picBox,.card1,.card2,.card3').hide();
+            }
+            else if(val==5){
+                $('.fq_picBox').show();
+                $('.change_box,.fq_box,.card1,.card2,.card3').hide();
+            }
+            else if(val==6){
+                $('.card1').show();
+                $('.change_box,.fq_box,.fq_picBox,.card2,.card3').hide();
+            }
+            else if(val==7){
+                $('.card2').show();
+                $('.change_box,.fq_box,.fq_picBox,.card1,.card3').hide();
+            }
+            else if(val==8){
+                $('.card3').show();
+                $('.change_box,.fq_box,.fq_picBox,.card1,.card2').hide();
+            }
+        });
+
+        // 一问一答图文内容
+        {if($id>0 && !empty($data['fq_category_content']))}
+            {volist name="data.fq_category_content" key="k" id="vo"}
+            xmSelect.render({
+                name: 'fq_ids[]',
+                el: '.fq_menus{$k}',
+                autoRow: true, //自动换行
+                filterable: true, //可搜索
+                searchTips: '请选择',
+                radio: false,
+                model: {
+                    icon: 'hidden',//是否展示复选框或者单选框图标 show, hidden:变换背景色  ！！这句话是重点，不然会变成父节点也有单选框！！
+                    label: {
+                        type: 'block',
+                        block: {
+                            showCount: 2,
+                            showIcon: true,
+                        }
+                    }
+                },
+                tree: {
+                    show: true, //用树显示
+                    showFolderIcon: true, //是否显示节点前的三角图标
+                    expandedKeys: true, //默认全部展开
+                    showLine: true, //显示渐近线
+                    indent: 20, //间距
+                    strict: false, //重点！！设置成非严格父子模式，这样父节点被禁用，子节点依然可以点击
+                    clickCheck: true,
+                },
+                toolbar: {
+                    show: true, //显示工具条
+                    list: ['ALL', 'REVERSE', 'CLEAR']
+                },
+                height: '300px', //最大下拉框高度
+                data: {$fq_list},
+                initValue: [{$vo['fq_ids']}],
+                on: function (data) {
+                    // data.arr 包含当前选中项数组
+                    const selectedValues = data.arr.map(item => item.value); // 提取选中值数组
+                }
+            });
+            {/volist}
+        {else}
+            xmSelect.render({
+                name: 'fq_ids[]',
+                el: '.fq_menus0',
+                autoRow: true, //自动换行
+                filterable: true, //可搜索
+                searchTips: '请选择',
+                radio: false,
+                model: {
+                    icon: 'hidden',//是否展示复选框或者单选框图标 show, hidden:变换背景色  ！！这句话是重点，不然会变成父节点也有单选框！！
+                    label: {
+                        type: 'block',
+                        block: {
+                            showCount: 2,
+                            showIcon: true,
+                        }
+                    }
+                },
+                tree: {
+                    show: true, //用树显示
+                    showFolderIcon: true, //是否显示节点前的三角图标
+                    expandedKeys: true, //默认全部展开
+                    showLine: true, //显示渐近线
+                    indent: 20, //间距
+                    strict: false, //重点！！设置成非严格父子模式，这样父节点被禁用，子节点依然可以点击
+                    clickCheck: true,
+                },
+                toolbar: {
+                    show: true, //显示工具条
+                    list: ['ALL', 'REVERSE', 'CLEAR']
+                },
+                height: '300px', //最大下拉框高度
+                data: {$fq_list},
+                initValue: [],
+                on: function (data) {
+                    // data.arr 包含当前选中项数组
+                    const selectedValues = data.arr.map(item => item.value); // 提取选中值数组
+                }
+            });
+        {/if}
+
+        // 选择板块
+        xmSelect.render({
+            el: '#connect_menus',
+            autoRow: true, //自动换行
+            filterable: true, //可搜索
+            searchTips: '请选择',
+            radio:true,
+            model: {
+                icon: 'hidden',//是否展示复选框或者单选框图标 show, hidden:变换背景色  ！！这句话是重点，不然会变成父节点也有单选框！！
+            },
+            tree: {
+                show: true, //用树显示
+                showFolderIcon: true, //是否显示节点前的三角图标
+                expandedKeys: true, //默认全部展开
+                showLine: true, //显示渐近线
+                indent: 20, //间距
+                strict: false, //重点！！设置成非严格父子模式，这样父节点被禁用，子节点依然可以点击
+                clickCheck:true,
+            },
+            toolbar: {
+                show: true, //显示工具条
+                list: ['ALL', 'REVERSE', 'CLEAR']
+            },
+            height: '300px', //最大下拉框高度
+            data: {$list},
+            initValue:["{$data['navbar_id']}"],
+            on: function(data) {
+                // data.arr 包含当前选中项数组
+                const selectedValues = data.arr.map(item => item.value); // 提取选中值数组
+                // const selectedNames = data.arr.map(item => item.name);  // 提取选中文本数组
+                // console.log('选中值:', selectedValues);
+                // console.log('选中文本:', selectedNames);
+
+                console.log(selectedValues[0]);
+                if(selectedValues[0]=='A1'){
+
+                }
+                else if(selectedValues[0]>0){
+                    $.post("/?s=index/get_nextNavbar&id="+selectedValues,{},function(data2){
+                        // var data2 = $.parseJSON(data2);
+                        fnavbar = data2.list;
+                        let html = '<select name="fnavbar[]">\n';
+                        let html2 = '<select name="btn_navbar[]">\n';
+                        for(let i=0;i<data2.list.length;i++){
+                            html += '<option value="'+data2.list[i].id+'">'+data2.list[i].name+'</option>\n';
+                            html2 += '<option value="'+data2.list[i].id+'">'+data2.list[i].name+'</option>\n';
+                        }
+                        html+='</select>';
+                        html2+='</select>';
+                        $('.change_box_table').find('.next_menu').html(html);
+                        $('.change_box_diybtn_table').find('.next_menu').html(html2);
+
+                        form.render(null,'component-form-index');
+                    });
+                }
+            },
+        });
+
+        // 右方图片文件
+        upload.render({
+            elem: '#img_file-upload'
+            ,url: '/?s=index/upload_file'
+            ,accept: 'file'
+            ,data: { folder: 'merch_file', type: 'website_index'}
+            ,multiple: false
+            ,number:1
+            ,before: function(obj){
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                if(res.code == 1)
+                {
+
+                    $('#img_file-upload-list').append('<div style="display: inline-block;"><img onclick="seePic(this);" src="/'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="thumb[]" value="'+res.file_path+'"></div>')
+                }
+            }
+        });
+
+        //一行四个图片格式start
+        upload.render({
+            elem: '#card1_file0-upload'
+            ,url: '/?s=index/upload_file'
+            ,accept: 'file'
+            ,data: { folder: 'merch_file', type: 'website_index'}
+            ,multiple: false
+            ,number:1
+            ,before: function(obj){
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                if(res.code == 1)
+                {
+
+                    $('#card1_file0-upload-list').append('<div style="display: inline-block;"><img onclick="seePic(this);" src="/'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="card1_img[0]" value="'+res.file_path+'"></div>')
+                }
+            }
+        });
+        upload.render({
+            elem: '#card1_file1-upload'
+            ,url: '/?s=index/upload_file'
+            ,accept: 'file'
+            ,data: { folder: 'merch_file', type: 'website_index'}
+            ,multiple: false
+            ,number:1
+            ,before: function(obj){
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                if(res.code == 1)
+                {
+
+                    $('#card1_file1-upload-list').append('<div style="display: inline-block;"><img onclick="seePic(this);" src="/'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="card1_img[1]" value="'+res.file_path+'"></div>')
+                }
+            }
+        });
+        upload.render({
+            elem: '#card1_file2-upload'
+            ,url: '/?s=index/upload_file'
+            ,accept: 'file'
+            ,data: { folder: 'merch_file', type: 'website_index'}
+            ,multiple: false
+            ,number:1
+            ,before: function(obj){
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                if(res.code == 1)
+                {
+
+                    $('#card1_file2-upload-list').append('<div style="display: inline-block;"><img onclick="seePic(this);" src="/'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="card1_img[2]" value="'+res.file_path+'"></div>')
+                }
+            }
+        });
+        upload.render({
+            elem: '#card1_file3-upload'
+            ,url: '/?s=index/upload_file'
+            ,accept: 'file'
+            ,data: { folder: 'merch_file', type: 'website_index'}
+            ,multiple: false
+            ,number:1
+            ,before: function(obj){
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                if(res.code == 1)
+                {
+
+                    $('#card1_file3-upload-list').append('<div style="display: inline-block;"><img onclick="seePic(this);" src="/'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="card1_img[3]" value="'+res.file_path+'"></div>')
+                }
+            }
+        });
+        //一行四个图片格式end
+
+        //两行各两个格式start
+        upload.render({
+            elem: '#card3_file0-upload'
+            ,url: '/?s=index/upload_file'
+            ,accept: 'file'
+            ,data: { folder: 'merch_file', type: 'website_index'}
+            ,multiple: false
+            ,number:1
+            ,before: function(obj){
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                if(res.code == 1)
+                {
+
+                    $('#card3_file0-upload-list').append('<div style="display: inline-block;"><img onclick="seePic(this);" src="/'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="card3_img[0]" value="'+res.file_path+'"></div>')
+                }
+            }
+        });
+        upload.render({
+            elem: '#card3_file1-upload'
+            ,url: '/?s=index/upload_file'
+            ,accept: 'file'
+            ,data: { folder: 'merch_file', type: 'website_index'}
+            ,multiple: false
+            ,number:1
+            ,before: function(obj){
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                if(res.code == 1)
+                {
+
+                    $('#card3_file1-upload-list').append('<div style="display: inline-block;"><img onclick="seePic(this);" src="/'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="card3_img[1]" value="'+res.file_path+'"></div>')
+                }
+            }
+        });
+        upload.render({
+            elem: '#card3_file2-upload'
+            ,url: '/?s=index/upload_file'
+            ,accept: 'file'
+            ,data: { folder: 'merch_file', type: 'website_index'}
+            ,multiple: false
+            ,number:1
+            ,before: function(obj){
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                if(res.code == 1)
+                {
+
+                    $('#card3_file2-upload-list').append('<div style="display: inline-block;"><img onclick="seePic(this);" src="/'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="card3_img[2]" value="'+res.file_path+'"></div>')
+                }
+            }
+        });
+        upload.render({
+            elem: '#card3_file3-upload'
+            ,url: '/?s=index/upload_file'
+            ,accept: 'file'
+            ,data: { folder: 'merch_file', type: 'website_index'}
+            ,multiple: false
+            ,number:1
+            ,before: function(obj){
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                if(res.code == 1)
+                {
+
+                    $('#card3_file3-upload-list').append('<div style="display: inline-block;"><img onclick="seePic(this);" src="/'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="card3_img[3]" value="'+res.file_path+'"></div>')
+                }
+            }
+        });
+        //两行各两个格式end
+
+        // 板块背景图
+        upload.render({
+            elem: '#img_file2-upload'
+            ,url: '/?s=index/upload_file'
+            ,accept: 'file'
+            ,data: { folder: 'merch_file', type: 'website_index'}
+            ,multiple: false
+            ,number:1
+            ,before: function(obj){
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                if(res.code == 1)
+                {
+
+                    $('#img_file2-upload-list').append('<div style="display: inline-block;"><img onclick="seePic(this);" src="/'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="bg_img[]" value="'+res.file_path+'"></div>')
+                }
+            }
+        });
+
+        form.on('submit(component-form-index)', function(data){
+            layer.load();
+            $.ajax({
+                url:"/?s=index/save_website_index",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.closeAll('loading');
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            let currentUrl = new URL(parent.location.href);
+                            currentUrl.searchParams.set('tab', 'channels');
+                            parent.history.pushState({}, '', currentUrl.toString());
+                            parent.location.reload();
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+
+    function addThis(t,type=1){
+        var layer = layui.layer,$ = layui.$,form = layui.form;
+
+        if(type==1){
+            let html = '<tr>\n' +
+                '                                            <td>\n'+
+                '                                                <select name="fnavbar[]">\n';
+                {if !empty($cmenu)}
+                    {volist name="cmenu" id="vo"}
+            html += '<option value="{$vo['id']}">{$vo['name']}</option>\n';
+                    {/volist}
+                {else}
+                    for(let i=0;i<fnavbar.length;i++){
+                        html += '<option value="'+fnavbar[i].id+'">'+fnavbar[i].name+'</option>\n';
+                    }
+                {/if}
+                html+='                                          </select>\n'+
+                    '                                            </td>\n' +
+                    '                                            <td>\n' +
+                    '                                                <input class="form-control icp icp-auto layui-input" value="" placeholder="请选择图标" type="text" name="ficon[]"/>\n' +
+                    '                                            </td>\n' +
+                    '                                            <td>\n' +
+                    '                                                <input type="text" class="layui-input" placeholder="请输入标题" name="ftitle[]">\n' +
+                    '                                            </td>\n' +
+                    '                                            <td>\n' +
+                    '                                                <input type="text" class="layui-input" placeholder="请输入描述" name="fdesc[]">\n' +
+                    '                                            </td>\n' +
+                    '                                            <td>\n' +
+                    '                                                <div class="closeBtn layui-btn-danger layui-btn" onclick="closeThis(this)">×</div>\n' +
+                    '                                            </td>\n' +
+                    '                                        </tr>';
+
+                $('.change_box_table').find('tbody').append(html);
+                $('.icp-auto').iconpicker();
+        }
+        else if(type==2){
+                let html = '<tr>\n' +
+                    '                                                <td>\n' +
+                    '                                                    <input type="text" class="layui-input" placeholder="请输入标题" name="fq_title[]" value="">\n' +
+                    '                                                </td>\n' +
+                    '                                                <td>\n' +
+                    '                                                    <input type="text" class="layui-input" placeholder="请输入描述" name="fq_desc[]" value="">\n' +
+                    '                                                </td>\n' +
+                    '                                                <td>\n' +
+                    '                                                    <div class="closeBtn layui-btn-danger layui-btn" onclick="closeThis(this)">×</div>\n' +
+                    '                                                </td>\n' +
+                    '                                            </tr>';
+                $('.fq_box_table').find('tbody').append(html);
+        }
+        else if(type==3){
+                let html = '<tr>\n' +
+                    '                                            <td>\n'+
+                    '                                                <select name="btn_navbar[]">\n';
+                    {if !empty($cmenu)}
+                        {volist name="cmenu" id="vo"}
+                html += '<option value="{$vo['id']}">{$vo['name']}</option>\n';
+                        {/volist}
+                    {else}
+                        for(let i=0;i<fnavbar.length;i++){
+                            html += '<option value="'+fnavbar[i].id+'">'+fnavbar[i].name+'</option>\n';
+                        }
+                    {/if}
+                        html+='                                          </select>\n'+
+                            '                                            </td>\n' +
+                            '                                                        <td>\n' +
+                            '                                                            <input class="layui-input" value="" placeholder="请输入按键名称" type="text" name="btn_title[]"/>\n' +
+                            '                                                        </td>\n' +
+                            '                                                        <td>\n' +
+                            '                                                            <select name="go_other[]" lay-filter="go_other">\n' +
+                            '                                                                <option value="0">否</option>\n' +
+                            '                                                                <option value="1">第三方链接</option>\n' +
+                            '                                                                <option value="2">应用链接</option>\n' +
+                            '                                                                <option value="3">图文链接</option>\n' +
+                            '                                                                <option value="4">消息链接</option>\n' +
+                            '                                                                <option value="5">关键字搜索</option>\n' +
+                            '                                                            </select>\n' +
+                            '                                                        </td>\n' +
+                            '                                                        <td>\n' +
+                            '                                                            <div class="other_link" style="display:none;">\n' +
+                            '                                                                <input type="text" class="layui-input" name="other_link[]" placeholder="请输入第三方链接" value="">\n' +
+                            '                                                            </div>\n' +
+                            '                                                            <div class="other_navbar" style="display:none;">\n' +
+                            '                                                                <select name="other_navbar[]" lay-search>\n' +
+                            '                                                                    <option value="">请选择应用</option>\n';
+
+                        {volist name="btn_list" id="vo2"}
+                            html+='                                                                    <option value="{$vo2.id}">{$vo2.name}</option>\n';
+                            {if !empty($vo2.childMenu)}
+                                {volist name="vo2.childMenu" id="vo3"}
+                            html+='                                                                    <option value="{$vo3.id}">--{$vo3.name}</option>\n';
+                                {if !empty($vo3.childMenu)}
+                                    {volist name="vo3.childMenu" id="vo4"}
+                                html+='                                                                    <option value="{$vo4.id}">----{$vo4.name}</option>\n';
+                                    {if !empty($vo4.childMenu)}
+                                        {volist name="vo4.childMenu" id="vo5"}
+                                    html+='                                                                    <option value="{$vo5.id}">------{$vo5.name}</option>\n';
+                                        {/volist}
+                                    {/if}
+                                    {/volist}
+                                {/if}
+                                {/volist}
+                            {/if}
+                        {/volist}
+
+                    html+='                                                                </select>\n' +
+                        '                                                            </div>\n' +
+                        '                                                            <div class="other_pic" style="display:none;">\n' +
+                        '                                                                <select name="other_pic[]" lay-search>\n' +
+                        '                                                                    <option value="">请选择图文</option>\n';
+                    {volist name="pic_list" id="vo2"}
+                    html+='                                                                    <option value="{$vo2.id}">{$vo2.name}</option>\n';
+                    {/volist}
+                        html+='                                                                </select>\n' +
+                            '                                                            </div>\n' +
+                            '                                                            <div class="other_msg" style="display:none;">\n' +
+                            '                                                                <select name="other_msg[]" lay-search>\n' +
+                            '                                                                    <option value="">请选择消息</option>\n';
+                        {volist name="msg_list" id="vo2"}
+                        html+='                                                                    <option value="{$vo2.id}">{$vo2.name}</option>\n';
+                        {/volist}
+                            html+='                                                                </select>\n' +
+                                '                                                            </div>\n' +
+                                '                                                            <div class="other_keywords" style="display:none;">\n' +
+                                '                                                                <input type="text" class="layui-input" name="other_keywords[]" value="" placeholder="更多关键字用顿号“、”分割">\n' +
+                                '                                                            </div>\n' +
+                                '                                                        </td>\n' +
+                                '                                                        <td>\n' +
+                                '                                                            <div class="closeBtn layui-btn-danger layui-btn" onclick="closeThis(this)">×</div>\n' +
+                                '                                                        </td>\n' +
+                                '                                                    </tr>';
+                            $('.change_box_diybtn_table').find('tbody').append(html);
+        }
+        else if(type==5){
+            let idx = $('.fq_picBox').find('.layui-table').find('tbody tr').length;
+
+            let html = '<tr>\n' +
+                '                                                <td>\n' +
+                '                                                    <input type="text" class="layui-input" name="fq_ctitle[]" value="" placeholder="请输入分类名称">\n' +
+                '                                                </td>\n' +
+                '                                                <td>\n' +
+                '                                                    <div class="xm-select-demo fq_menus'+idx+'"></div>\n' +
+                '                                                </td>\n' +
+                '                                                <td>\n' +
+                '                                                    <div class="closeBtn layui-btn-danger layui-btn" onclick="closeThis(this)">×</div>\n' +
+                '                                                </td>\n' +
+                '                                            </tr>';
+            $('.fq_picBox').find('tbody').append(html);
+            xmSelect.render({
+                name: 'fq_ids[]',
+                el: '.fq_menus'+idx,
+                autoRow: true, //自动换行
+                filterable: true, //可搜索
+                searchTips: '请选择',
+                radio: false,
+                model: {
+                    icon: 'hidden',//是否展示复选框或者单选框图标 show, hidden:变换背景色  ！！这句话是重点，不然会变成父节点也有单选框！！
+                    label: {
+                        type: 'block',
+                        block: {
+                            showCount: 2,
+                            showIcon: true,
+                        }
+                    }
+                },
+                tree: {
+                    show: true, //用树显示
+                    showFolderIcon: true, //是否显示节点前的三角图标
+                    expandedKeys: true, //默认全部展开
+                    showLine: true, //显示渐近线
+                    indent: 20, //间距
+                    strict: false, //重点！！设置成非严格父子模式，这样父节点被禁用，子节点依然可以点击
+                    clickCheck: true,
+                },
+                toolbar: {
+                    show: true, //显示工具条
+                    list: ['ALL', 'REVERSE', 'CLEAR']
+                },
+                height: '300px', //最大下拉框高度
+                data: {$fq_list},
+                initValue: [],
+                on: function (data) {
+                    // data.arr 包含当前选中项数组
+                    const selectedValues = data.arr.map(item => item.value); // 提取选中值数组
+                }
+            });
+        }
+
+        form.render(null, 'component-form-index');
+    }
+
+    function closeThis(t){
+        var layer = layui.layer,$ = layui.$;
+
+        $(t).parents(':eq(1)').remove();
+    }
+
+    function delPic(obj)
+    {
+        var layer = layui.layer,$ = layui.$;
+        layer.confirm('确认要删除该附件？', {
+            btn: ['删除','取消']
+        }, function(){
+            $(obj).parent().remove();
+            layer.closeAll();
+        }, function(){
+
+        });
+    }
+</script>
+</html>

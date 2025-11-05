@@ -1,0 +1,115 @@
+<style>
+    .process_div{width:100%;overflow-x:auto;padding-bottom:10px;border-bottom:2px solid {$website['color_word']};cursor:pointer;}
+    .process_child{margin-left:5px;width:80px;text-align: center;margin-right:20px;padding:5px 10px;}
+    .process_child .process_img{width:100%;}
+    .process_child:last-child .process_arrow_box{display:none;}
+    .process_child:first-child{margin-left:10px;}
+    .process_child .process_text{color:{$website['color_word']};}
+    .process_child .process_arrow{width:25px;height:25px;}
+    .process_active{color:{$website['color']};border-radius: 5px;background:{$website['color']};}
+    .process_siblings .process_active2{color:{$website['color']};border-radius: 5px;background:#4b4d97;}
+    .process_siblings2 .process_active2{color:{$website['color']};border-radius: 5px;background:#3438c9;}
+    /*.process_active .process_text,.process_active2 .process_text{background:{$website['color']};}*/
+    @media (max-width: 992px){
+        #content .container{width: 95%;max-width:95%;margin: 10px auto 0px;}
+        .personalMain .personal {width: 100%;display:block;}
+        .personal_right {width: 100% !important;}
+        .main-container {width: 100% !important;min-height:400px;}
+        .first_process_div{overflow-x: scroll;display: -webkit-inline-box !important;}
+        .first_process_div .process_child{display: block;}
+    }
+</style>
+
+<div class="disf process_div first_process_div">
+    {volist name="process" key="key2" id="vo"}
+    {if $key2<3}
+    <div onclick="show_process(this,{$vo['id']},'{$vo[\'link\']}','{$vo[\'id\']}',1)" class="f18 process_child {if $process_ids['process1']==$vo['id']}process_active{/if}" style="position: relative;">
+        <div class="f13 process_text">{$vo['step']}</div>
+        <div class="f13 process_text">{$vo['content']}</div>
+        <div class="process_arrow_box" style="position: absolute;top: 8px;right: -25px;">
+            <img src="./img/white_arrow.png" alt="" class="process_arrow">
+        </div>
+    </div>
+    {/if}
+    {/volist}
+</div>
+{volist name="process" key="key3" id="vo"}
+<div class="disf process_div process{$vo['id']} process_siblings" style="display: {if $process_ids['process1']==$vo['id']}flex{else}none{/if};{if(empty($vo['children']))}border-bottom:0;{/if}padding-top:10px;">
+    {volist name="vo['children']" key="key2" id="vo2"}
+        {if(!empty($vo2['children']))}
+            <div onclick="show_process(this,{$vo2['id']},'{$vo2[\'link\']}',{$vo['id']},2)" class="f18 process_child {if $process_ids['process2']==$vo2['id']}process_active2{/if}" style="position: relative;">
+        {else}
+            <div onclick="show_process2(this,{$vo2['id']},'{$vo2[\'link\']}',{$vo['id']},{$vo2['id']})" class="f18 process_child {if $process_ids['process2']==$vo2['id']}process_active2{/if}" style="position: relative;">
+        {/if}
+            <div class="f13 process_text">{$vo['step']}.{$key2}</div>
+            <div class="f13 process_text">{$vo2['content']}</div>
+            <div class="process_arrow_box" style="position: absolute;top: 8px;right: -25px;">
+                <img src="./img/white_arrow.png" alt="" class="process_arrow">
+            </div>
+        </div>
+        {/volist}
+    </div>
+    {/volist}
+
+    {volist name="process" key="key3" id="vo"}
+    {volist name="vo['children']" key="key2" id="vo2"}
+    {if(!empty($vo2['children']))}
+    <div class="disf process_div process{$vo2['id']} process_siblings2" style="display: {if $process_ids['process2']==$vo2['id']}flex{else}none{/if};{if(empty($vo2['children']))}border-bottom:0;{/if}padding-top:10px;">
+        {volist name="vo2['children']" key="key" id="vo3"}
+        <div onclick="show_process2(this,{$vo3['id']},'{$vo3[\'link\']}',{$vo['id']},{$vo2['id']})" class="f18 process_child {if $process_ids['process3']==$vo3['id']}process_active2{/if}" style="position: relative;">
+            <div class="f13 process_text">{$vo['step']}.{$key2}.{$key}</div>
+            <div class="f13 process_text">{$vo3['content']}</div>
+            <div class="process_arrow_box" style="position: absolute;top: 8px;right: -25px;">
+                <img src="./img/white_arrow.png" alt="" class="process_arrow">
+            </div>
+        </div>
+        {/volist}
+    </div>
+    {/if}
+    {/volist}
+    {/volist}
+    <script>
+        function show_process(t,id,link,id1,level){
+            var $ = layui.$
+                , layer = layui.layer;
+            if(link!=''){
+                window.location.href=link+'&process1='+id1+'&process2='+id;
+            }else{
+                if(level==1){
+                    //第一层点击查看第二层
+                    $(t).siblings().removeClass('process_active');
+                    $(t).addClass('process_active');
+                    $('.process_siblings').hide();
+                    $('.process_siblings2').hide();
+                    $('.process_siblings').find('.process_active').removeClass('process_active');
+                    $('.process_siblings').find('.process_active2').removeClass('process_active2');
+                    if(IsPhone()){
+                        var sleft=0;
+                        if($(t).index()==2){
+                            sleft=110;
+                        }else if($(t).index()==3){
+                            sleft=190;
+                        }else if($(t).index()==4){
+                            sleft=190;
+                        }
+                        $('.first_process_div').animate({ scrollLeft: sleft }, 500);
+                    }
+                }else if(level==2){
+                    //第二层点击查看第三层
+                    $(t).siblings().removeClass('process_active2');
+                    $(t).addClass('process_active2');
+                    $('.process_siblings2').hide();
+                    $('.process_siblings2').find('.process_active').removeClass('process_active');
+                }
+                $('.process'+id).show();
+            }
+        }
+
+        function show_process2(t,id,link,id1,id2){
+            var $ = layui.$
+                , layer = layui.layer;
+            if(link!=''){
+                window.location.href=link+'&process1='+id1+'&process2='+id2+'&process3='+id;
+            }
+        }
+    </script>

@@ -1,0 +1,808 @@
+<style>
+    .disf{display:flex;align-items: center;}
+    .cursor{cursor:pointer;color:{$website['color_word']};text-decoration:underline;}
+    .cursor:hover{color:{$website['color']};}
+    .gather_rule{width: 380px;margin-bottom:15px;}
+    .rule_head{font-size: 18px;border:1px solid {$website['color_word']};color:{$website['color_word']};border-radius: 50px;width:fit-content;padding:2px 12px;}
+    .rule_content{border:2px solid {$website['color_word']};border-radius: 5px;}
+    .rule_item:first-child{margin-top:0;}
+    .rule_item{margin-top:10px;color:{$website['color_word']};max-width: 380px;overflow-x: auto;white-space:nowrap;}
+    .rule_content .layui-form-item:last-child{margin-bottom:0;}
+
+    .change_window .layui-form-item .layui-form-checkbox[lay-skin=primary]{margin-top:0;}
+    .change_window .layui-tab-card>.layui-tab-title{background:{$website['color']};box-sizing:content-box;}
+    .change_window .layui-tab-card>.layui-tab-title li{color:{$website['color_word']};}
+    .change_window .layui-tab-card>.layui-tab-title .layui-this{background:#1790FF;}
+    /*新增tab-card样式*/
+    .change_window .layui-tab-content{border:2px solid {$website['color_word']};}
+    .change_window .layui-tab-title{text-align: center;padding: 10px;height:60px;background:unset;}
+    .change_window .layui-tab-card>.layui-tab-title li{padding: 0;border-radius: 50%;width: fit-content;border: 0;height: 60px;line-height: 60px;background:#aaaaaa;position: relative;margin-right:35px;}
+    .change_window .layui-tab-card>.layui-tab-title .layui-this:after{border-width: 0;}
+    .change_window .layui-tab-card>.layui-tab-title li:before{content: '';position: absolute;right: -20px;top: 20px;width: 15px;height: 15px;border: 2px solid {$website['color_word']};border-bottom: 0;border-left: 0;transform: rotate(45deg);}
+    .change_window .layui-tab-card>.layui-tab-title li:last-child{margin-right: 0;}
+    .change_window .layui-tab-card>.layui-tab-title li:last-child:before{border:0;}
+    .change_window .already_read{background:#009688 !important;position: relative;}
+    .change_window .already_read:after{content: '';position: absolute;top: 42px;left: 27px;width: 15px;height: 8px;border: 2px solid #FFFFFF;border-width: 2px !important;border-top: 0;border-right:0;transform: rotate(-45deg);border-radius:0 !important;box-sizing:unset !important;}
+
+    .rule_guide_times{font-size:15px;background:{$website['color']};color:{$website['color_word']};padding:3px 10px;box-sizing:border-box;border-radius:5px;margin-right:8px;display: inline-block;}
+    .rule_code{text-align: center;}
+    .rule_content .layui-form-item{margin-bottom:0;}
+    .rule_content .layui-form-label{padding-top:0;}
+    .input_verifycode{display: flex;align-items: center;justify-content: center;width: 50%;margin:0 auto;margin-top:10px;}
+    .grey_div{background:#a0a0a0;}
+
+
+    @media (max-width: 992px){
+        .gather_rule{width: 100%;}
+    }
+</style>
+{if(!empty($check_content))}
+<input type="hidden" name="rule_id" value="{$check_content['id']}">
+<div class="gather_rule">
+    <!--    <div class="rule_head">!</div>-->
+    <div class="rule_content" {if $check_content['already_read']==1}style="border:2px solid {$website['color_word']};"{/if}>
+    {if(!empty($check_content['confirm']['title'][0]))}
+    <div class="layui-form-item">
+        <label class="layui-form-label"><input type="checkbox" name="confirm" title="" value="1" lay-skin="primary" lay-filter="confirm" lay-verify="required" disabled {if $check_content['already_read']==1}checked{/if}>同意</label>
+        <div class="layui-input-inline layui-select-fscon" style="width: 65% !important;overflow: auto;">
+            <div class="rule_item disf">
+                {volist name="check_content.confirm.title" key="key2" id="vo"}
+                <div class="cursor" onclick="open_check('{$vo}','{$check_content[\'confirm\'][\'link\'][$key2-1]}',{$check_content[\'confirm\'][\'method\']},{$check_content[\'confirm\'][\'second\']},1)">《{$vo}》</div>&nbsp;
+                {/volist}
+            </div>
+        </div>
+    </div>
+    {/if}
+    {if(!empty($check_content['sure']['title'][0]))}
+    <div class="layui-form-item">
+        <label class="layui-form-label"><input type="checkbox" name="sure" title="" value="1" lay-skin="primary" lay-filter="sure" lay-verify="required" disabled {if $check_content['already_read']==1}checked{/if}>确认</label>
+        <div class="layui-input-inline layui-select-fscon" style="width: 65% !important;overflow: auto;">
+            <div class="rule_item disf">
+                {volist name="check_content.sure.title" key="key2" id="vo"}
+                <div class="cursor" onclick="open_check('{$vo}','{$check_content[\'sure\'][\'link\'][$key2-1]}',{$check_content[\'sure\'][\'method\']},{$check_content[\'confirm\'][\'second\']},2)">《{$vo}》</div>&nbsp;
+                {/volist}
+            </div>
+        </div>
+    </div>
+    {/if}
+    {if(!empty($check_content['knows']['title'][0]))}
+    <div class="layui-form-item">
+        <label class="layui-form-label"><input type="checkbox" name="knows" title="" value="1" lay-skin="primary" lay-filter="knows" lay-verify="required" disabled {if $check_content['already_read']==1}checked{/if}>知悉</label>
+        <div class="layui-input-inline layui-select-fscon" style="width: 65% !important;overflow: auto;">
+            <div class="rule_item disf">
+                {volist name="check_content.knows.title" key="key2" id="vo"}
+                <div class="cursor" onclick="open_check('{$vo}','{$check_content[\'knows\'][\'link\'][$key2-1]}',{$check_content[\'knows\'][\'method\']},{$check_content[\'confirm\'][\'second\']},3)">《{$vo}》</div>&nbsp;
+                {/volist}
+            </div>
+        </div>
+    </div>
+    {/if}
+    <div class="layui-form-item layui-layout-admin" style="margin-bottom: 10px !important;">
+        <div class="layui-input-block" style="margin-left:90px !important;">
+            <div class="" style="left: 0;">
+                <button class="layui-btn" lay-submit="" lay-filter="component-form-demo1" style="background:#1E9FFF;color:{$website['color_word']};border:1px solid {$website['color_word']};width: 190px;">确认提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="check_content" style="display: none;text-align: center;">
+    <div class="change_window">
+
+    </div>
+    <div class="out_closeBtn">
+        <div class="layui-btn layui-btn-success layui-btn-md close_window" style="margin-top:10px;" onclick="close_window()"><i class="layui-icon" style="display: none;">&#xe605;</i> 放弃阅读</div>
+        <div class="layui-btn layui-btn-normal layui-btn-md next_window" style="margin-top:10px;" onclick="next_piece()">下一篇-></div>
+        <div class="layui-btn layui-btn-success layui-btn-md sure_rules" style="margin-top:10px;display:none;" onclick="close_window()">确认规则</div>
+    </div>
+</div>
+{/if}
+
+<script>
+    var rule_time=0;
+    var rule_timer='';
+    var window_index='';
+    var already_read=[];//已读/已打开协议数组
+    var verify_name='';
+    var verify_type='';
+    var already_send=[0,0,0];//协议是发送验证码的和已经验证的了就显示1，0号位是阅读，1号位是确认，2号位是知悉
+
+    //当前阅读类型的下一篇，如果没有或到尽头则从第一篇阅读开始
+    function next_piece(){
+        var $ = layui.$
+            , layer = layui.layer
+            , element = layui.element
+            , form = layui.form;
+        // var layid = location.hash.replace(/^#demo=/, '');
+        var nowkey = $('.change_window').find('.layui-this').attr('lay-nowkey');//当前选项卡的tab索引
+        var allkey = $('.change_window').find('.layui-this').attr('lay-allkey');//当前选项卡所有tab数量
+        var change_layid = 'demo1';
+        if(nowkey!=allkey){
+            nowkey = parseInt(nowkey)+1;
+            change_layid = 'demo'+nowkey;
+        }
+        element.tabChange('rules', change_layid);
+        element.render();
+    }
+
+    function rule_timers(times,check,typ,name){
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form;
+        let now_rule = name+typ;
+        if(already_read.includes(now_rule)){
+            $("."+times).html("");
+            $('.'+check).show();
+            return false;
+        }
+        rule_time-=1;
+        if(rule_time==0){
+            //为当前的li更换颜色
+            $('.change_window .layui-this').addClass('already_read');
+            rule_time=0;
+            $("."+times).html("");
+            $('.'+check).show();
+            already_read.push(now_rule);
+            var all_read = -1;
+            var can_foreach = 0;//允许循环下去
+            // var change_color_name = '';
+            if(typ==1){
+                {volist name="check_content.confirm.title" key="key2" id="vo"}
+                if(can_foreach==0) {
+                    if (already_read.includes("{$vo}1")) {
+                        all_read = 0;
+                    } else {
+                        all_read = -1;
+                        can_foreach=-1;
+                    }
+                }
+                {/volist}
+                    if(all_read==0){
+                        $('input[name="confirm"]').prop('checked',true);
+                        $('.sure_rules').show();
+                    }else{
+                        $('input[name="confirm"]').prop('checked',false);
+                    }
+                }
+            else if(typ==2){
+                    {volist name="check_content.sure.title" key="key2" id="vo"}
+                    if(can_foreach==0) {
+                        if (already_read.includes('{$vo}2')) {
+                            all_read = 0;
+                        } else {
+                            all_read = -1;
+                            can_foreach=-1;
+                        }
+                    }
+                    {/volist}
+                        if(all_read==0){
+                            $('input[name="sure"]').attr('checked',true);
+                        }
+                    }
+                else if(typ==3){
+                        {volist name="check_content.knows.title" key="key2" id="vo"}
+                        if(can_foreach==0) {
+                            if (already_read.includes('{$vo}3')) {
+                                all_read = 0;
+                                // change_color_name = "$vo";
+                            } else {
+                                all_read = -1;
+                                can_foreach=-1;
+                            }
+                        }
+                        {/volist}
+                            if(all_read==0){
+                                $('input[name="knows"]').attr('checked',true);
+                                $('.sure_rules').show();
+                            }
+                        }
+                        change_title_color(name);
+                        form.render('');//刷新表单
+                        all_done();
+                    }else{
+                        $("."+times).html("浏览剩余（"+rule_time+"）秒");
+                        rule_timer = setTimeout(function () {
+                            rule_timers(times,check,typ,name);
+                        },1000);
+                    }
+                }
+
+                //看过的规则变颜色
+                function change_title_color(name){
+                    let cursor = $('.rule_content').find('.cursor').length;
+                    for(let i=0;i<cursor;i++){
+                        let this_text = $('.rule_content').find('.cursor').eq(i).text();
+                        if(this_text=='《'+name+'》'){
+                            $('.rule_content').find('.cursor').eq(i).css('color',"#fff");
+                        }
+                    }
+
+                    //看过的规则打勾-仅限确认规则类
+                    $('.change_window .layui-this').addClass('already_read');
+                }
+
+                //发送验证码类型的，全点开后显示‘发送验证码’框
+                function if_all_read_show(typ){
+                    var can_foreach=0;
+                    if(typ==1){
+                        //阅读
+                        {volist name="check_content.confirm.title" key="key2" id="vo"}
+                        if(can_foreach==0) {
+                            if (already_read.includes('{$vo}1')) {
+                                $('.rule_code').show();
+                                $('.out_closeBtn').hide();
+                            } else {
+                                can_foreach=-1;
+                                $('.rule_code').hide();
+                                $('.out_closeBtn').show();
+                            }
+                        }
+                        {/volist}
+                        }
+                    else if(typ==2){
+                            //确认
+                            {volist name="check_content.sure.title" key="key2" id="vo"}
+                            if(can_foreach==0) {
+                                if (already_read.includes('{$vo}2')) {
+                                    $('.rule_code').show();
+                                    $('.out_closeBtn').hide();
+                                } else {
+                                    can_foreach=-1;
+                                    $('.rule_code').hide();
+                                    $('.out_closeBtn').show();
+                                }
+                            }
+                            {/volist}
+                            }
+                        else if(typ==3){
+                                //知悉
+                                {volist name="check_content.knows.title" key="key2" id="vo"}
+                                if(can_foreach==0) {
+                                    if (already_read.includes('{$vo}3')) {
+                                        $('.rule_code').show();
+                                        $('.out_closeBtn').hide();
+                                    } else {
+                                        can_foreach=-1;
+                                        $('.rule_code').hide();
+                                        $('.out_closeBtn').show();
+                                    }
+                                }
+                                {/volist}
+                                }
+                            }
+
+                            layui.use(['layer', 'form', 'table', 'upload','element'], function () {
+                                var $ = layui.$
+                                    , layer = layui.layer
+                                    , form = layui.form
+                                    , upload = layui.upload
+                                    , element = layui.element
+                                    , table = layui.table;
+
+                                form.on('checkbox(confirm)',function(data){
+                                    let val = data.value;
+                                    var check_rules = [];
+                                    {volist name="check_content.confirm.title" key="key2" id="vo"}
+                                    if(!already_read.includes('{$vo}1')){
+                                        layer.msg('请先浏览《{$vo}》协议');
+                                        $(data.elem).prop('checked',false);
+                                        form.render('checkbox');
+                                        return false;
+                                    }
+                                    check_rules.push('{$vo}');
+                                    {/volist}
+                                        if($check_content['confirm']['method']==2){
+                                            if(already_send[0]==0){
+                                                layer.msg('请先浏览《{$vo}》协议');
+                                                $(data.elem).prop('checked',false);
+                                                form.render('checkbox');
+                                                return false;
+                                            }
+                                        }
+                                    });
+
+                                form.on('checkbox(sure)',function(data){
+                                    let val = data.value;
+                                    var check_rules = [];
+                                    {volist name="check_content.sure.title" key="key2" id="vo"}
+                                    if(!already_read.includes('{$vo}2')){
+                                        layer.msg('请先浏览《{$vo}》协议');
+                                        $(data.elem).prop('checked',false);
+                                        form.render('checkbox');
+                                        return false;
+                                    }
+                                    check_rules.push('{$vo}');
+                                    {/volist}
+                                        if($check_content['sure']['method']==2){
+                                            if(already_send[1]==0){
+                                                layer.msg('请先浏览《{$vo}》协议');
+                                                $(data.elem).prop('checked',false);
+                                                form.render('checkbox');
+                                                return false;
+                                            }
+                                        }
+                                    });
+
+                                form.on('checkbox(knows)',function(data){
+                                    let val = data.value;
+                                    var check_rules = [];
+                                    {volist name="check_content.knows.title" key="key2" id="vo"}
+                                    if(!already_read.includes('{$vo}3')){
+                                        layer.msg('请先浏览《{$vo}》协议');
+                                        $(data.elem).prop('checked',false);
+                                        form.render('checkbox');
+                                        return false;
+                                    }
+                                    check_rules.push('{$vo}');
+                                    {/volist}
+                                        if($check_content['knows']['method']==2){
+                                            if(already_send[2]==0){
+                                                layer.msg('请先浏览《{$vo}》协议');
+                                                $(data.elem).prop('checked',false);
+                                                form.render('checkbox');
+                                                return false;
+                                            }
+                                        }
+                                        // $.ajax({
+                                        //     url:"/?s=gather/notice_customer_for_rules",
+                                        //     type:"POST",
+                                        //     dataType:"json",
+                                        //     data:{
+                                        //         "system_id":"{$check_content['system_id']}",
+                                        //         "function_id":"{$check_content['function_id']}",
+                                        //         "rule_id":"{$check_content['id']}",
+                                        //         'typ':3,
+                                        //         'check_rules':check_rules
+                                        //     },
+                                        //     success:function (res) {
+                                        //
+                                        //     }
+                                        // });
+                                    });
+
+                                //监听Tab切换，以改变地址hash值
+                                element.on('tab(rules)', function(data){
+                                    let idx = data.index;
+                                    let method = this.getAttribute('lay-method');
+                                    let second = this.getAttribute('lay-second');
+                                    let name = this.getAttribute('lay-name');
+                                    let typ = this.getAttribute('lay-typ');
+
+                                    if("{$check_content['already_read']}"==0) {
+                                        if (method == 2) {
+                                            change_title_color(name);
+                                            if (!already_read.includes(name + typ)) {
+                                                already_read.push(name + typ);
+                                            }
+                                        }
+
+                                        //根据配置方式，使用‘秒数’或‘验证码’
+                                        if (method == 1) {
+                                            //秒数
+                                            rule_time = second;
+                                            $('.rule_times').show();
+                                            $('.rule_code').hide();
+                                            clearTimeout(rule_timer);
+                                            rule_time = second;
+                                            rule_timers('rule_guide_times', 'close_window', typ, name);
+                                        } else if (method == 2) {
+                                            //验证码
+                                            let now_rule = name + typ;
+                                            // console.log('element',already_read);
+                                            if (already_read.includes(now_rule)) {
+                                                // $(".rule_code").hide();
+                                                $('.close_window').show();
+                                                if (already_send[typ - 1] == 0) {
+                                                    if_all_read_show(typ);
+                                                }
+                                            } else {
+                                                //验证码类型的全点开后显示‘发送验证码’
+                                                change_title_color(name);
+                                                if (already_read.includes(now_rule)) {
+                                                    already_read.push(now_rule);
+                                                }
+                                                if (already_send[typ - 1] == 0) {
+                                                    if_all_read_show(typ);
+                                                }
+                                                // $('.rule_code').show();
+                                            }
+                                            $('.rule_times').hide();
+
+                                            verify_name = name;
+                                            verify_type = typ;
+                                        }
+                                    }
+                                });
+                            });
+
+                            function open_check(name,link,method,second,typ){
+                                var $ = layui.$
+                                    , layer = layui.layer
+                                    , element = layui.element;
+                                if("{$check_content['already_read']}"==0){
+                                    if(method==2){
+                                        $('.sure_rules').hide();
+                                        change_title_color(name);
+                                        if(!already_read.includes(name+typ)) {
+                                            already_read.push(name + typ);
+                                        }
+                                    }
+                                }
+
+                                //循环显示出Tab卡片样式
+                                let html = '<div class="layui-tab layui-tab-card" lay-filter="rules">\n' +
+                                    '        <ul class="layui-tab-title">\n';
+                                if(typ==1){
+                                    {volist name="check_content.confirm.title" key="key2" id="vo"}
+                                    if(name=="{$vo}"){
+                                        html+='            <li class="layui-this" lay-method="'+method+'" lay-second="'+second+'" lay-name="{$vo}" lay-typ="'+typ+'" lay-id="demo{$key2}" lay-nowkey="{$key2}" lay-allkey="<?php echo count($check_content['confirm']['title'])?>">{$vo}</li>\n';
+                                    }else{
+                                        html+='            <li class="" lay-method="'+method+'" lay-second="'+second+'" lay-name="{$vo}" lay-typ="'+typ+'" lay-id="demo{$key2}" lay-nowkey="{$key2}" lay-allkey="<?php echo count($check_content['confirm']['title'])?>">{$vo}</li>\n';
+                                    }
+                                    {/volist}
+                                    }
+                                else if(typ==2){
+                                        {volist name="check_content.sure.title" key="key2" id="vo"}
+                                        if(name=="{$vo}") {
+                                            html += '            <li class="layui-this" lay-method="'+method+'" lay-second="'+second+'" lay-name="{$vo}" lay-typ="'+typ+'" lay-id="demo{$key2}" lay-nowkey="{$key2}" lay-allkey="<?php echo count($check_content['confirm']['title'])?>">{$vo}</li>\n';
+                                        }else{
+                                            html+='            <li class="" lay-method="'+method+'" lay-second="'+second+'" lay-name="{$vo}" lay-typ="'+typ+'" lay-id="demo{$key2}" lay-nowkey="{$key2}" lay-allkey="<?php echo count($check_content['confirm']['title'])?>">{$vo}</li>\n';
+                                        }
+                                        {/volist}
+                                        }
+                                    else if(typ==3){
+                                            {volist name="check_content.knows.title" key="key2" id="vo"}
+                                            if(name=="{$vo}") {
+                                                html += '            <li class="layui-this" lay-method="'+method+'" lay-second="'+second+'" lay-name="{$vo}" lay-typ="'+typ+'" lay-id="demo{$key2}" lay-nowkey="{$key2}" lay-allkey="<?php echo count($check_content['confirm']['title'])?>">{$vo}</li>\n';
+                                            }else{
+                                                html+='            <li class="" lay-method="'+method+'" lay-second="'+second+'" lay-name="{$vo}" lay-typ="'+typ+'" lay-id="demo{$key2}" lay-nowkey="{$key2}" lay-allkey="<?php echo count($check_content['confirm']['title'])?>">{$vo}</li>\n';
+                                            }
+                                            {/volist}
+                                            }
+
+                                            html+='        </ul>\n' +
+                                                '        <div class="layui-tab-content">\n';
+                                            if(typ==1){
+                                                {volist name="check_content.confirm.link" key="key2" id="vo"}
+                                                if(link=="{$vo}") {
+                                                    html += '            <div class="layui-tab-item layui-show">\n';
+                                                }else{
+                                                    html += '            <div class="layui-tab-item">\n';
+                                                }
+                                                html+='        <iframe class="inversion_image" src="{$vo}&watch=1" style="width:99%;height:450px;"></iframe><div class="rule_times">\n' +
+                                                    '        <div style="display: flex;align-items: center;justify-content: center;">\n' +
+                                                    '            <span class="rule_guide_times"></span>\n' +
+                                                    '            <div class="rule_guide_can_check" style="display: none;"><input type="checkbox" name="guide_sure" lay-skin="switch" lay-text="已阅读|未阅读"></div>\n' +
+                                                    '        </div>\n' +
+                                                    '    </div><div class="rule_code" style="display: none;">\n';
+                                                {if session('account')['email']!=''}
+                                                html+='        <span class="f15">确认协议前需把验证码发送到邮箱“<span style="color:#ff2222;font-weight:600;"><?php echo session("account")["email"];?></span>”，然后把验证码输入下方文本框中。</span>\n' +
+                                                    '        <input type="text" name="number" id="number" value="<?php echo session('account')['email'];?>" style="display: none;">\n' +
+                                                '        <input type="text" name="method" id="method" value="1" style="display: none;">\n';
+                                                {elseif(session('account')['phone'] != '')}
+                                                html+='        <span class="f15">确认协议前需把验证码发送到手机“<span style="color:#ff2222;font-weight:600;"><?php echo session("account")["phone"];?></span>”，然后把验证码输入下方文本框中。</span>\n' +
+                                                    '        <input type="text" name="number" id="number" value="<?php echo session('account')['phone'];?>" style="display: none;">\n' +
+                                                '        <input type="text" name="method" id="method" value="2" style="display: none;">\n';
+                                                {/if}
+                                                    html+='        <div class="input_verifycode">\n' +
+                                                        '            <input type="number" class="layui-input" name="sure_code" placeholder="请输入验证码">\n' +
+                                                        '            <div class="layui-btn layui-btn-primary" id="sendCode" onclick="sendCode(this)">发送</div>\n' +
+                                                        '        </div>\n' +
+                                                        '        <div style="display: flex;align-items: center;justify-content: center;width: 50%;margin:0 auto;margin-top:10px;">\n' +
+                                                        '            <div class="layui-btn layui-btn-normal" id="verifyBtn" onclick="verifyBtn(this,'+typ+')">提交验证</div>\n' +
+                                                        '            <div class="layui-btn layui-btn-success layui-btn-md close_window" style="margin-top:0px;" onclick="close_window()"><i class="layui-icon" style="display: none;">&#xe605;</i> 放弃阅读</div>\n'+
+                                                        '            <div class="layui-btn layui-btn-normal layui-btn-md next_window" style="margin-top:0px;" onclick="next_piece()">下一篇-></div>\n'+
+                                                        '        </div>\n' +
+                                                        '    </div></div>\n';
+                                                    {/volist}
+                                                        $('.close_window').show();
+                                                    }
+                                                else if(typ==2){
+                                                    {volist name="check_content.sure.link" key="key2" id="vo"}
+                                                    if(link=="{$vo}") {
+                                                        html += '            <div class="layui-tab-item layui-show">\n';
+                                                    }else{
+                                                        html += '            <div class="layui-tab-item">\n';
+                                                    }
+                                                    html+='      <iframe class="inversion_image" src="{$vo}&watch=1" style="width:99%;height:450px;"></iframe><div class="rule_times">\n' +
+                                                        '        <div style="display: flex;align-items: center;justify-content: center;">\n' +
+                                                        '            <span class="rule_guide_times"></span>\n' +
+                                                        '            <div class="rule_guide_can_check" style="display: none;"><input type="checkbox" name="guide_sure" lay-skin="switch" lay-text="已阅读|未阅读"></div>\n' +
+                                                        '        </div>\n' +
+                                                        '    </div>\n'+
+                                                        '    <div class="rule_code" style="display: none;">\n';
+                                                    {if session('account')['email']!=''}
+                                                    html+='        <span class="f15">确认协议前需把验证码发送到邮箱“<span style="color:#ff2222;font-weight:600;"><?php echo session("account")["email"];?></span>”，然后把验证码输入下方文本框中。</span>\n' +
+                                                        '        <input type="text" name="number" id="number" value="<?php echo session('account')['email'];?>" style="display: none;">\n' +
+                                                    '        <input type="text" name="method" id="method" value="1" style="display: none;">\n';
+                                                    {elseif(session('account')['phone'] != '')}
+                                                    html+='        <span class="f15">确认协议前需把验证码发送到手机“<span style="color:#ff2222;font-weight:600;"><?php echo session("account")["phone"];?></span>”，然后把验证码输入下方文本框中。</span>\n' +
+                                                        '        <input type="text" name="number" id="number" value="<?php echo session('account')['phone'];?>" style="display: none;">\n' +
+                                                    '        <input type="text" name="method" id="method" value="2" style="display: none;">\n';
+                                                    {/if}
+                                                        html+='        <div class="input_verifycode">\n' +
+                                                            '            <input type="number" class="layui-input" name="sure_code" placeholder="请输入验证码">\n' +
+                                                            '            <div class="layui-btn layui-btn-primary" id="sendCode" onclick="sendCode(this)">发送</div>\n' +
+                                                            '        </div>\n' +
+                                                            '        <div style="display: flex;align-items: center;justify-content: center;width: 50%;margin:0 auto;margin-top:10px;">\n' +
+                                                            '            <div class="layui-btn layui-btn-normal" id="verifyBtn" onclick="verifyBtn(this,'+typ+')">提交验证</div>\n' +
+                                                            '            <div class="layui-btn layui-btn-success layui-btn-md close_window" style="margin-top:0px;" onclick="close_window()"><i class="layui-icon" style="display: none;">&#xe605;</i> 放弃阅读</div>\n'+
+                                                            '            <div class="layui-btn layui-btn-normal layui-btn-md next_window" style="margin-top:0px;" onclick="next_piece()">下一篇-></div>\n'+
+                                                            '        </div>\n' +
+                                                            '    </div>\n'+
+                                                            '   </div>\n';
+                                                        {/volist}
+                                                            $('.close_window').hide();
+                                                        }
+                                                    else if(typ==3){
+                                                        {volist name="check_content.knows.link" key="key2" id="vo"}
+                                                        if(link=="{$vo}") {
+                                                            html += '            <div class="layui-tab-item layui-show">\n';
+                                                        }else{
+                                                            html += '            <div class="layui-tab-item">\n';
+                                                        }
+                                                        html+='      <iframe class="inversion_image" src="{$vo}&watch=1" style="width:99%;height:450px;"></iframe><div class="rule_times">\n' +
+                                                            '        <div style="display: flex;align-items: center;justify-content: center;">\n' +
+                                                            '            <span class="rule_guide_times"></span>\n' +
+                                                            '            <div class="rule_guide_can_check" style="display: none;"><input type="checkbox" name="guide_sure" lay-skin="switch" lay-text="已阅读|未阅读"></div>\n' +
+                                                            '        </div>\n' +
+                                                            '    </div>\n'+
+                                                            '    <div class="rule_code" style="display: none;">\n';
+                                                        {if session('account')['email']!=''}
+                                                        html+='        <span class="f15">确认协议前需把验证码发送到邮箱“<span style="color:#ff2222;font-weight:600;"><?php echo session("account")["email"];?></span>”，然后把验证码输入下方文本框中。</span>\n' +
+                                                            '        <input type="text" name="number" id="number" value="<?php echo session('account')['email'];?>" style="display: none;">\n' +
+                                                        '        <input type="text" name="method" id="method" value="1" style="display: none;">\n';
+                                                        {elseif(session('account')['phone'] != '')}
+                                                        html+='        <span class="f15">确认协议前需把验证码发送到手机“<span style="color:#ff2222;font-weight:600;"><?php echo session("account")["phone"];?></span>”，然后把验证码输入下方文本框中。</span>\n' +
+                                                            '        <input type="text" name="number" id="number" value="<?php echo session('account')['phone'];?>" style="display: none;">\n' +
+                                                        '        <input type="text" name="method" id="method" value="2" style="display: none;">\n';
+                                                        {/if}
+                                                            html+='        <div class="input_verifycode">\n' +
+                                                                '            <input type="number" class="layui-input" name="sure_code" placeholder="请输入验证码">\n' +
+                                                                '            <div class="layui-btn layui-btn-primary" id="sendCode" onclick="sendCode(this)">发送</div>\n' +
+                                                                '        </div>\n' +
+                                                                '        <div style="display: flex;align-items: center;justify-content: center;width: 50%;margin:0 auto;margin-top:10px;">\n' +
+                                                                '            <div class="layui-btn layui-btn-normal" id="verifyBtn" onclick="verifyBtn(this,'+typ+')">提交验证</div>\n' +
+                                                                '            <div class="layui-btn layui-btn-success layui-btn-md close_window" style="margin-top:0px;" onclick="close_window()"><i class="layui-icon" style="display: none;">&#xe605;</i> 放弃阅读</div>\n'+
+                                                                '            <div class="layui-btn layui-btn-normal layui-btn-md next_window" onclick="next_piece()">下一篇-></div>\n'+
+                                                                '        </div>\n' +
+                                                                '    </div>\n'+
+                                                                '   </div>\n';
+                                                            {/volist}
+                                                                $('.close_window').show();
+                                                            }
+
+                                                            html+='        </div>\n' +
+                                                                '    </div>';
+                                                            $('.change_window').html(html);
+                                                            element.render('');
+
+                                                            let area = ['80%','80%'];
+                                                            if("{$check_content['already_read']}"==1) {
+                                                                area = ['98%','100%'];
+                                                            }
+                                                            if(IsPhone()){
+                                                                area = ['100%','100%'];
+                                                                $('.check_content').css('padding','10px');
+                                                                $('.input_verifycode').css('width','85%');
+                                                            }
+
+
+                                                            //浏览链接
+                                                            window_index = layer.open({
+                                                                skin:'grey_div',
+                                                                type: 1,
+                                                                title: name,
+                                                                content: $('.check_content'),
+                                                                closeBtn:0,
+                                                                area:area
+                                                            });
+                                                            if("{$check_content['already_read']}"==0) {
+                                                                //根据配置方式，使用‘秒数’或‘验证码’
+                                                                if (method == 1) {
+                                                                    rule_time = second;
+                                                                    $('.rule_times').show();
+                                                                    $('.out_closeBtn').show();
+                                                                    $('.rule_code').hide();
+                                                                    rule_timers('rule_guide_times', 'close_window', typ, name);
+                                                                } else if (method == 2) {
+                                                                    let now_rule = name + typ;
+                                                                    // console.log('open_check',already_read);
+                                                                    $('.out_closeBtn').show();
+                                                                    if (already_read.includes(now_rule)) {
+                                                                        // $(".rule_code").hide();
+                                                                        $('.close_window').show();
+                                                                        if (already_send[typ - 1] == 0) {
+                                                                            if_all_read_show(typ);
+                                                                        }
+                                                                    } else {
+                                                                        if (already_send[typ - 1] == 0) {
+                                                                            if_all_read_show(typ);
+                                                                        }
+                                                                    }
+                                                                    $('.rule_times').hide();
+
+                                                                    verify_name = name;
+                                                                    verify_type = typ;
+
+                                                                    //看过的规则打勾-仅限确认规则类
+                                                                    $('.change_window .layui-this').addClass('already_read');
+                                                                }
+                                                            }else{
+                                                                $('.out_closeBtn .close_window').show();
+                                                            }
+                                                        }
+
+                                                        function close_window(){
+                                                            var $ = layui.$
+                                                                , layer = layui.layer;
+
+                                                            clearTimeout(rule_timer);
+                                                            layer.close(window_index);
+                                                            $('.check_content').hide();
+                                                        }
+
+                                                        //发送数字验证码
+                                                        function sendCode(obj) {
+                                                            var number = $("#number").val();
+                                                            var method = $("#method").val();
+                                                            if($(obj).text()=='发送') {
+                                                                // 发送成功倒计时
+                                                                $.ajax({
+                                                                    url: "/?s=gather/sendcode",
+                                                                    type: "POST",
+                                                                    dataType: "json",
+                                                                    data: {
+                                                                        "number": number,
+                                                                        'method': method,
+                                                                        'code_name': 'sure_code',
+                                                                        'msg': '尊敬的客户，您正在Gogo自我游集运网确认协议，确认验证码：'
+                                                                    },
+                                                                    success: function (res) {
+                                                                        layer.msg(res.msg, {time: 2000}, function () {
+                                                                            if (res.code == 0) {
+                                                                                settime(obj);
+                                                                            }
+                                                                        });
+                                                                    },
+                                                                    error: function (xhr) {
+                                                                        var res = JSON.parse(xhr.responseText);
+                                                                    }
+                                                                });
+                                                            }
+                                                        }
+                                                        //验证码倒计时
+                                                        var num=60;
+                                                        function settime(obj) {
+                                                            if (num == 0) {
+                                                                $(obj).html("发送");
+                                                                num = 60;
+                                                            } else {
+                                                                $(obj).html(num+"重试");
+                                                                num--;
+                                                                time_name = setTimeout(function() {
+                                                                    settime(obj)
+                                                                },1000)
+                                                            }
+                                                        }
+                                                        //提交验证
+                                                        function verifyBtn(t,typ){
+                                                            var $ = layui.$
+                                                                , layer = layui.layer
+                                                                , form = layui.form;
+                                                            let sure_code = $(t).parent().parent().find('input[name="sure_code"]').val();
+                                                            $.ajax({
+                                                                url:"/?s=gather/check_verifyCode_for_rules",
+                                                                type:"POST",
+                                                                dataType:"json",
+                                                                data:{
+                                                                    "sure_code":sure_code,
+                                                                },
+                                                                success:function (res) {
+                                                                    layer.msg(res.msg, {time: 2000}, function () {
+                                                                        if (res.code == 0) {
+                                                                            // $('.rule_code').hide();
+                                                                            // $('.close_window').show();
+                                                                            $(t).parent().parent().find('span').hide();
+                                                                            $(t).parent().parent().find('.input_verifycode').hide();
+                                                                            $(t).parent().parent().find('#verifyBtn').hide();
+                                                                            $("#sendCode").html("发送");
+                                                                            num=60;
+                                                                            $('input[name="sure_code"]').val("");
+                                                                            clearTimeout(time_name);
+                                                                            // already_read.push(verify_name+verify_type);
+
+                                                                            var all_read = -1;
+                                                                            if(typ==1){
+                                                                                {volist name="check_content.confirm.title" key="key2" id="vo"}
+                                                                                if(already_read.includes("{$vo}1")){
+                                                                                    all_read=0;
+                                                                                }else{
+                                                                                    all_read=-1;
+                                                                                }
+                                                                                {/volist}
+                                                                                    if(all_read==0){
+                                                                                        already_send[typ-1]=1;
+                                                                                        $('input[name="confirm"]').attr('checked',true);
+                                                                                    }
+                                                                                }
+                                                                            else if(typ==2){
+                                                                                    {volist name="check_content.sure.title" key="key2" id="vo"}
+                                                                                    if(already_read.includes('{$vo}2')){
+                                                                                        all_read=0;
+                                                                                    }else{
+                                                                                        all_read=-1;
+                                                                                    }
+                                                                                    {/volist}
+                                                                                        if(all_read==0){
+                                                                                            already_send[typ-1]=1;
+                                                                                            $('input[name="sure"]').attr('checked',true);
+                                                                                        }
+                                                                                    }
+                                                                                else if(typ==3){
+                                                                                        {volist name="check_content.knows.title" key="key2" id="vo"}
+                                                                                        if(already_read.includes('{$vo}3')){
+                                                                                            all_read=0;
+                                                                                        }else{
+                                                                                            all_read=-1;
+                                                                                        }
+                                                                                        {/volist}
+                                                                                            if(all_read==0){
+                                                                                                already_send[typ-1]=1;
+                                                                                                $('input[name="knows"]').attr('checked',true);
+                                                                                            }
+                                                                                        }
+                                                                                        layer.closeAll();
+                                                                                        form.render('');//刷新表单
+                                                                                        all_done();
+                                                                                        $('.check_content').hide();
+                                                                                    }
+                                                                                });
+                                                                }
+                                                            });
+                                                        }
+
+                                                        //所有协议完成后，".rule_content"边框变白色
+                                                        function all_done(){
+                                                            var $ = layui.$
+                                                                , layer = layui.layer;
+
+                                                            var all_read = -1;
+                                                            if("{$check_content['confirm']['title'][0]}" != ''){
+                                                                {volist name="check_content.confirm.title" key="key2" id="vo"}
+                                                                if(already_read.includes("{$vo}1")){
+                                                                    all_read=0;
+                                                                }else{
+                                                                    all_read=-1;
+                                                                }
+                                                                {/volist}
+                                                                }else{all_read=0;}
+
+                                                                var all_read2 = -1;
+                                                                if("{$check_content['sure']['title'][0]}" != ''){
+                                                                    {volist name="check_content.sure.title" key="key2" id="vo"}
+                                                                    if(already_read.includes("{$vo}2")){
+                                                                        all_read2=0;
+                                                                    }else{
+                                                                        all_read2=-1;
+                                                                    }
+                                                                    {/volist}
+                                                                    }else{all_read2=0;}
+
+                                                                    var all_read3 = -1;
+                                                                    if("{$check_content['knows']['title'][0]}" != ''){
+                                                                        {volist name="check_content.knows.title" key="key2" id="vo"}
+                                                                        if(already_read.includes("{$vo}3")){
+                                                                            all_read3=0;
+                                                                        }else{
+                                                                            all_read3=-1;
+                                                                        }
+                                                                        {/volist}
+                                                                        }else{all_read3=0;}
+
+                                                                        if(all_read==0 && all_read2==0 && all_read3==0){
+                                                                            $('.rule_content').css('border','2px solid #fff');
+                                                                        }
+                                                                    }
+</script>

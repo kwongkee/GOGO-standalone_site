@@ -1,0 +1,160 @@
+{include file="common/gather_header"}
+<meta name="viewport" content="width=device-width, initial-scale=0.5" />
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    .operat-box {display: flex;align-items: center;justify-content: space-between;padding: 16px 30px;background-color: #0e2e68;color:#fff;}
+    .main-container{border:1px solid #fff;border-radius: 5px;}
+    .main-container-title {padding-right: 20px;}
+    .search-container {display: inline-block;width: 350px;}
+    .search-container .search-ipt {background-color: #fff;border-radius: 4px;}
+    .el-input--suffix .el-input__inner {padding-right: 30px;}
+    .el-input__inner {-webkit-appearance: none;background-color: #fff;background-image: none;border-radius: 4px;border: 1px solid #dcdfe6;box-sizing: border-box;color: #606266;display: inline-block;font-size: inherit;height: 40px;line-height: 40px;outline: none;padding: 0 15px;transition: border-color .2s cubic-bezier(.645,.045,.355,1);width: 100%;}
+    .search-container .search-ipt .el-input__suffix {display: flex;align-items: center;}
+    .el-input__suffix {position: absolute;height: 100%;right: 5px;top: 0;text-align: center;color: #c0c4cc;transition: all .3s;pointer-events: none;}
+    .el-input__suffix-inner {pointer-events: all;}
+    .add-btn-container {display: flex;align-items: center;padding: 8px 28px;cursor: pointer;border-radius: 5px;background: unset;color:#fff;border:1px solid #fff;}
+    .add-btn-container .el-icon-plus {font-weight: 700;}
+    .package-container .order-content {display: flex;flex-direction: column;justify-content: space-between;flex: 1;padding: 20px;box-sizing: border-box;}
+    .el-tabs__header {padding: 0;position: relative;margin: 0 0 15px;}
+    .el-tabs__nav-wrap {overflow: hidden;margin-bottom: -1px;position: relative;}
+    .el-tabs__nav-scroll {overflow: hidden;}
+    .el-tabs__nav-wrap:after {content: "";position: absolute;left: 0;bottom: 0;width: 100%;height: 2px;background-color: #e4e7ed;z-index: 1;}
+    .el-tabs__nav {white-space: nowrap;position: relative;transition: transform .3s;float: left;z-index: 2;}
+    .el-tabs__active-bar {position: absolute;bottom: 0;left: 0;height: 2px;background-color: #f1be83;z-index: 1;transition: transform .3s cubic-bezier(.645,.045,.355,1);list-style: none;}
+    .el-tabs__item.is-active {color: #f1be83;}
+    .el-tabs--bottom .el-tabs__item.is-bottom:nth-child(2), .el-tabs--bottom .el-tabs__item.is-top:nth-child(2), .el-tabs--top .el-tabs__item.is-bottom:nth-child(2), .el-tabs--top .el-tabs__item.is-top:nth-child(2) {padding-left: 0;}
+    .el-tabs__item {padding: 0 20px;height: 40px;box-sizing: border-box;line-height: 40px;display: inline-block;list-style: none;font-size: 14px;font-weight: 500;color: #fff;position: relative;}
+    .el-tabs__content {overflow: hidden;position: relative;}
+    .package-container .order-content .order-title {display: grid;justify-items: center;grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;padding: 14px 20px;margin: 5px 0 20px;font-size: 14px;color: #fff;background: #0e2e68;}
+    .empty-box {flex: 1;padding-top: 30px;color: #ccc;font-size: 14px;text-align: center;}
+    .package-container .img-empty {width: 150px;}
+    .empty-box img {width: 120px;padding-bottom: 16px;}
+    .el-loading-mask {position: absolute;z-index: 2000;background-color: hsla(0,0%,100%,.9);margin: 0;top: 0;right: 0;bottom: 0;left: 0;transition: opacity .3s;}
+</style>
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="personalMain">
+            <div class="personal">
+                {include file="common/member_left"}
+                <div class="package-container main-container" style="overflow: auto;">
+                    <div class="operat-box">
+                        <div ><span class="main-container-title">订单管理</span>
+                            <div class="search-container">
+                                <div class="search-ipt el-input el-input--suffix">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="add-btn-container">
+                            <div onclick="javascript:window.location.href='/?s=gather/package_forecast';">包裹预报</div>
+                        </div>
+                    </div>
+                    <div class="order-content">
+                        <div >
+                            <div class="package-tabs el-tabs el-tabs--top">
+                                <div class="el-tabs__header is-top">
+                                    <div class="el-tabs__nav-wrap is-top">
+                                        <div class="el-tabs__nav-scroll">
+                                            <div role="tablist" class="el-tabs__nav is-top"
+                                                 style="transform: translateX(0px);">
+                                                <div class="el-tabs__active-bar is-top"
+                                                     style="width: 56px; transform: translateX(0px);"></div>
+                                                <div id="tab-0" aria-controls="pane-0" role="tab" tabindex="0"
+                                                     class="el-tabs__item is-top is-active" aria-selected="true">预报订单
+                                                </div>
+                                                <div id="tab-3" aria-controls="pane-3" role="tab" tabindex="-1"
+                                                     class="el-tabs__item is-top">到仓订单
+                                                </div>
+                                                <div id="tab-4" aria-controls="pane-4" role="tab" tabindex="-1"
+                                                     class="el-tabs__item is-top">在仓订单
+                                                </div>
+                                                <div id="tab-5" aria-controls="pane-5" role="tab" tabindex="-1"
+                                                     class="el-tabs__item is-top">集运订单
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="el-tabs__content">
+                                    <div role="tabpanel" id="pane-0" aria-labelledby="tab-0" class="el-tab-pane" style="">
+
+                                    </div>
+                                    <div role="tabpanel" id="pane-3" aria-labelledby="tab-3"
+                                         class="el-tab-pane" aria-hidden="true" style="display: none;"></div>
+                                    <div role="tabpanel" id="pane-4" aria-labelledby="tab-4"
+                                         class="el-tab-pane" aria-hidden="true" style="display: none;"></div>
+                                    <div role="tabpanel" id="pane-5" aria-labelledby="tab-5"
+                                         class="el-tab-pane" aria-hidden="true" style="display: none;"></div>
+                                </div>
+                            </div>
+
+                            <table class="layui-hide" id="mainTable"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{include file="common/gather_footer"}
+<script>
+    layui.use(['layer', 'form', 'table', 'upload'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , element = layui.element
+            , upload = layui.upload
+            , table = layui.table;
+
+        form.render(null, 'component-form-group');
+
+        table.render({
+            elem: '#mainTable'
+            ,url: "/?s=gather/order_management&pa=1"
+            ,cellMinWidth: 200
+            ,cols: [[
+                {field:'id', width:80, title: '编号'}
+                ,{field:'ordersn',  title: '订单编号'}
+                ,{field:'createtime',  title: '创建时间'}
+                ,{width:120, align:'center', fixed: 'right', title: '操作', templet: function(d){
+                        return [
+                            '<a onclick="openWindow('+ "'["+d.ordersn+"]查看详情'" +',' + "'/?s=gather/order_info&id="+ d.id +"'" + ');" class="layui-btn layui-btn-xs layui-btn-normal">查看详情</a>',
+                            // '<a onclick="del('+ "'"+d.id+"'" +');" class="layui-btn layui-btn-xs layui-btn-danger">删除</a>'
+                        ].join('');
+                    } }
+            ]]
+            ,page: true
+        });
+
+        var $ = layui.$, active = {
+            reload: function () {
+                //执行重载
+                table.reload('mainTable1', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    , where: {
+                        keywords: $("#keywords1").val(),
+                    }
+                });
+            }
+        };
+        $('.main-table-reload-btn .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+
+    function openWindow(title,url,type)
+    {
+        var layer = layui.layer;
+        var index = layer.open({
+            type: 2,
+            title: title,
+            content: url,
+            area:['100%','100%']
+        });
+        // layer.full(index);
+    }
+</script>

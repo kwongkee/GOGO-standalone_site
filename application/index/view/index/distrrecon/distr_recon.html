@@ -1,0 +1,172 @@
+{include file="common/header"}
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;background:{$website['color_inner']};}
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+    .content .box_content{background:{$website['color']};color:{$website['color_word']};border:1px solid {$website['color_word']};font-size:25px;text-align:center;padding:30px;width:100%;}
+    .content .box_content img{width:40px;margin-right:5px;}
+    .content .title{font-size:26px;color:{$website['color_word']};font-weight:800;text-align:center;line-height:normal !important;}
+
+    .page_list{margin-top:15px;border:1px solid {$website['color_word']};border-radius:8px;padding:20px 20px;box-sizing:border-box;}
+    .page_list .tit{color:{$website['color_word']};font-size:15px;font-weight:800;}
+
+    .grey_div{background:#a0a0a0;}
+    {if session('miniprogram')==1}
+        .back{display: none;}
+    {/if}
+</style>
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="content" >
+            <div class="layui-fluid" style="padding:0;">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md12" style="padding:0;">
+                        <a class="back" href="javascript:history.back(-1);">
+                            <div style="display:flex;align-items:center;border: 1px solid #fff;width: fit-content;padding: 10px 20px;border-radius: 15px;background: #8f8b8b;margin-bottom:30px;color:#fff;">
+                                <img class="" src="./img/account/back.png" alt="" style="width: 18px;margin-right: 10px;"/>
+                                返回
+                            </div>
+                        </a>
+                        <div class="layui-card">
+                            <div class="layui-card-header" style="padding-top:8px;">
+                                <button class="layui-btn layui-btn-normal" onclick="openWindow('新增对账','/?s=index/save_recon',0,1);">新增对账</button>
+                            </div>
+                            <div class="layui-card-body">
+                                <table class="layui-hide" id="mainTable"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--选择业务类型-->
+<div class="bustype_box" style="display:none;padding:15px;box-sizing: border-box;text-align: center;">
+    <form class="layui-form" action="" method="post" lay-filter="component-form-element">
+    <div class="layui-form-item">
+        <div class="layui-form-label" style="color:#fff;width: 90px;">账单类型</div>
+        <div class="layui-input-block">
+            <select name="type" id="type">
+                {volist name="business_type" id="vo"}
+                <option value="{$vo['id']}">{$vo['name']}</option>
+                {/volist}
+            </select>
+        </div>
+    </div>
+    <div class="layui-btn layui-btn-normal tz">跳转新增对账</div>
+    </form>
+</div>
+<script>
+    layui.use(['layer', 'form', 'table', 'upload'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , element = layui.element
+            , upload = layui.upload
+            , table = layui.table;
+
+        table.render({
+            elem: '#mainTable'
+            ,url: "/?s=index/distr_recon&pa=1"
+            ,cellMinWidth: 200
+            ,cols: [[
+                {field:'typename',width:120, title: '账单类型'}
+                ,{field:'statusname',width:120, title: '账单状态'}
+                ,{field:'money',width:120, title: '账单价格'}
+                ,{field:'createtime',width:160, title: '创建时间'}
+                ,{align:'center',  title: '操作',fixed:'right',width:180, templet: function(d){
+                        if(d.status!=2 && d.status!=3){
+                            return [
+                                '<a onclick="openWindow('+"'逾期设置'"+','+"'/?s=index/save_overdue'" +','+"'"+d.id+"'"+ ',4);" class="layui-btn layui-btn-success layui-btn-xs">逾期设置</a>',
+                                '<a onclick="openWindow('+"'查看详情'"+','+"'/?s=index/save_recon'" +','+"'"+d.id+"'"+ ',2);" class="layui-btn layui-btn-normal layui-btn-xs">查看</a>',
+                                '<a onclick="openWindow('+"'删除'"+','+"'/?s=index/del_recon'" +','+"'"+d.id+"'"+ ',3);" class="layui-btn layui-btn-danger layui-btn-xs">删除</a>',
+                            ].join('');
+                        }else {
+                            return [
+                                '<a onclick="openWindow('+"'查看详情'"+','+"'/?s=index/view_recon'" +','+"'"+d.id+"'"+ ',2);" class="layui-btn layui-btn-normal layui-btn-xs">查看</a>',
+                            ].join('');
+                        }
+                    } }
+            ]]
+            ,page: true
+        });
+
+        $('.tz').click(function(){
+            window.location.href="/?s=index/save_recon&typeid="+$('#type').val();
+        });
+    });
+    function IsPhone() {
+        var info = navigator.userAgent;
+        var isPhone = /Mobi|Android|iPhone/i.test(info);
+        return isPhone;
+    }
+    function openWindow(name,url,id,typ){
+        if(typ==1){
+            let area = ['30%','30%'];
+            if(IsPhone()){
+                area = ['80%','40%'];
+            }
+            layer.open({
+                skin:'grey_div',
+                type: 1,
+                title: '选择对账类型',
+                shadeClose: true,
+                shade: 0.3,
+                area: area,
+                content: $('.bustype_box'),
+            });
+        }
+        else if(typ==2){
+            window.location.href=url+"&id="+id;
+        }
+        else if(typ==4){
+            let area = ['30%','30%'];
+            if(IsPhone()){
+                area = ['80%','40%'];
+            }
+            layer.open({
+                skin:'grey_div',
+                type: 2,
+                title: name,
+                shadeClose: true,
+                shade: 0.3,
+                area: area,
+                content: url+"&id="+id,
+            });
+        }
+        else if(typ==3){
+            layer.confirm('确认删除该账单吗？',function(index){
+                $.ajax({
+                    url: url,
+                    data:{'id':id},
+                    type:'post',
+                    cache:false,
+                    dataType:'json',
+                    success:function(data){
+                        if(data.code==0)
+                        {
+                            layer.msg(data.msg, {
+                                icon: 1,
+                                time: 2000
+                            }, function(){
+                                window.location.reload();
+                            });
+                            return true;
+                        }else {
+                            layer.msg(data.msg, {icon:2, time:2000});
+                            return false;
+                        }
+                    },
+                    error:function() {
+                        layer.msg('系统出错,请重试',{icon:2,time:1000});
+                    }
+                });
+            });
+        }
+    }
+</script>
+{include file="common/footer"}

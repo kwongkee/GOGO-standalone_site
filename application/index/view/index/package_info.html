@@ -1,0 +1,1598 @@
+{include file="common/header"}
+<!--<meta name="viewport" content="width=device-width, initial-scale=0.5" />-->
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css">
+    body{background:{$website['color_inner']};}
+    .layui-upload-img{width: 92px; height: 92px; margin: 0 10px 10px 0;}
+    .layui-fluid{padding-top: 15px;}
+    .layui-card{background:unset;color: #fff;}
+    .layui-elem-field legend,.layui-form-item .layui-form-label,.parcel_info .layui-elem-quote{color:{$website['color_word']};}
+    .parcel_info .layui-input-inline{color:#000;}
+    .layui-form-checkbox[lay-skin=primary] span{color:#fff;}
+    .layui-form-item .layui-form-checkbox[lay-skin=primary]{height:fit-content !important;}
+    .parcel_info .layui-elem-quote,.layui-collapse .layui-elem-quote{background:{$website['color']};border-left: 5px solid {$website['color_word']};color:{$website['color_word']};}
+    .parcel_info_already .layui-input-inline{color:#fff;}
+    .layui-btn-primary{background-color: #fff !important;}
+    .layui-btn-primary:hover {border-color: #F7931E !important;}
+    .disf{display:flex;align-items:center;}
+    .disf2{display:flex;align-items:baseline;}
+    .volumn{margin-left:115px !important;}
+    .layui-colla-title{background:{$website['color']};color:{$website['color_word']};}
+    .layui-form-item .layui-input-inline{line-height: 38px}
+    .show{display:block;}
+    html{background:#e0d7d7;}
+    legend{width: fit-content;border-bottom: 0;margin-bottom:0;}
+    a{color:{$website['color_word']};}
+    .layui-colla-title{background:{$website['color']};color:{$website['color_word']};}
+    .goods_div .layui-colla-title>h4{white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 125px;color:{$website['color_word']};}
+    .chosen-container{width:100%;}
+    .layui-form-item .layui-form-label{padding-left:0 !important;margin-left:0 !important;}
+    .layui-form-item{margin-bottom:7px;}
+    .disf{display:flex;align-items: center;}
+    .personal_right{border:1px solid {$website['color_word']};}
+    .personal_right .main-container{padding:10px;box-sizing: border-box;width: 1198px;}
+    .layui-form-label{font-weight: 800;}
+    .layui-form-item{color:{$website['color_word']};}
+    /**送仓物流方式**/
+    .warehouse_delivery{padding: 0 10px;box-sizing: border-box;display: grid;grid-template-columns: repeat(5,1fr);-moz-column-gap: 30px;column-gap: 30px;row-gap: 10px;}
+    .express_info,.logistics_info,.warehouse_info,.platform_get,.myself,.brand_name,.select_brand_name,.online_desc{display:none;}
+    .layui-form-onswitch,.layui-form-switch{margin-top:0;}
+    /*多个商品信息*/
+    .goods_collapse{width: 98%;margin: 0 auto;margin-bottom:10px;}
+    .goods{border:1px solid {$website['color_word']};padding:10px;box-sizing: border-box;display: grid;grid-template-columns: repeat(7,1fr);-moz-column-gap: 30px;column-gap: 10px;row-gap: 10px;}
+    .goods .expend_div{grid-column-start: 3;grid-column-end: 3;text-align: right;}
+    .goods .brand_div{width:100%;}
+    .add_goods,.del_goods{font-size:25px;}
+    .layui-layer-btn-{text-align: center;}
+    .goods_desc{width:100%;}
+    .goods_desc .layui-form-select{width:100%;}
+    .goods_remark{grid-column-start: 1;grid-column-end: 8;}
+    .expend_div{width: 140px;text-align: right;border-left: 1px solid {$website['color_word']};line-height: 1px;}
+    .equal_usd{color:{$website['color_word']} !important;}
+    .equal_usd_symbol{color: {$website['color_word']} !important;white-space: nowrap;}
+    .goods_currency{grid-column-start: 4;grid-column-end: 6;}
+    .goods_price{width: 60%;}
+    .expend_div .layui-btn{color:{$website['color_word']};}
+    #country{width:170px;}
+    xm-select .xm-label .scroll .label-content{overflow: hidden;}
+    /**查看包裹详情**/
+    .view_parcel_info .layui-input-inline{color:{$website['color_word']};}
+    .view_parcel_info .goods *{color:{$website['color_word']};}
+
+    /**包裹信息**/
+    .package_div{padding:0 10px;display: grid;grid-template-columns: repeat(3,1fr);-moz-column-gap: 50px;column-gap: 50px;row-gap: 40px;}
+    /**验货信息**/
+    .inspection_div{padding:0 10px;display: grid;grid-template-columns: repeat(3,1fr);-moz-column-gap: 50px;column-gap: 50px;row-gap: 10px;}
+    .video_inspection{grid-column-start: 2;grid-column-end: 4;}
+    .inspection_date{width:190px;}
+
+    .yulan img{cursor:pointer;}
+    .edit_img{width:28px;height:28px;cursor:pointer;}
+    .grey_div{background:{$website['color_inner']};}
+    .layui-btn-primary2{background: unset;border:1px solid #fff;color:#fff !important;padding: 13px 10px;margin-left: 10px;line-height: 2px;box-sizing: border-box;}
+
+    @media screen and (min-width: 992px){
+        .layui-form-label {margin-left: 10px!important;}
+        .layui-input-block{margin-left: 140px !important;}
+        .yulan{width: 700px !important;}
+        .layui-select-fs{width: 100%;}
+        .layui-select-fscon{width: 735px !important;}
+        .volumn{margin-left:95px !important;}
+    }
+    @media screen and (max-width: 450px){
+        .layui-form-label {width: 75px!important;margin-left: 10px!important;}
+        .layui-input-block{margin-left: 120px !important;}
+        .layui-form-label{padding: 9px 5px;}
+        .yulan{width: 72% !important;}
+        .layui-select-fs{width: 100%;}
+        .layui-select-fscon{width: 100%  !important;}
+        .layui-form-item .layui-input-inline {display: block;float: none;left: 4px;width: auto;margin: 0 0 10px 95px;margin-bottom:0;margin-left:0px;}
+        .layui-form-item .layui-inline {margin-bottom:10px;}
+        .layui-form-item{margin-bottom:0 !important;}
+        .volumn{margin-left:99px !important;}
+        .layui-input-inline .layui-elem-quote{margin-left: 80px;width: 60% !important;}
+        .layui-field-box{padding:10px !important;}
+
+        /**入仓信息**/
+        .warehouse_delivery{display:contents;}
+        .warehouse_delivery .delivery_method{margin:5px 0;}
+
+        .layui-colla-content{padding:10px;}
+
+        /**添加物品**/
+        .goods{display:contents;}
+        .goods>div{margin-bottom:5px;}
+        .goods_div .layui-colla-title>h4{white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 125px;}
+        .package_div{display: contents;}
+        .package_div>div{margin-bottom:5px;}
+        .goods_currency{width: 100% !important;}
+        .view_parcel_info{padding:0 !important;}
+
+        /**验货信息**/
+        .inspection_div{display:contents;}
+        .inspection_div>div{margin-bottom:5px;}
+        .inspection_div .inspection_date {width: 130px;}
+
+    }
+</style>
+<body>
+<section id="content" class="non_topimg">
+    <div class="container">
+        {include file="common/member_header"}
+        <div class="personalMain">
+            <div class="personal">
+                {include file="common/member_left"}
+                <style>.personalMain{overflow:unset;}</style>
+                <div class="personal_right">
+                    <div class="main-container">
+                        {include file="common/new_domestic_top"}
+                        <form class="layui-form" action="" lay-filter="component-form-group">
+                            <input type="hidden" name="id" value="{$parcel['id']}">
+                            <input type="hidden" id="country_id" value="{$order['country']}">
+                            <input type="hidden" name="process1" value="{$process_ids['process1']}">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">订仓编号</label>
+                                <div class="layui-input-inline layui-select-fscon">
+                                    {$order['ordersn']}<a class="layui-btn layui-btn-xs layui-btn-normal" href="javascript:order_info({$order['id']});" style="display: none;">查看订仓订单</a>
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">包裹状态</label>
+                                <div class="layui-input-block" style="margin-left:10px !important;padding-top:10px;">
+                                    {$parcel['status_name']}{if $order_fee_log['id']>0}<a class="layui-btn layui-btn-xs layui-btn-normal" style="display: none;" href="javascript:payorder_info({$order_fee_log['id']})">包裹订单</a>{/if}
+                                </div>
+                            </div>
+                            {if(!empty($parcel['remark']))}
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">包裹备注</label>
+                                <div class="layui-input-inline layui-select-fscon">
+                                    {$parcel['remark']}
+                                </div>
+                            </div>
+                            {/if}
+                            {if $parcel['status2']==0}
+                            <!--待签收的包裹可修改-->
+                            <div class="parcel_info" style="padding:10px;">
+                                <fieldset class="layui-elem-field">
+                                    <legend style="display: flex;align-items: center;">入仓方式 <img src="./img/edit.png" alt="" class="edit_img" onclick="edit_info(1,this)"></legend>
+                                    <div class="layui-field-box">
+                                        <div class="need_edit" style="display: none;">
+                                            <div class="warehouse_delivery">
+                                                <div class="delivery_logistics">
+                                                    <select name="delivery_logistics[]" id="delivery_logistics" lay-filter="delivery_logistics" lay-verify="required">
+                                                        <option value="">请选择送仓方式</option>
+                                                        <option value="1" {if $parcel['delivery_logistics']==1}selected{/if}>物流到仓</option>
+                                                        <option value="2" {if $parcel['delivery_logistics']==2}selected{/if}>上门提货</option>
+                                                    </select>
+                                                </div>
+                                                <div class="delivery_method" style="display:{if $parcel['delivery_logistics']==1}block{else}none{/if};">
+                                                    <select name="delivery_method[]" id="delivery_method" lay-filter="delivery_method" lay-verify="required">
+                                                        <option value="">请选择送仓物流</option>
+                                                        <option value="1" {if $parcel['delivery_method']==1}selected{/if}>快递寄递</option>
+                                                        <option value="2" {if $parcel['delivery_method']==2}selected{/if}>物流运抵</option>
+                                                        <option value="3" {if $parcel['delivery_method']==3}selected{/if}>自送入仓</option>
+                                                    </select>
+                                                </div>
+                                                <div class="express_info" style="display:{if($parcel['delivery_method']==1 && $parcel['delivery_logistics']==1)}flex{else}none{/if};">
+                                                    <div class="express_id">
+                                                        <select name="express_id[]" id="express_id" lay-filter="express_id" lay-search>
+                                                            <option value="">请选择快递企业</option>
+                                                            {volist name="express" id="v"}
+                                                            <option value="{$v['id']}" {if $parcel['express_id']==$v['id']}selected{/if}>{$v['param3']}</option>
+                                                            {/volist}
+                                                        </select>
+                                                    </div>
+                                                    <input type="text" class="layui-input" name="express_no[]" placeholder="请输入快递单号" value="{$parcel['express_no']}">
+                                                </div>
+                                                <div class="logistics_info" style="display:{if($parcel['delivery_method']==2 && $parcel['delivery_logistics']==1)}flex{else}none{/if};">
+                                                    <div class="express_id">
+                                                        <select name="logistics_id[]" id="logistics_id" lay-filter="express_id" lay-search>
+                                                            <option value="">请选择物流企业</option>
+                                                            {volist name="express" id="v"}
+                                                            <option value="{$v['id']}" {if $parcel['express_id']==$v['id']}selected{/if}>{$v['param3']}</option>
+                                                            {/volist}
+                                                        </select>
+                                                    </div>
+                                                    <input type="text" class="layui-input" name="logistics_no[]" placeholder="请输入物流单号" value="{$parcel['express_no']}">
+                                                </div>
+                                                <div class="warehouse_info" style="display:{if($parcel['delivery_method']==3 && $parcel['delivery_logistics']==1)}flex{else}none{/if};">
+                                                    <input type="text" class="layui-input" name="inwarehouse_date[]" id="inwarehouse_date" value="{$parcel['inwarehouse_date']}" placeholder="请选择入仓日期">
+                                                    <input type="text" class="layui-input" name="contact_name[]" placeholder="请输入入仓联系人" value="{$parcel['contact_name']}">
+                                                    <input type="text" class="layui-input" name="contact_mobile[]" placeholder="请输入入仓联系电话" value="{$parcel['contact_mobile']}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="noneed_edit" style="color:{$website['color_word']};">
+                                            {if $parcel['delivery_logistics']==1}
+                                            {if($parcel['delivery_method']==1 || $parcel['delivery_method']==2)}
+                                            <div class="warehouse_delivery">
+                                                <div>送仓物流：{if $parcel['delivery_logistics']==1}物流到仓{elseif($parcel['delivery_logistics']==2)}上门提货{/if}</div>
+                                                <div>送仓方式：{if $parcel['delivery_method']==1}快递寄递{elseif($parcel['delivery_method']==2)}物流运抵{/if}</div>
+                                                <div>运输企业：{$parcel['express_name']}</div>
+                                                <div>运单编号：{$parcel['express_no']}</div>
+                                            </div>
+                                            {/if}
+                                            {if $parcel['delivery_method']==3}
+                                            <div class="warehouse_delivery">
+                                                <div>送仓物流：{if $parcel['delivery_logistics']==1}物流到仓{elseif($parcel['delivery_logistics']==2)}上门提货{/if}</div>
+                                                <div>送仓方式：{if $parcel['delivery_method']==1}快递寄递{elseif($parcel['delivery_method']==2)}物流运抵{/if}</div>
+                                                <div>入仓日期：{$parcel['inwarehouse_date']}</div>
+                                                <div>联系人：{$parcel['contact_name']}</div>
+                                                <div>联系电话：{$parcel['contact_mobile']}</div>
+                                            </div>
+                                            {/if}
+                                            {/if}
+                                        </div>
+                                    </div>
+                                </fieldset>
+                                <fieldset class="layui-elem-field">
+                                    <legend>物品信息<img src="./img/edit.png" alt="" class="edit_img" onclick="edit_info(2,this)"></legend>
+                                    {if(!empty($goods))}
+                                    <div class="layui-field-box">
+                                        <blockquote class="layui-elem-quote">物品信息</blockquote>
+                                        <input type="hidden" name="del_gid" value=""><!--删除的物品ids-->
+                                        <input type="hidden" class="value_selected0" value="{$goods[0]['top_id']}"><!--当前包裹里属性已选择的大类，‘普货’、‘敏感’、‘禁限’-->
+                                        <input type="hidden" class="package0" name="package_line[0]" id="package0" value="{$parcel['line_type']}"><!--当前包裹决定走的线路，‘普货’、‘敏感货’、‘特殊线路由总后台配置该包裹线路’-->
+                                        <div class="goods_div need_edit" style="display: none;">
+                                            <div class="layui-collapse goods_collapse" lay-accordion>
+                                                {volist name="goods" key="key2" id="vo2"}
+                                                <input type="hidden" name="good_id[0][]" value="{$vo2['id']}">
+                                                <div class="layui-colla-item">
+                                                    <div class="layui-colla-title disf" style="justify-content: space-between;">
+                                                        <h4>{$key2}. <span class="goods_desc">{$vo2['good_desc']} </span><span class="goods_num">{$vo2['good_num']}</span><span class="goods_unit">{$vo2['good_unit']}</span></h4>
+                                                        <div class="expend_div">
+                                                            {if $key2!=1}<div class="layui-btn layui-btn-danger del_goods" onclick="del_goods({$vo2['id']},this)">-</div>{/if}
+                                                            <div class="layui-btn layui-btn-success add_goods" onclick="add_goods(0,this)">+</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-colla-content {if $key2==1}layui-show{/if}">
+                                                        <div class="goods">
+                                                            <div class="xmvalue goods_item">
+                                                                <div id="valueid{$key2}" class="xm-select-demo"></div>
+                                                            </div>
+                                                            <div class="goods_desc goods_item disf2">
+                                                                <select name="goods_select_desc[0][]" class="goods_select_desc" lay-search lay-filter="goods_select_desc">
+                                                                    <option value="{$vo2['good_desc']}">{$vo2['good_desc']}</option>
+                                                                </select>
+                                                                <input type="text" name="goods_desc[0][]" placeholder="输入新的物品" class="layui-input goods_input_desc"  onchange="goods_input_desc(this)" style="display: none;">
+                                                            </div>
+                                                            <div class="goods_num disf2">
+                                                                <input type="number" name="goods_num[0][]" placeholder="物品数量" class="layui-input goods_item" value="{$vo2['good_num']}"  onchange="goods_input_num(this)">
+                                                                <div class="goods_unit goods_item">
+                                                                    <select name="goods_unit[0][]" lay-search lay-filter="goods_unit">
+                                                                        <option value="">请选择单位</option>
+                                                                        {volist name="unit" id="vo"}
+                                                                        <option value="{$vo['code_value']}" {if $vo2['good_unit']==$vo['code_name']}selected{/if}>{$vo['code_name']}</option>
+                                                                        {/volist}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="goods_currency goods_item">
+                                                                <div class="disf">
+                                                                    <select name="goods_currency[0][]" class="goods_currency_select" lay-search lay-filter="currency">
+                                                                        <option value="">请选择币种</option>
+                                                                        {volist name="currency" id="vo"}
+                                                                        <option value="{$vo['id']}" {if $vo['currency_symbol_standard']==$vo2['good_currency']}selected{/if}>{$vo['code_zhname']}：{$vo['currency_symbol_standard']}</option>
+                                                                        {/volist}
+                                                                    </select>
+                                                                    <input type="number" name="goods_price[0][]" placeholder="物品价值" class="layui-input goods_price goods_item" value="{$vo2['good_price']}" onchange="get_money(this)">
+                                                                    <div class="tax_relate">
+                                                                        <div class="layui-btn layui-btn-xs layui-btn-primary2 layui-border-red" onclick="tax_relate({$order['country']})">是否涉税</div>
+                                                                    </div>
+                                                                </div>
+                                                                {if $vo2['good_currency']!='USD'}
+                                                                <div class="equal_usd">
+                                                                    <div class="equal_usd_symbol">
+                                                                        <P>{$vo2['good_currency']}{$vo2['good_price']}=USD{$vo2['goods_usdprice']}</P>
+                                                                        <p>数据仅供参考，具体请打开&nbsp;<a href="https://www.xe.com" target="_blank" style="text-decoration: underline;">XE汇率</a>&nbsp;查询</p>
+                                                                    </div>
+                                                                    <input type="hidden" name="goods_usdprice[0][]" placeholder="物品价值" class="layui-input" value="{$vo2['goods_usdprice']}">
+                                                                </div>
+                                                                {/if}
+                                                            </div>
+                                                            <div class="goods_package goods_item">
+                                                                <select name="goods_package[0][]" lay-search>
+                                                                    <option value="">请选择包装材质</option>
+                                                                    {volist name="package" id="v"}
+                                                                    <option value="{$v['code_value']}" {if $vo2['good_package']==$v['code_name']}selected{/if}>{$v['code_name']}</option>
+                                                                    {/volist}
+                                                                </select>
+                                                            </div>
+                                                            <div class="goods_brand goods_item disf2">
+                                                                <div class="goods_brand brand_div">
+                                                                    <select name="goods_brand[0][]" lay-filter="brand_type">
+                                                                        <option value="">请选择物品品牌</option>
+                                                                        <option value="1" {if $vo2['brand_type']==1}selected{/if}>无牌（无商标信息）</option>
+                                                                        <option value="2" {if $vo2['brand_type']==2}selected{/if}>仿牌（商品无注册）</option>
+                                                                        <option value="3" {if $vo2['brand_type']==3}selected{/if}>普通品牌（有注册非知名）</option>
+                                                                        <option value="4" {if $vo2['brand_type']==4}selected{/if}>奢侈品牌（有注册且知名）</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="brand_name brand_div" style="display: {if $vo2['brand_type']==3}block{else}none{/if};">
+                                                                    <input type="text" class="layui-input" name="goods_brand_name[0][]" placeholder="请输入品牌名称" value="{$vo2['brand_name']}">
+                                                                </div>
+                                                                <div class="copy_brand brand_div" style="display: {if $vo2['brand_type']==2}block{else}none{/if};">
+                                                                    <select name="goods_brand_name2[0][]" lay-search>
+                                                                        <option value="">请选择仿牌名称</option>
+                                                                        {volist name="brand" id="v"}
+                                                                        <option value="仿{$v['param1']}" {if $vo2['brand_name']=='仿'.$v['param1']}selected{/if}>仿{$v['param1']}</option>
+                                                                        {/volist}
+                                                                    </select>
+                                                                </div>
+                                                                <div class="select_brand_name brand_div" style="display: {if $vo2['brand_type']==4}block{else}none{/if};">
+                                                                    <select name="goods_brand_name3[0][]" lay-filter="brand_name" lay-search>
+                                                                        <option value="">请选择品牌名称</option>
+                                                                        {volist name="brand" id="v"}
+                                                                        <option value="{$v['param1']}" {if $vo2['brand_name']==$v['param1']}selected{/if}>{$v['param1']}</option>
+                                                                        {/volist}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="goods_remark goods_item">
+                                                                <input type="text" class="layui-input" name="goods_remark[0][]" placeholder="请输入物品备注" value="{$vo2['good_remark']}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {/volist}
+                                            </div>
+                                        </div>
+                                        <div class="goods_div noneed_edit">
+                                            <div class="layui-collapse goods_collapse" lay-accordion>
+                                                {volist name="goods" key="key2" id="vo2"}
+                                                <div class="layui-colla-item">
+                                                    <h2 class="layui-colla-title">{$key2}. <span class="goods_desc">{$vo2['good_desc']} </span><span class="goods_num">{$vo2['good_num']}</span><span class="goods_unit">{$vo2['good_unit']}</span></h2>
+                                                    <div class="layui-colla-content {if $key2==1}layui-show{/if}">
+                                                        <div class="goods" style="color:{$website['color_word']};">
+                                                            <div class="xmvalue goods_item">
+                                                                物品属性：{$vo2['valueid2']}
+                                                            </div>
+                                                            <div class="goods_desc goods_item">
+                                                                物品描述：{$vo2['good_desc']}
+                                                            </div>
+                                                            <div class="goods_num">
+                                                                物品数量：{$vo2['good_num']}{$vo2['good_unit']}
+                                                            </div>
+                                                            <div class="goods_currency goods_item">
+                                                                物品价值：{$vo2['good_currency']}&nbsp;{$vo2['good_price']}{if(!empty($vo2['goods_usdprice']))}（USD&nbsp;{$vo2['goods_usdprice']}）{/if}
+                                                            </div>
+                                                            <div class="goods_package goods_item">
+                                                                包装材质：{$vo2['good_package']}
+                                                            </div>
+                                                            <div class="goods_brand goods_item">
+                                                                <div class="goods_brand brand_div">
+                                                                    物品品牌：{if $vo2['brand_type']==1}无牌{/if}{if $vo2['brand_type']==2}仿牌（{$vo2['brand_name']}）{/if}{if $vo2['brand_type']==3}普通品牌（{$vo2['brand_name']}）{/if}{if $vo2['brand_type']==4}奢侈品牌（{$vo2['brand_name']}）{/if}
+                                                                </div>
+                                                            </div>
+                                                            <div class="goods_remark goods_item">
+                                                                物品备注：{$vo2['good_remark']}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {/volist}
+                                            </div>
+                                        </div>
+                                        {if $order['prediction_id']==1}
+                                        <!--原包签收-->
+                                        <blockquote class="layui-elem-quote">包裹信息</blockquote>
+                                        <div class="package_div need_edit" style="display: none;">
+                                            <div class="package_type" style="display: flex;">
+                                                <div style="width: 100%;">
+                                                    <select name="package[]" id="package" lay-filter="package">
+                                                        <option value="">请选择包装材质</option>
+                                                        <option value="裸装" {if $parcel['package']=='裸装'}selected{/if}>裸装</option>
+                                                        <option value="包装" {if $parcel['package']=='包装'}selected{/if}>包装</option>
+                                                    </select>
+                                                </div>
+                                                <input type="text" class="layui-input package_name" name="package_name[]" placeholder="请输入包裹包装材质" value="{$parcel['package_name']}" style="display:{if $parcel['package']=='包装'}block{else}none{/if};">
+                                            </div>
+                                            <div class="package_grosswt">
+                                                <input type="number" class="layui-input" name="grosswt[]" placeholder="请输入包裹毛重kg" value="{$parcel['grosswt']}">
+                                            </div>
+                                            <div class="package_volumn disf">
+                                                <input type="number" class="layui-input" name="long[]" value="{$parcel['volumn'][0]}" placeholder="长cm" style="width:33%;">X<input  style="width:33%;" type="number" class="layui-input" name="width[]" value="{$parcel['volumn'][1]}" placeholder="宽cm">X<input type="number" class="layui-input" name="height[]" value="{$parcel['volumn'][2]}" placeholder="高cm" style="width:33%;">
+                                            </div>
+                                        </div>
+                                        <div class="package_div noneed_edit" style="color:{$website['color_word']};">
+                                            <div class="package_type" style="display: flex;">
+                                                包装材质： {$parcel['package']}{if $parcel['package']=='包装'}（{$parcel['package_name']}）{/if}
+                                            </div>
+                                            <div class="package_grosswt">
+                                                包裹毛重KG：{$parcel['grosswt']}
+                                            </div>
+                                            <div class="package_volumn disf">
+                                                包裹体积CM：{$parcel['volumn'][0]}*{$parcel['volumn'][1]}*{$parcel['volumn'][2]}（长*宽*高）
+                                            </div>
+                                        </div>
+                                        {/if}
+                                    </div>
+                                    {/if}
+                                    {if $order['prediction_id']==2}
+                                    <!--验货签收-->
+                                    <div class="layui-field-box">
+                                        <div class="inspection_product need_edit" style="display: none;">
+                                            <blockquote class="layui-elem-quote">验货信息</blockquote>
+                                            <div class="inspection_div">
+                                                <div class="inspection_method">
+                                                    <select name="inspection_method[]" id="inspection_method" lay-filter="inspection_method" lay-verify="required">
+                                                        <option value="">请选择验货方式</option>
+                                                        <option value="1" {if $parcel['inspection_method']==1}selected{/if}>拍照验货</option>
+                                                        <option value="2" {if $parcel['inspection_method']==2}selected{/if}>视频验货</option>
+                                                    </select>
+                                                </div>
+                                                <div class="video_inspection" style="display:{if $parcel['inspection_method']==2}flex{else}none{/if};">
+                                                    <input type="text" class="layui-input inspection_date" name="inspection_date[]" id="inspection_date" value="{$parcel['inspection_date']}" placeholder="视频时间">
+                                                    <div class="video_platform">
+                                                        <select name="video_platform[]" id="video_platform" lay-filter="video_platform" lay-verify="">
+                                                            <option value="">请选择视频验货平台</option>
+                                                            <option value="1" {if $parcel['video_platform']==1}selected{/if}>微信</option>
+                                                            <option value="2" {if $parcel['video_platform']==2}selected{/if}>腾讯会议</option>
+                                                            <option value="3" {if $parcel['video_platform']==3}selected{/if}>ZOOM</option>
+                                                            <option value="4" {if $parcel['video_platform']==4}selected{/if}>其他</option>
+                                                        </select>
+                                                    </div>
+                                                    <input type="text" class="layui-input video_platform_name" name="video_platform_name[]" value="{$parcel['video_platform_name']}" placeholder="其他平台名称" style="display:{if $parcel['video_platform']==4}block{else}none{/if};">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="inspection_product noneed_edit" style="color:{$website['color_word']};">
+                                            <blockquote class="layui-elem-quote">验货信息</blockquote>
+                                            <div class="inspection_div">
+                                                <div class="inspection_method">
+                                                    验货方式：{if $parcel['inspection_method']==1}拍照验货{/if}
+                                                    {if $parcel['inspection_method']==2}视频验货{/if}
+                                                </div>
+                                                <div class="video_inspection2" style="display:{if $parcel['inspection_method']==2}flex{else}none{/if};">
+                                                    视频时间：{$parcel['inspection_date']}
+                                                </div>
+                                                <div class="video_inspection2" style="display:{if $parcel['inspection_method']==2}flex{else}none{/if};">
+                                                    视频验货平台：{if $parcel['video_platform']==1}微信{/if}{if $parcel['video_platform']==2}腾讯会议{/if}{if $parcel['video_platform']==3}ZOOM{/if}{if $parcel['video_platform']==4}其他（{$parcel['video_platform_name']}）{/if}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    {/if}
+                                </fieldset>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">创建时间</label>
+                                <div class="layui-input-inline layui-select-fscon">
+                                    <?php echo date('Y-m-d H:i',$parcel['createtime']);?>
+                                </div>
+                            </div>
+                            <div class="layui-form-item sure_editBtn" style="display: none;">
+                                <label class="layui-form-label"></label>
+                                <div class="layui-input-inline layui-select-fscon">
+                                    <button class="layui-btn" lay-submit="" lay-filter="component-form-demo1">确认修改</button>
+                                </div>
+                            </div>
+                            {else}
+                            <!--已签收包裹待确认信息/待签收/查看信息-->
+                            <div class="parcel_info view_parcel_info" style="padding:10px;color:{$website['color_word']};">
+                                <fieldset class="layui-elem-field">
+                                    <legend>入仓方式</legend>
+                                    <div class="layui-field-box">
+                                        {if $parcel['delivery_logistics']==1}
+                                        {if($parcel['delivery_method']==1 || $parcel['delivery_method']==2)}
+                                        <div class="warehouse_delivery">
+                                            <div>送仓物流：{if $parcel['delivery_logistics']==1}物流到仓{elseif($parcel['delivery_logistics']==2)}上门提货{/if}</div>
+                                            <div>送仓方式：{if $parcel['delivery_method']==1}快递寄递{elseif($parcel['delivery_method']==2)}物流运抵{/if}</div>
+                                            <div>运输企业：{$parcel['express_name']}</div>
+                                            <div>运单编号：{$parcel['express_no']}</div>
+                                        </div>
+                                        {/if}
+                                        {if $parcel['delivery_method']==3}
+                                        <div class="warehouse_delivery">
+                                            <div>送仓物流：{if $parcel['delivery_logistics']==1}物流到仓{elseif($parcel['delivery_logistics']==2)}上门提货{/if}</div>
+                                            <div>送仓方式：{if $parcel['delivery_method']==1}快递寄递{elseif($parcel['delivery_method']==2)}物流运抵{/if}</div>
+                                            <div>入仓日期：{$parcel['inwarehouse_date']}</div>
+                                            <div>联系人：{$parcel['contact_name']}</div>
+                                            <div>联系电话：{$parcel['contact_mobile']}</div>
+                                        </div>
+                                        {/if}
+                                        {/if}
+                                    </div>
+                                </fieldset>
+                                <fieldset class="layui-elem-field">
+                                    <legend>物品信息</legend>
+                                    {if $order['prediction_id']==1}
+                                    <!--原包签收-->
+                                    <!--不用修改时，改回grid为6个格-->
+                                    <style>.goods{grid-template-columns:repeat(6,1fr);}.goods_currency{grid-column-end:5;}</style>
+                                    <!--原包签收-->
+                                    {if(!empty($goods))}
+                                    <div class="layui-field-box">
+                                        <blockquote class="layui-elem-quote">物品信息</blockquote>
+                                        <div class="goods_div">
+                                            <div class="layui-collapse goods_collapse" lay-accordion>
+                                                {volist name="goods" key="key2" id="vo2"}
+                                                <div class="layui-colla-item">
+                                                    <div class="layui-colla-title disf" style="justify-content: space-between;">
+                                                        <h4>{$key2}. <span class="goods_desc">{$vo2['good_desc']} </span><span class="goods_num">{$vo2['good_num']}</span><span class="goods_unit">{$vo2['good_unit']}</span></h4>
+                                                    </div>
+                                                    <div class="layui-colla-content {if $key2==1}layui-show{/if}">
+                                                        <div class="goods">
+                                                            <div class="xmvalue goods_item">
+                                                                物品属性：{$vo2['valueid2']}
+                                                            </div>
+                                                            <div class="goods_desc goods_item">
+                                                                物品描述：{$vo2['good_desc']}
+                                                            </div>
+                                                            <div class="goods_num">
+                                                                物品数量：{$vo2['good_num']}{$vo2['good_unit']}
+                                                            </div>
+                                                            <div class="goods_currency goods_item">
+                                                                物品价值：{$vo2['good_currency']}&nbsp;{$vo2['good_price']}
+                                                            </div>
+                                                            <div class="goods_package goods_item">
+                                                                包装材质：{$vo2['good_package']}
+                                                            </div>
+                                                            <div class="goods_brand goods_item">
+                                                                <div class="goods_brand brand_div">
+                                                                    物品品牌：{if $vo2['brand_type']==1}无牌{/if}{if $vo2['brand_type']==2}仿牌（{$vo2['brand_name']}）{/if}{if $vo2['brand_type']==3}普通品牌（{$vo2['brand_name']}）{/if}{if $vo2['brand_type']==4}奢侈品牌（{$vo2['brand_name']}）{/if}
+                                                                </div>
+                                                            </div>
+                                                            <div class="goods_remark goods_item">
+                                                                物品备注：{$vo2['good_remark']}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {/volist}
+                                            </div>
+                                        </div>
+                                        <blockquote class="layui-elem-quote">包裹信息</blockquote>
+                                        <div class="package_div" style="padding-bottom: 10px;">
+                                            <div class="package_type" style="display: flex;">
+                                                包装材质： {$parcel['package']}{if $parcel['package']=='包装'}（{$parcel['package_name']}）{/if}
+                                            </div>
+                                            <div class="package_grosswt">
+                                                包裹毛重KG：{$parcel['grosswt']}
+                                            </div>
+                                            <div class="package_volumn disf">
+                                                包裹体积CM：{$parcel['volumn'][0]}*{$parcel['volumn'][1]}*{$parcel['volumn'][2]}（长*宽*高）
+                                            </div>
+                                        </div>
+                                        {if !empty($parcel['condition'])}
+                                        <blockquote class="layui-elem-quote">包裹状况</blockquote>
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">状况描述</label>
+                                            <div class="layui-input-inline layui-select-fscon">
+                                                {$parcel['condition']}
+                                            </div>
+                                        </div>
+                                        {/if}
+                                        {if !empty($parcel['condition_file'])}
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">状况文件</label>
+                                            <div class="layui-input-inline layui-select-fscon">
+                                                <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;background: unset;">
+                                                    预览图：
+                                                    <div class="layui-upload-list" id="file-upload-list">
+                                                        {volist name="parcel['condition_file']" id="vo"}
+                                                        <div style="display: inline-block;">
+                                                            <img onclick="seePic(this);" src="https://decl.gogo198.cn/{$vo}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png">
+                                                        </div>
+                                                        {/volist}
+                                                    </div>
+                                                </blockquote>
+                                            </div>
+                                        </div>
+                                        {/if}
+                                    </div>
+                                    {/if}
+                                    {/if}
+                                    {if $order['prediction_id']==2}
+                                    <!--验货签收-->
+                                    <div class="layui-field-box">
+                                        {if(!empty($goods))}
+                                        <blockquote class="layui-elem-quote">物品信息</blockquote>
+                                        {if($parcel['status2']>=2)}
+                                        <!--不用修改时，改回grid为6个格-->
+                                        <style>.goods{grid-template-columns:repeat(6,1fr);}.goods_currency{grid-column-end:5;}</style>
+                                        <!--确认签收，要查看物品信息-->
+                                        <div class="goods_div">
+                                            <div class="layui-collapse goods_collapse" lay-accordion>
+                                                {volist name="goods" key="key2" id="vo2"}
+                                                <div class="layui-colla-item">
+                                                    <div class="layui-colla-title disf" style="justify-content: space-between;">
+                                                        <h4>{$key2}. <span class="goods_desc">{$vo2['good_desc']} </span><span class="goods_num">{$vo2['good_num']}</span><span class="goods_unit">{$vo2['good_unit']}</span></h4>
+                                                    </div>
+                                                    <div class="layui-colla-content {if $key2==1}layui-show{/if}">
+                                                        <div class="goods">
+                                                            <div class="xmvalue goods_item">
+                                                                物品属性：{$vo2['valueid2']}
+                                                            </div>
+                                                            <div class="goods_desc goods_item">
+                                                                物品描述：{$vo2['good_desc']}
+                                                            </div>
+                                                            <div class="goods_num">
+                                                                物品数量：{$vo2['good_num']}{$vo2['good_unit']}
+                                                            </div>
+                                                            <div class="goods_currency goods_item">
+                                                                物品价值：{$vo2['good_currency']}&nbsp;{$vo2['good_price']}
+                                                            </div>
+                                                            <div class="goods_package goods_item">
+                                                                包装材质：{$vo2['good_package']}
+                                                            </div>
+                                                            <div class="goods_brand goods_item">
+                                                                <div class="goods_brand brand_div">
+                                                                    物品品牌：{if $vo2['brand_type']==1}无牌{/if}{if $vo2['brand_type']==2}仿牌（{$vo2['brand_name']}）{/if}{if $vo2['brand_type']==3}普通品牌（{$vo2['brand_name']}）{/if}{if $vo2['brand_type']==4}奢侈品牌（{$vo2['brand_name']}）{/if}
+                                                                </div>
+                                                            </div>
+                                                            <div class="goods_remark goods_item">
+                                                                物品备注：{$vo2['good_remark']}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {/volist}
+                                            </div>
+                                        </div>
+                                        {else}
+                                        <style>.view_parcel_info .goods *{color:#000;}{if $order['prediction_id']==2}.goods_currency{width:360px;}{/if}</style>
+                                        <!--确认信息，要填写物品必填信息-->
+                                        <input type="hidden" name="del_gid" value=""><!--删除的物品ids-->
+                                        <input type="hidden" class="value_selected0" value="{$goods[0]['top_id']}"><!--当前包裹里属性已选择的大类，‘普货’、‘敏感’、‘禁限’-->
+                                        <input type="hidden" class="package0" name="package_line[0]" id="package0" value="{$parcel['line_type']}"><!--当前包裹决定走的线路，‘普货’、‘敏感货’、‘特殊线路由总后台配置该包裹线路’-->
+                                        <div class="goods_div">
+                                            <div class="layui-collapse goods_collapse" lay-accordion>
+                                                {volist name="goods" key="key2" id="vo2"}
+                                                <input type="hidden" name="good_id[0][]" value="{$vo2['id']}">
+                                                <div class="layui-colla-item need_edit">
+                                                    <div class="layui-colla-title disf" style="justify-content: space-between;">
+                                                        <h4>{$key2}. <span class="goods_desc">{$vo2['good_desc']} </span><span class="goods_num">{$vo2['good_num']}</span><span class="goods_unit">{$vo2['good_unit']}</span></h4>
+                                                        <div class="expend_div">
+                                                            {if $key2!=1}<div class="layui-btn layui-btn-danger del_goods" onclick="del_goods({$vo2['id']},this)">-</div>{/if}
+                                                            <div class="layui-btn layui-btn-success add_goods" onclick="add_goods(0,this)">+</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-colla-content {if $key2==1}layui-show{/if}">
+                                                        <div class="goods">
+                                                            <div class="xmvalue goods_item">
+                                                                <div id="valueid{$key2}" class="xm-select-demo"></div>
+                                                            </div>
+                                                            <div class="goods_desc goods_item disf2">
+                                                                <select name="goods_select_desc[0][]" class="goods_select_desc" lay-search lay-filter="goods_select_desc">
+                                                                    <option value="{$vo2['good_desc']}">{$vo2['good_desc']}</option>
+                                                                </select>
+                                                                <input type="text" name="goods_desc[0][]" placeholder="输入新的物品" class="layui-input goods_input_desc"  onchange="goods_input_desc(this)" style="display: none;">
+                                                            </div>
+                                                            <div class="goods_num disf2">
+                                                                <input type="number" name="goods_num[0][]" placeholder="物品数量" class="layui-input goods_item" value="{$vo2['good_num']}" onchange="goods_input_num(this)">
+                                                                <div class="goods_unit goods_item">
+                                                                    <select name="goods_unit[0][]" lay-search lay-filter="goods_unit">
+                                                                        <option value="">请选择单位</option>
+                                                                        {volist name="unit" id="vo"}
+                                                                        <option value="{$vo['code_value']}" {if $vo2['good_unit']==$vo['code_name']}selected{/if}>{$vo['code_name']}</option>
+                                                                        {/volist}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="goods_currency goods_item">
+                                                                <div class="disf">
+                                                                    {if $key2==1}
+                                                                    <!--第一个才选择国家地区-->
+                                                                    <div id="country" class="xm-select-demo"></div>
+                                                                    {/if}
+
+                                                                    <select name="goods_currency[0][]" class="goods_currency_select" lay-search lay-filter="currency">
+                                                                        <option value="">币种</option>
+
+                                                                    </select>
+                                                                    <input type="number" name="goods_price[0][]" placeholder="物品价值" class="layui-input goods_price goods_item" value="{$vo2['good_price']}" onchange="get_money(this)">
+                                                                    <div class="tax_relate">
+                                                                        <div class="layui-btn layui-btn-xs layui-btn-primary2 layui-border-red" onclick="tax_relate({$order['country']})">是否涉税</div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="equal_usd" style="display: none;">
+                                                                    <div class="equal_usd_symbol"></div>
+                                                                    <input type="hidden" name="goods_usdprice[0][]" placeholder="物品价值" class="layui-input">
+                                                                </div>
+                                                            </div>
+                                                            <div class="goods_package goods_item">
+                                                                <select name="goods_package[0][]" lay-search>
+                                                                    <option value="">请选择包装材质</option>
+                                                                    {volist name="package" id="v"}
+                                                                    <option value="{$v['code_value']}" {if $vo2['good_package']==$v['code_name']}selected{/if}>{$v['code_name']}</option>
+                                                                    {/volist}
+                                                                </select>
+                                                            </div>
+                                                            <div class="goods_brand goods_item disf2">
+                                                                <div class="goods_brand brand_div">
+                                                                    <select name="goods_brand[0][]" lay-filter="brand_type">
+                                                                        <option value="">请选择物品品牌</option>
+                                                                        <option value="1" {if $vo2['brand_type']==1}selected{/if}>无牌（无商标信息）</option>
+                                                                        <option value="2" {if $vo2['brand_type']==2}selected{/if}>仿牌（商品无注册）</option>
+                                                                        <option value="3" {if $vo2['brand_type']==3}selected{/if}>普通品牌（有注册非知名）</option>
+                                                                        <option value="4" {if $vo2['brand_type']==4}selected{/if}>奢侈品牌（有注册且知名）</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="brand_name brand_div" style="display: {if $vo2['brand_type']==3}block{else}none{/if};">
+                                                                    <input type="text" class="layui-input" name="goods_brand_name[0][]" placeholder="请输入品牌名称" value="{$vo2['brand_name']}">
+                                                                </div>
+                                                                <div class="copy_brand brand_div" style="display: {if $vo2['brand_type']==2}block{else}none{/if};">
+                                                                    <select name="goods_brand_name2[0][]" lay-search>
+                                                                        <option value="">请选择仿牌名称</option>
+                                                                        {volist name="brand" id="v"}
+                                                                        <option value="仿{$v['param1']}" {if $vo2['brand_name']=='仿'.$v['param1']}selected{/if}>仿{$v['param1']}</option>
+                                                                        {/volist}
+                                                                    </select>
+                                                                </div>
+                                                                <div class="select_brand_name brand_div" style="display: {if $vo2['brand_type']==4}block{else}none{/if};">
+                                                                    <select name="goods_brand_name3[0][]" lay-filter="brand_name" lay-search>
+                                                                        <option value="">请选择品牌名称</option>
+                                                                        {volist name="brand" id="v"}
+                                                                        <option value="{$v['param1']}" {if $vo2['brand_name']==$v['param1']}selected{/if}>{$v['param1']}</option>
+                                                                        {/volist}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="goods_remark goods_item">
+                                                                <input type="text" class="layui-input" name="goods_remark[0][]" placeholder="请输入物品备注" value="{$vo2['good_remark']}">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                {/volist}
+                                            </div>
+                                        </div>
+                                        {/if}
+                                        {/if}
+                                        {if(!empty($parcel['pic_file']) || !empty($parcel['video_code']))}
+                                        <div class="inspection_product">
+                                            <blockquote class="layui-elem-quote">验货信息</blockquote>
+                                            <div class="inspection_div" style="padding-bottom:10px;">
+                                                <div class="inspection_method">
+                                                    验货方式：{if $parcel['inspection_method']==1}拍照验货{/if}
+                                                    {if $parcel['inspection_method']==2}视频验货{/if}
+                                                </div>
+                                                <div class="video_inspection2" style="display:{if $parcel['inspection_method']==2}flex{else}none{/if};">
+                                                    视频时间：{$parcel['inspection_date']}
+                                                </div>
+                                                <div class="video_inspection2" style="display:{if $parcel['inspection_method']==2}flex{else}none{/if};">
+                                                    视频验货平台：{if $parcel['video_platform']==1}微信{/if}{if $parcel['video_platform']==2}腾讯会议{/if}{if $parcel['video_platform']==3}ZOOM{/if}{if $parcel['video_platform']==4}其他（{$parcel['video_platform_name']}）{/if}
+                                                </div>
+                                                <div class="video_inspection2" style="display:{if($parcel['inspection_method']==2 && $parcel['video_code']!='')}flex{else}none{/if};">
+                                                    查验链接：{$parcel['video_code']}&nbsp;<div class="layui-btn layui-btn-xs layui-btn-normal" onclick="copy_that(this,'{$parcel['video_code']}')">复制</div><div id="cs" style="display: none;"></div>
+                                                </div>
+                                            </div>
+                                            <div class="picture_inspection" style="display:{if $parcel['inspection_method']==1}block{else}none{/if};">
+                                                <div class="layui-form-item photo_inspection">
+                                                    <label class="layui-form-label">验货图片</label>
+                                                    <div class="layui-input-inline layui-select-fscon">
+                                                        <div class="layui-upload">
+                                                            <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;background: unset;">
+                                                                预览图：
+                                                                <div class="layui-upload-list" id="file-upload-list">
+                                                                    {if(!empty($parcel['pic_file']))}
+                                                                    {volist name="parcel['pic_file']" id="vo"}
+                                                                    <div style="display: inline-block;">
+                                                                        <img onclick="seePic(this);" src="https://decl.gogo198.cn/{$vo}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png">
+                                                                    </div>
+                                                                    {/volist}
+                                                                    {/if}
+                                                                </div>
+                                                            </blockquote>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {/if}
+                                        <blockquote class="layui-elem-quote">包裹信息</blockquote>
+                                        <div class="package_div" style="padding-bottom: 10px;">
+                                            <div class="package_type" style="display: flex;">
+                                                包装材质： {$parcel['package']}{if $parcel['package']=='包装'}（{$parcel['package_name']}）{/if}
+                                            </div>
+                                            <div class="package_grosswt">
+                                                包裹毛重KG：{$parcel['grosswt']}
+                                            </div>
+                                            <div class="package_volumn disf">
+                                                包裹体积CM：{$parcel['volumn'][0]}*{$parcel['volumn'][1]}*{$parcel['volumn'][2]}（长*宽*高）
+                                            </div>
+                                        </div>
+                                        <blockquote class="layui-elem-quote">包裹状况</blockquote>
+                                        {if !empty($parcel['condition'])}
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">状况描述</label>
+                                            <div class="layui-input-inline layui-select-fscon">
+                                                {$parcel['condition']}
+                                            </div>
+                                        </div>
+                                        {/if}
+                                        {if !empty($parcel['condition_file'])}
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">状况文件</label>
+                                            <div class="layui-input-inline layui-select-fscon">
+                                                <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;background: unset;">
+                                                    预览图：
+                                                    <div class="layui-upload-list" id="file-upload-list">
+                                                        {volist name="parcel['condition_file']" id="vo"}
+                                                        <div style="display: inline-block;">
+                                                            <img onclick="seePic(this);" src="https://decl.gogo198.cn/{$vo}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png">
+                                                        </div>
+                                                        {/volist}
+                                                    </div>
+                                                </blockquote>
+                                            </div>
+                                        </div>
+                                        {/if}
+                                    </div>
+                                    {/if}
+                                </fieldset>
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">创建时间</label>
+                                <div class="layui-input-inline layui-select-fscon">
+                                    <?php echo date('Y-m-d H:i',$parcel['createtime']);?>
+                                </div>
+                            </div>
+                            {/if}
+
+                            {if($parcel['status2']==1 || $parcel['status2']==2)}
+                            <div class="layui-form-item layui-layout-admin">
+                                <div class="layui-input-block">
+                                    <div class="layui-footer" style="left: 0;text-align: center;padding:15px 0;z-index: 99;">
+                                        <button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="component-form-demo1" style="border:1px solid #fff;width: 190px;">
+                                            {if $parcel['status2']==1}确认信息{elseif($parcel['status2']==2)}确认签收{/if}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            {/if}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+{include file="common/footer"}
+<!--<script src="js/jquery_3.3.1_jquery.min.js"></script>-->
+<script src="./layui/xm-select3.js?v=<?php echo time();?>"></script>
+<script src="./layui//common_js.js?v=<?php echo time();?>"></script>
+<script>
+    var time_name = '';
+    var valueid = '';
+    layui.use(['layer', 'form', 'table', 'upload','laydate','element'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , element = layui.element
+            , upload = layui.upload
+            , laydate = layui.laydate
+            , table = layui.table;
+
+        form.render(null, 'component-form-group');
+
+        laydate.render({
+            elem: '#inwarehouse_date'
+            ,type: 'date'
+            ,min: 'nowTime'
+            ,format: 'MM月dd日'
+        });
+
+        {if $parcel['status2']!=0}
+        {if $order['prediction_id']==2}
+        {if($parcel['status2']<2)}
+        xmSelect.render({
+            el: '#country',
+            name: 'country',
+            autoRow: true, //自动换行
+            filterable: true, //可搜索
+            searchTips: '请搜索国家地区',
+            tips:'国地',
+            radio: true,
+            model: {
+                icon: 'hidden',//是否展示复选框或者单选框图标 show, hidden:变换背景色  ！！这句话是重点，不然会变成父节点也有单选框！！
+            },
+            tree: {
+                show: true, //用树显示
+                showFolderIcon: true, //是否显示节点前的三角图标
+                expandedKeys: false, //默认全部展开
+                showLine: true, //显示渐近线
+                indent: 20, //间距
+                strict: false, //重点！！设置成非严格父子模式，这样父节点被禁用，子节点依然可以点击
+                clickCheck: true,
+            },
+            toolbar: {
+                show: false, //显示工具条
+                list: ['ALL', 'REVERSE', 'CLEAR']
+            },
+            height: '300px', //最大下拉框高度
+            data: {$country},
+            layVerify: 'required',
+            on:function(data){
+                $.ajax({
+                    url: "/?s=gather/get_currency_t",
+                    method: 'post',
+                    data: {val: data.change[0].id},
+                    dataType: 'JSON',
+                    success: function (res) {
+                        if(res.code==0){
+                            let html='<option value="">请选择币种</option>';
+                            for(let i=0;i<res.list.length;i++){
+                                if(res.list[i].id==60){
+                                    html += '<option value="'+res.list[i].id+'" selected>'+res.list[i].code_zhname+'：'+res.list[i].currency_symbol_standard+'</option>';
+                                }else{
+                                    html += '<option value="'+res.list[i].id+'">'+res.list[i].code_zhname+'：'+res.list[i].currency_symbol_standard+'</option>';
+                                }
+                            }
+                            $('.goods_currency_select').html(html);
+                            form.render(null,'component-form-group');
+                        }
+                    }
+                });
+            }
+        });
+        {/if}
+            {/if}
+                {/if}
+
+                    {volist name="goods" key="key2" id="vo2"}
+                    valueid=xmSelect.render({
+                        el: '#valueid{$key2}',
+                        autoRow: true, //自动换行
+                        filterable: true, //可搜索
+                        searchTips: '请搜索',
+                        radio:true,//单选
+                        name:"valueid[0][]",
+                        tips:'请选择物品属性',
+                        model: {
+                            icon: 'hidden',//是否展示复选框或者单选框图标 show, hidden:变换背景色  ！！这句话是重点，不然会变成父节点也有单选框！！
+                        },
+                        tree: {
+                            show: true, //用树显示
+                            showFolderIcon: true, //是否显示节点前的三角图标
+                            expandedKeys: true, //默认全部展开
+                            showLine: true, //显示渐近线
+                            indent: 20, //间距
+                            strict: false, //重点！！设置成非严格父子模式，这样父节点被禁用，子节点依然可以点击
+                            clickCheck:true,
+                            vaguaSearch:1,//开启模糊搜索
+                            nowElement:'valueid{$key2}'
+                        },
+                        toolbar: {
+                            show: false, //显示工具条
+                            list: ['ALL', 'REVERSE', 'CLEAR']
+                        },
+                        height: '300px', //最大下拉框高度
+                        data: {$value},
+                        initValue:[{$vo2['valueid']}],
+                        on:function(data){
+                            //1、选择了属性后，记录当前属性最上级的类名。
+                            //2、添加物品后，选择了其他的最上级类名则按原逻辑提示。
+                            $('.value_selected0').val(data['change'][0]['top_id']);
+                            if(data['change'][0]['top_id']==17){
+                                $('#package0').val('普货');
+                            }else if(data['change'][0]['top_id']==19){
+                                $('#package0').val('敏感货');
+                            }else if(data['change'][0]['top_id']==20){
+                                $('#package0').val('特殊货');
+                            }
+                            var keywords = data['change'][0]['keywords'];
+                            keywords = keywords.split('、');
+                            let html = '<option value="">请选择物品</option>\n' +
+                                '<option value="-1">没有可选物品，另外添加</option>';
+                            for(let i=0;i<keywords.length;i++){
+                                html+='<option value="'+keywords[i]+'">'+keywords[i]+'</option>';
+                            }
+                            $('#valueid{$key2}').parent().parent().find('.goods_select_desc').html(html);
+                            //隐藏并清空输入新的物品框
+                            $('#valueid{$key2}').parent().parent().find('.goods_input_desc').val('');
+                            $('#valueid{$key2}').parent().parent().find('.goods_input_desc').hide();
+                            form.render(null,'component-form-group');
+                            valueid.closed();
+                        }
+                    });
+                    {/volist}
+
+                        form.on('select(delivery_logistics)',function(data){
+                            let val = data.value;
+                            if(val==1){
+                                $(this).parent().parent().parent().parent().find('.delivery_method').show();
+                                $(this).parent().parent().parent().parent().find('.express_info').hide();
+                                $(this).parent().parent().parent().parent().find('.logistics_info').hide();
+                                $(this).parent().parent().parent().parent().find('.warehouse_info').hide();
+                            }else if(val==2){
+                                $(this).parent().parent().parent().parent().find('.delivery_method').hide();
+                                $(this).parent().parent().parent().parent().find('.express_info').hide();
+                                $(this).parent().parent().parent().parent().find('.logistics_info').hide();
+                                $(this).parent().parent().parent().parent().find('.warehouse_info').hide();
+                            }
+                        });
+
+                        form.on('select(delivery_method)',function(data){
+                            let val = data.value;
+                            if(val==1){
+                                $(this).parent().parent().parent().parent().find('.express_info').css('display','flex');
+                                $(this).parent().parent().parent().parent().find('.logistics_info').hide();
+                                $(this).parent().parent().parent().parent().find('.warehouse_info').hide();
+                            }else if(val==2){
+                                $(this).parent().parent().parent().parent().find('.express_info').hide();
+                                $(this).parent().parent().parent().parent().find('.logistics_info').css('display','flex');
+                                $(this).parent().parent().parent().parent().find('.warehouse_info').hide();
+                            }else if(val==3){
+                                $(this).parent().parent().parent().parent().find('.express_info').hide();
+                                $(this).parent().parent().parent().parent().find('.logistics_info').hide();
+                                $(this).parent().parent().parent().parent().find('.warehouse_info').css('display','flex');
+                            }
+
+                            form.render(null, 'component-form-group');
+                        });
+
+                        //物品描述
+                        form.on('select(goods_select_desc)',function(data){
+                            let val = data.value;
+                            if(val==-1){
+                                $(this).parent().parent().parent().find('.goods_input_desc').show();
+                                $(this).parent().parent().hide();
+                            }else{
+                                $(this).parent().parent().parent().parent().parent().parent().find('.layui-colla-title h4 .goods_desc').html(val+' ');
+                            }
+                        });
+                        //物品单位
+                        form.on('select(goods_unit)',function(data) {
+                            let val = $(this).text();
+                            $(this).parent().parent().parent().parent().parent().parent().parent().find('.layui-colla-title h4 .goods_unit').html(val);
+                        });
+                        //物品币种
+                        form.on('select(currency)',function(data){
+                            let val = data.value;
+                            let t = this;
+                            let currency = $(t).parent().parent().find('.layui-select-title').find('input').val();
+                            let money = $(t).parent().parent().parent().find('.goods_price').val();
+                            if(money>0 && val!=''){
+                                currency = currency.split('：')[1];
+                                if(currency!='USD' && money>0){
+                                    if(currency!='CNY'){
+                                        //转换成CNY汇率，再转换USD
+                                        get_cny(currency,money,$(t).parent().parent().parent().find('.goods_price'));
+                                    }else{
+                                        //转换成USD汇率
+                                        get_usd(currency,money,$(t).parent().parent().parent().find('.goods_price'));
+                                    }
+                                }else if(currency=='USD'){
+                                    $(t).parent().parent().parent().find('.equal_usd').hide();
+                                    get_condition(money,1);
+                                    all_money(t);
+                                }
+                            }
+
+                            let currency_num = $('.goods_currency_select').length;
+                            if(currency_num>=2){
+                                if(val!=$('.goods_currency_select').eq(0).val()){
+                                    let idx = layer.confirm('当前物品币种要与第一个物品的币种一样', {
+                                        title: "操作提示",
+                                        icon: 0,
+                                        closeBtn: 0,
+                                        btn:['确定','取消当前添加'],
+                                    },function(){
+                                        var select = 'dd';
+                                        $(t).parent().parent().find('dl').find(select).eq(1).click();
+                                        layer.close(idx);
+                                    },function(){
+                                        window.location.href='/?s=index/share_order&manage=2&process1=19&process2=21&process3=21';
+                                    });
+                                }
+                                // for(let i=0;i<currency_num;i++){
+                                //     if(i>0){
+                                //     }
+                                // }
+                            }
+                        });
+                        //验货签收时获取其国家地区币种和USD(废弃)
+                        form.on('select(country)',function(data){
+                            let val = data.value;
+                            let t = this;
+                            $.ajax({
+                                url: "/?s=gather/get_currency_t",
+                                method: 'post',
+                                data: {val: val},
+                                dataType: 'JSON',
+                                success: function (res) {
+                                    if(res.code==0){
+                                        let html='<option value="">请选择币种</option>';
+                                        for(let i=0;i<res.list.length;i++){
+                                            if(res.list[i].id==60){
+                                                html += '<option value="'+res.list[i].id+'" selected>'+res.list[i].code_zhname+'：'+res.list[i].currency_symbol_standard+'</option>';
+                                            }else{
+                                                html += '<option value="'+res.list[i].id+'">'+res.list[i].code_zhname+'：'+res.list[i].currency_symbol_standard+'</option>';
+                                            }
+                                        }
+                                        $('.goods_currency_select').html(html);
+                                        form.render(null,'component-form-group');
+                                    }
+                                }
+                            });
+                        });
+                        //物品品牌
+                        form.on('select(brand_type)',function(data) {
+                            let val = data.value;
+                            if(val==2){
+                                $(this).parent().parent().parent().parent().find('.copy_brand').show();
+                                $(this).parent().parent().parent().parent().find('.brand_name').hide();
+                                $(this).parent().parent().parent().parent().find('.select_brand_name').hide();
+                            }else if(val==3){
+                                $(this).parent().parent().parent().parent().find('.copy_brand').hide();
+                                $(this).parent().parent().parent().parent().find('.brand_name').show();
+                                $(this).parent().parent().parent().parent().find('.select_brand_name').hide();
+                            }else if(val==4){
+                                $(this).parent().parent().parent().parent().find('.copy_brand').hide();
+                                $(this).parent().parent().parent().parent().find('.brand_name').hide();
+                                $(this).parent().parent().parent().parent().find('.select_brand_name').show();
+                            }else{
+                                $(this).parent().parent().parent().parent().find('.copy_brand').hide();
+                                $(this).parent().parent().parent().parent().find('.brand_name').hide();
+                                $(this).parent().parent().parent().parent().find('.select_brand_name').hide();
+                            }
+                        });
+                        //视频平台
+                        form.on('select(inspection_method)',function(data){
+                            let val = data.value;
+                            if(val==2){
+                                $(this).parent().parent().parent().parent().find('.video_inspection').css('display','flex');
+                            }else{
+                                $(this).parent().parent().parent().parent().find('.video_inspection').hide();
+                            }
+                        });
+                        form.on('select(video_platform)',function(data){
+                            let val = data.value;
+                            if(val==4){
+                                $(this).parent().parent().parent().parent().find('.video_platform_name').show();
+                            }else{
+                                $(this).parent().parent().parent().parent().find('.video_platform_name').hide();
+                            }
+                        });
+                        /* 监听提交 */
+                        form.on('submit(component-form-demo1)', function (data) {
+                            // data.field['valueid'] = $('input[name="valueid"]').attr('value');
+                            {if $parcel['status2']==2}
+                            //确认签收，选择‘签收入库’还是‘弃置转运’
+                            area = ['80%','80%'];
+                            if(IsPhone()){
+                                area = ['95%','90%'];
+                            }
+                            layer.confirm('请选择签收操作方式', {
+                                btn: ['签收入库', '弃置转运']
+                            }, function(){
+                                //签收入库
+                                var index = layer.open({
+                                    skin:'grey_div',
+                                    type: 2,
+                                    title: '签收入库',
+                                    content: "/?s=gather/add_storage&id={$parcel['id']}",
+                                    area:area
+                                });
+                            }, function(){
+                                //弃置转运
+                                layer.confirm('请选择弃置转运操作方式', {
+                                    btn: ['就地弃置', '国内转运']
+                                }, function(){
+                                    var index = layer.open({
+                                        skin:'grey_div',
+                                        type: 2,
+                                        title: '包裹弃置',
+                                        content: "/?s=gather/add_disposal&id={$parcel['id']}",
+                                        area:area
+                                    });
+                                }, function(){
+                                    var index = layer.open({
+                                        skin:'grey_div',
+                                        type: 2,
+                                        title: '国内转运',
+                                        content: "/?s=gather/add_transport&id={$parcel['id']}",
+                                        area:area
+                                    });
+                                });
+                            });
+                            {else}
+                            $.ajax({
+                                url: "/?s=index/package_info",
+                                method: 'post',
+                                data: data.field,
+                                dataType: 'JSON',
+                                success: function (res) {
+                                    if (res.code == 0) {
+                                        // var index = parent.layer.getFrameIndex(window.name);
+                                        // parent.layer.close(index);
+                                        // parent.window.location.reload();
+                                        layer.msg(res.msg, {time: 2000}, function () {
+                                            window.location.reload();
+                                        });
+                                    }else if(res.code == 1){
+                                        //确认信息后跳去确认签收
+                                        layer.msg(res.msg, {time: 2000}, function () {
+                                            window.location.href = "/?s=index/share_order&manage=4&process1=22&process2=24&process3=24";
+                                        });
+                                    }else if(res.code == -2){
+                                        //判断条件达到要求，提示
+                                        let operation_btn = [];
+                                        for(let i=0;i<res.data[0].operation_name.length;i++){
+                                            operation_btn.push(res.data[0].operation_name[i]);
+                                        }
+
+                                        let idx = layer.confirm(res.data[0].text_tips, {
+                                            title: "操作提示",
+                                            icon: 0,
+                                            closeBtn: 0,
+                                            btn: operation_btn
+                                            // ,btn3: function(index, layero){
+                                            //     //按钮【按钮三】的回调
+                                            //     if(res.data[0].operation_select[2]==2){
+                                            //         window.location.href=res.data[0].system_urls_value[2];
+                                            //     }else if(res.data[0].operation_select[2]==1){
+                                            //         window.location.href=res.data[0].operation_url[2];
+                                            //     }else{
+                                            //         layer.close(idx);
+                                            //     }
+                                            // }
+                                        }, function(index, layero){
+                                            //按钮【按钮一】的回调
+                                            var href = '';
+                                            if(res.data[0].operation_select[0]==2){
+                                                href=res.data[0].system_urls_value[0];
+                                            }else if(res.data[0].operation_select[0]==1){
+                                                href=res.data[0].operation_url[0];
+                                            }
+                                            //已知晓，不调整并确认包裹信息
+                                            data.field['no_adjust']=1;
+                                            $.getJSON("/?s=index/package_info",data.field, function(res) {
+                                                layer.msg(res.msg, {time: 2000}, function () {
+                                                    window.location.href = href;
+                                                });
+                                            });
+                                            layer.close(idx);
+                                        }, function(index){
+                                            //按钮【按钮二】的回调
+                                            var href='';
+                                            if(res.data[0].operation_select[1]==2){
+                                                href=res.data[0].system_urls_value[1];
+                                            }else if(res.data[0].operation_select[1]==1){
+                                                href=res.data[0].operation_url[1];
+                                            }
+                                            //已知晓，需调整并暂不确认包裹信息
+                                            data.field['no_adjust']=2;
+                                            $.getJSON("/?s=index/package_info",data.field, function(res) {
+                                                layer.msg(res.msg, {time: 2000}, function () {
+                                                    window.location.href = href;
+                                                });
+                                            });
+                                            layer.close(idx);
+                                        });
+                                    }
+                                },
+                                error: function (data) {
+                                    layer.msg('系统错误', {time: 2000});
+                                }
+                            });
+                            {/if}
+                                return false;
+                            });
+                    });
+
+    function order_info(id){
+        var $ = layui.$
+            , layer = layui.layer;
+        var index2 = layer.open({
+            type: 2,
+            title: "查看订单",
+            content: '/?s=index/order_info&process3=9&id='+id,
+            area:['80%','80%']
+        });
+    }
+
+    function payorder_info(id) {
+        var $ = layui.$
+            , layer = layui.layer;
+        let area = ['80%','80%'];
+        if(IsPhone()){
+            area = ['95%','80%'];
+        }
+        var index2 = layer.open({
+            skin:'grey_div',
+            type: 2,
+            title: "包裹订单",
+            content: '/?s=index/parcel_order_info&id='+id,
+            area:area
+        });
+    }
+
+    //填写或查看包裹信息
+    function parcel_info(){
+        var $ = layui.$
+            , layer = layui.layer;
+        var index2 = layer.open({
+            type: 1,
+            title: "包裹信息",
+            content: $('.parcel_info'),
+            area:['100%','100%']
+        });
+        $('.close_win').click(function(){
+            layer.close(index2);
+        });
+    }
+
+    //添加商品
+    function add_goods(pnum,t){
+        var $ = layui.$
+            , layer = layui.layer
+            , element = layui.element
+            , form = layui.form;
+        let gnum_o = $('.need_edit .goods').length;
+        let gnum = parseInt($('.need_edit .goods').length) + 1;
+        if({$order['prediction_id']}==2){
+            if($('select[name=country]').val()==''){
+                layer.msg('请先选择目的国地');return false;
+            }
+        }
+
+        let html = '<div class="layui-colla-item need_edit">\n' +
+            '                                                                                    <div class="layui-colla-title disf" style="justify-content: space-between;">\n' +
+            '                                                                                        <h4>'+gnum+'. <span class="goods_desc"></span><span class="goods_num"></span><span class="goods_unit"></span></h4>\n' +
+            '                                                                                        <div class="expend_div">\n' +
+            '                                                                                                <div class="layui-btn layui-btn-danger del_goods" onclick="del_goods(\'\',this)">-</div>\n' +
+            '                                                                                            <div class="layui-btn layui-btn-success add_goods" onclick="add_goods(0,this)">+</div>\n' +
+            '                                                                                        </div>\n' +
+            '                                                                                    </div>\n' +
+            '                                                                                    <div class="layui-colla-content layui-show">\n' +
+            '                                                                                        <input type="hidden" name="good_id['+pnum+']['+gnum_o+']" value="0">\n'+
+            '                                                                                        <div class="goods">\n' +
+            '                                                                                            <div class="xmvalue goods_item">\n' +
+            '                                                                                                <div id="valueid'+gnum+'" class="xm-select-demo"></div>\n' +
+            '                                                                                            </div>\n' +
+            '                                                                                            <div class="goods_desc goods_item disf2">\n' +
+            '                                                                                                    <select name="goods_select_desc['+pnum+']['+gnum_o+']" class="goods_select_desc" lay-search lay-filter="goods_select_desc">\n'+
+            '                                                                                                    </select>\n'+
+            '                                                                                                    <input type="text" name="goods_desc['+pnum+']['+gnum_o+']" placeholder="输入新的物品" class="layui-input goods_input_desc" onchange="goods_input_desc(this)" style="display: none;">\n'+
+            '                                                                                            </div>\n' +
+            '                                                                                            <div class="disf2 goods_num">\n' +
+            '                                                                                                <input type="number" name="goods_num['+pnum+']['+gnum_o+']" placeholder="物品数量" class="layui-input goods_item" onchange="goods_input_num(this)">\n' +
+            '                                                                                                <div class="goods_unit goods_item">\n' +
+            '                                                                                                    <select name="goods_unit['+pnum+']['+gnum_o+']" lay-filter="goods_unit" lay-search>\n' +
+            '                                                                                                        <option value="">请选择单位</option>\n';
+        {volist name="unit" id="vo"}
+        html+='                                                                                                        <option value="{$vo[\'code_value\']}">{$vo[\'code_name\']}</option>\n';
+        {/volist}
+            html+='                                                                                              </select>\n' +
+                '                                                                                                </div>\n' +
+                '                                                                                            </div>\n' +
+                '                                                                                            <div class="goods_currency goods_item">\n' +
+                '                                                                                               <div class="disf">\n'+
+                '                                                                                                 <select name="goods_currency['+pnum+']['+gnum_o+']" class="goods_currency_select" lay-search  lay-filter="currency">\n' +
+                '                                                                                                    <option value="">请选择币种</option>\n';
+            if({$order['prediction_id']}==2) {
+                let curr = $('.goods_currency_select').eq(0).html();
+                html += curr;
+            }else if({$order['prediction_id']}==1){
+                {volist name="currency" id="vo"}
+                html+='                                                                                           <option value="{$vo['id']}" {if $order['country']==$vo['country_id']}selected{/if}>{$vo['code_zhname']}：{$vo['currency_symbol_standard']}</option>\n';
+                {/volist}
+                }
+
+                html+='                                                                                           </select>\n' +
+                    '                                                                                                <input type="number" name="goods_price['+pnum+']['+gnum_o+']" placeholder="物品价值" class="layui-input goods_price goods_item" onchange="get_money(this)">\n' +
+                    '                                                                                                <div class="tax_relate">\n' +
+                    '                                                                                                   <div class="layui-btn layui-btn-xs layui-btn-primary2 layui-border-red" onclick="tax_relate({$order['country']})">是否涉税</div>\n' +
+                '                                                                                                </div>\n'+
+                '                                                                                             </div>\n'+
+                '                                                                                                 <div class="equal_usd" style="display: none;">\n' +
+                '                                                                                                    <div class="equal_usd_symbol"></div>\n' +
+                '                                                                                                    <input type="hidden" name="goods_usdprice['+pnum+'][]" placeholder="物品价值" class="layui-input">\n' +
+                '                                                                                                 </div>\n'+
+                '                                                                                            </div>\n' +
+                '                                                                                            <div class="goods_package goods_item">\n' +
+                '                                                                                                <select name="goods_package['+pnum+']['+gnum_o+']" lay-search>\n' +
+                '                                                                                                    <option value="">请选择包装材质</option>\n';
+                {volist name="package" id="v"}
+                html+='                                                                                                    <option value="{$v[\'code_value\']}">{$v[\'code_name\']}</option>\n';
+                {/volist}
+                    html+='                                                                                           </select>\n' +
+                        '                                                                                            </div>\n' +
+                        '                                                                                            <div class="goods_brand goods_item disf2">\n' +
+                        '                                                                                                <div class="goods_brand brand_div">\n' +
+                        '                                                                                                    <select name="goods_brand['+pnum+']['+gnum_o+']" lay-filter="brand_type">\n' +
+                        '                                                                                                        <option value="">请选择物品品牌</option>\n' +
+                        '                                                                                                        <option value="1">无牌（无商标信息）</option>\n' +
+                        '                                                                                                        <option value="2">仿牌（商品无注册）</option>\n' +
+                        '                                                                                                        <option value="3">普通品牌（有注册非知名）</option>\n' +
+                        '                                                                                                        <option value="4">奢侈品牌（有注册且知名）</option>\n' +
+                        '                                                                                                    </select>\n' +
+                        '                                                                                                </div>\n' +
+                        '                                                                                                <div class="brand_name brand_div">\n' +
+                        '                                                                                                    <input type="text" class="layui-input" name="goods_brand_name['+pnum+']['+gnum_o+']" placeholder="请输入品牌名称">\n' +
+                        '                                                                                                </div>\n' +
+                        '                                                                                                <div class="copy_brand brand_div" style="display: none;">\n' +
+                        '                                                                                                    <select name="goods_brand_name2['+pnum+']['+gnum_o+']" lay-search>\n' +
+                        '                                                                                                        <option value="">请选择仿牌名称</option>\n';
+                    {volist name="brand" id="v"}
+                    html+='                                                                                                        <option value="仿{$v[\'param1\']}">仿{$v[\'param1\']}</option>\n';
+                    {/volist}
+                        html+='                                                                                              </select>\n' +
+                            '                                                                                                </div>\n' +
+                            '                                                                                                <div class="select_brand_name brand_div">\n' +
+                            '                                                                                                    <select name="goods_brand_name3['+pnum+']['+gnum_o+']" lay-filter="brand_name" lay-search>\n' +
+                            '                                                                                                        <option value="">请选择品牌名称</option>\n';
+                        {volist name="brand" id="v"}
+                        html+='                                                                                                        <option value="{$v[\'param1\']}">{$v[\'param1\']}</option>\n';
+                        {/volist}
+                            html+='                                                                                               </select>\n' +
+                                '                                                                                                </div>\n' +
+                                '                                                                                            </div>\n' +
+                                '                                                                                            <div class="goods_remark goods_item">\n' +
+                                '                                                                                                <input type="text" class="layui-input" name="goods_remark['+pnum+']['+gnum_o+']" placeholder="请输入物品备注">\n' +
+                                '                                                                                            </div>\n' +
+                                '                                                                                        </div>\n' +
+                                '                                                                                    </div>\n' +
+                                '                                                                                </div>';
+                            $(t).parent().parent().parent().find('.layui-colla-content').click();
+                            $(t).parent().parent().parent().parent().append(html);
+
+                            valueid=xmSelect.render({
+                                el: '#valueid'+gnum,
+                                autoRow: true, //自动换行
+                                filterable: true, //可搜索
+                                searchTips: '请搜索',
+                                radio:true,//单选
+                                tips:'请选择物品属性',
+                                name:"valueid["+pnum+"]["+gnum_o+"]",
+                                model: {
+                                    icon: 'hidden',//是否展示复选框或者单选框图标 show, hidden:变换背景色  ！！这句话是重点，不然会变成父节点也有单选框！！
+                                },
+                                tree: {
+                                    show: true, //用树显示
+                                    showFolderIcon: true, //是否显示节点前的三角图标
+                                    expandedKeys: true, //默认全部展开
+                                    showLine: true, //显示渐近线
+                                    indent: 20, //间距
+                                    strict: false, //重点！！设置成非严格父子模式，这样父节点被禁用，子节点依然可以点击
+                                    clickCheck:true,
+                                    vaguaSearch:1,//开启模糊搜索
+                                    nowElement:'valueid'+gnum
+                                },
+                                toolbar: {
+                                    show: false, //显示工具条
+                                    list: ['ALL', 'REVERSE', 'CLEAR']
+                                },
+                                height: '300px', //最大下拉框高度
+                                data: {$value},
+                                on:function(data){
+                                    if(data.isAdd==true){
+                                        //1、选择了属性后，记录当前属性最上级的类名。
+                                        //2、添加物品后，选择了其他的最上级类名则按原逻辑提示。
+                                        let origin_value = $('.value_selected'+pnum).val();
+                                        if(origin_value != ''){
+                                            if(origin_value==17 && data['change'][0]['top_id']==19){
+                                                //先选普货，再选敏感
+                                                var cidx = layer.confirm('普货包裹内含混装敏感物品，包裹只能通过敏感渠道寄运，请确认：', {
+                                                    btn: ['普通物品与敏感物品分装不同包裹，分开包裹寄运','普通物品与敏感物品混装同一包裹，按敏感货寄运'],
+                                                    maxWidth:450,
+                                                    closeBtn:0,//0隐藏，1显示
+                                                },function(index){
+                                                    //限制用户选择敏感货属性、系统仅提供普货线路选择
+                                                    $('#valueid'+gnum).find('.xm-select-default').attr('value','');
+                                                    valueid.delete([data['change'][0]['id']]);
+                                                    $('#package'+pnum).val('普货');
+                                                    layer.close(layer.index);
+                                                },function(index){
+                                                    $('#package'+pnum).val('敏感货');
+                                                    //继续添加物品、系统仅提供敏感货线路选择
+                                                    layer.close(cidx);
+                                                });
+                                            }
+                                            else if(origin_value==19 && data['change'][0]['top_id']==17){
+                                                //先选敏感，再选普货
+                                                let idx = layer.confirm('敏感物品包裹内含有普通物品，包裹只能通过敏感渠道寄运，请确认：', {
+                                                    btn: ['敏感物品与普通物品分装不同包裹，分开包裹寄运','敏感物品与普通物品混装同一包裹，按敏感货寄运'],
+                                                    maxWidth:450,
+                                                    closeBtn:0,//0隐藏，1显示
+                                                },function(index){
+                                                    //限制用户选择普通货属性、系统仅提供敏感线路选择
+                                                    $('#valueid'+gnum).find('.xm-select-default').attr('value','');
+                                                    valueid.delete([data['change'][0]['id']]);
+                                                    $('#package'+pnum).val('敏感货');
+                                                    layer.close(layer.index);
+                                                },function(index){
+                                                    $('#package'+pnum).val('敏感货');
+                                                    //继续添加物品、系统仅提供敏感货线路选择
+                                                    layer.close(idx);
+                                                });
+                                            }else if(data['change'][0]['top_id']==20){
+                                                //先选任何，再选禁限
+                                                let idx = layer.confirm('包裹内含有禁限物品，请确认：', {
+                                                    btn: ['不加禁限物品，继续添加其他属性物品','知悉会被拒寄，及知晓允许寄运将按敏感或禁限货处理，请求客服处理'],
+                                                    maxWidth:520,
+                                                    closeBtn:0,//0隐藏，1显示
+                                                },function(index){
+                                                    //限制用户选择禁限属性、系统持续判断普货与敏感货的添加
+                                                    $('#valueid'+gnum).find('.xm-select-default').attr('value','');
+                                                    valueid.delete([data['change'][0]['id']]);
+                                                    layer.close(layer.index);
+                                                },function(index){
+                                                    $('#package'+pnum).val('特殊货');
+                                                    //继续添加商品、提交后，系统通知后台
+                                                    layer.close(idx);
+                                                });
+                                            }else{
+                                                //删除了上一个属性，选择了与第一个物品相同的属性
+                                                if(data['change'][0]['top_id']==17){
+                                                    $('#package'+pnum).val('普货');
+                                                }else if(data['change'][0]['top_id']==19){
+                                                    $('#package'+pnum).val('敏感货');
+                                                }else if(data['change'][0]['top_id']==20){
+                                                    $('#package'+pnum).val('特殊货');
+                                                }
+                                            }
+                                        }else{
+                                            //当前包裹无选择过属性
+                                            if(data['change'][0]['top_id']==17){
+                                                $('#package'+pnum).val('普货');
+                                            }else if(data['change'][0]['top_id']==19){
+                                                $('#package'+pnum).val('敏感货');
+                                            }else if(data['change'][0]['top_id']==20){
+                                                $('#package'+pnum).val('特殊货');
+                                            }
+                                        }
+
+                                        //3、获取属性的物品标签
+                                        var keywords = data['change'][0]['keywords'];
+                                        keywords = keywords.split('、');
+                                        let html = '<option value="">请选择物品</option>\n' +
+                                            '<option value="-1">没有可选物品，另外添加</option>';
+                                        for(let i=0;i<keywords.length;i++){
+                                            html+='<option value="'+keywords[i]+'">'+keywords[i]+'</option>';
+                                        }
+                                        $('#valueid'+gnum).parent().parent().find('.goods_select_desc').html(html);
+                                        //隐藏并清空输入新的物品框
+                                        $('#valueid'+gnum).parent().parent().find('.goods_input_desc').val('');
+                                        $('#valueid'+gnum).parent().parent().find('.goods_input_desc').hide();
+                                        form.render(null,'component-form-group');
+                                    }
+                                    valueid.closed();
+                                }
+                            });
+                            element.render('collapse');
+                            form.render(null,'component-form-group');
+                        }
+                        //删除物品
+                        function del_goods(gid,t){
+                            var $ = layui.$
+                                , layer = layui.layer
+                                , form = layui.form;
+                            if(gid>0){
+                                let del_gid = $('input[name="del_gid"]').val();
+                                if(typeof(del_gid)=='undefined' || del_gid=='') {
+                                    $('input[name="del_gid"]').val(gid);
+                                }else{
+                                    del_gid +=','+gid;
+                                    $('input[name="del_gid"]').val(del_gid);
+                                }
+                                form.render(null,'component-form-group');
+                            }
+                            let idx = layer.confirm('确认删除该物品吗？',function(index){
+                                $(t).parent().parent().parent().remove();
+                                layer.close(idx);
+                            });
+                        }
+
+                        function seePic(obj)
+                        {
+                            var layer = layui.layer,$ = layui.$;
+                            layer.open({
+                                type: 1,
+                                title: false,
+                                closeBtn: 1,
+                                area: ['auto'],
+                                skin: 'layui-layer-nobg',
+                                shadeClose: true,
+                                content: '<img width="100%" src="' + $(obj)[0].src + '" />'
+                            });
+                        }
+
+
+</script>

@@ -1,0 +1,311 @@
+{include file="common/header"}
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;}
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+    .content .box_content{background:{$website['color']};color:{$website['color_word']};border:1px solid {$website['color_word']};font-size:25px;text-align:center;padding:30px;width:100%;}
+    .content .box_content img{width:40px;margin-right:5px;}
+    
+    .layui-form-label{width:100px;}
+    .layui-input-block{line-height:38px;}
+    .ordertype2,.type1_h,.type1,.type2,.create_user,.type2_h,.type3,.sms{display:none;}
+</style>
+
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="content" style="padding:0;">
+            <div class="layui-fluid">
+                <div class="layui-row layui-col-space15">
+                    <form class="layui-form" action="" method="post" lay-filter="component-form-element">
+                        <div class="layui-col-md12">
+                            <a href="javascript:history.back(-1);">
+                            <div style="display:flex;align-items:center;border: 1px solid #fff;width: fit-content;padding: 10px 20px;border-radius: 15px;background: #8f8b8b;margin-bottom:30px;color:#fff;">
+                                <img class="" src="./img/account/back.png" alt="" style="width: 18px;margin-right: 10px;"/>
+                                返回
+                            </div>
+                        </a>
+                            <div class="layui-card">
+                                <div class="layui-card-body">
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">业务名称</div>
+                                        <div class="layui-input-block">
+                                            物流仓储
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">目的国地</div>
+                                        <div class="layui-input-block">
+                                            新加坡
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">货物属性</div>
+                                        <div class="layui-input-block">
+                                            普货
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">物品类型</div>
+                                        <div class="layui-input-block">
+                                            点击显示勾选的物品税号类型
+                                        </div>
+                                    </div>
+                                   
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">长度cm</label>
+                                        <div class="layui-input-block">
+                                            10
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">宽度cm</label>
+                                        <div class="layui-input-block">
+                                            20
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">高度cm</label>
+                                        <div class="layui-input-block">
+                                            30
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">重量kg</label>
+                                        <div class="layui-input-block">
+                                            10
+                                        </div>
+                                    </div>
+                                    {if $id!=3}
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">报价模板</label>
+                                            <div class="layui-input-block">
+                                                <select name="template_id" lay-search lay-filter="template_id">
+                                                    <option value="">请选择报价模板</option>
+                                                    <option value="-1">无合适模板，自定义模板</option>
+                                                    <option value="1">模板一</option>
+                                                    <option value="2">模板二</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <fieldset class="layui-elem-field">
+                                            <legend style="width:unset;border-bottom:0;">报价区</legend>
+                                            <div class="layui-field-box">
+                                                报价表单区域
+                                            </div>
+                                        </fieldset>
+                                    {/if}
+                                </div>
+                                <div class="layui-form-item" style="margin-top: 25px;text-align: center;">
+                                    <div>
+                                        {if $id!=3}
+                                            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="component-form-element2">确认报价</button>
+                                        {else}
+                                            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="component-form-element3">确认接单</button>
+                                        {/if}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script type="text/javascript">
+    layui.use(['layer','form','laydate','upload'],function(){
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , laydate = layui.laydate
+            , upload = layui.upload;
+
+        form.render(null, 'component-form-element');
+
+        form.on('select(order_type)',function(data){
+            let val = data.value;
+            if(val==1){
+                $('.ordertype1').show();
+                $('.ordertype2').hide();
+            }else if(val==2){
+                $('.ordertype1').hide();
+                $('.ordertype2').show();
+            }
+            $('#totalmoney').val('');
+        });
+
+        form.on('select(ordersn)',function(data){
+            let val = data.value;
+            if(val!='' && typeof(val)!='undefined'){
+                let money = data.elem[data.elem.selectedIndex].title;
+                $('#totalmoney').val(money);
+            }
+        });
+
+        form.on('select(template_id)',function(data){
+            let val = data.value;
+            if(val==-1){
+                layer.open({
+                    type: 2,
+                    title: '添加模板',
+                    shadeClose: true,
+                    shade: 0.3,
+                    area: ['100%', '100%'],
+                    content: "/?s=index/save_template&buss=物流仓储",
+                });
+            }
+        });
+
+        form.on('select(type)',function(data){
+            let val = data.value;
+            if(val==1){
+                $('.type1_h').show();
+                $('.type2').hide();
+                $('.type1').hide();
+                $('.type2_h').hide();
+                $('.type3').hide();
+            }else if(val==2){
+                $('.type1_h').hide();
+                $('.type2').hide();
+                $('.type1').hide();
+                $('.type2_h').show();
+            }else if(val==''){
+                $('.type1_h').hide();
+                $('.type2').hide();
+                $('.type1').hide();
+                $('.type2_h').hide();
+                $('.type3').hide();
+            }
+        });
+
+        form.on('select(type2)',function(data){
+            let val = data.value;
+            if(val==1){
+                $('.type1').show();
+                $('.type2').hide();
+            }else if(val==2){
+                $('.type1').hide();
+                $('.type2').show();
+            }else if(val==''){
+                $('.type1').hide();
+                $('.type2').hide();
+            }
+        });
+
+        form.on('select(type3)',function(data){
+            let val = data.value;
+            if(val==1){
+                $('.type3').show();
+            }else if(val==2){
+                $('.type3').hide();
+            }else if(val==''){
+                $('.type3').hide();
+            }
+        });
+        
+        form.on('select(notice_type)',function(data){
+            let val = data.value;
+            if(val==1){
+                $('.email').show();
+                $('.sms').hide();
+            }else if(val==2){
+                $('.email').hide();
+                $('.sms').show();
+            }
+        });
+
+        form.on('select(pay_userid)',function(data){
+            let val = data.value;
+            if(val==-1){
+                $('.create_user').show();
+                $('input[name="nickname"]').val("");
+                $('input[name="email"]').val("");
+                $('input[name="phone"]').val("");
+            }
+            else if(val!=''){
+                let arr = data.elem[data.elem.selectedIndex].title.split('@@');
+                $('.create_user').show();
+                if(arr[0]!='' && typeof(arr[0]) != 'undefined'){
+                    $('#nickname').val(arr[0]);
+                }else if(arr[1]!='' && typeof(arr[1]) != 'undefined'){
+                    $('#nickname').val(arr[1]);
+                }
+                if(arr[2]!='' && typeof(arr[2]) != 'undefined'){
+                    $('#email').val(arr[2]);
+                }else if(arr[3]!='' && typeof(arr[3]) != 'undefined'){
+                    $('#phone').val(arr[3]);
+                }
+            }
+            else if(val==-1){
+                $('.create_user').hide();
+            }
+        });
+
+        form.on('submit(component-form-element2)', function(data){
+            // JSON.stringify()
+            // console.log(data.field);return false;
+            $.ajax({
+                url:"/?s=index/save_quote",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            window.history.go(-1);
+                        }else if(res.code == -1){
+                            layer.open({
+                                type: 2,
+                                title: '请先登录',
+                                shadeClose: true,
+                                shade: 0.3,
+                                area: ['85%', '50%'],
+                                content: "/?s=index/customer_login&open=1",
+                            });
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+        
+        form.on('submit(component-form-element3)', function(data){
+            $.ajax({
+                url:"/?s=index/save_quote",
+                method:'post',
+                data:{'id':"{$id}",'check':1},
+                dataType:'JSON',
+                success:function(res){
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            //跳转到相应业务管理系统
+                            window.location.href='';
+                        }else if(res.code == -1){
+                            layer.open({
+                                type: 2,
+                                title: '实名认证',
+                                shadeClose: true,
+                                shade: 0.3,
+                                area: ['85%', '50%'],
+                                content: "/?s=index/merchant_reg&open=1",
+                            });
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+</script>
+{include file="common/footer"}

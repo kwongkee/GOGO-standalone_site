@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>独立站平台 - website.gogo198.net</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {--primary: #8a2be2;--primary-dark: #6a1cb9;--primary-light: #9b4de3;--secondary: #bb86fc;--accent: #e6d7f5;--text: #333333;--text-light: #f8f8f8;--background: #f9f5fd;--card-bg: #ffffff;--gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));--gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary));--shadow: 0 10px 30px rgba(138, 43, 226, 0.15);--shadow-hover: 0 15px 35px rgba(138, 43, 226, 0.25);}
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        body {color: var(--text);line-height: 1.6;overflow-x: hidden;}
+        h1, h2, h3, h4, h5, h6 {font-family: 'Montserrat', sans-serif;font-weight: 700;}
+
+        /* 导航栏样式 */
+        header {background: rgba(255, 255, 255, 0.95);color: var(--text);padding: 15px 0;box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);position: sticky;top: 0;z-index: 1000;backdrop-filter: blur(10px);}
+        nav {display: flex;justify-content: space-between;align-items: center;position: relative;}
+        .logo {font-size: 1.8rem;font-weight: 700;display: flex;align-items: center;background: var(--gradient);-webkit-background-clip: text;background-clip: text;color: transparent;z-index: 1001;}
+        .logo i {margin-right: 10px;color: var(--primary);}
+        .nav-links {display: flex;list-style: none;}
+        .nav-links li {margin-left: 25px;position: relative;}
+        .nav-links a {color: var(--text);text-decoration: none;font-weight: 500;transition: all 0.3s ease;padding: 8px 12px;border-radius: 4px;position: relative;display: flex;align-items: center;}
+        .nav-links a::after {content: '';position: absolute;bottom: 0;left: 50%;width: 0;height: 2px;background: var(--gradient);transition: all 0.3s ease;transform: translateX(-50%);}
+        .nav-links a:hover {color: var(--primary);}
+        .nav-links a:hover::after {width: 80%;}
+        .auth-buttons {display: flex;align-items: center;}
+        .btn {padding: 12px 25px;border-radius: 50px;text-decoration: none;font-weight: 600;transition: all 0.3s ease;cursor: pointer;display: inline-block;text-align: center;border: none;font-family: 'Montserrat', sans-serif;}
+        .btn-outline {border: 2px solid var(--primary);color: var(--primary);background: transparent;margin-right: 15px;}
+        .btn-outline:hover {background: var(--primary);color: white;transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-primary {background: var(--gradient);color: white;border: 2px solid transparent;}
+        .btn-primary:hover {background: transparent;border-color: var(--primary);color: var(--primary);transform: translateY(-3px);box-shadow: var(--shadow);}
+
+        /* 表单样式 */
+        .form-section {margin-bottom: 30px;}
+        .form-title {font-size: 1.3rem;margin-bottom: 20px;color: var(--primary-dark);display: flex;align-items: center}
+        .form-title i {margin-right: 10px;}
+        .form-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));gap: 20px;}
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select,
+        .form-group textarea {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;}
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {border-color: var(--primary);outline: none;}
+        .form-group textarea {min-height: 120px;resize: vertical;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
+
+
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}
+        .form-group input:focus,
+        .form-group select:focus {border-color: var(--primary);outline: none;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
+
+        .layui-form-item .layui-form-label{width:100px;}
+        xm-select .xm-body-tree{width:290px;}
+        /*xm-select .scroll-body{height:200px;}*/
+        xm-select .xm-label-block span{overflow: hidden;}
+        /* 动画 */
+        @keyframes fadeIn {
+            from {opacity: 0;transform: translateY(10px);}
+            to {opacity: 1;transform: translateY(0);}
+        }
+
+        @media (max-width: 576px) {
+            .btn {padding: 10px 20px;font-size: 0.9rem;}
+            /*.form-actions {flex-direction: column;}*/
+        }
+    </style>
+    <link rel="stylesheet" href="layui/css/layui.css">
+</head>
+<body>
+<form class="layui-form" id="siteForm" action="" method="post" lay-filter="component-form-demo" style="padding:0px;">
+    <input type="hidden" name="company_id" value="{$company_id}">
+    <input type="hidden" name="company_type" value="0">
+    <input type="hidden" name="id" value="{$id}">
+
+    <div class="form-group" style="padding:0px;">
+        <div class="layui-form-item">
+            <label class="layui-form-label">所属平台</label>
+            <div class="layui-input-block">
+                <select name="platform" id="platform" lay-filter="platform">
+                    <option value="1">GOGO</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">知识类型</label>
+            <div class="layui-input-block">
+                <select name="type" id="type" lay-filter="type">
+                    <option value="">请选择知识类型</option>
+                    <option value="1" {if 1==$info['type']}selected{/if}>商品资讯</option>
+                    <option value="2" {if 2==$info['type']}selected{/if}>政策资讯</option>
+                    <option value="3" {if 3==$info['type']}selected{/if}>历史对话</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item goods_info" style="display:{if $info['type']==1}block{else}none{/if};">
+            <label class="layui-form-label">选择商品</label>
+            <div class="layui-input-block">
+                <select name="goods_id" id="goods_id">
+                    {volist name="list['goods']" id="vo"}
+                        <option value="{$vo['goods_id']}" {if $vo['goods_id']==$info['knowledge_id']}selected{/if}>{$vo['goods_name']}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item dialogue_info" style="display:{if $info['type']==3}block{else}none{/if};">
+            <label class="layui-form-label">选择对话</label>
+            <div class="layui-input-block">
+                <div id="dialogue_id" class="xm-select-demo" style="display: inline-block;width:200px;"></div>
+            </div>
+        </div>
+
+        <div class="layui-form-item upload_file" style="display:{if($info['type']==1 || $info['type']==2)}block{else}none{/if};">
+            <label class="layui-form-label">上传文档</label>
+            <div class="layui-input-block">
+                <div class="layui-upload" style="margin-top: 10px;">
+                    <button type="button" class="layui-btn" id="file-upload">上传文档</button>
+                    <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                        预览图：
+                        <div class="layui-upload-list" id="file-upload-list">
+                            {if !empty($info['file_path'])}
+                            {volist name="info['file_path']" id="vo"}
+                                <div style="display: inline-block;">
+                                    <a href="{$vo}" target="_blank">
+                                        <img onclick="seePic(this);" src="{$vo}" data-src2="{$vo}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png" style="width:80px;height:80px;">
+                                    </a>
+                                    <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
+                                    <input type="hidden" name="file_path[]" value="{$vo}">
+                                </div>
+                            {/volist}
+                            {/if}
+                        </div>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="button" class="btn btn-outline" id="cancelBtn" style="background:transparent;border: 2px solid var(--primary);color: var(--primary);">取消</button>
+        <button type="submit" class="btn btn-primary" lay-submit lay-filter="component-form-demo">立即保存</button>
+    </div>
+</form>
+
+</body>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="layui/layui.js"></script>
+<script src="./layui/xm-select.js"></script>
+<script>
+    layui.use(['layer','form','laydate','upload','colorpicker'],function() {
+        laydate = layui.laydate;
+        layer = layui.layer;
+        var form = layui.form;
+        $ = layui.jquery;
+        var upload = layui.upload;
+        var colorpicker = layui.colorpicker;
+
+        //轮播图弹窗关闭事件
+        const modal = parent.document.getElementById('saveRotateModal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        cancelBtn.addEventListener('click', closeModal);
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        // 历史对话
+        xmSelect.render({
+            el: '#dialogue_id',
+            autoRow: false, // 禁用自动换行
+            filterable: true,
+            searchTips: '请搜索',
+            radio: true,
+            paging: true,
+            pageRemote: false, // 本地分页
+            pageSize: 5,       // 每页显示 5 条
+            name: "dialogue_id",
+            model: {
+                icon: 'hidden',//是否展示复选框或者单选框图标 show, hidden:变换背景色  ！！这句话是重点，不然会变成父节点也有单选框！！
+                label: {
+                    type: 'block',
+                    block: {
+                        //最大显示数量, 0:不限制
+                        showCount: 1,
+                        //是否显示删除图标
+                        showIcon: true,
+                    }
+                },
+            },
+            prop:{
+                name: 'content',
+                value: 'id',
+            },
+            tree: {
+                show: true, //用树显示
+                showFolderIcon: true, //是否显示节点前的三角图标
+                expandedKeys: false, //默认全部展开
+                showLine: true, //显示渐近线
+                indent: 20, //间距
+                strict: false, //重点！！设置成非严格父子模式，这样父节点被禁用，子节点依然可以点击
+                clickCheck: true,
+                vaguaSearch:0,//关闭模糊搜索
+            },
+            toolbar: {
+                show: false, //显示工具条
+                list: ['ALL', 'REVERSE', 'CLEAR']
+            },
+            height: '200px', //最大下拉框高度
+            data: {$list['dialogue']},
+            initValue:[],
+            on:function(res){
+                if(res.isAdd==true) {
+                }
+            }
+        });
+
+        form.on('select(type)',function(data){
+            let val = data.value;
+
+            if(val==1){
+                //商品
+                $('.goods_info,.upload_file').show();
+                $('.dialogue_info').hide();
+            }
+            else if(val==2){
+                //政策
+                $('.goods_info,.dialogue_info').hide();
+                $('.upload_file').show();
+            }
+            else if(val==3){
+                //客服对话
+                $('.goods_info,.upload_file').hide();
+                $('.dialogue_info').show();
+            }
+        });
+
+        //上传文档
+        upload.render({
+            elem: '#file-upload'
+            ,url: '/?s=index/upload_file'
+            ,accept: 'file'
+            ,data: { folder:'merch_file', type: 'knowledge_files'}
+            ,multiple: true
+            ,before: function(obj){
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                layer.msg(res.message, {time: 2000}, function () {
+                    if (res.error == 1) {
+
+                        $('#file-upload-list').append('<div style="display: inline-block;"><a href="' + res.file_path + '" target="_blank"><img onclick="seePic(this);" src="' + res.file_path + '" data-src2="' + res.file_path + '" class="layui-upload-img" style="width:80px;height:80px;" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png"></a><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="file_path[]" value="' + res.file_path + '"></div>');
+                    }
+                });
+            }
+        });
+
+        /* 监听提交 */
+        form.on('submit(component-form-demo)', function (data) {
+            layer.load();
+            $.ajax({
+                url: "/?s=index/save_knowledge",
+                method: 'post',
+                data: data.field,
+                dataType: 'JSON',
+                success: function (res) {
+                    layer.closeAll('loading'); //关闭loading
+                    layer.msg(res.msg, {time: 2000}, function () {
+                        if (res.code == 0) {
+                            let currentUrl = new URL(parent.location.href);
+                            currentUrl.searchParams.set('tab', 'knowledge');
+                            parent.history.pushState({}, '', currentUrl.toString());
+                            parent.location.reload();
+                        }
+                    });
+                },
+                error: function (data) {
+                    layer.msg('系统错误', {time: 2000});
+                }
+            });
+            return false;
+        });
+    });
+
+    function delPic(obj)
+    {
+        var layer = layui.layer,$ = layui.$;
+        layer.confirm('确认要删除该附件？', {
+            btn: ['删除','取消']
+        }, function(){
+            $(obj).parent().remove();
+            layer.closeAll();
+        }, function(){
+
+        });
+    }
+</script>
+</html>

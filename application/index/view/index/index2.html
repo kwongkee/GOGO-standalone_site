@@ -1,0 +1,1288 @@
+{include file="common/header1"}
+<link href="./css/all.css" rel="stylesheet">
+<style>
+    .row{width:100%;}
+    /* 新闻轮播条 - 现代设计 */
+    .news-ticker {background: var(--accent-gradient);color: white;padding: 10px 0;position: relative;overflow: hidden;margin-top: 105px;border-radius: 0 0 16px 16px;box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);}
+    .ticker-container {display: flex;align-items: center;justify-content: space-between;padding: 10px 20px 0;}
+    .ticker-label {background: rgba(255, 255, 255, 0.15);padding: 5px 15px;border-radius: 50px;font-weight: 700;font-size: 14px;display: flex;align-items: center;gap: 8px;backdrop-filter: blur(5px);border:1px solid #fff;flex-shrink: 0;}
+    .ticker-content {flex: 1;margin: 0 20px;overflow: hidden;position: relative;height: 24px;}
+    .ticker-items {position: absolute;top: 0;left: 0;width: 100%;display:flex;animation: ticker-scroll 30s linear infinite;}
+    .ticker-item {white-space: nowrap;font-size: 15px;padding: 2px 20px;flex-shrink: 0;}
+    .ticker-item a {color: white;text-decoration: none;position: relative;padding-right: 25px;}
+    .ticker-item a::after {content: '';position: absolute;bottom: -2px;left: 0;width: 0;height: 2px;background: var(--primary-color);transition: var(--transition);}
+    .ticker-item a:hover::after {width: 100%;}
+    .ticker-item a:hover{color: var(--primary-color);}
+    @keyframes ticker-scroll {
+        0% {transform: translateX(0);}
+        100% {transform: translateX(calc(-100% / var(--item-count) * var(--total-items)));}
+    }
+    .ticker-more {width: 36px;height: 36px;border-radius: 50%;background: rgba(255, 255, 255, 0.15);display: flex;align-items: center;justify-content: center;transition: var(--transition);}
+    .ticker-more:hover {background: rgba(255, 255, 255, 0.25);transform: translateX(3px);}
+
+    /* 主轮播图 - 现代化设计 */
+    .hero-slider {position: relative;min-height: 70vh;margin-top: 0px;/*border-radius: var(--border-radius);*/overflow: hidden;box-shadow: var(--card-shadow);padding:0;max-width:100% !important;}
+    .slider-container {height: 100%;position: relative;}
+    .slide {position: absolute;top: 0;left: 0;width: 100%;height: 100%;opacity: 0;transition: opacity 1s ease;background-size: cover;background-position: center;}
+    .slide.active {opacity: 1;z-index: 1;}
+    .slide-content {position: absolute;bottom: 0;left: 0;width: 100%;padding: 40px;background: linear-gradient(transparent, rgba(15, 23, 42, 0.9));color: white;z-index: 2;/**backdrop-filter: blur(4px);**/}
+    .slide-content h2 {font-size: 40px;margin-bottom: 15px;max-width: 600px;font-weight: 700;letter-spacing: -0.5px;line-height: 1.2;}
+    .slide-content p {font-size: 18px;max-width: 600px;margin-bottom: 25px;color: rgba(255, 255, 255, 0.85);}
+    .slider-nav {position: absolute;bottom: 20px;left: 50%;transform: translateX(-50%);display: flex;gap: 10px;z-index: 3;padding: 8px;border-radius: 50px;background: rgba(0, 0, 0, 0.3);backdrop-filter: blur(10px);}
+    .slider-dot {width: 14px;height: 14px;border-radius: 50%;background-color: rgba(255, 255, 255, 0.5);cursor: pointer;transition: var(--transition);}
+    .slider-dot.active {background-color: white;transform: scale(1.2);}
+    .slider-arrows {position: absolute;top: 50%;width: 100%;display: flex;justify-content: space-between;padding: 0 20px;z-index: 3;}
+    .slider-arrow {width: 56px;height: 56px;border-radius: 50%;background: rgba(255, 255, 255, 0.85);display: flex;align-items: center;justify-content: center;cursor: pointer;transition: var(--transition);color: var(--primary-color);font-size: 22px;box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);}
+    .slider-arrow:hover {background: white;transform: translateY(-3px) scale(1.05);color: var(--primary-dark);box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);}
+
+    /*发现轮播 + 切换框 开始*/
+    .rc_container{max-width: 100% !important;padding:50px 0;}
+    .rc_container .header {background: linear-gradient(90deg, #4361ee 0%, #3a0ca3 100%);color: white;padding: 20px 30px;display: flex;justify-content: space-between;align-items: center;}
+    .rc_container .header h1 {font-weight: 700;font-size: 1.8rem;letter-spacing: 1px;}
+    .rc_container .date {background: rgba(255, 255, 255, 0.2);padding: 6px 15px;border-radius: 20px;font-size: 0.9rem;}
+    .rc_container .content {display: flex;flex-wrap: wrap;padding: 0px;margin:0 auto;width: 1200px;}
+
+    /* 左侧轮播图样式 */
+    .rc_container .left-section {flex: 1;min-width: 300px;padding: 15px;}
+    .rc_container .swiper-container {border-radius: 15px;overflow: hidden;box-shadow: 0 10px 30px #777;height: 400px;position: relative;}
+    .rc_container .swiper-slide {position: relative;background-size: cover;background-position: center;display: flex;flex-direction: column;justify-content: flex-end;padding: 30px;color: white;}
+    .rc_container .slide-overlay {background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));position: absolute;bottom: 0;left: 0;right: 0;padding: 30px 20px 20px;}
+    .rc_container .slide-title {color:{$website['color_word']};font-weight: 600;margin-bottom: 20px;text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);}
+    .rc_container .slide-desc {opacity: 0.9;text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);}
+    .rc_container .swiper-pagination {bottom: 15px !important;}
+    .rc_container .swiper-pagination-bullet {background: rgba(255, 255, 255, 0.5);opacity: 1;width: 10px;height: 10px;}
+    .rc_container .swiper-pagination-bullet-active {background: var(--primary-color);}
+
+    /* 右侧内容样式 */
+    .rc_container .right-section {flex: 1;min-width: 300px;max-width: 420px;padding: 15px;display: flex;flex-direction: column;}
+    .rc_container .tab-container {display: flex;margin-bottom: 10px;border-bottom: 2px solid #eaeaea;}
+    .rc_container .tab {padding: 5px 30px;cursor: pointer;font-weight: 500;position: relative;color: #666;transition: all 0.3s ease;}
+    .rc_container .tab.active {color: var(--primary-color);font-weight: 600;}
+    .rc_container .tab.active::after {content: '';position: absolute;bottom: -2px;left: 0;right: 0;height: 3px;background: var(--primary-color);border-radius: 3px 3px 0 0;}
+    .rc_container .news-container {background: white;border-radius: 15px;overflow: hidden;box-shadow: 0 0px 15px #777;flex-grow: 1;display: flex;flex-direction: column;}
+    .rc_container .news-header {background: var(--accent-gradient);color: white;padding: 15px 20px;font-weight: 600;}
+    .rc_container .news-content {flex-grow: 1;overflow: hidden;position: relative;height: 300px;}
+    .rc_container .news-vertical-slider {position: absolute;top: 0;left: 0;width: 100%;height: 100%;}
+    .rc_container .news-slide {padding: 20px;border-bottom: 1px solid #f0f0f0;transition: all 0.3s ease;cursor:pointer;}
+    .rc_container .news-slide:last-child {border-bottom: none;}
+    .rc_container .news-slide:hover {background-color: #f8f9ff;transform: translateX(5px);}
+    .rc_container .news-title {font-weight: 500;margin-bottom: 8px;color: #333;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;-webkit-line-clamp: 1;width: 100%;}
+    .rc_container .news-title::before {content: "•";color: #4361ee;font-size: 1.5rem;margin-right: 10px;}
+    .rc_container .news-source {color: #4361ee;font-weight: 600;display: inline-block;background: rgba(67, 97, 238, 0.1);padding: 3px 10px;border-radius: 15px;margin-right: 10px;}
+    .rc_container .news-time {color: #888;}
+    .rc_container .news-desc {color: #666;line-height: 1.5;margin-top: 10px;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 3;-webkit-box-orient: vertical;height: 60px;}
+    .rc_container .customer-service {margin-top: 0px;background: white;border-radius: 15px;overflow: hidden;box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);display:none;height:350px;}
+    .rc_container .service-header {background: var(--accent-gradient);color: white;padding: 15px 20px;font-weight: 600;font-size: 1.2rem;}
+    .rc_container .service-content {padding: 10px;text-align: center;color: #888;font-style: italic;height: 85%;display: flex;align-items: center;justify-content: center;}
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+        .rc_container{padding:20px 0;}
+        .rc_container .content {flex-direction: column;width: 100%;}
+        .rc_container .left-section, .right-section {width: 100%;}
+        .rc_container .swiper-container {height: 300px;}
+        .rc_container .header {flex-direction: column;text-align: center;gap: 10px;}
+        .rc_container .tab-container {justify-content: center;}
+    }
+
+    @media (max-width: 480px) {
+        .rc_container .header h1 {font-size: 1.4rem;}
+        .rc_container .tab {padding: 10px 15px;font-size: 0.9rem;}
+        .rc_container .slide-title {font-size: 1.2rem;}
+    }
+
+    /*热卖*/
+    .column_gd1 .goodsDiv .goodsImg{width:calc(20% - 10px);height:50px;margin-right:10px;}
+    .column_gd1 .goodsDiv .goodsInfo{width:100%;}
+    .column_gd1 .goodsDiv .goodsInfo .title{width: 100%;text-overflow: ellipsis;overflow:hidden;white-space: nowrap;color:#000;}
+    .column_gd1 .goodsDiv .goodsInfo .price{background:{$website['color']};color:{$website['color_word']};padding: 3px 10px;border-radius: 5px;width: 110px;text-align: center;margin-top:5px;border:1px solid {$website['color_word']};}
+    .column_gd1 .viewGoods{background:{$website['color']};color:{$website['color_word']};padding: 3px 10px;border-radius: 5px;width: fit-content;text-align: right;margin-left:15px;cursor:pointer;margin-top:5px;border:1px solid {$website['color_word']};}
+
+    .news2{opacity:0;}
+    /*新闻*/
+    .column_gd1 .newsDiv{height:390px;width:100%;background:#fff;border-radius:15px;overflow:hidden;box-shadow: 0px 0px 10px 1px #bebebe;border: 0px solid {$website['color_word']};}
+    .column_gd1 .newsDiv .newsHead{width:100%;height:10%;border-bottom: 1px solid {$website['color']};}
+    .column_gd1 .newsDiv .newsHead .newsText{width:50%;text-align: center;color:#000;padding:7px 0;cursor:pointer;}
+    .column_gd1 .newsDiv .newsHead .newsAct{background:{$website['color']};color:{$website['color_word']};}
+    .column_gd1 .newsDiv .newsCont{height:90%;max-width:373px;min-width:373px;width:auto;padding:8px 10px 10px;box-sizing: border-box;position: relative;}
+    .column_gd1 .newsDiv .newsCont .swiper-container{height:100%;width:100%;}
+    .column_gd1 .newsDiv .newsCont .swiper-container .swiper-slide a{overflow: hidden;text-overflow: ellipsis;white-space:nowrap;}
+    /*发现轮播 + 切换框 结束*/
+
+    /**业务服务**/
+    .cross-border{padding-top: 20px;padding-bottom:20px;border-top:2px solid {$website['color']};}
+    .cross-border .big_swiper{box-shadow: 0px 0px 15px 0px #777;}
+    .cross-border .section-title{text-indent:0rem;text-align:left;}
+    .cross-border .section-title a h2{position:relative;width: fit-content;margin-bottom:10px;font-weight:600;}
+    .cross-border .section-title a h2::after{content: '';position: absolute;left: 0;right: calc(100% - 120%);bottom: -5px;border-bottom: 2px solid #000;}
+    .cross-border .section-title p{font-size: 15px;text-align:left;text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;line-clamp: 2;-webkit-box-orient: vertical;font-weight:600;}
+    .cross-border .row .cross-section{background-position: center;background-size: cover;position:relative;transform-style: preserve-3d;box-shadow: 0px 0px 10px 1px #555;}
+    .cross-border .row .cross-section .in_mask{background-color: #000; opacity: 0.4;position: absolute;left: 0;top: 0;height: 100%;width: 100%;z-index:1;}
+    .cross-border .row .cross-section .cross-content{padding:20px 30px 80px 30px;z-index:2;position:relative;font-size: 15px;height:100%;}
+    .cross-border .row .cross-section .cross-content h3{color:#fff;margin-bottom:10px;padding-bottom:0;}
+    .cross-border .row .cross-section .cross-content hr{border-bottom:1px solid #fff;width:75px;margin:0 0 10px;}
+    .cross-border .row .cross-section .cross-content p{color:#fff;text-align:left;text-overflow: -o-ellipsis-lastline;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 3;line-clamp: 3;-webkit-box-orient: vertical;height:68px;font-weight:unset;}
+    .cross-border .row .cross-section .cross-content .withArrow{margin-bottom:30px;}
+    .cross-border .row .cross-section .cross-content .withArrow span{color:#fff;}
+    .cross-border .row .cross-section .cross-content .withArrow a{font-weight:unset;color:#fff;}
+
+    /**业务切换框样式 start**/
+    .change_boxClick .change_body{padding: 10px;box-sizing: border-box;border-radius:10px;}
+    /* 头部切换区域 */
+    .change_boxClick .tab-header {display: flex;align-items: center;justify-content: center;/**background-color: #e9ecef;**/position: relative;width:95%;max-width: 100%;margin: 0 auto;padding:0px;border-radius:0px;border: 0px solid #fff;margin-top:10px;}
+    .change_boxClick .tab-header::after {content: "";position: absolute;bottom: 0;width: 100%;height: 2px;background: #e0e0e0;z-index: 1;}
+    .change_boxClick .tab-nav {display: flex;flex-wrap: nowrap;overflow-x: auto;scroll-behavior: smooth;-webkit-overflow-scrolling: touch;width: 100%;justify-content: center;}
+    .change_boxClick .tab-nav::-webkit-scrollbar {display: none;}
+    .change_boxClick .tab-item {flex: 0 0 auto;padding: 12px 20px;cursor: pointer;color: #000;transition: all 0.3s ease;font-weight: 600;color:#555;}
+    .change_boxClick .tab-item:hover{color:{$website['color']};}
+    .change_boxClick .tab-item.active {color: {$website['color']};border-radius:10px;position:relative;}
+    .change_boxClick .tab-item.active::after {content: "";position: absolute;bottom: -1px;left: 0;width: 100%;height: 4px;background: {$website['color']};border-radius: 2px;z-index: 3;}
+
+    /* 左右箭头 */
+    .change_boxClick .arrow {position: absolute;top: 50%;transform: translateY(-50%);width: 30px;height: 30px;background-color: rgba(255, 255, 255, 0.8);border: 1px solid #e9ecef;border-radius: 4px;cursor: pointer;display: none; /* 初始隐藏，超过宽度时显示 */justify-content: center;align-items: center;font-size: 16px;color: #495057;}
+    .change_boxClick .arrow.left {left: -40px;text-align: center;}
+    .change_boxClick .arrow.right {right: -40px;text-align: center;}
+
+    /* 内容区域 */
+    .change_boxClick .container {max-width: 1200px;margin: 30px auto 20px;display: flex;flex-wrap: wrap;padding: 0 15px;}
+    .change_boxClick .content-left {flex: 1 1 400px;background-color: #fff;padding: 20px;border: 0px solid #e9ecef;border-radius: 15px;margin-right: 20px;margin-bottom: 10px;box-shadow:0px 0px 15px 0 #555;}
+    .change_boxClick .content-left .content-scroll{min-height:300px;height:300px;overflow-y: auto;}
+    .change_boxClick .content-left .content-btm{margin-top:20px;}
+    .change_boxClick .content-left .content-btm .view_detailBtn{background: {$website['color']};color: {$website['color_word']};padding: 7px 10px;border-radius: 7px;font-weight: 600;}
+    .change_boxClick .content-left .content-btm .view_detailBtn2{background: {$website['color_word']};border:1px solid {$website['color']};color: {$website['color']};padding: 7px 10px;border-radius: 7px;font-weight: 600;margin:0 5px;}
+    .change_boxClick .content-item {margin-bottom: 20px;}
+    .change_boxClick .content-item .icon {display: inline-block;width: 20px;height: 20px;margin-right: 8px;vertical-align: middle;background-size: cover;}
+    .change_boxClick .content-item .title {display: inline-block;vertical-align: middle;margin-bottom: 8px;color: {$website['color']};font-weight:600;}
+    .change_boxClick .content-item .desc {color: #555;line-height: 1.6;text-indent:3rem;}
+    .change_boxClick .content-right {flex: 1 1 400px;background-color: #fff;padding: 0px;border: 0px solid #e9ecef;border-radius: 4px;margin-bottom: 10px;text-align: center;}
+    .change_boxClick .content-right img {max-width: 100%;width:100%;height: 100%;border-radius: 15px;box-shadow: 0 15px 40px #555;transform: perspective(1000px) rotateY(-5deg);transition: transform 0.4s ease;}
+    .change_boxClick .content-right img:hover {transform: perspective(1000px) rotateY(0deg);}
+    /**业务切换框样式 end**/
+
+    /* 常见问题项容器样式1 start*/
+    .fold_boxClick .fold_body{padding:10px;box-sizing: border-box;background: #102f50;box-shadow: 0px 0px 10px 1px #555;border-radius: 10px;min-height: 500px;height:500px;max-height:500px;overflow-y: auto;width:100%;}
+    .fold_boxClick .faq-item {border: 1px solid #eee;border-radius: 6px;margin-bottom: 10px;overflow: hidden;}
+    /* 标题样式 */
+    .fold_boxClick .faq-title {background-color: {$website['color']};color:{$website['color_word']};padding: 12px 16px;cursor: pointer;font-weight: 600;font-size:15px;display: flex;justify-content: space-between;align-items: center;position:relative;}
+    .fold_boxClick .faq-title:after{content: "+";position: absolute;right: 10px;font-size: 25px;font-weight: 600;color:{$website['color_word']};}
+    /* 标题 hover 效果，可选 */
+    /*.fold_boxClick .faq-title:hover {background-color: #e9ecef;}*/
+    /* 内容样式，默认隐藏 */
+    .fold_boxClick .faq-content {padding: 0 16px;max-height: 0;opacity: 0;overflow: hidden;transition: max-height 0.2s ease-out, opacity 0.2s ease-out;}
+    /* 内容展开时的样式 */
+    .fold_boxClick .faq-content.show {padding: 12px 16px;max-height: 200px; overflow-y:auto; opacity: 1;transition: max-height 0.2s ease-in, opacity 0.2s ease-in;background:#fff;}
+    /* 常见问题项容器样式1 end*/
+
+    /* 常见问题项容器样式2 start*/
+    .fq_container .categories {display: flex;border-bottom: 2px solid #e0e0e0;background: #fff;}
+    .fq_container .category {flex: 1;text-align: center;padding: 18px 0;font-size: 18px;font-weight: 500;cursor: pointer;transition: all 0.3s ease;position: relative;color: #555;}
+    .fq_container .category.active {color: var(--primary-color);}
+    .fq_container .category.active::after {content: '';position: absolute;bottom: 0;left: 50%;transform: translateX(-50%);width: 60%;height: 3px;background: var(--primary-color);border-radius: 3px;}
+    .fq_container .category:hover {background: rgba(67, 97, 238, 0.05);}
+    .fq_container .faq-container {padding: 30px;min-height: 450px;}
+    .fq_container .swiper {height: 500px;width: 100%;}
+    .fq_container .news-item {padding: 10px;border-radius: 0px;background: white;box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);border: 1px solid #f0f0f0;transition: all 0.3s ease;cursor: pointer;display: flex;justify-content: space-between;align-items: center;}
+    .fq_container .news-item:hover {transform: translateY(-3px);box-shadow: 0 0px 15px 0px var(--primary-color);border-color: #e0e8ff;}
+    .fq_container .news-content {flex: 1;}
+    .fq_container .news-title {font-weight: 500;font-size: 18px;margin-bottom: 8px;color: #222;}
+    .fq_container .news-title::before {content: "aigogo";display: inline-block;background: rgba(67, 97, 238, 0.1);color: var(--primary-color);font-size: 14px;padding: 3px 8px;border-radius: 4px;margin-right: 10px;}
+    .fq_container .news-desc {font-size: 15px;color: #666;line-height: 1.5;}
+    .fq_container .news-date {background: #f8f9ff;color: var(--primary-color);padding: 8px 14px;border-radius: 30px;font-size: 14px;font-weight: 500;min-width: 110px;text-align: center;}
+    .fq_container .qa_swiper{display:none;overflow:hidden;}
+    .fq_container .qa_swiper .swiper-slide{height:unset;}
+    .fq_container .qa1_swiper{display:block;}
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+        .fq_container .category {padding: 15px 0;font-size: 16px;}
+        .fq_container .faq-container {padding: 20px 15px;min-height: 400px;max-height:465px;overflow:hidden;}
+        .fq_container .swiper {height: 465px;}
+        .fq_container .news-item {padding: 15px;flex-direction: column;align-items: flex-start;}
+        .fq_container .news-date {margin-top: 15px;align-self: flex-end;}
+        .fq_container .news-title {font-size: 16px;}
+        .fq_container .news-desc {font-size: 14px;}
+        .fq_container .qa_swiper .swiper-slide{height:fit-content !important;}
+    }
+
+    @media (max-width: 480px) {
+        .fq_container .categories {flex-direction: row;}
+        .fq_container .category {padding: 12px 0;border-bottom: 1px solid #eee;}
+        .fq_container .category.active::after {width: 100%;border-radius: 0;}
+        .fq_container .news-title::before {display: block;margin-right: 0;margin-bottom: 8px;}
+    }
+    /* 常见问题项容器样式2 end*/
+
+    /*卡片样式一 start*/
+    .card1_style{margin-top:10%;}
+    .card1_style .feature-container {display: flex;flex-wrap: wrap;justify-content: space-around;padding: 20px;}
+    .card1_style .feature-item {width: 23%;min-width: 250px;border: 1px solid #e6e6e6;border-radius: 8px;box-shadow: 0px 0px 10px 1px #999;padding: 20px;margin-bottom: 20px;max-height: 280px;height: 280px;}
+    .card1_style .feature-title {font-size: 18px;font-weight: bold;color: #333;display: flex;align-items: center;margin-bottom: 10px;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 1;}
+    .card1_style .feature-title i {font-size: 22px;margin-right: 8px;color: #009688;}
+    .card1_style .feature-desc {font-size: 14px;color: #666;line-height: 1.6;margin-bottom: 15px;height:40px;overflow: hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;}
+    .card1_style .feature-img {width: 100%;border-radius: 4px;overflow: hidden;}
+    .card1_style .feature-img img {width: 100%;height: 150px;display: block;}
+    /*卡片样式一 end*/
+
+    /*卡片样式二 start*/
+    .card2_style .feature-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));grid-gap: 20px;max-width: 1200px;margin: 0 auto;}
+    /* 每个功能项样式 */
+    .card2_style .feature-item {display: flex;flex-direction: column;align-items: center;justify-content: center;text-align: center;padding: 40px 20px;border: 1px solid #eee;border-radius: 8px;cursor: pointer;transition: all 0.3s ease;}
+    .card2_style .feature-item:hover {border:1px solid {$website['color']};transform: translateY(-2px);}
+    /* 图标样式（使用 Font Awesome 示例，可替换为自定义图标） */
+    .card2_style .feature-item i {font-size: 24px;color: {$website['color']}; /* 红色图标 */margin-bottom: 10px;}
+    /* 文字样式 */
+    .card2_style .feature-item span {font-size: 14px;color: #1f2d3d;}
+    /*卡片样式二 end*/
+
+    /*卡片样式三 start*/
+    /* 容器样式，实现卡片布局 */
+    .card3_style{margin-top:5%;}
+    .card3_style .containers {display: grid;grid-template-columns: repeat(2, 1fr);/*flex-wrap: wrap;*/justify-content: space-around;gap: 30px;}
+    /* 卡片通用样式 */
+    .card3_style .card {width: 100%;min-width: 280px;background-color: #fff;border-radius: 15px;box-shadow: 0px 0px 15px 0px #555;padding: 0px;display: flex;flex-direction: column;justify-content: space-between;transition: all 0.3s ease;}
+    .card3_style .card_disf{}
+    .card3_style .card_disf .desc_area{margin-left:15px;width: 68%;padding:20px 15px 20px 0;}
+    /* 卡片悬停效果 */
+    /*.card3_style .card:hover {transform: translateY(-3px);border:1px solid {$website['color']};}*/
+    /* 卡片图标样式 */
+    .card3_style .card-icon {width: 40%;height: auto;background:{$website['color']};color: {$website['color_word']};display: flex;justify-content: center;align-items: center;font-weight: bold;margin-bottom: 0px;padding:20px 15px 20px 20px;border-top-left-radius: 15px;border-bottom-left-radius: 15px;}
+    .card3_style .card-icon img{width:100%;height:100%;border-radius: 15px;box-shadow: 0px 0px 15px 0px {$website['color_word']};border:0px solid {$website['color_word']};}
+    .card3_style .card-icon img:hover{transform: scale(1.1); transition: all 0.3s ease;}
+    .card3_style .api-icon {background-color: ;}
+    .card3_style .h5-icon {background-color: #667aff;}
+    .card3_style .sdk-icon {background-color: #409eff;}
+    .card3_style .platform-icon {background-color: #48b685;}
+    /* 卡片标题样式 */
+    .card3_style .card-title {color: {$website['color']};margin-bottom: 8px;font-weight:600;}
+    /* 卡片描述样式 */
+    .card3_style .card-desc {color: #555;line-height: 1.5;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 6;line-clamp: 6;-webkit-box-orient: vertical;overflow: hidden;}
+    /*卡片样式三 end*/
+
+    /**新闻**/
+    .cross-news .news_container{width:100%;overflow:hidden;height:50px;}
+    .cross-news a{color: {$website['color_word']};text-decoration: none;display: block;font-size:15px;overflow: hidden;height:50px;line-height:50px;font-weight:600;}
+    .swiper-button-disabled{display:none;}
+    @media (max-width: 992px) {
+        .swiper-button-disabled{display:flex;}
+        .cross-news .disf{border: 1px solid {$website['color_word']};}
+        /*轮播图*/
+        #banner{margin-top:0px;}
+        #carousel-container{margin-top:0 !important;}
+        .cross-border .card3_style{overflow-y:auto;}
+
+        /*发现 + 切换框 开始*/
+        .nav_item_active{padding:2px 12px;}
+        .column4_list{margin-top:15px;}
+        .discoveryDiv .titleDiv{font-size:16px !important;height:70px;}
+        #discovery-container{height: 355px;}
+        .column_gd1 .newsDiv{height:355px;}
+        .column_gd1 .newsDiv .newsHead .newsText{font-size:15px !important;}
+        .column_gd1 .goodsDiv .goodsInfo .price{padding: 2px 8px;width: 100px;}
+        .column_gd1 .viewGoods{padding: 2px 8px;}
+
+        /*热卖&客服*/
+        .column_gd1{margin-top:30px;}
+        .column_gd1 .newsDiv .newsCont{width:100%;min-width: unset;max-width: unset;}
+        .column_gd1 .goodsDiv .goodsInfo .title{width: 100%;}
+        .column_gd1 .goodsDiv .goodsInfo .price{margin-top:3px !important;}
+        .column_gd1 .viewGoods{margin-top:3px !important;}
+
+        /*热卖滚动内容*/
+        .contentBox{width: 100%;}
+        .contentSized .navSized{width: 100%;}
+        .contentSized .rightNav{width: 0%;}
+        .nav_item{white-space: nowrap;}
+        .column4_list{display: block;}
+        .column_item .content_card img{object-fit: cover;}
+        .discoveryDiv img{background-position: center;background-repeat: no-repeat;background-size: cover;height: 100%;margin: -1px 0px 0px -1px;object-fit: cover;}
+        .column_item{margin-bottom: 0px;}
+        /*发现 + 切换框 结束*/
+
+        /**业务轮播框 start**/
+        .cross-border .big_swiper{padding:10px 15px !important;box-shadow:unset;}
+        /**业务轮播框 end**/
+
+        /**业务切换框样式 start**/
+        .change_boxClick .container{width:100%;margin:15px auto;}
+        .change_boxClick .tab-header{max-width: 90%;margin-top:10px;}
+        .change_boxClick .tab-item{padding:5px 10px;}
+        .change_boxClick .content-left,.change_boxClick .content-right{margin-right:0 !important;margin-bottom:20px !important;}
+        .change_boxClick .container .content-right:nth-child(even){margin-bottom:0 !important;}
+        .change_boxClick .container .content-left:nth-child(even){margin-bottom:0 !important;}
+        .change_boxClick .content-left .content-scroll{height:200px;min-height:200px;}
+        .change_boxClick .content-left .content-btm{height:fit-content;min-height: fit-content;margin-top:10px;}
+        .change_boxClick .content-left .content-btm .view_detailBtn{padding:4px 8px;box-sizing: border-box;}
+        .change_boxClick .content-right{margin-bottom:0;}
+        .change_boxClick .row{margin-bottom:calc( 10% - 20px) !important;}
+        .change_boxClick .row, .change_boxClick .row-fluid{margin:0;width: 100%;}
+        .change_boxClick .content-right img{height:190px;}
+        /**业务切换框样式 end**/
+
+        /**常见问题样式二 start**/
+        .fold_boxClick .fq_list .swiper-slide{height:40px !important;box-sizing: border-box;margin:0;}
+        /**常见问题样式二 end**/
+
+        /*卡片样式一 start*/
+        .card1_style{max-height:600px;overflow-y: auto;margin-top:0;}
+        /*卡片样式一 end*/
+
+        /*卡片样式二 start*/
+        .card2_style{padding-top:2px;max-height:600px;overflow-y: auto;}
+        /*卡片样式二 end*/
+
+        /*卡片样式三 start*/
+        .card3_style{margin-top:0%;}
+        .card3_style .card-icon{padding:10px 10px 10px 10px;}
+        .card3_style .card{padding:0px;box-sizing: border-box;}
+        .card3_style .containers{padding:10px 10px;box-sizing: border-box;grid-template-columns:repeat(1, 1fr);gap:15px;}
+        .card3_style .card-desc{-webkit-line-clamp: 3;}
+        .card3_style .card_disf .desc_area{width:61%;}
+        /*卡片样式三 end*/
+
+        /**业务折叠框 start**/
+        .fold_boxClick .row{margin-bottom:calc( 10% - 20px) !important;}
+        .fold_boxClick .row, .fold_boxClick .row-fluid{margin:0;width: 100%;}
+        .fold_boxClick .fold_body2{height:410px;min-height: 410px;max-height:410px;}
+        .fold_boxClick .fq_list .num{margin-right: 0;}
+        .fold_boxClick .fq_list .slide-text{width:90%;margin-left:8px;}
+        .fold_boxClick .fq_list .slide-line{width:100%;}
+        .fold_boxClick .fq_list .slide-text .title{width:65%;min-width:65%;max-width:65%;overflow:hidden;text-overflow:ellipsis;white-space: nowrap;}
+        .fold_boxClick .fq_list .slide-text .date{text-align:;}
+        .fold_boxClick .fq_list .slide-text{justify-content: space-between;}
+        /**业务折叠框 end**/
+    }
+
+    .aboutus{border-top:2px solid #fff;}
+    .view_detail{background:rgba(255,255,255,0.8);color:{$website['color']};position: absolute;bottom: 0px;left: 50%;transform: translate(-50%,-50%);padding: 2px 10px;border-radius: 15px;font-weight:600;border:1px solid {$website['color_word']};}
+    .view_detail:hover{color:{$website['color']};}
+</style>
+
+<!-- 新闻轮播条 -->
+<div class="news-ticker" style="display: none;">
+    <div class="ticker-container container">
+        <div class="ticker-label">
+            <i class="fas fa-bullhorn"></i> 最新资讯
+        </div>
+        <div class="ticker-content">
+            <div class="ticker-items" id="newsTicker">
+                <!-- 新闻条目由JS动态生成 -->
+            </div>
+        </div>
+<!--        <div class="ticker-more">-->
+<!--            <a href="#"><i class="fas fa-angle-right"></i></a>-->
+<!--        </div>-->
+    </div>
+</div>
+
+<!-- 主轮播图 -->
+{if !empty($rotate)}
+<section class="hero-slider container" id="banner">
+    <div class="slider-container">
+        {volist name="rotate" key="key" id="vo"}
+            {if $vo['type']==0}
+                <div class="slide {if key==0}active{/if}" style="background-image: url('https://shop.gogo198.cn/{$vo['thumb']}');">
+                    <div class="slide-content">
+<!--                            <h2>多模型学习搭建智能电商平台</h2>-->
+<!--                            <p>基于AI技术的智能电商解决方案，帮助企业实现数字化转型</p>-->
+                        {if !empty($vo['link'])}
+                            <button class="btn btn-primary" onclick="javascript:window.location.href='{$vo[\'link\']}';">了解更多</button>
+                        {/if}
+                    </div>
+                </div>
+            {elseif($vo['type']==1)}
+                <video src="//shop.gogo198.cn/{$vo['thumb']}" style="width:100%;height:100%;" class="slide carousel-image pc_image" autoplay loop muted></video>
+            {/if}
+        {/volist}
+
+        <div class="slider-nav">
+            {volist name="rotate" key="key" id="vo"}
+            <div class="slider-dot {if $key==1}active{/if}"></div>
+            {/volist}
+        </div>
+
+        <div class="slider-arrows">
+            <div class="slider-arrow prev">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="slider-arrow next">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+    </div>
+</section>
+{/if}
+
+<!--板块流开始-->
+{volist name="services" key="k" id="vo"}
+    {if $vo['navbar_id']=='A1'}
+        <!--小轮播和切换框 开始-->
+        <div class="container website_component rc_container" style="background:{if $vo['bg_type']==1}{$vo['bg_color']}{elseif($vo['bg_type']==2)}url(https://shop.gogo198.cn/{$vo['bg_img']}){/if};">
+            <div class="content">
+                <!-- 左侧轮播图区域 -->
+                <div class="left-section">
+                    <div class="swiper-container" id="discovery-container">
+                        <div class="swiper-wrapper">
+                            {volist name="discovery_rotate" key="k" id="vo"}
+                            <div class="swiper-slide" style="background-image: url('https://shop.gogo198.cn/{$vo['thumb']}');" onclick="javascript:window.location.href='{if $vo['go_other']==1}{$vo['other_link']}/{elseif($vo['go_other']==3)}/?s=index/txt_detail?id={$vo['other_pic']}&type=1&oid={$vo['id']}{elseif($vo['go_other']==4)}/?s=index/msg_detail?id={$data['other_msg']}&type=1&oid={$vo['id']}{elseif($vo['go_other']==5)}/{/if}';">
+                                <div class="slide-overlay">
+                                    <h3 class="slide-title f18">{$vo['descs']}</h3>
+                                    <p class="slide-desc f18"></p>
+                                </div>
+                            </div>
+                            {/volist}
+                        </div>
+                        <div class="swiper-pagination discovery-pagination"></div>
+                    </div>
+                </div>
+
+                <!-- 右侧内容区域 -->
+                <div class="right-section">
+                    <div class="tab-container">
+                        <div class="tab active f18" data-tab="news">新闻资讯</div>
+                        <div class="tab f18" data-tab="service">客服中心</div>
+                    </div>
+
+                    <div class="news-container">
+                        <div class="news-header f16">今日要闻</div>
+                        <div class="news-content">
+                            <div class="news-vertical-slider">
+                                {volist name="news" key="k" id="vo"}
+                                <div class="news-slide" onclick="javascript:window.location.href='/?s=index/cross_news_detail&id={$vo.id}';">
+                                    <div class="news-title f15">{$vo['title']}</div>
+                                    <div>
+        <!--                                <span class="news-source">行业动态</span>-->
+        <!--                                <span class="news-time">10:45 更新</span>-->
+                                    </div>
+                                    <p class="news-desc f13">{$vo['descs']}</p>
+                                </div>
+                                {/volist}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="customer-service">
+                        <div class="service-header f16 disf" style="justify-content: space-between;">
+                            <div>客服中心</div>
+                            <div><a href="/?s=index/panel" target="_blank"><img src="./img/expand.png" alt="" style="width:20px;"></a></div>
+                        </div>
+                        <div class="service-content">
+                            <!--https://boss.gogo198.cn/?s=customer/customer_online&pa=2&who_send=2&id=0&pid=0&isframe=1&uid=php echo session('user.gogo_id');-->
+                            <iframe src="//ai.gogo198.net/?s=index/panel" frameborder="0" style="width:100%;height:100%;"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--小轮播和切换框 结束-->
+    {elseif($vo['navbar_id']=='A2')}
+        <section class="cross-border fold_boxClick" style="background:{if $vo['bg_type']==1}{$vo['bg_color']}{elseif($vo['bg_type']==2)}url(https://shop.gogo198.cn/{$vo['bg_img']}){/if};">
+            <div class="container">
+                <div class="row" style="margin-bottom:calc( 3% - 10px);">
+                    <div class="col-md-12">
+                        <div class="section-title text-center">
+                            <a href="javascript:;" class="f15"><h2 class="f26">{$vo['info']['name']}</h2></a>
+<!--                            <p style="margin-bottom:10px;" class="f15">$vo['info']['desc']</p>-->
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    {if $vo['format_type']==4}
+                    <!--标题+描述折叠-->
+                    <div class="fold_body">
+                        {volist name="vo.fq_content" key="k2" id="vo2"}
+                        <div class="faq-item">
+                            <div class="faq-title">{$vo2['fq_title']}</div>
+                            <div class="faq-content">
+                                {$vo2['fq_desc']}
+                            </div>
+                        </div>
+                        {/volist}
+                    </div>
+                    {elseif($vo['format_type']==5)}
+                        <!--标题进入图文-->
+                        <div class="fq_container">
+                            <div class="categories">
+                                {volist name="vo['fq_category_content']" key="key2" id="vo2"}
+                                <div class="category {if $key2==1}active{/if}" data-category="qa{$key2}">{$vo2['fq_ctitle']}</div>
+                                {/volist}
+                            </div>
+
+                            <div class="faq-container">
+                                {volist name="vo['fq_category_content']" key="key2" id="vo2"}
+                                <div class="swiper qa{$key2}_swiper qa_swiper" {if $key2 != 1}style="display:none"{/if}>
+                                    <div class="swiper-wrapper">
+                                        {volist name="vo2['fq_list']" key="key3" id="vo3"}
+                                        <div class="swiper-slide">
+                                            <div class="news-item" onclick="javascript:window.location.href='/?s=index/txt_detail&id={$vo3.id}&type=image_txt&oid={$vo3.id}';">
+                                                <div class="news-content">
+                                                    <div class="news-title">{$vo3['name']}</div>
+                                                    <!--<div class="news-desc">探索AI与人类协同工作的最佳实践和方法</div>-->
+                                                </div>
+                                                <div class="news-date">{$vo3['createtime']}</div>
+                                            </div>
+                                        </div>
+                                        {/volist}
+                                    </div>
+                                    <div class="swiper-pagination qa_page{$key2}" style="display:none;"></div>
+                                </div>
+                                {/volist}
+                            </div>
+                        </div>
+                    {elseif($vo['format_type']==6)}
+                    <div class="card1_style">
+                        <div class="feature-container">
+                            {volist name="vo.card1_content" id="vo2"}
+                            <div class="feature-item">
+                                <div class="feature-title">
+                                    <!--										<i class="layui-icon layui-icon-app"></i>-->
+                                    {$vo2['card1_title']}
+                                </div>
+                                <div class="feature-desc">{$vo2['card1_desc']}</div>
+                                <div class="feature-img">
+                                    <img src="https://shop.gogo198.cn/{$vo2['card1_img']}" alt="{$vo2['card1_title']}">
+                                </div>
+                            </div>
+                            {/volist}
+                        </div>
+                    </div>
+                    {elseif($vo['format_type']==7)}
+                    <div class="card2_style">
+                        <div class="feature-grid">
+                            {volist name="vo.card2_content" id="vo2"}
+                            <div class="feature-item">
+                                <i class="{$vo2['card2_icon']}"></i>
+                                <span>{$vo2['card2_title']}</span>
+                            </div>
+                            {/volist}
+                        </div>
+                    </div>
+                    {elseif($vo['format_type']==8)}
+                    <div class="card3_style">
+                        <div class="containers">
+                            {volist name="vo.card3_content" id="vo2"}
+                            <div class="card api-card">
+                                <div class="disf card_disf">
+                                    <div class="card-icon api-icon"><img src="https://shop.gogo198.cn/{$vo2['card3_img']}" alt=""></div>
+                                    <div class="desc_area">
+                                        <h3 class="card-title f18">{$vo2['card3_title']}</h3>
+                                        <p class="card-desc f15" title="{$vo2['card3_desc']}"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            {/volist}
+                        </div>
+                    </div>
+                    {/if}
+                </div>
+            </div>
+            </div>
+        </section>
+    {else}
+        {if $vo['format_type']==2}
+            <section class="cross-border change_boxClick" style="background:{if $vo['bg_type']==1}{$vo['bg_color']}{elseif($vo['bg_type']==2)}url(https://shop.gogo198.cn/{$vo['bg_img']}){/if};">
+                <div class="container">
+                    <div class="row" style="margin-bottom:0;">
+                        <div class="col-md-12">
+                            <div class="section-title text-center">
+                                <a href="?s=index/detail&id={$vo['info']['id']}" target="_blank" class="f15"><h2 class="f26">{$vo['info']['name']}</h2></a>
+                                <p style="margin-bottom:10px;" class="f15">{$vo['info']['desc']}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="change_body">
+                            <!-- 头部切换区域 -->
+                            <div class="tab-header">
+                                <div class="arrow left" id="prevArrow">&lt;</div>
+                                <div class="tab-nav" id="tabNav">
+                                    {volist name="vo['info']['children']" key="k2" id="vo2"}
+                                    <div class="tab-item {if $k2==1}active{/if} f18" data-target="service{$vo2['id']}">{$vo2['name']}</div>
+                                    {/volist}
+                                </div>
+                                <div class="arrow right" id="nextArrow">&gt;</div>
+                            </div>
+                            <!-- 内容区域 -->
+                            <div class="container">
+                                {volist name="vo['info']['children']" key="k2" id="vo2"}
+                                {if $k2%2==0}
+                                <div class="content-right" id="contentServiceImg{$vo2['id']}" style="display:{if $k2==1}block{else}none{/if};margin-right:20px;">
+                                    <img src="https://shop.gogo198.cn/{$vo2['thumb']}" alt="{$vo2['name']}">
+                                </div>
+
+                                <div class="content-left" id="contentService{$vo2['id']}" style="display:{if $k2==1}block{else}none{/if};margin-right:0;">
+                                    <div class="content-scroll">
+                                        {volist name="vo['content']" key="k3" id="vo3"}
+                                        {if $vo3['fnavbar'] == $vo2['id']}
+                                        <div class="content-item">
+                                            <i class="{$vo3['ficon']} icon" style="color:{$website['color']}"></i>
+                                            <span class="title f18">{$vo3['ftitle']}</span>
+                                            <p class="desc f15">{$vo3['fdesc']}</p>
+                                        </div>
+                                        {/if}
+                                        {/volist}
+                                    </div>
+
+                                    <div class="content-btm">
+                                        {volist name="vo['btn_content']" key="k3" id="vo3"}
+                                        {if $vo3['btn_navbar']==$vo2['id']}
+                                        <a href="{$vo3.link}" target="_blank" class="f15 {if $k3%2==0}view_detailBtn2{else}view_detailBtn{/if}">{$vo3['btn_title']}</a>
+                                        {/if}
+                                        {/volist}
+                                    </div>
+                                </div>
+                                {else}
+                                <div class="content-left" id="contentService{$vo2['id']}" style="display:{if $k2==1}block{else}none{/if};">
+                                    <div class="content-scroll">
+                                        {volist name="vo['content']" key="k3" id="vo3"}
+                                        {if $vo3['fnavbar'] == $vo2['id']}
+                                        <div class="content-item">
+                                            <i class="{$vo3['ficon']} icon" style="color:{$website['color']}"></i>
+                                            <span class="title f18">{$vo3['ftitle']}</span>
+                                            <p class="desc f15">{$vo3['fdesc']}</p>
+                                        </div>
+                                        {/if}
+                                        {/volist}
+                                    </div>
+
+                                    <div class="content-btm">
+                                        {volist name="vo['btn_content']" key="k3" id="vo3"}
+                                        {if $vo3['btn_navbar']==$vo2['id']}
+                                        <a href="{$vo3.link}" target="_blank" class="f15 {if $k3%2==0}view_detailBtn2{else}view_detailBtn{/if}">{$vo3['btn_title']}</a>
+                                        {/if}
+                                        {/volist}
+                                    </div>
+                                </div>
+                                <div class="content-right" id="contentServiceImg{$vo2['id']}" style="display:{if $k2==1}block{else}none{/if};">
+                                    <img src="https://shop.gogo198.cn/{$vo2['thumb']}" alt="{$vo2['name']}">
+                                </div>
+                                {/if}
+                                {/volist}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        {elseif($vo['format_type']==1)}
+            <section class="cross-border bigPic" style="background:{if $vo['bg_type']==1}{$vo['bg_color']}{elseif($vo['bg_type']==2)}url(https://shop.gogo198.cn/{$vo['bg_img']}){/if};">
+                <div class="container">
+                    <div class="row" style="margin-bottom:0;">
+                        <div class="col-md-12">
+                            <div class="section-title text-center">
+                                <a href="?s=index/detail&id={$vo['info']['id']}" target="_blank" class="f15"><h2 class="f26">{$vo['info']['name']}</h2></a>
+                                <p style="margin-bottom:10px;" class="f15">{$vo['info']['desc']}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 5%;">
+                        <div class="swiper-container{$vo['id']} swiper-container-horizontal big_swiper" style="overflow:hidden;position:relative;padding:0px;box-sizing:border-box;border-radius:15px;">
+                            <div class="swiper-wrapper">
+                                {volist name="vo.info['children']" id="vo2"}
+                                <div class="swiper-slide" style="height:100%;">
+                                    <div class=" cross_border_content">
+                                        <div class="about-text">
+                                            <div class="cross-section" style="background-image:url(https://shop.gogo198.cn/{$vo2['thumb']});position:relative;">
+                                                <div class="in_mask"></div>
+                                                <div class="cross-content">
+                                                    {if $vo2.go_other==1}
+                                                    <a href="{$vo2['other_link']}" target="_blank" class="f15"><h3 class="f22">▷{$vo2['name']}</h3></a>
+                                                    {elseif($vo2.go_other==2)}
+                                                    <a href="?s=index/detail&id={$vo2['other_navbar']}" target="_blank" class="f15"><h3 class="f22">▷{$vo2['name']}</h3></a>
+                                                    {else}
+                                                    <a href="?s=index/detail&id={$vo2['id']}" target="_blank" class="f15"><h3 class="f22">▷{$vo2['name']}</h3></a>
+                                                    {/if}
+
+                                                    {if empty($vo2.children)}
+                                                    {volist name="vo2.desc" id="vo3"}
+                                                    <p class="f15" style="height:fit-content;margin-bottom:0;">○&nbsp;{$vo3}</p>
+                                                    {/volist}
+                                                    {if $vo2.go_other==1}
+                                                    <a href="{$vo2.other_link}" target="_blank" class="f15 view_detail">查看详情</a>
+                                                    {elseif($vo2.go_other==2)}
+                                                    <a href="?s=index/detail&id={$vo2.other_navbar}" target="_blank" class="f15 view_detail">查看详情</a>
+                                                    {else}
+                                                    <a href="?s=index/detail&id={$vo2.id}" class="f15 view_detail">查看详情</a>
+                                                    {/if}
+                                                    {else}
+                                                    <ul class="withArrow">
+                                                        {volist name="vo2.children" id="vo3"}
+                                                        {if $vo3.go_other==1}
+                                                        <li><a href="{$vo3.other_link}" target="_blank" class="f15"><i class="fa fa-angle-right"></i> {$vo3.name}</a></li>
+                                                        {elseif($vo3.go_other==2)}
+                                                        <li><a href="?s=index/detail&id={$vo3.other_navbar}" target="_blank" class="f15"><i class="fa fa-angle-right"></i> {$vo3.name}</a></li>
+                                                        {else}
+                                                        <li><a href="?s=index/detail&id={$vo3.id}" class="f15"><i class="fa fa-angle-right"></i> {$vo3.name}</a></li>
+                                                        {/if}
+                                                        {/volist}
+                                                    </ul>
+                                                    {/if}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/volist}
+                            </div>
+                            <!--左右切换-->
+                            <!--<div class="swiper-button-next sn{$k+1}"></div>-->
+                            <!--<div class="swiper-button-prev sprv{$k+1}"></div>-->
+                        </div>
+                    </div>
+                </div>
+            </section>
+        {elseif($vo['format_type']==6)}
+            <section class="cross-border" style="background:{if $vo['bg_type']==1}{$vo['bg_color']}{elseif($vo['bg_type']==2)}url(https://shop.gogo198.cn/{$vo['bg_img']}){/if};">
+            <div class="container">
+                <div class="row" style="margin-bottom:calc( 5% - 10px);">
+                    <div class="col-md-12">
+                        <div class="section-title text-center">
+                            <a href="?s=index/detail&id={$vo['info']['id']}" target="_blank" class="f15"><h2 class="f26">{$vo['info']['name']}</h2></a>
+                            <p style="margin-bottom:10px;" class="f15">{$vo['info']['desc']}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="card1_style">
+                        <div class="feature-container">
+                            {volist name="vo.card1_content" id="vo2"}
+                            <div class="feature-item">
+                                <div class="feature-title">
+                                    <!--										<i class="layui-icon layui-icon-app"></i>-->
+                                    {$vo2['card1_title']}
+                                </div>
+                                <div class="feature-desc">{$vo2['card1_desc']}</div>
+                                <div class="feature-img">
+                                    <img src="https://shop.gogo198.cn/{$vo2['card1_img']}" alt="{$vo2['card1_title']}">
+                                </div>
+                            </div>
+                            {/volist}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {elseif($vo['format_type']==7)}
+            <section class="cross-border" style="background:{if $vo['bg_type']==1}{$vo['bg_color']}{elseif($vo['bg_type']==2)}url(https://shop.gogo198.cn/{$vo['bg_img']}){/if};">
+            <div class="container">
+                <div class="row" style="margin-bottom:calc( 5% - 10px);">
+                    <div class="col-md-12">
+                        <div class="section-title text-center">
+                            <a href="?s=index/detail&id={$vo['info']['id']}" target="_blank" class="f15"><h2 class="f26">{$vo['info']['name']}</h2></a>
+                            <p style="margin-bottom:10px;" class="f15">{$vo['info']['desc']}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="card2_style">
+                        <div class="feature-grid">
+                            {volist name="vo.card2_content" id="vo2"}
+                            <div class="feature-item">
+                                <i class="{$vo2['card2_icon']}"></i>
+                                <span>{$vo2['card2_title']}</span>
+                            </div>
+                            {/volist}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {elseif($vo['format_type']==8)}
+            <section class="cross-border" style="background:{if $vo['bg_type']==1}{$vo['bg_color']}{elseif($vo['bg_type']==2)}url(https://shop.gogo198.cn/{$vo['bg_img']}){/if};">
+            <div class="container">
+                <div class="row" style="margin-bottom:0;">
+                    <div class="col-md-12">
+                        <div class="section-title text-center">
+                            <a href="?s=index/detail&id={$vo['info']['id']}" target="_blank" class="f15"><h2 class="f26">{$vo['info']['name']}</h2></a>
+                            <p style="margin-bottom:10px;" class="f15">{$vo['info']['desc']}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="card3_style">
+                        <div class="containers">
+                            {volist name="vo.card3_content" id="vo2"}
+                            <div class="card api-card">
+                                <div class="disf card_disf">
+                                    <div class="card-icon api-icon"><img src="https://shop.gogo198.cn/{$vo2['card3_img']}" alt=""></div>
+                                    <div class="desc_area">
+                                        <h3 class="card-title">{$vo2['card3_title']}</h3>
+                                        <p class="card-desc" title="{$vo2['card3_desc']}">{$vo2['card3_desc']}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {/volist}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        {/if}
+    {/if}
+{/volist}
+<!--板块流结束-->
+
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+{include file="common/footer"}
+<script type="text/javascript" charset="utf-8">
+    // 存储所有轮播实例
+    const swiperInstances = {};
+
+    // 初始化轮播函数
+    function initSwiper(swiperClass, pageClass, preview) {
+        if (!swiperInstances[swiperClass]) {
+            swiperInstances[swiperClass] = new Swiper(swiperClass, {
+                direction: 'vertical',
+                slidesPerView: preview[0],
+                spaceBetween: preview[1],
+                loop: true,
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false,
+                },
+                pagination: {
+                    el: pageClass,
+                    clickable: true,
+                },
+                // 关键修复：添加观察者
+                observer: true,
+                observeParents: true,
+                observeSlideChildren: true,
+                // 处理幻灯片数量不足的情况
+                loopAdditionalSlides: 2,
+                loopPreventsSlide: true
+            });
+        }
+        return swiperInstances[swiperClass];
+    }
+
+    $(function () {
+        //头部新闻滚动 start
+        const tickerContainer = document.getElementById('newsTicker');
+        const newsItems = [
+            {volist name="news" id="vo"}
+            '<a href="/?s=index/cross_news_detail&id={$vo.id}" target="_blank">{$vo.title}</a>',
+            {/volist}
+        ];
+
+        // 复制条目实现无缝滚动（2组相同内容）
+        const duplicatedItems = [...newsItems, ...newsItems];
+
+        // 生成DOM元素
+        duplicatedItems.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'ticker-item';
+            div.innerHTML = item;
+            tickerContainer.appendChild(div);
+        });
+
+        // 设置CSS变量控制动画
+        const totalItems = duplicatedItems.length;
+        const originalCount = newsItems.length;
+        console.log(totalItems,originalCount);
+        tickerContainer.style.setProperty('--total-items', totalItems-50);
+        tickerContainer.style.setProperty('--item-count', originalCount);
+
+        // 计算宽度确保正确滚动
+        const itemWidth = 100 / originalCount;
+        document.documentElement.style.setProperty('--item-width', `${itemWidth}%`);
+        //头部新闻滚动 end
+
+        //小轮播+切换框 start
+        // 选项卡切换功能
+        $('.rc_container .tab').click(function() {
+            $('.rc_container .tab').removeClass('active');
+            $(this).addClass('active');
+            let tab_sel = $(this).attr('data-tab');
+
+            if(tab_sel == 'service'){
+                {if !empty(session('account'))}
+                    $('.rc_container .news-container').hide();
+                    $('.rc_container .customer-service').show();
+                {else}
+                    window.location.href="/?s=index/customer_login";
+                {/if}
+            }else{
+                $('.rc_container .news-container').show();
+                $('.rc_container .customer-service').hide();
+            }
+        });
+
+        // 新闻垂直轮播效果
+        let currentSlide = 0;
+        const slides = $('.rc_container .news-slide');
+        const slideHeight = slides.first().outerHeight(true);
+        const totalSlides = slides.length;
+
+        function nextNewsSlide() {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            $('.rc_container .news-vertical-slider').css('transform', `translateY(-${(currentSlide * slideHeight) - 130.91}px)`);
+        }
+
+        setInterval(nextNewsSlide, 6000);
+
+        // 添加悬停暂停功能
+        $('.rc_container .news-content').hover(
+            function() {
+                clearInterval(interval);
+            },
+            function() {
+                interval = setInterval(nextNewsSlide, 6000);
+            }
+        );
+
+        let interval = setInterval(nextNewsSlide, 6000);
+        //小轮播+切换框 end
+
+        // 常见问题 start
+        //折叠样式
+        $('.faq-title').on('click', function () {
+            // 找到当前点击标题对应的内容区域
+            var content = $(this).next('.faq-content');
+            // 判断内容是否已展开（是否有 show 类）
+            if (content.hasClass('show')) {
+                // 已展开则隐藏，移除 show 类
+                content.removeClass('show');
+            } else {
+                // 未展开则显示，添加 show 类
+                content.addClass('show');
+            }
+        });
+
+        //分类垂直轮播样式
+        $('.fq_container .category').click(function() {
+            const category = $(this).data('category');
+            const swiperClass = '.' + category + '_swiper';
+            const pageClass = '.qa_page' + category.replace('qa', '');
+
+            // 更新激活状态
+            $('.fq_container .category').removeClass('active');
+            $(this).addClass('active');
+
+            // 隐藏所有轮播
+            $('.fq_container .qa_swiper').hide();
+
+            // 显示当前分类轮播
+            $(swiperClass).show();
+
+            // 初始化/获取轮播实例
+            let preview = [8,10];
+            if(window.screen.width < 992){
+                preview = [3,5];
+            }
+            const swiper = initSwiper(swiperClass, pageClass, preview);
+
+            // 关键修复：延迟更新确保正确渲染
+            setTimeout(() => {
+                swiper.update();
+                swiper.slideTo(0, 0); // 重置到第一张
+                swiper.autoplay.start();
+
+                // 处理移动端可能的布局问题
+                if ($(window).width() < 768) {
+                    swiper.changeDirection('horizontal', true);
+                    swiper.changeDirection('vertical', true);
+                }
+            }, 100);
+        });
+        // 常见问题 end
+
+        // 头部切换逻辑
+        const $tabItems = $('.tab-item');
+        var arrs = {};
+        {volist name="services" key="k" id="vo"}
+            {volist name="vo['info']['children']" key="k2" id="vo2"}
+                // 动态拼接键名和jQuery选择器值
+                arrs['service{$vo2.id}'] = $('#contentService{$vo2.id}, #contentServiceImg{$vo2.id}');
+            {/volist}
+        {/volist}
+
+        // 赋值给最终变量
+        const $contentAreas = arrs;
+
+        $tabItems.on('click', function () {
+            const target = $(this).data('target');
+            $tabItems.removeClass('active');
+            $(this).addClass('active');
+            // 隐藏所有内容
+            Object.values($contentAreas).forEach(area => area.hide());
+            // 显示对应内容
+            $contentAreas[target].show();
+        });
+
+        // 左右箭头逻辑
+        const $tabNav = $('#tabNav');
+        const $prevArrow = $('#prevArrow');
+        const $nextArrow = $('#nextArrow');
+
+        function checkArrows() {
+            if ($tabNav[0].scrollWidth > $tabNav.width()) {
+                $('.arrow').show();
+            } else {
+                $('.arrow').hide();
+            }
+        }
+
+        $(window).on('resize', checkArrows);
+        checkArrows();
+
+        $prevArrow.on('click', function () {
+            $tabNav.animate({ scrollLeft: '-=100' }, 300);
+        });
+
+        $nextArrow.on('click', function () {
+            $tabNav.animate({ scrollLeft: '+=100' }, 300);
+        });
+
+        // 自动切换定时器（每10秒切换）
+        let currentIndex = 0;
+        const totalTabs = $tabItems.length;
+        setInterval(() => {
+            currentIndex = (currentIndex + 1) % totalTabs;
+            $tabItems.eq(currentIndex).trigger('click');
+        }, 10000);
+    });
+
+    $(function(){
+        // 视口高度（随窗口缩放变化）
+        var viewportHeight = window.innerHeight - 115;
+        $('#banner').css({'height': viewportHeight + 'px'});// 轮播图
+        {if empty($rotate)}
+            $('.cross-border').eq(0).css('margin-top','115px');
+        {/if}
+        if(!IsPhone()){
+            $('.cross-border').css({'height': viewportHeight + 'px'});// 业务服务
+
+            var viewportHeight2 = viewportHeight - 350;
+            $('.cross-border .row .cross-section .cross-content').css({'height': viewportHeight2 + 110 + 'px'});
+        }else{
+            $('.cross-border.fold_boxClick').css({'height': viewportHeight + 'px'});// 业务服务
+            $('.cross-border.bigPic').css({'height': viewportHeight + 'px'});// 业务服务
+            var viewportHeight2 = viewportHeight - 280;
+            $('.cross-border.bigPic .row .cross-section .cross-content').css({'height': viewportHeight2 + 110 + 'px'});
+        }
+
+
+        if(IsPhone()){
+            $('.contentBox').css({'-webkit-transform':'translate(-50%, -0.2%)'});
+            $('.wapNavContent').show();
+            $('.mobile_news_box').show();
+            $('.pc_news_box').hide();
+            $('.pcNavContent').hide();
+            $('.change_boxClick').css({'height':'unset'});
+        }else{
+            if (isMicrosoftEdge()) {
+                $('.contentBox').css({'-webkit-transform':'translate(-50%, 0.2%)'});
+            }
+            $('.mobile_news_box').hide();
+        }
+
+        //业务板块，鼠标移入移出功能
+        $('.cross-border .row .cross-section').mouseover(function() {
+            $(this).find('.in_mask').css('opacity', '0');
+        });
+        $('.cross-border .row .cross-section').mouseout(function() {
+            $(this).find('.in_mask').css('opacity', '0.4');
+        });
+    });
+
+    //banner点击跳转
+    function openInNewTab(link=''){
+        if(link!=''){
+            const newWindow = window.open(link, '_blank', 'noopener,noreferrer');
+            if (newWindow) newWindow.opener = null;
+        }
+    }
+
+    //新闻1+banner+联系我们+发现+新闻2 轮播开始================
+    // 发现页轮播图开始
+    const swiper = new Swiper('#discovery-container', {
+        direction: 'horizontal',
+        loop: true,
+        autoplay: {
+            delay: 5000,
+            disableOnInteraction: false,
+        },
+        pagination: {
+            el: '.discovery-pagination',
+            clickable: true,
+        },
+        effect: 'fade',
+        fadeEffect: {
+            crossFade: true
+        },
+    });
+    //新闻1+banner+联系我们+发现+新闻2 轮播结束=================
+
+    //业务服务开始=================
+    if(window.screen.width < 992){
+        //延迟加载“手机版的-头部新闻轮播”
+        setTimeout(function () {
+            //集成
+            new Swiper('#mobileNewsBox-container', {
+                loop: false, // 循环模式选项
+                direction: 'vertical',
+                autoplay: {
+                    delay: 5000
+                },
+                // 如果需要分页器
+                // pagination: {
+                //     el: '.swiper-pagination',
+                // },
+            });
+        }, 1000);
+
+        {volist name="services" key="k" id="vo"}
+            {if $vo['format']>0}
+                new Swiper('.swiper-container{$vo['id']}', {
+                    loop: true, // 循环模式选项
+                    autoplay: {
+                        delay: 5000
+                    },
+                    slidesPerView: 1,
+                    paginationClickable: true,
+                    spaceBetween: 60,
+                    // 如果需要前进后退按钮
+                    // navigation: {
+                    //   nextEl: '.sn{$k+1}',
+                    //   prevEl: '.sprv{$k+1}',
+                    // },
+                });
+            {else}
+                {if $vo['format_type']==5}
+                    {volist name="vo['fq_category_content']" key="key2" id="vo2"}
+                        const qa{$key2} = new Swiper('.qa{$key2}_swiper', {
+                            direction: 'vertical',
+                            slidesPerView: 3,
+                            spaceBetween: 5,
+                            loop: true,
+                            autoplay: {
+                                delay: 5000,
+                                disableOnInteraction: false,
+                            },
+                            pagination: {
+                                el: '.qa_page{$key2}',
+                                clickable: true,
+                            },
+                        });
+                    {/volist}
+                {/if}
+            {/if}
+        {/volist}
+    }else{
+        //电脑版-头部新闻轮播
+        var newsSwiper = new Swiper('.news', {
+            direction:'vertical',
+            loop: true, // 循环模式选项
+            autoplay: {
+                delay:5000
+            },
+            spaceBetween: 1,
+            // 如果需要分页器
+            // pagination: {
+            //     el: '.swiper-pagination',
+            // },
+        });
+
+        {volist name="services" key="k" id="vo"}
+            {if $vo['format']>0}
+                new Swiper('.swiper-container{$vo['id']}', {
+                    loop: true, // 循环模式选项
+                    autoplay: {
+                        delay: 5000
+                    },
+                    slidesPerView: 1,
+                    paginationClickable: true,
+                    spaceBetween: 60,
+                    // 如果需要前进后退按钮
+                    // navigation: {
+                    //   nextEl: '.sn{$k+1}',
+                    //   prevEl: '.sprv{$k+1}',
+                    // },
+                });
+            {else}
+                {if $vo['format_type']==5}
+                    {volist name="vo['fq_category_content']" key="key2" id="vo2"}
+                         const qa{$key2} = new Swiper('.qa{$key2}_swiper', {
+                            direction: 'vertical',
+                            slidesPerView: 8,
+                            spaceBetween: 10,
+                            loop: true,
+                            autoplay: {
+                                delay: 3000,
+                                disableOnInteraction: true,
+                            },
+                            pagination: {
+                                el: '.qa_page{$key2}',
+                                clickable: true,
+                            },
+                        });
+                    {/volist}
+                {/if}
+            {/if}
+        {/volist}
+    }
+    //业务服务结束=================
+</script>
+
+<script>
+    // 轮播图功能
+    document.addEventListener('DOMContentLoaded', function() {
+        {if !empty($rotate)}
+        // 轮播图功能
+        const slides = document.querySelectorAll('.slide');
+        const dots = document.querySelectorAll('.slider-dot');
+        const prevBtn = document.querySelector('.slider-arrow.prev');
+        const nextBtn = document.querySelector('.slider-arrow.next');
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const mobileNav = document.getElementById('mobileNav');
+        let currentSlide = 0;
+
+        // 初始化轮播图
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+
+            currentSlide = (n + slides.length) % slides.length;
+
+            slides[currentSlide].classList.add('active');
+            dots[currentSlide].classList.add('active');
+        }
+
+        // 下一张
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        // 上一张
+        function prevSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        // 自动轮播
+        let slideInterval = setInterval(nextSlide, 5000);
+
+        // 事件监听
+        nextBtn.addEventListener('click', () => {
+            nextSlide();
+            clearInterval(slideInterval);
+            slideInterval = setInterval(nextSlide, 5000);
+        });
+
+        prevBtn.addEventListener('click', () => {
+            prevSlide();
+            clearInterval(slideInterval);
+            slideInterval = setInterval(nextSlide, 5000);
+        });
+
+        // 指示点点击
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                showSlide(index);
+                clearInterval(slideInterval);
+                slideInterval = setInterval(nextSlide, 5000);
+            });
+        });
+        {/if}
+    });
+</script>
+

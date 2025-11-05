@@ -1,0 +1,422 @@
+{include file="common/header"}
+<link rel="stylesheet" href="https://www.gogo198.net/layui/font/iconfont.woff?v=256">
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;background:{$website['color_inner']};}
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+    .content .box_content{background:{$website['color']};color:{$website['color_word']};border:1px solid {$website['color_word']};font-size:25px;text-align:center;padding:30px;width:100%;}
+    .content .box_content img{width:40px;margin-right:5px;}
+    .navbar_menu{color: {$website['color_word']};font-size: 16px;margin-bottom:10px;}
+    .context,.navbar_menu a{color:{$website['color_word']};}
+    .context{margin-bottom:1cm;}
+    .layui-colla-title{color:{$website['color_word']};background-color:#0e2e68;}
+    .preamble_con,.layui-colla-content{color:{$website['color_word']};font-size:15px;}
+    .layui-colla-content p{margin-bottom:0.3cm;}
+
+    .navbar_menu{color:{$website['color_word']};font-size:16px;margin-bottom:10px;margin-top:15px;margin-left:10px;}
+    .navbar_menu a{color:{$website['color_word']};}
+    .navbar_menu a:last-child{color:#D2A778;font-weight:700;}
+    .layui-elem-field legend{border-bottom: 0;color: #fff;width:fit-content;}
+    .layui-form-item{border-bottom: 1px solid #fff;padding-bottom: 5px;}
+    .layui-form-label{padding: 10px 10px;text-align: left;font-weight:600;color:{$website['color_word']};}
+    .layui-input-block{min-height: fit-content;margin-left: 80px;color:#000;}
+    .input50{width:50%;}
+    .input25{width:25%;}
+    .input35{width:35%;}
+    .input36{width:36%;}
+    .hide2{display: none;}
+    .text_wrap{white-space: pre-wrap !important;}
+    .layui-colla-content{padding:10px 10px;}
+    .white_color{color:{$website['color_word']};white-space:nowrap;width:45px;text-align:center;}
+</style>
+<section id="content" class="non_topimg">
+    <div class="container">
+        <p class="navbar_menu"><a href="/?s=index/express&id={$id}">集运管理</a>&nbsp;<span style="color:#d1a575;">\</span>
+            <a href="/?s=index/express_list&id={$id}&typ={$type}">已处理运单列表</a>&nbsp;<span style="color:#d1a575;">\</span>
+            <a href="/?s=index/express_manage&id={$id}&type={$type}">运单管理</a>&nbsp;<span style="color:#d1a575;">\</span>
+            <a href="javascript:;">{if $express_id>0}修改{else}新增{/if}运单</a>&nbsp;<span style="color:#d1a575;">\</span>
+        </p>
+
+        <form class="layui-form" action="" method="post" lay-filter="component-form-element">
+            <input type="text" style="display:none;" name="id" id="id" value="{$id}">
+            <input type="text" style="display:none;" name="express_id2" id="express_id2" value="{$express_id}">
+            <input type="text" style="display:none;" name="type" id="type" value="{$type}">
+            {if $express_id>0}
+                <div class="content" style="padding:10px 10px;box-sizing:border-box;margin-top:20px;border:1px solid #fff;">
+                <div class="layui-collapse" lay-accordion>
+                    <div class="layui-colla-item">
+                        <h2 class="layui-colla-title" style="display:flex;align-items:center;justify-content:space-between;">
+                            {$parag_num}
+                        </h2>
+                        <div class="layui-colla-content layui-show">
+                            <div class="layui-form-item">
+                                <div class="layui-form-label text_wrap">物流商名称</div>
+                                <div class="layui-input-block">
+                                    <select name="express_type[]" class="express_type" lay-filter="express_type">
+                                        <option value="1" {if $info['express_type']==1}selected{/if}>选择</option>
+                                        <option value="2" {if $info['express_type']==2}selected{/if}>新增</option>
+                                    </select>
+                                </div>
+                                <div class="layui-input-block block2">
+                                    <div class="select_express {if $info['express_type']==2}hide2{/if}">
+                                        <select name="express_id[]" class="express_id" lay-filter="express_id" lay-search>
+                                            {volist name="express" id="vo"}
+                                            <option value="{$vo['id']}" {if $info['express_id']==$vo['id']}selected{/if}>{$vo['param3']}</option>
+                                            {/volist}
+                                        </select>
+                                    </div>
+                                    <div class="input_express {if $info['express_type']==1}hide2{/if}">
+                                        <input type="text" class="layui-input" value="{$info['express_name']}" name="express_name[]" placeholder="物流商名称" >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <div class="layui-form-label text_wrap">物流单号</div>
+                                <div class="layui-input-block">
+                                    <select name="express_no_type[]" class="express_no_type" lay-filter="express_no_type">
+                                        <option value="1" {if $info['express_no_type']==1}selected{/if}>上段运单编号</option>
+                                        <option value="2" {if $info['express_no_type']==2}selected{/if}>原始订单编号</option>
+                                        <option value="3" {if $info['express_no_type']==3}selected{/if}>新增物流单号</option>
+                                    </select>
+                                </div>
+                                <div class="layui-input-block block2">
+                                    <div class="up_expressno {if $info['express_no_type']!=1}hide2{/if}">
+                                        <input type="text" class="layui-input" value="{if $info['express_no_type']!=1}{else}{$info['express_no']}{/if}" name="express_no1[]" placeholder="上段运单编号">
+                                    </div>
+                                    <div class="orderno  {if $info['express_no_type']!=2}hide2{/if}">
+                                        <input type="text" class="layui-input" value="{if $info['express_no_type']!=2}{else}{$info['express_no']}{/if}" name="express_no2[]" placeholder="原始订单编号">
+                                    </div>
+                                    <div class="add_expressno {if $info['express_no_type']!=3}hide2{/if}">
+                                        <input type="text" class="layui-input" value="{if $info['express_no_type']!=3}{else}{$info['express_no']}{/if}" name="express_no3[]" placeholder="物流单号">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <div class="layui-form-label text_wrap">运单查询网址</div>
+                                <div class="layui-input-block">
+                                    <select name="express_website_type[]" class="express_website_type" lay-filter="express_website_type">
+                                        <option value="1" {if $info['express_website_type']==1}selected{/if}>选择</option>
+                                        <option value="2" {if $info['express_website_type']==2}selected{/if}>新增</option>
+                                    </select>
+                                </div>
+                                <div class="layui-input-block block2">
+                                    <div class="select_website {if $info['express_website_type']==2}hide2{/if}">
+                                        <select name="express_website_id[]" class="express_website_id" lay-search>
+                                            {volist name="express" id="vo"}
+                                            <option value="{$vo['id']}" {if $info['express_website_id']==$vo['id']}selected{/if}>{$vo['param5']}</option>
+                                            {/volist}
+                                        </select>
+                                    </div>
+                                    <div class="input_website  {if $info['express_website_type']==1}hide2{/if}">
+                                        <div class="disf">
+                                            <input type="text" class="layui-input" value="{$info['express_website']}" name="express_website[]" placeholder="运单查询网址">
+                                            <div class="layui-btn layui-btn-warning check_website" onclick="check_website(this)">检查</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {else}
+                <div class="content" style="padding:10px 10px;box-sizing:border-box;margin-top:20px;border:1px solid #fff;">
+                <input type="hidden" id="parag_num" value="<?php echo count($waybill['logistics_waybill']['express'])+1;?>">
+                <div class="layui-collapse" lay-accordion>
+                    <div class="layui-colla-item">
+                        <h2 class="layui-colla-title" style="display:flex;align-items:center;justify-content:space-between;">
+                            第<?php echo count($waybill['logistics_waybill']['express'])+1;?>段
+                        </h2>
+                        <div class="layui-colla-content layui-show">
+                            <div class="layui-form-item">
+                                <div class="layui-form-label text_wrap">物流商名称</div>
+                                <div class="layui-input-block">
+                                    <select name="express_type[]" class="express_type" lay-filter="express_type">
+                                        <option value="1">选择</option>
+                                        <option value="2">新增</option>
+                                    </select>
+                                </div>
+                                <div class="layui-input-block block2">
+                                    <div class="select_express">
+                                        <select name="express_id[]" class="express_id" lay-filter="express_id" lay-search>
+                                            {volist name="express" id="vo"}
+                                            <option value="{$vo['id']}">{$vo['param3']}</option>
+                                            {/volist}
+                                        </select>
+                                    </div>
+                                    <div class="input_express hide2">
+                                        <input type="text" class="layui-input" value="" name="express_name[]" placeholder="物流商名称" >
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <div class="layui-form-label text_wrap">物流单号</div>
+                                <div class="layui-input-block">
+                                    <select name="express_no_type[]" class="express_no_type" lay-filter="express_no_type">
+                                        <option value="1">上段运单编号</option>
+                                        <option value="2">原始订单编号</option>
+                                        <option value="3">新增物流单号</option>
+                                    </select>
+                                </div>
+                                <div class="layui-input-block block2">
+                                    <div class="up_expressno">
+                                        <input type="text" class="layui-input" value="{$waybill['logistics_waybill']['express_no'][count($waybill['logistics_waybill']['express_no'])-1]}" name="express_no1[]" placeholder="上段运单编号">
+                                    </div>
+                                    <div class="orderno hide2">
+                                        <input type="text" class="layui-input" value="" name="express_no2[]" placeholder="原始订单编号">
+                                    </div>
+                                    <div class="add_expressno hide2">
+                                        <input type="text" class="layui-input" value="" name="express_no3[]" placeholder="物流单号">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item">
+                                <div class="layui-form-label text_wrap">运单查询网址</div>
+                                <div class="layui-input-block">
+                                    <select name="express_website_type[]" class="express_website_type" lay-filter="express_website_type">
+                                        <option value="1">选择</option>
+                                        <option value="2">新增</option>
+                                    </select>
+                                </div>
+                                <div class="layui-input-block block2">
+                                    <div class="select_website">
+                                        <select name="express_website_id[]" class="express_website_id" lay-search>
+                                            {volist name="express" id="vo"}
+                                            <option value="{$vo['id']}">{$vo['param5']}</option>
+                                            {/volist}
+                                        </select>
+                                    </div>
+                                    <div class="input_website hide2">
+                                        <div class="disf">
+                                            <input type="text" class="layui-input" value="" name="express_website[]" placeholder="运单查询网址">
+                                            <div class="layui-btn layui-btn-warning check_website" onclick="check_website(this)">检查</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center;margin-top:20px;">
+                    <div class="layui-btn layui-btn-warning" onclick="add_express()">新增运单</div>
+                </div>
+            </div>
+            {/if}
+            <div style="text-align: center;margin-top:20px;">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="component-form-element2">运单确认，提交</button>
+                <!--<div class="layui-btn layui-btn-normal sure_data">费用确认，提交</div>-->
+            </div>
+        </form>
+    </div>
+</section>
+
+{include file="common/footer"}
+<script>
+    layui.use(['layer', 'form', 'table', 'upload','element'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , element = layui.element
+            , upload = layui.upload
+            , table = layui.table;
+
+        form.render(null,'component-form-element');
+
+        form.on('select(express_type)',function(data){
+            let val = data.value;
+            if(val==1){
+                $(this).parent().parent().parent().parent().find('.block2').find('.select_express').show();
+                $(this).parent().parent().parent().parent().find('.block2').find('.input_express').hide();
+            }else if(val==2){
+                $(this).parent().parent().parent().parent().find('.block2').find('.select_express').hide();
+                $(this).parent().parent().parent().parent().find('.block2').find('.input_express').show();
+            }
+
+            form.render(null,'component-form-element');
+        });
+
+        form.on('select(express_no_type)',function(data){
+            let val = data.value;
+            if(val==1){
+                $(this).parent().parent().parent().parent().find('.block2').find('.up_expressno').show();
+                $(this).parent().parent().parent().parent().find('.block2').find('.orderno').hide();
+                $(this).parent().parent().parent().parent().find('.block2').find('.add_expressno').hide();
+            }else if(val==2){
+                $(this).parent().parent().parent().parent().find('.block2').find('.up_expressno').hide();
+                $(this).parent().parent().parent().parent().find('.block2').find('.orderno').show();
+                $(this).parent().parent().parent().parent().find('.block2').find('.add_expressno').hide();
+            }else if(val==3){
+                $(this).parent().parent().parent().parent().find('.block2').find('.up_expressno').hide();
+                $(this).parent().parent().parent().parent().find('.block2').find('.orderno').hide();
+                $(this).parent().parent().parent().parent().find('.block2').find('.add_expressno').show();
+            }
+
+            form.render(null,'component-form-element');
+        });
+
+        form.on('select(express_website_type)',function(data){
+            let val = data.value;
+            if(val==1){
+                $(this).parent().parent().parent().parent().find('.block2').find('.select_website').show();
+                $(this).parent().parent().parent().parent().find('.block2').find('.input_website').hide();
+            }else if(val==2){
+                $(this).parent().parent().parent().parent().find('.block2').find('.select_website').hide();
+                $(this).parent().parent().parent().parent().find('.block2').find('.input_website').show();
+            }
+
+            form.render(null,'component-form-element');
+        });
+
+        form.on('submit(component-form-element2)', function(data){
+            $.ajax({
+                url:"/?s=index/save_expressno&pa=1",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            window.history.back(-1);
+                            // window.location.href="/?s=index/express_list&id={$id}&type=2";
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+
+    function check_website(t){
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form;
+        let val = $(t).parent().find('input').val();
+        if(val==''){
+            layer.msg('请输入运单查询网址');
+        }else{
+            layer.open({
+                type: 2,
+                title: '检查网址',
+                area:['80%','50%'],
+                content: $(t).parent().find('input').val()
+            });
+        }
+    }
+
+    function add_express(){
+        var $ = layui.$
+            , layer = layui.layer
+            , element = layui.element
+            , form = layui.form;
+        let num = $('#parag_num').val();
+        let now_num = parseInt(num) + 1;
+        $('#parag_num').val(now_num);
+        let html = '<div class="layui-colla-item">\n' +
+            '                        <h2 class="layui-colla-title" style="display:flex;align-items:center;justify-content:space-between;">\n' +
+            '                            第'+now_num+'段 <div class="layui-btn layui-btn-danger" onclick="del_express(this)">删除</div>\n' +
+            '                        </h2>\n' +
+            '                        <div class="layui-colla-content layui-show">\n' +
+            '                            <div class="layui-form-item">\n' +
+            '                                <div class="layui-form-label text_wrap">物流商名称</div>\n' +
+            '                                <div class="layui-input-block">\n' +
+            '                                    <select name="express_type['+now_num+']" class="express_type" lay-filter="express_type">\n' +
+            '                                        <option value="1">选择</option>\n' +
+            '                                        <option value="2">新增</option>\n' +
+            '                                    </select>\n' +
+            '                                </div>\n' +
+            '                                <div class="layui-input-block block2">\n' +
+            '                                    <div class="select_express">\n' +
+            '                                        <select name="express_id['+now_num+']" class="express_id" lay-filter="express_id" lay-search>\n';
+                                                        {volist name="express" id="vo"}
+            html += '                                        <option value="{$vo[\'id\']}">{$vo[\'param3\']}</option>\n';
+                                                        {/volist}
+            html += '                                </select>\n' +
+            '                                    </div>\n' +
+            '                                    <div class="input_express hide2">\n' +
+            '                                        <input type="text" class="layui-input" value="" name="express_name['+now_num+']" placeholder="物流商名称" >\n' +
+            '                                    </div>\n' +
+            '                                </div>\n' +
+            '                            </div>\n' +
+            '                            <div class="layui-form-item">\n' +
+            '                                <div class="layui-form-label text_wrap">物流单号</div>\n' +
+            '                                <div class="layui-input-block">\n' +
+            '                                    <select name="express_no_type['+now_num+']" class="express_no_type" lay-filter="express_no_type">\n' +
+            '                                        <option value="1">上段运单编号</option>\n' +
+            '                                        <option value="2">原始订单编号</option>\n' +
+            '                                        <option value="3">新增物流单号</option>\n' +
+            '                                    </select>\n' +
+            '                                </div>\n' +
+            '                                <div class="layui-input-block block2">\n' +
+            '                                    <div class="up_expressno">\n' +
+            '                                        <input type="text" class="layui-input" value="{$waybill[\'logistics_waybill\'][\'express_no\'][count($waybill[\'logistics_waybill\'][\'express_no\'])-1]}" name="express_no1['+now_num+']" placeholder="上段运单编号">\n' +
+            '                                    </div>\n' +
+            '                                    <div class="orderno hide2">\n' +
+            '                                        <input type="text" class="layui-input" value="" name="express_no2['+now_num+']" placeholder="原始订单编号">\n' +
+            '                                    </div>\n' +
+            '                                    <div class="add_expressno hide2">\n' +
+            '                                        <input type="text" class="layui-input" value="" name="express_no3['+now_num+']" placeholder="物流单号">\n' +
+            '                                    </div>\n' +
+            '                                </div>\n' +
+            '                            </div>\n' +
+            '                            <div class="layui-form-item">\n' +
+            '                                <div class="layui-form-label text_wrap">运单查询网址</div>\n' +
+            '                                <div class="layui-input-block">\n' +
+            '                                    <select name="express_website_type['+now_num+']" class="express_website_type" lay-filter="express_website_type">\n' +
+            '                                        <option value="1">选择</option>\n' +
+            '                                        <option value="2">新增</option>\n' +
+            '                                    </select>\n' +
+            '                                </div>\n' +
+            '                                <div class="layui-input-block block2">\n' +
+            '                                    <div class="select_website">\n' +
+            '                                        <select name="express_website_id['+now_num+']" class="express_website_id" lay-search>\n';
+                                                        {volist name="express" id="vo"}
+            html += '                                        <option value="{$vo[\'id\']}">{$vo[\'param5\']}</option>\n';
+                                                        {/volist}
+            html += '                                 </select>\n' +
+            '                                    </div>\n' +
+            '                                    <div class="input_website hide2">\n' +
+            '                                        <div class="disf">\n' +
+            '                                            <input type="text" class="layui-input" value="" name="express_website['+now_num+']" placeholder="运单查询网址">\n' +
+            '                                            <div class="layui-btn layui-btn-warning check_website" onclick="check_website(this)">检查</div>\n' +
+            '                                        </div>\n' +
+            '                                    </div>\n' +
+            '                                </div>\n' +
+            '                            </div>\n' +
+            '                        </div>\n' +
+            '                    </div>';
+        $('.layui-collapse').find('.layui-show').removeClass('layui-show');
+        $('.layui-collapse').append(html);
+        form.render(null,'component-form-element');
+        element.render('collapse');
+    }
+
+    function del_express(t){
+        var $ = layui.$
+            , layer = layui.layer
+            , element = layui.element
+            , form = layui.form;
+
+        layer.confirm('确认删除该运单吗？', {
+            btn: ['确认', '取消']
+        }, function () {
+            let num = $('#parag_num').val();
+            let now_num = parseInt(num) - 1;
+            $('#parag_num').val(now_num);
+
+            $(t).parent().parent().remove();
+            layer.closeAll();
+        });
+    }
+</script>

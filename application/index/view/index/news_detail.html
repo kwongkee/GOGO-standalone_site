@@ -1,0 +1,152 @@
+{include file="common/header"}
+<link href="css/gallery-1.css" rel="stylesheet">
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    .title{font-size:30px;font-weight:600;color:{$website['color_word']};text-align:center;margin-bottom:18px;}
+    /*.disf{display:flex;align-items: center;}*/
+    #content{padding-top:20px;}
+    #content .container .content{border: 1px solid {$website['color_word']};padding:30px 20px;box-sizing:border-box;position:relative;margin-top:10px;}
+    #content .container .content .in_mask{background-color: #000;opacity: 0.4;position: absolute;left: 0;top: 0;height: 100%;width: 100%;z-index: 1;}
+    #content .container .content .contents{z-index:2;position:relative;color:{$website['color_word']};}
+    #content .container{padding-bottom:0px;}
+    #content .color_word{font-size:15px;padding: 15px 10px;box-sizing:border-box;}
+    .preface{width:100%;position:relative;padding: 0 0 40px 0;box-sizing: border-box;}
+    .preface .preface_title{width:80px;text-align:right;font-size:15px;color:{$website['color_word']};font-weight:600;margin-right:10px;}
+    .preface .preface_title2{text-align:left;font-size:15px;color:{$website['color_word']};width:90%;}
+    .contents img{width:100%;}
+    @media (min-width: 993px) {
+        .contents img{width:500px;}
+    }
+    @media (min-width: 1000px){
+        #content .container{padding-top:30px;}
+        #content{padding-top:0;margin:0;}
+        /*.need_service_box{margin-top: 180px;margin-left: 180px;}*/
+        .main_img,.color_word{width:400px;height:280px;text-align:center;margin:20px auto;}
+    }
+    @media (max-width: 992px){
+        .main_img,.color_word{width:100%;height:250px;text-align:center;margin:20px auto;}
+        .color_word{padding:30px;box-sizing:border-box;}
+        .detail_topimg, .non_topimg{margin-top:85px;}
+        .title{line-height: 30px;}
+    }
+    .need_service,.need_share,.need_advice{padding:7px 10px;box-sizing:border-box;font-size:15px;font-weight:800;box-shadow:1px 1px 10px #333;text-align:center;/* margin-top:15px; */border:1px solid #D2A778;color:#ffffff;background:#0B2074;white-space:nowrap;}
+
+    .detail_container .row .about-logo *{background:{$website['color_inner']} !important;font-size:16px;}
+    .detail_container .row .about-logo img{box-shadow:1px 1px 15px #000;}
+
+    .box_content a:nth-of-type(1){display:none;}
+    .box_content a:nth-of-type(2){display:none;}
+
+    .navbar_menu{color:{$website['color_word']};font-size:16px;}
+    .navbar_menu a{color:{$website['color_word']};}
+    .navbar_menu a:last-child{color:#D2A778;font-weight:700;}
+    .page_box{padding:10px 0;box-sizing: border-box;justify-content: space-between;color:{$website['color_word']};padding-bottom:0;}
+</style>
+<!--<img class="detail_topimg" src="https://shop.gogo198.cn/{$website['inpic']}" alt="" style="max-width:100%;width:100%;">-->
+<section id="content" class="non_topimg"  style="background:{$website['color_inner']};">
+    <div class="container detail_container">
+        {if !empty($navbar_menu)}
+        <p class="navbar_menu"><i class="fa fa-sign-in" style="margin-right:5px;display:none;"></i><a href="/">HOME</a>&nbsp;<span style="color:#d1a575;">\</span>&nbsp;{$navbar_menu}</p>
+        {/if}
+        <hr style="border-top:1px solid {$website['color_word']};">
+    </div>
+    <div class="container" style="padding-top:0;">
+        <div class="title">{$news['name']}</div>
+        <div class="preface" style="margin-top:18px;">
+            <div class="disf">
+                <div class="preface_title">发文机关</div>
+                <div class="preface_title2">{$news['issuing_authority']}</div>
+            </div>
+            <div class="disf">
+                <div class="preface_title">文　　号</div>
+                <div class="preface_title2">{$news['document_number']}</div>
+            </div>
+            <div class="disf">
+                <div class="preface_title">发布日期</div>
+                <div class="preface_title2">{$news['release_date']}</div>
+            </div>
+            <div class="disf">
+                <div class="preface_title">生效日期</div>
+                <div class="preface_title2">{$news['effective_date']}</div>
+            </div>
+            <div class="disf">
+                <div class="preface_title">效力</div>
+                <div class="preface_title2">{$news['effect']}</div>
+            </div>
+            {if !empty($news['remark'])}
+            <div class="disf">
+                <div class="preface_title">备注</div>
+                <div class="preface_title2">{$news['remark']}</div>
+            </div>
+            {/if}
+            {include file="common/like"}
+            <div class="like">
+                <div class="disf">
+                    <div class="like_box disf" onclick="like_num()">
+                        <img src="./img/like.png" alt="">
+                        <div class="like_num upd_num">&nbsp;{$news['like_num']}</div>
+                    </div>
+                    <div class="like_box disf" onclick="comment()">
+                        <img src="./img/comment.png" alt="">
+                        <div class="like_num upd_comment_num">&nbsp;{$news['comment_num']}</div>
+                    </div>
+                    <div class="like_box disf" onclick="show_share()">
+                        <i class="fa fa-share-square-o" style="color:{$website['color_word']};font-size:15px;margin-right:3px;"></i>
+                        <div class="like_num upd_share_num">&nbsp;{$news['share_num']}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {if !empty($news['content'])}
+            <div class="content">
+                <!--<div class="in_mask"></div>-->
+                <div class="contents">{$news['content']}</div>
+            </div>
+        {/if}
+        <div class="page_box disf">
+            <div class="prev">{if empty($prev_news)}上一篇：无{else}<a href="/?s=index/news_detail&id={$prev_news['id']}"><&nbsp;上一篇</a>{/if}</div>
+            <div class="next">{if empty($next_news)}下一篇：无{else}<a href="/?s=index/news_detail&id={$next_news['id']}">下一篇&nbsp;></a>{/if}</div>
+        </div>
+        <hr  style="border-top:1px solid {$website['color_word']};"/>
+        <div class="row">
+            <div class="col-md-12">
+                {include file="common/advice"}
+            </div>
+        </div>
+        <div class="row comment_box">
+            {if !empty($all_comment)}
+            {volist name="all_comment" id="vo"}
+            <div class="comment_div">
+                <div class="disf" style="justify-content: space-between;">
+                    <div class="name f15">游客:{$vo['ip']}</div>
+                    <div class="time f15"><?php echo date('Y-m-d H:i',$vo['createtime']);?></div>
+                </div>
+                <div class="comment_content f15">{$vo.text}</div>
+            </div>
+            {/volist}
+            {else}
+            <div class="f15 no_comment" style="text-align: center;color:{$website['color_word']};">——暂无评论——</div>
+            {/if}
+        </div>
+    </div>
+</section>
+<div class="comment" style="display: none;padding:20px;box-sizing: border-box;text-align: center;">
+    <textarea name="comment_content" id="comment_content" class="layui-textarea" placeholder="请留下您的评论..."></textarea>
+    <div class="layui-btn layui-btn-md submit_comment" style="margin-top:15px;">立即评论</div>
+</div>
+{include file="common/footer"}
+<script>
+    $(function(){
+        let link = '';
+        if("{$news['origin_type']}"==1){
+            link = "{$news['link']}";
+        }else if("{$news['origin_type']}"==2){
+            link = "https://shop.gogo198.cn/{$news['file']}";
+        }
+        let html = '<a href="'+link+'">' +
+            '<div class="need_share"><i class="fa fa-eye" style="color:{$website['color_word']};font-size:15px;margin-right:3px;"></i>查看原文</div>\n'+
+        '</a>';
+        $('.box_content').append(html);
+    })
+</script>

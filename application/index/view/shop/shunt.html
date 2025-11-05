@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>订购信息</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <script src="layui/layui.js"></script>
+    <style>
+        .layui-fluid{padding-top:15px;}
+        .layui-form-item{margin-bottom: 0;}
+        .inline{line-height: 38px;}
+        .disf{display:flex;align-items: center;}
+        .link{text-decoration: underline;color:#1790FF;}
+    </style>
+</head>
+<body style="background: #eee;">
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    已分流列表
+                </div>
+                <div class="layui-card-body">
+                    <table class="layui-hide" id="mainTable"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    layui.use(['layer', 'form', 'table', 'upload'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , upload = layui.upload
+            , table = layui.table;
+
+        table.render({
+            elem: '#mainTable'
+            ,url: "/?s=shop/shunt&req=1&gogo_id={$gogo_id}"
+            ,cellMinWidth: 200
+            ,cols: [[
+                {field:'ordersn', title: '订单编号', width:160}
+                ,{field:'status_name', title: '状态', width:80}
+                ,{field:'createtime', title: '创建日期'}
+                ,{align:'center',  title: '操作',fixed:'right',width:90, templet: function(d){
+                        return [
+                            '<a onclick="openWindow('+"'"+ d.id +"'" +','+"1"+ ');" class="layui-btn layui-btn-normal layui-btn-xs">查看详情</a>',
+                            // '<a onclick="openWindow('+"'"+ d.id +"'" +','+"2"+ ');" class="layui-btn layui-btn-danger layui-btn-xs">删除</a>',
+                        ].join('');
+                    } }
+            ]]
+            ,page: true
+        });
+    });
+
+    function openWindow(id,typ) {
+        let url = '';
+        if (typ == 1) {
+            window.location.href = "/?s=shop/shunt_detail&id=" + id;
+        }
+    }
+</script>
+</html>

@@ -1,0 +1,49 @@
+{include file="common/header"}
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style type="text/css" media="all">
+    #content{padding-top:20px;padding-bottom:20px;}
+    .content{padding:20px 20px;box-sizing:border-box;}
+    .content .col-md-12{padding:0;float:unset;}
+    .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+    .content .box_content{background:{$website['color']};color:{$website['color_word']};border:1px solid {$website['color_word']};font-size:25px;text-align:center;padding:30px;width:100%;}
+    .content .box_content img{width:40px;margin-right:5px;}
+</style>
+<section id="content" class="non_topimg">
+    <div class="container">
+        <div class="content" >
+            <div class="col-md-12">
+                <a href="javascript:history.back(-1);">
+                    <div style="display:flex;align-items:center;border: 1px solid #fff;width: fit-content;padding: 10px 20px;border-radius: 15px;background: #8f8b8b;margin-bottom:30px;">
+                        <img class="" src="./img/account/back.png" alt="" style="width: 18px;margin-right: 10px;"/>
+                        返回
+                    </div>
+                </a>
+                {if $account['merch_status']==0 || $account['merch_status']==1}
+                <a href="/?s=index/bussiness_person">
+                    <div class="box_content disf">
+                        <img class="" src="./img/account/login.png" alt="" />
+                        {if session('lang')=='zh'}买家服务{elseif(session('lang')=='cht')}買家服務{elseif(session('lang')=='en')}Buyer Services{/if}
+                    </div>
+                </a>
+                {/if}
+                
+                <a href="/?s=index/seller_service">
+                    <div class="box_content disf">
+                        <img class="" src="./img/account/seller.png" alt="" />
+                        {if session('lang')=='zh'}卖家服务{elseif(session('lang')=='cht')}賣家服務{elseif(session('lang')=='en')}Seller Services{/if}
+                    </div>
+                </a>
+                
+                <a href="/?s=index/distri_service">
+                    <div class="box_content disf">
+                        <img class="" src="./img/account/distri.png" alt="" />
+                        {if session('lang')=='zh'}分销服务{elseif(session('lang')=='cht')}分銷服務{elseif(session('lang')=='en')}Distribution Service{/if}
+                    </div>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</section>
+{include file="common/footer"}

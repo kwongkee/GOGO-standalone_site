@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>独立站平台 - website.gogo198.net</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        html{height:100%;}
+        :root {--primary: #8a2be2;--primary-dark: #6a1cb9;--primary-light: #9b4de3;--secondary: #bb86fc;--accent: #e6d7f5;--text: #333333;--text-light: #f8f8f8;--background: #f9f5fd;--card-bg: #ffffff;--gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));--gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary));--shadow: 0 10px 30px rgba(138, 43, 226, 0.15);--shadow-hover: 0 15px 35px rgba(138, 43, 226, 0.25);}
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        body {color: var(--text);line-height: 1.6;overflow-x: hidden;}
+        h1, h2, h3, h4, h5, h6 {font-family: 'Montserrat', sans-serif;font-weight: 700;}
+
+        /* 导航栏样式 */
+        header {background: rgba(255, 255, 255, 0.95);color: var(--text);padding: 15px 0;box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);position: sticky;top: 0;z-index: 1000;backdrop-filter: blur(10px);}
+        nav {display: flex;justify-content: space-between;align-items: center;position: relative;}
+        .logo {font-size: 1.8rem;font-weight: 700;display: flex;align-items: center;background: var(--gradient);-webkit-background-clip: text;background-clip: text;color: transparent;z-index: 1001;}
+        .logo i {margin-right: 10px;color: var(--primary);}
+        .nav-links {display: flex;list-style: none;}
+        .nav-links li {margin-left: 25px;position: relative;}
+        .nav-links a {color: var(--text);text-decoration: none;font-weight: 500;transition: all 0.3s ease;padding: 8px 12px;border-radius: 4px;position: relative;display: flex;align-items: center;}
+        .nav-links a::after {content: '';position: absolute;bottom: 0;left: 50%;width: 0;height: 2px;background: var(--gradient);transition: all 0.3s ease;transform: translateX(-50%);}
+        .nav-links a:hover {color: var(--primary);}
+        .nav-links a:hover::after {width: 80%;}
+        .auth-buttons {display: flex;align-items: center;}
+        .btn {padding: 12px 25px;border-radius: 50px;text-decoration: none;font-weight: 600;transition: all 0.3s ease;cursor: pointer;display: inline-block;text-align: center;border: none;font-family: 'Montserrat', sans-serif;}
+        .btn-outline {border: 2px solid var(--primary);color: var(--primary);background: transparent;margin-right: 15px;}
+        .btn-outline:hover {background: var(--primary);color: white;transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-primary {background: var(--gradient);color: white;border: 2px solid transparent;}
+        .btn-primary:hover {background: transparent;border-color: var(--primary);color: var(--primary);transform: translateY(-3px);box-shadow: var(--shadow);}
+
+        /* 表单样式 */
+        .form-section {margin-bottom: 30px;}
+        .form-title {font-size: 1.3rem;margin-bottom: 20px;color: var(--primary-dark);display: flex;align-items: center}
+        .form-title i {margin-right: 10px;}
+        .form-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));gap: 20px;}
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select,
+        .form-group textarea {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;}
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {border-color: var(--primary);outline: none;}
+        .form-group textarea {min-height: 120px;resize: vertical;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
+
+
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}
+        .form-group input:focus,
+        .form-group select:focus {border-color: var(--primary);outline: none;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
+
+        .disf{display: flex;align-items: center;}
+        xm-select:hover{border-color:var(--primary) !important;}
+        .xm-option.selected,.xm-label-block{background:var(--primary) !important;}
+
+        /* 动画 */
+        @keyframes fadeIn {
+            from {opacity: 0;transform: translateY(10px);}
+            to {opacity: 1;transform: translateY(0);}
+        }
+
+        @media (max-width: 576px) {
+            .btn {padding: 10px 20px;font-size: 0.9rem;}
+            /*.form-actions {flex-direction: column;}*/
+        }
+    </style>
+    <link rel="stylesheet" href="layui/css/layui.css">
+</head>
+<body>
+<form class="layui-form" id="siteForm" action="" method="post" lay-filter="component-form-rotate" style="padding:0px;">
+    <input type="hidden" name="company_id" value="{$company_id}">
+    <input type="hidden" name="company_type" value="{$company_type}">
+    <input type="hidden" name="id" value="{$gid}">
+    <input type="hidden" name="type" value="{$type}">
+    <input type="hidden" name="pa" value="2">
+
+    <div class="form-group" style="padding:0px;">
+        <div class="layui-tab layui-tab-card">
+            <ul class="layui-tab-title">
+                <li class="layui-this">自主导流</li>
+                <li class="">平台导流</li>
+                <li class="">自主商城</li>
+                <li class="">平台商城</li>
+            </ul>
+            <div class="layui-tab-content" style="min-height:400px;max-height: 400px;overflow-y:auto;">
+                <div class="layui-tab-item layui-show">
+                    <!--自主导流start-->
+                    {if empty($list['my_guide'])}
+                        <p style="font-size:15px;">自主导流暂未配置，请先在配置站点</a></p>
+                    {else}
+                        <p style="margin-bottom:15px;font-size:15px;text-align: center;">配置该商品在相应导流板块显示规则：<span style="color:#e60000;">商品关键字</span>在相应<span style="color:#e60000;">导流板块关键字</span>中存在，将会自动显示在导流板块中。</p>
+                        <table class="layui-table" style="width: 100%;margin:0 auto;">
+                            <thead>
+                            <th>导流板块</th>
+                            <th>商品关键字</th>
+                            </thead>
+                            <tbody>
+                            {volist name="list['my_guide']" id="vo"}
+                            <tr>
+                                <td>
+                                    {$vo['name']}
+                                    <input type="text" name="guide[my_guide][]" value="{$vo['id']}" style="display: none;">
+                                </td>
+                                <td>
+                                    <input type="text" class="layui-input keywords" name="keywords[my_guide][]" placeholder="多个关键字用“、”顿号隔开" value="{$vo['my_keywords']}">
+                                </td>
+                            </tr>
+                            {/volist}
+                            </tbody>
+                        </table>
+                    {/if}
+                </div>
+                <div class="layui-tab-item">
+                    <!--平台导流start-->
+                    {if empty($list['platform_guide'])}
+                        <p style="font-size:15px;">平台导流暂未配置，请联系平台</a></p>
+                    {else}
+                        <p style="margin-bottom:15px;font-size:15px;text-align: center;">配置该商品在相应导流板块显示规则：<span style="color:#e60000;">商品关键字</span>在相应<span style="color:#e60000;">导流板块关键字</span>中存在，将会自动显示在导流板块中。</p>
+                        <table class="layui-table" style="width: 100%;margin:0 auto;">
+                            <thead>
+                            <th>导流板块</th>
+                            <th>商品关键字</th>
+                            </thead>
+                            <tbody>
+                            {volist name="list['platform_guide']" id="vo"}
+                            <tr>
+                                <td>
+                                    {$vo['name']['zh']}
+                                    <input type="text" name="guide[platform_guide][]" value="{$vo['id']}" style="display: none;">
+                                </td>
+                                <td>
+                                    <input type="text" class="layui-input keywords" name="keywords[platform_guide][]" placeholder="多个关键字用“、”顿号隔开" value="{$vo['my_keywords']}">
+                                </td>
+                            </tr>
+                            {/volist}
+                            </tbody>
+                        </table>
+                    {/if}
+                </div>
+                <div class="layui-tab-item">
+                    {if empty($list['my_shop'])}
+                        <p style="font-size:15px;">自主商城暂未配置，请先在配置站点</a></p>
+                    {else}
+                        <table class="layui-table" style="width: 100%;">
+                            <thead>
+                            <th>导流名称</th>
+                            <th>操作</th>
+                            </thead>
+                            <tbody>
+                            {volist name="list['my_shop']" id="vo"}
+                            <tr>
+                                <td>
+                                    {$vo['title']}
+                                    <input type="text" name="guide[my_shop][]" value="{$vo['id']}" style="display: none;">
+                                </td>
+                                <td>
+                                    <input type="text" class="layui-input keywords" name="keywords[my_shop][]" placeholder="多个关键字用“、”顿号隔开" value="{$vo['my_keywords']}">
+                                </td>
+                            </tr>
+                            {/volist}
+                            </tbody>
+                        </table>
+                    {/if}
+                </div>
+                <div class="layui-tab-item">
+                    {if empty($list['platform_shop'])}
+                        <p style="font-size:15px;">平台商城暂未配置，请联系平台</a></p>
+                    {else}
+                        <table class="layui-table" style="width: 100%;">
+                            <thead>
+                            <th>导流名称</th>
+                            <th>操作</th>
+                            </thead>
+                            <tbody>
+                            {volist name="list['platform_shop']" id="vo"}
+                            <tr>
+                                <td>
+                                    {$vo['title']}
+                                    <input type="text" name="guide[platform_shop][]" value="{$vo['id']}" style="display: none;">
+                                </td>
+                                <td>
+                                    <input type="text" class="layui-input keywords" name="keywords[platform_shop][]" placeholder="多个关键字用“、”顿号隔开" value="{$vo['my_keywords']}">
+                                </td>
+                            </tr>
+                            {/volist}
+                            </tbody>
+                        </table>
+                    {/if}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <!--        <button type="button" class="btn btn-outline" id="cancelBtn" style="background:transparent;border: 2px solid var(&#45;&#45;primary);color: var(&#45;&#45;primary);">取消</button>-->
+        <button type="submit" class="btn btn-primary" lay-submit lay-filter="component-form-rotate">{if empty($list['goods']['shelf_id'])}提交审核{else}立即提交{/if}</button>
+    </div>
+</form>
+
+</body>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    layui.use(['layer','form','laydate','upload','colorpicker','element'],function() {
+        var laydate = layui.laydate
+            ,layer = layui.layer
+            ,form = layui.form
+            ,$ = layui.jquery
+            ,upload = layui.upload
+            ,element = layui.element
+            ,colorpicker = layui.colorpicker;
+
+        form.on('submit(component-form-rotate)', function(data){
+            layer.load();
+            $.ajax({
+                url:"/?s=index/select_shelf",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.closeAll('loading');
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            window.location.reload();
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+
+</script>
+</html>

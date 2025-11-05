@@ -1,0 +1,1606 @@
+{include file="common/header"}
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+<style>
+    .home_box {
+        width: 100%;
+        background: #fff
+    }
+
+    .home_box .searchBox {
+        padding-top: 70px;
+        width: 100%;
+        background: url("/img/customers/cq_banner_bg.png") no-repeat;
+        background-size: 100%;
+        background-color: #2D429F
+    }
+
+    .home_box .searchBox .title {
+        width: 100%;
+        text-align: center;
+        font-size: 46px;
+        font-weight: bold;
+        color: #FFFFFF;
+        text-shadow: 0px 1px 8px rgba(0,0,0,0.2)
+    }
+
+    .home_box .searchBox .subtitle {
+        width: 100%;
+        text-align: center;
+        font-size: 20px;
+        color: #FFFFFF;
+        text-shadow: 0px 1px 8px rgba(0,0,0,0.2)
+    }
+
+    .home_box .searchBox .searchContentBox {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 30px auto 0;
+        width: 810px;
+        position: relative
+    }
+
+    .home_box .searchBox .searchContentBox .input_box {
+        width: 140px;
+        height: 50px
+    }
+
+    .home_box .searchBox .searchContentBox .input_box .country_box {
+        background: #fff;
+        border-radius: 6px;
+        border: 1px solid #448bd2;
+        width: 140px;
+        height: 50px;
+        border: none;
+        padding: 0 27px 0 20px
+    }
+
+    .home_box .searchBox .searchContentBox .search_content {
+        display: flex;
+        align-items: center;
+        height: 50px;
+        width: 660px;
+        border-right: none;
+        border-radius: 6px;
+        margin-left: 10px;
+        background: #fff
+    }
+
+    .home_box .searchBox .searchContentBox .search_content .search_icon {
+        width: 16px;
+        height: 16px;
+        background: url("/img/customers/icon_se.png") no-repeat;
+        background-size: 100% 100%;
+        margin-left: 20px;
+        flex-shrink: 0
+    }
+
+    .home_box .searchBox .searchContentBox .search_content .search_input {
+        width: 515px;
+        height: 45px;
+        border: none;
+        padding: 0 10px
+    }
+
+    .home_box .searchBox .searchContentBox .search_content .search_input::-webkit-input-placeholder {
+        font-size: 15px;
+        color: #666666
+    }
+
+    .home_box .searchBox .searchContentBox .search_content .search_input::-moz-placeholder {
+        font-size: 15px;
+        color: #666666;
+        opacity: 1
+    }
+
+    .home_box .searchBox .searchContentBox .search_content .getReport {
+        width: 120px;
+        height: 50px;
+        background: linear-gradient(0deg, #E0B06E, #F5D7A5);
+        font-size: 16px;
+        color: #694B28;
+        text-align: center;
+        margin-left: -1px;
+        border: none;
+        border-radius: 0 6px 6px 0
+    }
+
+    .home_box .searchBox .searchContentBox .sel-box {
+        width: 810px;
+        border: 1px solid #DEDFE4;
+        box-shadow: 0px 2px 20px 0px rgba(46,46,46,0.15);
+        border-radius: 6px;
+        position: absolute;
+        left: 0px;
+        top: 50px;
+        z-index: 999;
+        margin-top: 10px;
+        background: #FFFFFF;
+        display: none
+    }
+
+    .home_box .searchBox .searchContentBox .sel-box .sel-common {
+        width: 100%;
+        padding: 30px 60px 0 20px;
+        display: flex;
+        justify-content: space-between
+    }
+
+    .home_box .searchBox .searchContentBox .sel-box .sel-common .sel-tit {
+        width: 120px;
+        color: #999999
+    }
+
+    .home_box .searchBox .searchContentBox .sel-box .sel-common .sel-cont {
+        width: 705px;
+        overflow: hidden;
+        display: flex;
+        flex-wrap: wrap
+    }
+
+    .home_box .searchBox .searchContentBox .sel-box .sel-common .sel-cont li {
+        padding: 2px 5px;
+        margin: 0 20px 30px 0px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        cursor: pointer;
+        font-size: 14px;
+        color: #333333;
+        display: flex
+    }
+
+    .home_box .searchBox .searchContentBox .sel-box .sel-common .sel-cont li:hover {
+        color: #4D64CC
+    }
+
+    .home_box .searchBox .searchContentBox .sel-box .sel-common .sel-cont li .hot_icon {
+        display: inline-block;
+        width: 12px;
+        height: 14px;
+        background: url("/img/customers/cq_icon_hot.png") no-repeat;
+        background-size: 100% 100%;
+        margin: 3px 3px 0 0
+    }
+
+    .home_box .searchBox .searchContentBox .sel-box .sel-bottom {
+        width: 100%;
+        height: 50px;
+        line-height: 50px;
+        background: #F7F7F7;
+        padding-left: 16px;
+        font-size: 14px;
+        color: #D69137
+    }
+
+    .home_box .searchBox .searchContentBox .history_drop {
+        position: absolute;
+        display: none;
+        width: 660px;
+        background: #FFFFFF;
+        border: 1px solid #DEDFE4;
+        box-shadow: 0px 2px 20px 0px rgba(46,46,46,0.15);
+        border-radius: 6px;
+        padding: 20px;
+        top: 55px;
+        left: 150px;
+        z-index: 1
+    }
+
+    .home_box .searchBox .searchContentBox .history_drop .drop_item {
+        width: 100%
+    }
+
+    .home_box .searchBox .searchContentBox .history_drop .drop_item .item_title {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 6px
+    }
+
+    .home_box .searchBox .searchContentBox .history_drop .drop_item .item_title .title_label {
+        font-size: 14px;
+        color: #999999
+    }
+
+    .home_box .searchBox .searchContentBox .history_drop .drop_item .item_title .delete_box {
+        display: flex;
+        align-items: center;
+        cursor: pointer
+    }
+
+    .home_box .searchBox .searchContentBox .history_drop .drop_item .item_title .delete_box .delete_icon {
+        width: 14px;
+        height: 14px;
+        background: url("/img/customers/cq_icon_del.png") no-repeat;
+        background-size: 100% 100%
+    }
+
+    .home_box .searchBox .searchContentBox .history_drop .drop_item .item_title .delete_box .delete_label {
+        font-size: 13px;
+        color: #999999;
+        margin: 2px 0 0 7px
+    }
+
+    .home_box .searchBox .searchContentBox .history_drop .drop_item .item_title .delete_box:hover .delete_icon {
+        background: url("/img/customers/cq_icon_del02.png") no-repeat;
+        background-size: 100% 100%
+    }
+
+    .home_box .searchBox .searchContentBox .history_drop .drop_item .item_title .delete_box:hover .delete_label {
+        color: #4D64CC
+    }
+
+    .home_box .searchBox .searchContentBox .history_drop .drop_item .search_box {
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        max-height: 80px;
+        overflow: hidden
+    }
+
+    .home_box .searchBox .searchContentBox .history_drop .drop_item .search_box .search_item {
+        display: block;
+        height: 28px;
+        line-height: 26px;
+        max-width: 244px;
+        padding: 0 10px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin: 10px 10px 0 0;
+        background: #F4F3F8;
+        border: 1px solid #EBEAED;
+        border-radius: 2px;
+        font-size: 13px;
+        color: #555555
+    }
+
+    .home_box .searchBox .searchContentBox .history_drop .drop_item .search_box .search_item .countryName {
+        display: inline-block;
+        height: 20px;
+        line-height: 20px;
+        padding: 0px 3px;
+        color: #2B93EE;
+        font-size: 12px;
+        margin: 4px 5px 0 0
+    }
+
+    .home_box .searchBox .searchContentBox .history_drop .drop_item .search_box .search_item:hover {
+        color: #4D64CC !important
+    }
+
+    .home_box .searchBox .searchContentBox .history_drop .drop_item .history_list .history_item {
+        display: flex;
+        align-items: center;
+        margin-top: 10px
+    }
+
+    .home_box .searchBox .searchContentBox .history_drop .drop_item .history_list .history_item .history_icon {
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        background: url("/img/customers/clock.png") no-repeat;
+        background-size: 100% 100%
+    }
+
+    .home_box .searchBox .searchContentBox .history_drop .drop_item .history_list .history_item .country_name {
+        display: inline-block;
+        padding: 1px 5px;
+        background: #E7F4FF;
+        color: #2B93EE;
+        font-size: 13px;
+        margin-left: 5px
+    }
+
+    .home_box .searchBox .searchContentBox .history_drop .drop_item .history_list .history_item .history_label {
+        display: inline-block;
+        width: 500px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 13px;
+        color: #555555;
+        margin-left: 10px
+    }
+
+    .home_box .searchBox .searchContentBox .history_drop .drop_item .history_list .history_item .history_label:hover {
+        color: #4D64CC
+    }
+
+    .home_box .searchBox .searchContentBox .history_drop .recentSearch {
+        margin-bottom: 26px
+    }
+
+    .home_box .searchBox .searchContentBox .history_drop .login_tips_box {
+        width: 445px;
+        height: 49px;
+        background: url("/img/customers/drop_login_tips.png") no-repeat;
+        background-size: 100% 100%;
+        margin: 20px auto 0;
+        overflow: hidden;
+        display: none
+    }
+
+    .home_box .searchBox .searchContentBox .history_drop .login_tips_box .drop_login_botton {
+        font-size: 14px;
+        color: #6283FB;
+        margin: 20px 0 0 350px;
+        cursor: pointer
+    }
+
+    .home_box .searchBox .searchContentBox .history_drop .login_tips_empty_box {
+        width: 100%;
+        display: none
+    }
+
+    .home_box .searchBox .searchContentBox .history_drop .login_tips_empty_box .login_tips_empty_img {
+        width: 285px;
+        height: 83px;
+        background: url("/img/customers/drop_login_tips_empty.png") no-repeat;
+        background-size: 100% 100%;
+        margin: 30px auto
+    }
+
+    .home_box .searchBox .searchContentBox .history_drop .login_tips_empty_box .drop_login_botton {
+        width: 128px;
+        height: 39px;
+        background: linear-gradient(-90deg, rgba(77,106,227,0.91) 0%, rgba(108,134,241,0.91) 100%);
+        border-radius: 6px;
+        text-align: center;
+        line-height: 39px;
+        font-size: 14px;
+        color: #FFFFFF;
+        cursor: pointer;
+        margin: 0 auto
+    }
+
+    .home_box .searchBox .searchContentBox .matchCountryBox {
+        display: none;
+        max-height: 180px;
+        width: 160px;
+        background: #fff;
+        position: absolute;
+        left: 0px;
+        top: 50px;
+        z-index: 10;
+        overflow-y: auto;
+        border: 1px solid #c4c4c4
+    }
+
+    .home_box .searchBox .searchContentBox .matchCountryBox .matchCountryItem {
+        width: 100%;
+        height: 30px;
+        text-indent: 5px;
+        line-height: 30px;
+        margin-top: 10px;
+        font-size: 14px;
+        color: #303133;
+        cursor: pointer
+    }
+
+    .home_box .searchBox .searchContentBox .matchCountryBox .matchCountryItem:hover {
+        color: #fff;
+        background: #448bd2
+    }
+
+    .home_box .searchBox .searchContentBox .matchCountryBox .matchCountryItem:nth-of-type(1) {
+        margin-top: 0px
+    }
+
+    .home_box .searchBox .hotEnterprise {
+        width: 850px;
+        display: flex;
+        font-size: 14px;
+        color: #8499F5;
+        align-items: flex-start;
+        margin: 20px auto 0;
+        margin-bottom: 10px;
+        height: 24px;
+        overflow: hidden
+    }
+
+    .home_box .searchBox .hotEnterprise .hot_label_box {
+        width: 65px;
+        height: 20px;
+        background: url("/img/customers/icon_rs.png") no-repeat;
+        background-size: 100% 100%;
+        margin: 0 5px 0 20px
+    }
+
+    .home_box .searchBox .hotEnterprise .hotEnterpriseList {
+        width: 738px;
+        display: flex;
+        flex-wrap: wrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap
+    }
+
+    .home_box .searchBox .hotEnterprise .hotEnterpriseList .hotEnterpriseItem {
+        margin-right: 15px;
+        color: #BFCCFE;
+        font-size: 16px;
+        max-width: 340px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap
+    }
+
+    .home_box .searchBox .hotEnterprise .hotEnterpriseList .hotEnterpriseItem:hover {
+        color: #fff !important
+    }
+
+    .home_box .advantage_box {
+        width: 100%;
+        padding: 60px 0;
+        background: #F7F7FD
+    }
+
+    .home_box .advantage_box .advantage_list {
+        width: 1100px;
+        display: flex;
+        justify-content: space-between;
+        margin: 0 auto
+    }
+
+    .home_box .advantage_box .advantage_list .advantage_item {
+        width: 252px;
+        height: 220px;
+        background: #FFFFFF;
+        box-shadow: 0px 2px 20px 0px rgba(151,151,151,0.1);
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center
+    }
+
+    .home_box .advantage_box .advantage_list .advantage_item .advantage_img {
+        display: block;
+        width: 90px;
+        height: 91px
+    }
+
+    .home_box .advantage_box .advantage_list .advantage_item .advantage_label {
+        font-size: 18px;
+        font-weight: bold;
+        color: #444444;
+        margin-top: 25px
+    }
+
+    .home_box .partner_box {
+        width: 100%;
+        padding: 60px 0 40px;
+        background: #fff
+    }
+
+    .home_box .partner_box .partner_title {
+        width: 100%;
+        text-align: center;
+        font-size: 28px;
+        color: #303133
+    }
+
+    .home_box .partner_box .partner_subtitle {
+        font-size: 15px;
+        color: #666876;
+        width: 100%;
+        text-align: center;
+        margin-top: 5px
+    }
+
+    .home_box .partner_box .partner_img {
+        margin: 30px auto 0;
+        width: 1122px;
+        height: 472px;
+        background: url("/img/customers/cq_pic_01.png") no-repeat;
+        background-size: 100% 100%
+    }
+
+    .home_box .world_box {
+        width: 100%;
+        height: 592px;
+        background: url("/img/customers/cq_map_bg.jpg") no-repeat;
+        background-size: 100% 100%;
+        padding-top: 60px
+    }
+
+    .home_box .world_box .world_title {
+        width: 100%;
+        text-align: center;
+        font-size: 28px;
+        color: #fff
+    }
+
+    .home_box .world_box .world_subtitle {
+        width: 100%;
+        text-align: center;
+        font-size: 15px;
+        color: #C2CDFF;
+        margin-top: 5px
+    }
+
+    .home_box .world_box .world_img {
+        width: 1116px;
+        height: 383px;
+        background: url("/img/customers/cq_map.png") no-repeat;
+        background-size: 100% 100%;
+        margin: 44px auto 0;
+        position: relative
+    }
+
+    .home_box .world_box .world_img .info_box {
+        height: 44px;
+        background: #2B7FDD;
+        border-radius: 4px;
+        line-height: 44px;
+        padding: 0 30px;
+        position: absolute;
+        box-shadow: rgba(3,252,254,0.24) 0px 0px 10px inset
+    }
+
+    .home_box .world_box .world_img .info_box span {
+        font-size: 16px;
+        color: #fff
+    }
+
+    .home_box .world_box .world_img .info_box .info_num {
+        font-size: 20px
+    }
+
+    .home_box .world_box .world_img .america {
+        left: 14%;
+        top: 15%
+    }
+
+    .home_box .world_box .world_img .europe {
+        left: 44%;
+        top: 7%
+    }
+
+    .home_box .world_box .world_img .africa {
+        left: 46.5%;
+        top: 45%
+    }
+
+    .home_box .world_box .world_img .asia {
+        left: 69%;
+        top: 9%
+    }
+
+    .home_box .world_box .world_img .oceania {
+        left: 78%;
+        top: 55%
+    }
+
+    .home_box .dimension_box {
+        width: 100%;
+        padding: 60px 0 40px
+    }
+
+    .home_box .dimension_box .dimension_title {
+        width: 100%;
+        text-align: center;
+        color: #303133;
+        font-size: 28px
+    }
+
+    .home_box .dimension_box .dimension_subtitle {
+        width: 780px;
+        font-size: 15px;
+        color: #666876;
+        line-height: 30px;
+        margin: 20px auto 0;
+        text-align: center
+    }
+
+    .home_box .dimension_box .dimension_list {
+        width: 760px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin: 50px auto 0
+    }
+
+    .home_box .dimension_box .dimension_list .dimension_item {
+        width: 90px;
+        margin-right: 60px;
+        margin-bottom: 40px
+    }
+
+    .home_box .dimension_box .dimension_list .dimension_item .dimension_img {
+        display: block;
+        width: 90px;
+        height: 90px
+    }
+
+    .home_box .dimension_box .dimension_list .dimension_item .dimension_label {
+        width: 90px;
+        text-align: center;
+        font-size: 15px;
+        color: #303133;
+        margin-top: 10px
+    }
+
+    .home_box .dimension_box .dimension_list .dimension_item:nth-of-type(5) {
+        margin-right: 0px
+    }
+
+    .home_box .dimension_box .dimension_list .dimension_item:nth-of-type(9) {
+        margin-right: 0px
+    }
+    .sel-box {
+        width: 1110px;
+        overflow: hidden;
+        border-radius: 6px;
+        cursor: text;
+        padding-bottom: 20px;
+        margin: 40px auto auto
+    }
+
+    .sel-box.hide {
+        display: none
+    }
+
+    .sel-box .type_menu_box {
+        display: flex;
+        height: 80px
+    }
+
+    .sel-box .type_menu_box .type_menu_list {
+        display: flex;
+        margin: 0 0 0px 80px
+    }
+
+    .sel-box .type_menu_box .type_menu_list .type_menu_item {
+        width: 150px;
+        height: 36px;
+        background: #5672D1;
+        text-align: center;
+        line-height: 36px;
+        font-size: 16px;
+        color: #FFFFFF;
+        margin-right: 1px;
+        cursor: pointer
+    }
+
+    .sel-box .type_menu_box .type_menu_list .type_menu_item:first-child {
+        border-radius: 20px 0 0 20px
+    }
+
+    .sel-box .type_menu_box .type_menu_list .type_menu_item:last-child {
+        border-radius: 0 20px 20px 0
+    }
+
+    .sel-box .type_menu_box .type_menu_list .type_menu_active {
+        background: linear-gradient(0deg, #E0B06E, #F5D7A5);
+        color: #694B28;
+        position: relative
+    }
+
+    .sel-box .type_menu_box .type_menu_list .type_menu_active:after {
+        content: '';
+        border-top: 8px solid #E0B06E;
+        border-right: 8px solid transparent;
+        border-left: 8px solid transparent;
+        border-bottom: 8px solid transparent;
+        width: 0px;
+        height: 0px;
+        position: absolute;
+        top: 36px;
+        left: 45%;
+        z-index: 0
+    }
+
+    .sel-box .sel-box-content {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center
+    }
+
+    .sel-box .sel-box-content .hotCountry {
+        width: 80px;
+        height: 42px;
+        flex-shrink: 0;
+        font-size: 14px;
+        font-weight: 400;
+        color: #FFFFFF;
+        line-height: 42px
+    }
+
+    .sel-box .sel-box-content .hotCountryList {
+        display: flex;
+        align-items: center
+    }
+
+    .sel-box .sel-box-content .hotCountryList .item {
+        width: 160px;
+        height: 42px;
+        background: #5672D1;
+        border-radius: 6px;
+        margin-right: 14px;
+        padding: 0 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 8px;
+        cursor: pointer;
+        user-select: none
+    }
+
+    .sel-box .sel-box-content .hotCountryList .item:hover {
+        transform: scale(1.05)
+    }
+
+    .sel-box .sel-box-content .hotCountryList .item:last-child {
+        margin-right: 0
+    }
+
+    .sel-box .sel-box-content .hotCountryList .item .couImg {
+        flex-shrink: 0;
+        width: 40px;
+        height: 26px;
+        margin-right: 16px;
+        background-repeat: no-repeat;
+        background-size: 100% 100%
+    }
+
+    .sel-box .sel-box-content .hotCountryList .item .name {
+        flex: 1;
+        font-size: 14px;
+        font-weight: 400;
+        color: #FFFFFF;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden
+    }
+
+    .sel-box .all_country_drop {
+        display: flex
+    }
+
+    .sel-box .all_country_drop .sel-tit {
+        width: 80px;
+        height: 42px;
+        flex-shrink: 0;
+        font-size: 14px;
+        font-weight: 400;
+        color: #FFFFFF;
+        line-height: 42px
+    }
+
+    .sel-box .all_country_drop .all_country_dro_ul {
+        display: flex;
+        flex-wrap: wrap
+    }
+
+    .sel-box .all_country_drop .all_country_dro_ul .item {
+        width: 160px;
+        height: 42px;
+        background: #5672D1;
+        border-radius: 6px;
+        margin: 0 14px 14px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 8px;
+        cursor: pointer;
+        user-select: none
+    }
+
+    .sel-box .all_country_drop .all_country_dro_ul .item:hover {
+        transform: scale(1.05)
+    }
+
+    .sel-box .all_country_drop .all_country_dro_ul .item:nth-of-type(5n) {
+        margin: 0 0 14px 0
+    }
+
+    .sel-box .all_country_drop .all_country_dro_ul .item:last-child {
+        margin-right: 0
+    }
+
+    .sel-box .all_country_drop .all_country_dro_ul .item .couImg {
+        flex-shrink: 0;
+        width: 40px;
+        height: 26px;
+        margin-right: 16px;
+        background-repeat: no-repeat;
+        background-size: 100% 100%
+    }
+
+    .sel-box .all_country_drop .all_country_dro_ul .item .name {
+        flex: 1;
+        font-size: 14px;
+        font-weight: 400;
+        color: #FFFFFF;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden
+    }
+
+    .sel-box .all_country_drop .all_country_dro_ul .item a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 8px;
+        width: 100%;
+        height: 100%
+    }
+
+    .sel-box .unfoldBox {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: #FFFFFF;
+        margin-top: 30px;
+        cursor: pointer
+    }
+
+    .sel-box .unfoldBox .icon {
+        width: 15px;
+        height: 13px;
+        background: url("/public/images/customer/arrow_down.png") no-repeat center/100%;
+        margin-left: 12px
+    }
+
+    .sel-box .packUpBox {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: #FFFFFF;
+        margin-top: 30px;
+        cursor: pointer
+    }
+
+    .sel-box .packUpBox .icon {
+        width: 15px;
+        height: 13px;
+        background: url("/public/images/customer/arrow_up.png") no-repeat center/100%;
+        margin-left: 12px
+    }
+
+    .sel-box .country_tips {
+        width: 100%;
+        text-align: center;
+        font-size: 16px;
+        color: #EDC88F;
+        margin-top: 20px;
+        display: none
+    }
+
+    /**手机版**/
+    @media (max-width: 992px){
+        .home_box .searchBox {padding-top: 80px;}
+        .home_box .searchBox .title{font-size: 30px;margin-top: 40px;}
+        .home_box .searchBox .subtitle{font-size:17px;}
+        .home_box .searchBox .searchContentBox{width: 100%;padding:0 20px;box-sizing: border-box;}
+        .home_box .searchBox .searchContentBox .input_box{width: 30%;}
+        .home_box .searchBox .searchContentBox .input_box .country_box{width: 100%;padding:0 10px;}
+        .home_box .searchBox .searchContentBox .search_content{width: 100%;}
+        .home_box .searchBox .searchContentBox .search_content .search_icon{margin-left:10px;}
+        .home_box .searchBox .searchContentBox .search_content .search_input{width: 100%;}
+        .home_box .searchBox .searchContentBox .search_content .getReport{width: 90px;font-size: 15px;}
+        .home_box .advantage_box{padding:30px 0;}
+        .home_box .advantage_box .advantage_list {width: 100%;padding:0 10px;}
+        .home_box .advantage_box .advantage_list .advantage_item {width: 25%;height:fit-content;padding:10px;margin-right: 10px;}
+        .home_box .advantage_box .advantage_list .advantage_item:last-child{margin-right:0;}
+        .home_box .advantage_box .advantage_list .advantage_item .advantage_img{width: 60px;height: 60px;}
+        .home_box .advantage_box .advantage_list .advantage_item .advantage_label {font-size: 14px;margin-top: 15px;text-align: center;}
+        .home_box .partner_box{padding:30px 0;}
+        .home_box .partner_box .partner_title{font-size: 20px;}
+        .home_box .partner_box .partner_subtitle{font-size:14px;}
+        .home_box .partner_box .partner_img{width:100%;height:190px;}
+        .home_box .world_box{padding-top: 30px;height:fit-content;}
+        .home_box .world_box .world_title{font-size: 20px;}
+        .home_box .world_box .world_subtitle{font-size:14px;}
+        .home_box .world_box .world_img{width: 100%;margin-top:30px;height:190px;}
+        .home_box .world_box .world_img .info_box{padding:0 10px;height:30px;line-height: 30px;}
+        .home_box .world_box .world_img .info_box .info_num {font-size: 14px;}
+        .home_box .world_box .world_img .info_box span {font-size: 12px;}
+        .home_box .world_box .world_img .america {left: 11%;top: 11%;}
+        .home_box .world_box .world_img .europe {left: 38%;top: 4%;}
+        .home_box .world_box .world_img .africa {left: 44%;top: 42%;}
+        .home_box .world_box .world_img .asia {left: 68%;top: 6%;}
+        .home_box .world_box .world_img .oceania {left: 75%;top: 51%;}
+        .home_box .dimension_box {width: 100%;padding: 30px 20px;}
+        .home_box .dimension_box .dimension_title{font-size:20px;}
+        .home_box .dimension_box .dimension_subtitle {width: 100%;}
+        .home_box .dimension_box .dimension_list {width: 100%;}
+        .home_box .dimension_box .dimension_list .dimension_item {width: 90px;margin-right: 20px;margin-bottom: 20px;}
+        .home_box .dimension_box .dimension_list .dimension_item:nth-of-type(5){margin-right:20px;}
+        .home_box .dimension_box .dimension_list .dimension_item:nth-of-type(9){margin-right:20px;}
+        .home_box .dimension_box .dimension_list .dimension_item:nth-of-type(3n){margin-right:0;}
+        .home_box .dimension_box .dimension_list{margin:30px auto 0;}
+    }
+</style>
+<div id="main">
+    <div class="home_box">
+        <div class="searchBox" style="padding-bottom:30px;">
+            <h1 class="title">查全球</h1>
+            <div class="subtitle">136个国家/区域企业信息&nbsp;&nbsp;&nbsp;&nbsp;了解海外买家更简单</div>
+            <div class="searchContentBox">
+                <div class="input_box">
+                    <input type="text" class="country_box" id="country_box" value="" placeholder="国家名称" autocomplete="off">
+                </div>
+                <div class="search_content">
+                    <div class="search_icon"></div>
+                    <input type="text" placeholder="企业名称或相关HS编码" class="search_input" id="search_input" autocomplete="off">
+                    <button class="getReport buttonStyle2" id="getReport">查企业</button>
+                </div>
+                <div id="country_drop" class="sel-box" style="display: none;">
+                    <div class="sel-common">
+                        <div class="sel-tit">常用国家/地区</div>
+                        <ul id="immediately" class="sel-cont">
+
+                            <li placeholder="捷克文企业名称关键词">
+
+                                <span class="hot_icon"></span>
+
+                                <span class="country_name" countrycode="CZ">捷克</span>
+                            </li>
+
+                            <li placeholder="爱尔兰文/英文企业名称关键词">
+
+                                <span class="hot_icon"></span>
+
+                                <span class="country_name" countrycode="IE">爱尔兰</span>
+                            </li>
+
+                            <li placeholder="希腊文企业名称关键词">
+
+                                <span class="hot_icon"></span>
+
+                                <span class="country_name" countrycode="CY">塞浦路斯</span>
+                            </li>
+
+                            <li placeholder="斯洛伐克文企业名称关键词">
+
+                                <span class="hot_icon"></span>
+
+                                <span class="country_name" countrycode="SK">斯洛伐克</span>
+                            </li>
+
+                        </ul>
+                    </div>
+                    <div class="sel-bottom">小提示：输入国家中文关键字，查到全球更多国家</div>
+                </div>
+                <div class="history_drop" id="history_drop" style="display: none;">
+                    <div class="drop_item recentSearch" style="display: none;">
+                        <div class="item_title">
+                            <div class="title_label">最近搜索</div>
+                            <div class="delete_box" id="recentSearchDelete">
+                                <div class="delete_icon"></div>
+                                <div class="delete_label">清除</div>
+                            </div>
+                        </div>
+                        <div class="search_box" id="search_box"></div>
+                    </div>
+                    <div class="drop_item history_box" style="display: none;">
+                        <div class="item_title">
+                            <div class="title_label">浏览历史</div>
+                            <div class="delete_box" id="historyDelete">
+                                <div class="delete_icon"></div>
+                                <div class="delete_label">清除</div>
+                            </div>
+                        </div>
+                        <div class="history_list" id="history_list"></div>
+                    </div>
+
+                    <div class="login_tips_empty_box" style="display: block;">
+                        <div class="login_tips_empty_img"></div>
+                        <div class="drop_login_botton">马上登录</div>
+                    </div>
+                </div>
+
+                <div class="matchCountryBox" id="matchCountryBox" style="display: none;"><div class="matchCountryItem" placeholder="日/英文企业名称关键词" countrycode="JP" seacouindex="1">日本</div></div>
+            </div>
+            <div class="sel-box all" style="display:none;">
+
+                <div class="type_menu_box">
+                    <div class="type_menu_list">
+                        <div class="type_menu_item type_menu_active">热门国家</div>
+                        <div class="type_menu_item">全部国家/区域</div>
+                        <div class="type_menu_item">RCEP</div>
+                        <div class="type_menu_item">东盟十国</div>
+                        <div class="type_menu_item">金砖国家</div>
+                    </div>
+                </div>
+
+                <div class="all_country_drop" data="热门国家" style="">
+                    <div class="sel-tit">热门国家：</div>
+                    <ul id="immediately" class="all_country_dro_ul">
+                        <li class="item">
+                            <a href="/searchworld/cn" seacouid="CN">
+                                <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/中国.jpg')"></div>
+                                <span class="name">中国</span>
+                            </a>
+                        </li>
+                        <li class="item country_item" seacouid="RU" seacoucn="俄罗斯" seacouindex="1" placeholder="俄/中/英文企业名称或相关HS编码">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/欧洲/俄罗斯.jpg')"></div>
+                            <span class="name">俄罗斯</span>
+                        </li>
+                        <li class="item country_item" seacouid="JP" seacoucn="日本" seacouindex="1" placeholder="日/英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/日本.jpg')"></div>
+                            <span class="name">日本</span>
+                        </li>
+                        <li class="item country_item" seacouid="GB" seacoucn="英国" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/欧洲/英国.jpg')"></div>
+                            <span class="name">英国</span>
+                        </li>
+                        <li class="item country_item" seacouid="IN" seacoucn="印度" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/印度.jpg')"></div>
+                            <span class="name">印度</span>
+                        </li>
+                        <li class="item country_item" seacouid="SG" seacoucn="新加坡" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/新加坡.jpg')"></div>
+                            <span class="name">新加坡</span>
+                        </li>
+                        <li class="item country_item" seacouid="TH" seacoucn="泰国" seacouindex="1" placeholder="泰/英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/泰国.jpg')"></div>
+                            <span class="name">泰国</span>
+                        </li>
+                        <li class="item country_item" seacouid="KR" seacoucn="韩国" seacouindex="1" placeholder="韩文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/韩国.jpg')"></div>
+                            <span class="name">韩国</span>
+                        </li>
+                        <li class="item country_item" seacouid="NZ" seacoucn="新西兰" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/大洋洲/新西兰.jpg')"></div>
+                            <span class="name">新西兰</span>
+                        </li>
+                        <li class="item country_item" seacouid="UZ" seacoucn="乌兹别克斯坦" seacouindex="1" placeholder="俄/英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/乌兹别克斯坦.jpg')"></div>
+                            <span class="name">乌兹别克斯坦</span>
+                        </li>
+                        <li class="item country_item" seacouid="DE" seacoucn="德国" seacouindex="1" placeholder="德文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/欧洲/德国.jpg')"></div>
+                            <span class="name">德国</span>
+                        </li>
+                        <li class="item country_item" seacouid="BR" seacoucn="巴西" seacouindex="1" placeholder="葡萄牙文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/南美洲/巴西.jpg')"></div>
+                            <span class="name">巴西</span>
+                        </li>
+                        <li class="item country_item" seacouid="CA" seacoucn="加拿大" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/北美洲/加拿大.jpg')"></div>
+                            <span class="name">加拿大</span>
+                        </li>
+                        <li class="item country_item" seacouid="CZ" seacoucn="捷克" seacouindex="1" placeholder="捷克文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/欧洲/捷克.jpg')"></div>
+                            <span class="name">捷克</span>
+                        </li>
+                        <li class="item country_item" seacouid="IE" seacoucn="爱尔兰" seacouindex="1" placeholder="爱尔兰文/英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/欧洲/爱尔兰.jpg')"></div>
+                            <span class="name">爱尔兰</span>
+                        </li>
+                        <li class="item country_item" seacouid="CY" seacoucn="塞浦路斯" seacouindex="1" placeholder="希腊文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/欧洲/塞浦路斯.jpg')"></div>
+                            <span class="name">塞浦路斯</span>
+                        </li>
+                        <li class="item country_item" seacouid="SK" seacoucn="斯洛伐克" seacouindex="1" placeholder="斯洛伐克文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/欧洲/斯洛伐克.jpg')"></div>
+                            <span class="name">斯洛伐克</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="all_country_drop" data="RCEP" style="display: none;">
+                    <div class="sel-tit">RCEP：</div>
+                    <ul id="immediately" class="all_country_dro_ul">
+                        <li class="item">
+                            <a href="/searchworld/cn" seacouid="CN">
+                                <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/中国.jpg')"></div>
+                                <span class="name">中国</span>
+                            </a>
+                        </li>
+                        <li class="item country_item" seacouid="JP" seacoucn="日本" seacouindex="1" placeholder="日/英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/日本.jpg')"></div>
+                            <span class="name">日本</span>
+                        </li>
+                        <li class="item country_item" seacouid="KR" seacoucn="韩国" seacouindex="1" placeholder="韩文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/韩国.jpg')"></div>
+                            <span class="name">韩国</span>
+                        </li>
+                        <li class="item country_item" seacouid="AU" seacoucn="澳大利亚" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/大洋洲/澳大利亚.jpg')"></div>
+                            <span class="name">澳大利亚</span>
+                        </li>
+                        <li class="item country_item" seacouid="TH" seacoucn="泰国" seacouindex="1" placeholder="泰/英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/泰国.jpg')"></div>
+                            <span class="name">泰国</span>
+                        </li>
+                        <li class="item country_item" seacouid="PH" seacoucn="菲律宾" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/菲律宾.jpg')"></div>
+                            <span class="name">菲律宾</span>
+                        </li>
+                        <li class="item country_item" seacouid="SG" seacoucn="新加坡" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/新加坡.jpg')"></div>
+                            <span class="name">新加坡</span>
+                        </li>
+                        <li class="item country_item" seacouid="MY" seacoucn="马来西亚" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/马来西亚.jpg')"></div>
+                            <span class="name">马来西亚</span>
+                        </li>
+                        <li class="item country_item" seacouid="VN" seacoucn="越南" seacouindex="1" placeholder="越南文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/越南.jpg')"></div>
+                            <span class="name">越南</span>
+                        </li>
+                        <li class="item country_item" seacouid="NZ" seacoucn="新西兰" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/大洋洲/新西兰.jpg')"></div>
+                            <span class="name">新西兰</span>
+                        </li>
+                        <li class="item country_item" seacouid="KH" seacoucn="柬埔寨" seacouindex="1" placeholder="繁体中文/英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/柬埔寨.jpg')"></div>
+                            <span class="name">柬埔寨</span>
+                        </li>
+                        <li class="item country_item" seacouid="MM" seacoucn="缅甸" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/缅甸.jpg')"></div>
+                            <span class="name">缅甸</span>
+                        </li>
+                        <li class="item country_item" seacouid="LA" seacoucn="老挝" seacouindex="1" placeholder="老挝/英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/老挝.jpg')"></div>
+                            <span class="name">老挝</span>
+                        </li>
+                        <li class="item country_item" seacouid="BN" seacoucn="文莱" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/文莱.jpg')"></div>
+                            <span class="name">文莱</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="all_country_drop" data="东盟十国" style="display: none;">
+                    <div class="sel-tit">东盟十国：</div>
+                    <ul id="immediately" class="all_country_dro_ul">
+                        <li class="item country_item" seacouid="TH" seacoucn="泰国" seacouindex="1" placeholder="泰/英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/泰国.jpg')"></div>
+                            <span class="name">泰国</span>
+                        </li>
+                        <li class="item country_item" seacouid="PH" seacoucn="菲律宾" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/菲律宾.jpg')"></div>
+                            <span class="name">菲律宾</span>
+                        </li>
+                        <li class="item country_item" seacouid="SG" seacoucn="新加坡" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/新加坡.jpg')"></div>
+                            <span class="name">新加坡</span>
+                        </li>
+                        <li class="item country_item" seacouid="MY" seacoucn="马来西亚" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/马来西亚.jpg')"></div>
+                            <span class="name">马来西亚</span>
+                        </li>
+                        <li class="item country_item" seacouid="VN" seacoucn="越南" seacouindex="1" placeholder="越南文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/越南.jpg')"></div>
+                            <span class="name">越南</span>
+                        </li>
+                        <li class="item country_item" seacouid="KH" seacoucn="柬埔寨" seacouindex="1" placeholder="繁体中文/英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/柬埔寨.jpg')"></div>
+                            <span class="name">柬埔寨</span>
+                        </li>
+                        <li class="item country_item" seacouid="MM" seacoucn="缅甸" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/缅甸.jpg')"></div>
+                            <span class="name">缅甸</span>
+                        </li>
+                        <li class="item country_item" seacouid="LA" seacoucn="老挝" seacouindex="1" placeholder="老挝/英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/老挝.jpg')"></div>
+                            <span class="name">老挝</span>
+                        </li>
+                        <li class="item country_item" seacouid="BN" seacoucn="文莱" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/文莱.jpg')"></div>
+                            <span class="name">文莱</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="all_country_drop" data="金砖国家" style="display: none;">
+                    <div class="sel-tit">金砖国家：</div>
+                    <ul id="immediately" class="all_country_dro_ul">
+                        <li class="item country_item" seacouid="BR" seacoucn="巴西" seacouindex="1" placeholder="葡萄牙文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/南美洲/巴西.jpg')"></div>
+                            <span class="name">巴西</span>
+                        </li>
+                        <li class="item country_item" seacouid="RU" seacoucn="俄罗斯" seacouindex="1" placeholder="俄/中/英文企业名称或相关HS编码">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/欧洲/俄罗斯.jpg')"></div>
+                            <span class="name">俄罗斯</span>
+                        </li>
+                        <li class="item country_item" seacouid="IN" seacoucn="印度" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/印度.jpg')"></div>
+                            <span class="name">印度</span>
+                        </li>
+                        <li class="item">
+                            <a href="/searchworld/cn" seacouid="CN">
+                                <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/中国.jpg')"></div>
+                                <span class="name">中国</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="all_country_drop" data="亚洲" style="display: none;">
+                    <div class="sel-tit">亚洲：</div>
+                    <ul id="immediately" class="all_country_dro_ul">
+                        <li class="item">
+                            <a href="/searchworld/cn" seacouid="CN">
+                                <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/中国.jpg')"></div>
+                                <span class="name">中国</span>
+                            </a>
+                        </li>
+                        <li class="item country_item" seacouid="JP" seacoucn="日本" seacouindex="1" placeholder="日/英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/日本.jpg')"></div>
+                            <span class="name">日本</span>
+                        </li>
+                        <li class="item country_item" seacouid="HK" seacoucn="中国香港" seacouindex="1" placeholder="简体/繁体/英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/中国香港.jpg')"></div>
+                            <span class="name">中国香港</span>
+                        </li>
+                        <li class="item country_item" seacouid="QA" seacoucn="卡塔尔" seacouindex="1" placeholder="阿拉伯/英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/卡塔尔.jpg')"></div>
+                            <span class="name">卡塔尔</span>
+                        </li>
+                        <li class="item country_item" seacouid="IN" seacoucn="印度" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/印度.jpg')"></div>
+                            <span class="name">印度</span>
+                        </li>
+                        <li class="item country_item" seacouid="BN" seacoucn="文莱" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/文莱.jpg')"></div>
+                            <span class="name">文莱</span>
+                        </li>
+                        <li class="item country_item" seacouid="PK" seacoucn="巴基斯坦" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/巴基斯坦.jpg')"></div>
+                            <span class="name">巴基斯坦</span>
+                        </li>
+                        <li class="item country_item" seacouid="KH" seacoucn="柬埔寨" seacouindex="1" placeholder="繁体中文/英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/柬埔寨.jpg')"></div>
+                            <span class="name">柬埔寨</span>
+                        </li>
+                        <li class="item country_item" seacouid="SG" seacoucn="新加坡" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/新加坡.jpg')"></div>
+                            <span class="name">新加坡</span>
+                        </li>
+                        <li class="item country_item" seacouid="KG" seacoucn="吉尔吉斯斯坦" seacouindex="1" placeholder="俄文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/吉尔吉斯斯坦.jpg')"></div>
+                            <span class="name">吉尔吉斯斯坦</span>
+                        </li>
+                        <li class="item country_item" seacouid="BD" seacoucn="孟加拉国" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/孟加拉国.jpg')"></div>
+                            <span class="name">孟加拉国</span>
+                        </li>
+                        <li class="item country_item" seacouid="TH" seacoucn="泰国" seacouindex="1" placeholder="泰/英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/泰国.jpg')"></div>
+                            <span class="name">泰国</span>
+                        </li>
+                        <li class="item country_item" seacouid="KR" seacoucn="韩国" seacouindex="1" placeholder="韩文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/韩国.jpg')"></div>
+                            <span class="name">韩国</span>
+                        </li>
+                        <li class="item country_item" seacouid="VN" seacoucn="越南" seacouindex="1" placeholder="越南文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/越南.jpg')"></div>
+                            <span class="name">越南</span>
+                        </li>
+                        <li class="item country_item" seacouid="IL" seacoucn="以色列" seacouindex="1" placeholder="希伯来文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/以色列.jpg')"></div>
+                            <span class="name">以色列</span>
+                        </li>
+                        <li class="item country_item" seacouid="PH" seacoucn="菲律宾" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/菲律宾.jpg')"></div>
+                            <span class="name">菲律宾</span>
+                        </li>
+                        <li class="item country_item" seacouid="MM" seacoucn="缅甸" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/缅甸.jpg')"></div>
+                            <span class="name">缅甸</span>
+                        </li>
+                        <li class="item country_item" seacouid="MY" seacoucn="马来西亚" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/马来西亚.jpg')"></div>
+                            <span class="name">马来西亚</span>
+                        </li>
+                        <li class="item country_item" seacouid="LA" seacoucn="老挝" seacouindex="1" placeholder="老挝/英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/老挝.jpg')"></div>
+                            <span class="name">老挝</span>
+                        </li>
+                        <li class="item country_item" seacouid="ID" seacoucn="印尼" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/印度尼西亚.jpg')"></div>
+                            <span class="name">印尼</span>
+                        </li>
+                        <li class="item country_item" seacouid="UZ" seacoucn="乌兹别克斯坦" seacouindex="1" placeholder="俄/英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/乌兹别克斯坦.jpg')"></div>
+                            <span class="name">乌兹别克斯坦</span>
+                        </li>
+                        <li class="item country_item" seacouid="SA" seacoucn="沙特阿拉伯" seacouindex="1" placeholder="阿拉伯企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/亚洲/沙特阿拉伯.jpg')"></div>
+                            <span class="name">沙特阿拉伯</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="all_country_drop" data="欧洲" style="display: none;">
+                    <div class="sel-tit">欧洲：</div>
+                    <ul id="immediately" class="all_country_dro_ul">
+                        <li class="item country_item" seacouid="RU" seacoucn="俄罗斯" seacouindex="1" placeholder="俄/中/英文企业名称或相关HS编码">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/欧洲/俄罗斯.jpg')"></div>
+                            <span class="name">俄罗斯</span>
+                        </li>
+                        <li class="item country_item" seacouid="GB" seacoucn="英国" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/欧洲/英国.jpg')"></div>
+                            <span class="name">英国</span>
+                        </li>
+                        <li class="item country_item" seacouid="LV" seacoucn="拉脱维亚" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/欧洲/拉脱维亚.jpg')"></div>
+                            <span class="name">拉脱维亚</span>
+                        </li>
+                        <li class="item country_item" seacouid="MT" seacoucn="马耳他" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/欧洲/马耳他.jpg')"></div>
+                            <span class="name">马耳他</span>
+                        </li>
+                        <li class="item country_item" seacouid="FI" seacoucn="芬兰" seacouindex="1" placeholder="芬兰文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/欧洲/芬兰.jpg')"></div>
+                            <span class="name">芬兰</span>
+                        </li>
+                        <li class="item country_item" seacouid="PL" seacoucn="波兰" seacouindex="1" placeholder="波兰文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/欧洲/波兰.jpg')"></div>
+                            <span class="name">波兰</span>
+                        </li>
+                        <li class="item country_item" seacouid="DE" seacoucn="德国" seacouindex="1" placeholder="德文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/欧洲/德国.jpg')"></div>
+                            <span class="name">德国</span>
+                        </li>
+                        <li class="item country_item" seacouid="NO" seacoucn="挪威" seacouindex="1" placeholder="挪威文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/欧洲/挪威.jpg')"></div>
+                            <span class="name">挪威</span>
+                        </li>
+                        <li class="item country_item" seacouid="SE" seacoucn="瑞典" seacouindex="1" placeholder="瑞典文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/欧洲/瑞典.jpg')"></div>
+                            <span class="name">瑞典</span>
+                        </li>
+                        <li class="item country_item" seacouid="CZ" seacoucn="捷克" seacouindex="1" placeholder="捷克文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/欧洲/捷克.jpg')"></div>
+                            <span class="name">捷克</span>
+                        </li>
+                        <li class="item country_item" seacouid="IE" seacoucn="爱尔兰" seacouindex="1" placeholder="爱尔兰文/英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/欧洲/爱尔兰.jpg')"></div>
+                            <span class="name">爱尔兰</span>
+                        </li>
+                        <li class="item country_item" seacouid="CY" seacoucn="塞浦路斯" seacouindex="1" placeholder="希腊文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/欧洲/塞浦路斯.jpg')"></div>
+                            <span class="name">塞浦路斯</span>
+                        </li>
+                        <li class="item country_item" seacouid="SK" seacoucn="斯洛伐克" seacouindex="1" placeholder="斯洛伐克文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/欧洲/斯洛伐克.jpg')"></div>
+                            <span class="name">斯洛伐克</span>
+                        </li>
+                        <li class="item country_item" seacouid="FR" seacoucn="法国" seacouindex="1" placeholder="法/英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/欧洲/法国.jpg')"></div>
+                            <span class="name">法国</span>
+                        </li>
+                        <li class="item country_item" seacouid="BE" seacoucn="比利时" seacouindex="1" placeholder="法/荷兰/德/英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/欧洲/比利时.jpg')"></div>
+                            <span class="name">比利时</span>
+                        </li>
+                        <li class="item country_item" seacouid="CH" seacoucn="瑞士" seacouindex="1" placeholder="德/法/意大利/英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/欧洲/瑞士.jpg')"></div>
+                            <span class="name">瑞士</span>
+                        </li>
+                        <li class="item country_item" seacouid="DK" seacoucn="丹麦" seacouindex="1" placeholder="请输入海外企业的英文名称">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/欧洲/丹麦.jpg')"></div>
+                            <span class="name">丹麦</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="all_country_drop" data="大洋洲" style="display: none;">
+                    <div class="sel-tit">大洋洲：</div>
+                    <ul id="immediately" class="all_country_dro_ul">
+                        <li class="item country_item" seacouid="AU" seacoucn="澳大利亚" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/大洋洲/澳大利亚.jpg')"></div>
+                            <span class="name">澳大利亚</span>
+                        </li>
+                        <li class="item country_item" seacouid="NZ" seacoucn="新西兰" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/大洋洲/新西兰.jpg')"></div>
+                            <span class="name">新西兰</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="all_country_drop" data="南美洲" style="display: none;">
+                    <div class="sel-tit">南美洲：</div>
+                    <ul id="immediately" class="all_country_dro_ul">
+                        <li class="item country_item" seacouid="BR" seacoucn="巴西" seacouindex="1" placeholder="葡萄牙文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/南美洲/巴西.jpg')"></div>
+                            <span class="name">巴西</span>
+                        </li>
+                        <li class="item country_item" seacouid="AR" seacoucn="阿根廷" seacouindex="1" placeholder="西班牙语企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/南美洲/阿根廷.jpg')"></div>
+                            <span class="name">阿根廷</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="all_country_drop" data="北美洲" style="display: none;">
+                    <div class="sel-tit">北美洲：</div>
+                    <ul id="immediately" class="all_country_dro_ul">
+                        <li class="item country_item" seacouid="CA" seacoucn="加拿大" seacouindex="1" placeholder="英文企业名称关键词">
+                            <div class="couImg" style="background-image: url('https://resource.x315.cn/cms/images/ensign/北美洲/加拿大.jpg')"></div>
+                            <span class="name">加拿大</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="country_tips" style="display: none;">更多国家持续上线中</div>
+            </div>
+        </div>
+        <div class="advantage_box">
+            <div class="advantage_list">
+                <div class="advantage_item">
+                    <img src="/img/customers/cq_ys_01.png" alt="" class="advantage_img">
+                    <div class="advantage_label">轻松获取海外客户</div>
+                </div>
+                <div class="advantage_item">
+                    <img src="/img/customers/cq_ys_02.png" alt="" class="advantage_img">
+                    <div class="advantage_label">初步了解买家信息</div>
+                </div>
+                <div class="advantage_item">
+                    <img src="/img/customers/cq_ys_03.png" alt="" class="advantage_img">
+                    <div class="advantage_label">状态变化实时跟进</div>
+                </div>
+                <div class="advantage_item">
+                    <img src="/img/customers/cq_ys_04.png" alt="" class="advantage_img">
+                    <div class="advantage_label">规避跨国交易风险</div>
+                </div>
+            </div>
+        </div>
+        <div class="partner_box">
+            <div class="partner_title">你了解你的国外合作伙伴吗？</div>
+            <div class="partner_subtitle">没见过？无担保？不了解？与国外买家合作怎么验明正身？</div>
+            <div class="partner_img"></div>
+        </div>
+        <div class="world_box">
+            <div class="world_title">查全球，136个国家企业任你查</div>
+            <div class="world_subtitle">快人一步，海外企业在线实时查询</div>
+            <div class="world_img">
+                <div class="info_box america">
+                    <span class="info_num">3</span>
+                    <span class="info_label">个国家</span>
+                </div>
+                <div class="info_box europe">
+                    <span class="info_num">38</span>
+                    <span class="info_label">个国家和地区</span>
+                </div>
+                <div class="info_box africa">
+                    <span class="info_num">56</span>
+                    <span class="info_label">个国家</span>
+                </div>
+                <div class="info_box asia">
+                    <span class="info_num">36</span>
+                    <span class="info_label">个国家和地区</span>
+                </div>
+                <div class="info_box oceania">
+                    <span class="info_num">3</span>
+                    <span class="info_label">个国家</span>
+                </div>
+            </div>
+        </div>
+        <div class="dimension_box">
+            <div class="dimension_title">50+个维度，核验买家身份</div>
+            <div class="dimension_subtitle">查全球，能够从50+个维度，展示企业信息，助力外贸人核验国外买家身份，其中包括企业名称、注册资本、成立日期、企业状态、企业官网、企业电话、传真、主要人员、抵押登记等模块，许多网上难以获取的数据，我们都一一攻克。（不同国家企业数据维度有所差异）</div>
+            <div class="dimension_list">
+                <div class="dimension_item">
+                    <img src="/img/customers/cq_icon_01.png" alt="" class="dimension_img">
+                    <div class="dimension_label">企业名称</div>
+                </div>
+                <div class="dimension_item">
+                    <img src="/img/customers/cq_icon_02.png" alt="" class="dimension_img">
+                    <div class="dimension_label">注册资本</div>
+                </div>
+                <div class="dimension_item">
+                    <img src="/img/customers/cq_icon_03.png" alt="" class="dimension_img">
+                    <div class="dimension_label">成立日期</div>
+                </div>
+                <div class="dimension_item">
+                    <img src="/img/customers/cq_icon_04.png" alt="" class="dimension_img">
+                    <div class="dimension_label">企业状态</div>
+                </div>
+                <div class="dimension_item">
+                    <img src="/img/customers/cq_icon_05.png" alt="" class="dimension_img">
+                    <div class="dimension_label">企业官网</div>
+                </div>
+                <div class="dimension_item">
+                    <img src="/img/customers/cq_icon_06.png" alt="" class="dimension_img">
+                    <div class="dimension_label">企业电话</div>
+                </div>
+                <div class="dimension_item">
+                    <img src="/img/customers/cq_icon_07.png" alt="" class="dimension_img">
+                    <div class="dimension_label">传真</div>
+                </div>
+                <div class="dimension_item">
+                    <img src="/img/customers/cq_icon_08.png" alt="" class="dimension_img">
+                    <div class="dimension_label">主要人员</div>
+                </div>
+                <div class="dimension_item">
+                    <img src="/img/customers/cq_icon_09.png" alt="" class="dimension_img">
+                    <div class="dimension_label">抵押登记</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{include file="common/footer"}
+<script>
+    $(function(){
+        $('.type_menu_list .type_menu_item').click(function(){
+            $(this).addClass('type_menu_active');
+            $(this).siblings().removeClass('type_menu_active');
+            let idx = $(this).index();
+            $('.sel-box').find('.all_country_drop').hide();
+            $('.sel-box').find('.all_country_drop').eq(idx).show();
+        });
+    });
+
+    layui.use(['layer','form','laydate','upload'],function() {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , laydate = layui.laydate
+            , upload = layui.upload;
+
+        $('#getReport').click(function(){
+            $.ajax({
+                url:"/?s=index/background_searchworld",
+                method:'post',
+                data:{},
+                dataType:'JSON',
+                success:function(res){
+                    if(res.code == 0)
+                    {
+                        if(res.jump_gld==0) {
+                            layer.confirm('是否同意授权跳转到第三方网站[格兰德]？', {
+                                btn: ['同意', '拒绝']
+                            }, function () {
+                                $.ajax({
+                                    url: "/?s=index/goto_gld",
+                                    method: 'post',
+                                    data: {'is_jump': 1, 'firsttimes': 1, 'type': 12},
+                                    dataType: 'JSON',
+                                    success: function (res) {
+                                        if (res.code == 0) {
+                                            window.location.href = res.url;
+                                        }
+                                    }
+                                });
+                            }, function () {
+
+                            });
+                        }else {
+                            $.ajax({
+                                url: "/?s=index/goto_gld",
+                                method: 'post',
+                                data: {'is_jump': 1, 'firsttimes': 0, 'type': 12},
+                                dataType: 'JSON',
+                                success: function (res) {
+                                    if (res.code == 0) {
+                                        window.location.href = res.url;
+                                    }
+                                }
+                            });
+                        }
+                    }else if(res.code == -1){
+                        layer.msg(res.msg,{time:2000}, function () {
+                            layer.open({
+                                type: 2,
+                                title: '请先登录',
+                                shadeClose: true,
+                                shade: 0.3,
+                                area: ['100%', '100%'],
+                                content: "/?s=index/customer_login&open=3",
+                            });
+                        });
+                    }else if(res.code==-2){
+
+                    }
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+        });
+    });
+</script>

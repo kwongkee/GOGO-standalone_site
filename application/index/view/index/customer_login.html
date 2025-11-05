@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登入/注册</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="css/chosen.css?v=1.2"/>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style>
+        body{background:#000;}
+        .disf{display:flex;}
+        .form-control {display: block;width: 100%;height: 34px;padding: 0px 10px;box-sizing:border-box;font-size: 14px;line-height: 1.428571429;color: #555;background-color: #fff;background-image: none;border: 1px solid #000;border-radius: 0px;-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);-webkit-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;}
+        #translate select{width:100px;}
+
+        #content{transform: translate(0, 5%);}
+        #content .container{width: 100%;max-width: 400px;padding: 20px;margin: 0 auto;border-radius: 5px;background-color: #fff;box-shadow: 0 0 16px rgba(0,0,0,.04);box-shadow: unset;}
+        #content .container .logo{width: 140px;}
+        #content .container .title{font-size: 30px;padding-left: 10px;margin: 30px 0;}
+        .content{padding:20px 20px;box-sizing:border-box;}
+        .content .col-md-12{padding:0;float:unset;}
+        .content .box_content{justify-content:center;border-radius:8px;margin-bottom:30px;}
+        .content .box_content{border:1px solid ;font-size:25px;text-align:center;padding:30px;width:100%;}
+        .content .box_content img{width:40px;margin-right:5px;}
+
+        .content .title{font-size:26px;color:#fff;font-weight:800;text-align:center;line-height:normal !important;}
+        .content .control-group{margin-top:10px;}
+        .content .control-group .label_title{width:80px;color:#fff;font-weight:800;font-size:15px;text-align:right;margin-right:10px;}
+        .content .control-group #reg_method{width:110px;}
+        .content .control-group .phone,.content .control-group .email{width:82.5%;}
+        .content .control-group .controls .form-control{width:100%;font-size:15px;}
+        .content .control-group .controls .btn-send{padding:7px 0px;width:25%;background:#1E9FFF;color:#000;border:1px solid #000;}
+        .content form{text-align:center;}
+
+        #content .container .loginBox{width:400px;text-align: center;margin:0 auto;}
+        #content .container .loginBox .methodDiv{margin-bottom:10px;justify-content: right;}
+        #content .container .loginBox .methodDiv .methodBox{margin-right:10px;padding-right:10px;position:relative;color:#000;font-size: 16px;cursor:pointer;border-right:2px solid #000;}
+        #content .container .loginBox .methodDiv .methodAct{font-weight:600;}
+        /*#content .container .loginBox .methodDiv .methodAct:after{position:absolute;content:'';left:0;bottom:-10px;width: 100%;height:3px;background:#f1be83;}*/
+        #content .container .loginBox .methodDiv .methodBox:last-child{margin-right:0;padding-right:0;border:0;}
+        #content .container .loginBox .methodContent .numberDiv{padding-bottom: 5px;border-bottom: 0px solid #fff;}
+        #content .container .loginBox .methodContent .phone_login .form-control{width:80%;}
+        #content .container .loginBox .methodContent .phone_login .selectBox{width:25%;}
+        #content .container .loginBox .methodContent .phone_login .selectBox *{font-family: Courier !important;font-weight: 800;}
+        #content .container .loginBox .methodContent .phone_login .selectBox .chosen-container{width:100%;text-align: left;background: unset !important;}
+        #content .container .loginBox .methodContent .phone_login .selectBox .chosen-container-single .chosen-single{background: unset !important;box-shadow: unset;border: 1px solid #000;border-radius: 0;position: relative;padding-left:0;height: 34px;line-height: 34px;}
+        #content .container .loginBox .methodContent .phone_login .selectBox .chosen-container-active.chosen-with-drop .chosen-single{background: unset !important;color: #000 !important;font-size: 15px !important;border: 1px solid #000;outline: unset !important;box-shadow: unset !important;}
+        #content .container .loginBox .methodContent .phone_login .selectBox .chosen-container-single .chosen-single span{background: unset !important;color: #000 !important;font-size: 15px;border: 0 !important;outline: unset !important;box-shadow: unset !important;position:relative;font-weight: 800;}
+        #content .container .loginBox .methodContent .phone_login .selectBox .chosen-container-single .chosen-single:after{position: absolute;content: '';top: 8px;right: 7px;width: 8px;height: 8px;border: 2px solid #000;border-left: 0;border-bottom: 0;transform: rotate(135deg);}
+        #content .container .loginBox .methodContent .phone_login .selectBox .chosen-container-single .chosen-single div{display:none;}
+        #content .container .loginBox .methodContent .phone_login .selectBox .chosen-results li{padding:5px 0 !important;}
+        #content .container .loginBox .methodContent .phone_login .country_code{background:unset;width:100%;border:0;color:#fff;border-right:1px solid #fff;}
+        #content .container .loginBox .methodContent .phone_login #country_code option:not(:checked) {color: #000;}
+        #content .container .loginBox .methodContent .phone_login #country_code option:not(:checked) span{display: block;}
+        #content .container .loginBox .methodContent .phone_login #country_code option:checked{color:#000;}
+        /*#content .container .loginBox .methodContent .numberDiv .form-control,.loginBox .methodContent .codeDiv .form-control{background: unset;border: 0;color: #fff;}*/
+        /*#content .container .loginBox .methodContent .numberDiv .form-control::placeholder,.loginBox .methodContent .codeDiv .form-control::placeholder {color: #fff;}*/
+        #content .container .loginBox .methodContent .phone_login{display:none;}
+        #content .container .loginBox .methodContent .codeDiv{margin-top:20px;padding-bottom:5px;border-bottom: 1px solid #fff;}
+        #content .container .loginBox .methodContent .codeDiv .sendcode{padding:7px 0px;color:#fff;background:#000;width:30%;white-space: nowrap;padding-right:0;cursor:pointer;}
+        #content .container .loginBox .btn-submit{width:100%;margin-top:20px;padding:7px 0;color: #fff;background: #000;cursor:pointer;font-size:15px;}
+        #content .container .loginBox .other_method_title{margin-top:20px;position: relative;color:#000;font-size:15px;}
+        #content .container .loginBox .other_method_title:before{position: absolute;content:'';width: 25%;top: 10px;left: 0;height: 1px;background: #000;}
+        #content .container .loginBox .other_method_title:after{position: absolute;content:'';width: 25%;top: 10px;right: 0;height: 1px;background: #000;}
+        #content .container .loginBox .other_method_loginBox{margin:25px 0 0;}
+        #content .container .loginBox .other_method_loginBox .loginImg{width:35px;margin-bottom:5px;display: inline-block;cursor:pointer;}
+        #content .container .loginBox .other_method_loginBox p{font-size:13px;color:{$website['color_word']};}
+        #content .container .loginBox .other_method_loginBox .disf div{margin-right:0px;}
+        #content .container .loginBox .other_method_loginBox .disf div:last-child{margin-right:0px;}
+        #content .container .loginBox input{appearance:none !important;background:unset !important;}
+
+        /*下拉框*/
+        .dropdown{position: relative;width: 100%;margin-bottom:25px;}
+        .dropdown .dropbtn{position:relative;background-color: #fff;color: #000;padding: 5px 10px;font-size: 16px;border: 1px solid #000;cursor: pointer;width: 60%;box-sizing: border-box;min-height:42px;max-height:42px;line-height: 32px;text-align: left;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;}
+        .dropdown .dropbtn:after{position: absolute;content: '';top: 13px;right: 15px;width: 8px;height: 8px;border: 2px solid #000;border-left: 0;border-bottom: 0;transform: rotate(135deg);}
+        .dropdown .dropbtn img{width:25px;display: inline-block;}
+        .dropdown .dropbtn span{font-size:15px;margin-left:5px;display: inline-block;}
+        .dropdown .dropdown-content {display: none;position: absolute;top:45px;background-color: #f9f9f9;min-width: 160px;box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);z-index: 1;width: 100%;height: 185px;overflow-y: scroll;}
+        .dropdown .dropdown-content a {color: black;padding: 12px 16px;text-decoration: none;display: flex;align-items: center;}
+        .dropdown .dropdown-content a:hover {background-color: #f1f1f1}
+        .dropdown .dropdown-content img {margin-right: 10px;width: 30px;height: 30px;}
+        #content .container .loginBox .btn-submit2 {width: 100%;margin-top: 25px;padding: 7px 0;color: #fff;background: #000;cursor:pointer;font-size:15px;}
+
+        /*客服*/
+        #content .container .customerBox{width: 100%;display: flex;align-items: center;justify-content: right;cursor:pointer;}
+        #content .container .customerBox .customerDiv{width: 40px;text-align: center;}
+        #content .container .customerBox img{width: 30px;}
+
+        /*登录说明*/
+        #content .container .introduceBox{margin-top:5px;height:180px;width: 100%;margin-bottom: 20px;overflow-y: auto;text-align: center;}
+
+        /*版权*/
+        .copyright{}
+        .copyright,.copyright a,.copyright span,.copyright p{color:#000 !important;}
+
+        /*微信公众号扫码pc*/
+        @media screen and (min-width: 769px) {
+            #wxapplogin{display:none;}
+            #wxqrlogin{display:block;}
+        }
+        /*微信公众号扫码h5*/
+        @media screen and (max-width: 768px) {
+            #wxapplogin{display:block;}
+            #wxqrlogin{display:none;}
+            .loginBox{width:100%;}
+        }
+
+        .phone{display:none;}
+        @media (max-width:992px){
+            #content{margin-top:0px;transform: translate(0, 2%);margin-bottom:40px;}
+            #content .container{width:80%;}
+            #content .container .loginBox{width:100%;}
+            .content .control-group .phone,.content .control-group .email{width:53%;}
+            .dropdown .dropbtn:after{right: 9px;background:#fff;}
+            .dropdown .dropbtn img {width: 20px;}
+            .dropdown .dropbtn span{margin-left:0;}
+        }
+    </style>
+</head>
+<script src="https://static.elfsight.com/platform/platform.js" async></script> <div class="elfsight-app-e7ce9f60-c939-41c2-9ef0-a655047a2e07" data-elfsight-app-lazy></div>
+<script type="text/javascript" charset="utf-8">
+    var head= document.getElementsByTagName('head')[0]; var script= document.createElement('script'); script.type= 'text/javascript'; script.src= '//www.gogo198.net/js/res.zvo.cn_translate_inspector_v2.js?v=12<?php echo time();?>'; head.appendChild(script);
+</script>
+<body>
+    <section id="content" class="non_topimg" >
+        <div class="container">
+            <div class="disf" style="align-items: center;justify-content: space-between;">
+                <img src="https://shop.gogo198.cn/collect_website/public/uploads/centralize/website_index/64a5282e9bdbf.png" class="logo">
+                <div id="translate" class="web_translate"></div>
+            </div>
+            <p class="title">登入/注册</p>
+            <div class="loginBox">
+                <div class="methodDiv disf">
+                    <div class="methodBox methodAct" onclick="change_method(1,this)">邮箱登录</div>
+<!--                    <div class="methodBox" onclick="change_method(2,this)">手机登录</div>-->
+                    <div class="methodBox" onclick="change_method(3,this)">小程序登录</div>
+                </div>
+                <form name="sentMessage" id="loginForm2" novalidate>
+                    <div class="methodContent ">
+                        <input type="hidden" name="reg_method" id="reg_method" value="2">
+                        <div class="numberDiv email_login">
+                            <input type="text" class="form-control" placeholder="请输入您的电子邮箱" id="email" name="email" value="{$email}"/>
+                        </div>
+<!--                        <div class="numberDiv phone_login">-->
+<!--                            <div class="disf">-->
+<!--                                <div class="selectBox">-->
+<!--                                    <select name="country_code" id="country_code" class="country_code">-->
+<!--                                        {volist name="country_code" id="vo"}-->
+<!--                                        <option value="{$vo.id}" {if $vo.id==162}selected{/if}>{$vo.param6} {$vo.param8}</option>-->
+<!--                                        {/volist}-->
+<!--                                    </select>-->
+<!--                                </div>-->
+
+<!--                                <input type="text" class="form-control" placeholder="请输入您的手机号码" id="phone" name="phone"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                        <div class="codeDiv disf">
+                            <input type="text" class="form-control" placeholder="请输入6位验证码" id="code" name="code" value="{$code}"/>
+                            <div class="sendcode" onclick="send_code()" id="sendCode">获取验证码</div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn pull-center btn-submit">登录/注册</button><br />
+                </form>
+                <div class="other_method_title">或通过以下帐户登入/注册</div>
+                <div class="other_method_loginBox">
+                    <div class="dropdown disf">
+                        <div class="dropdown-input dropbtn">
+                            {volist name="autologin_apps2" key="key" id="vo"}
+                                {if $key==1}
+                                    <a href="javascript:void(0);" class="option" data-id="{$vo['id']}">
+                                        <img src="{$vo['pic']}" alt="{$vo['name']}">
+                                        <span>{$vo['name']}</span>
+                                    </a>
+                                {/if}
+                            {/volist}
+                        </div>
+                        <div class="dropdown-content">
+                            {volist name="autologin_apps2" id="vo"}
+                            <a href="javascript:select_apps(this,{$vo['id']},'{$vo['pic']}','{$vo['name']}');" class="option" data-id="{$vo['id']}">
+                                <img src="{$vo['pic']}" alt="{$vo['name']}">
+                                <span>{$vo['name']}</span>
+                            </a>
+                            {/volist}
+                        </div>
+                        <input type="text" class="form-control" placeholder="输入已选平台的帐户" id="account" name="account" value="" style="height:42px;">
+                    </div>
+
+
+                    <div class="btn pull-center btn-submit2">前往授权</div><br />
+
+<!--                    <fb:login-button-->
+<!--                            scope="public_profile,email"-->
+<!--                            onlogin="checkLoginState();">-->
+<!--                        facebook-->
+<!--                    </fb:login-button>-->
+                </div>
+            </div>
+            <div class="customerBox">
+                <div class="customerDiv" onclick="show_customer()">
+                    <img src="/img/kefu_black.png" alt="">
+                    <p>客服</p>
+                </div>
+            </div>
+            <div class="introduceBox">
+                {if !empty($login_content['content'])}
+                    {$login_content['content']|htmlspecialchars_decode|stripslashes}
+                {/if}
+            </div>
+            <div class="copyright">{$website['copyright']}</div>
+        </div>
+    </section>
+</body>
+<script src="layui/layui.js"></script>
+<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+<script src="js/jquery.chosen.js?v=1.3"></script>
+<script src="https://cdn.auth0.com/js/auth0/9.15.0/auth0.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+    //facebook===============================start
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId: '27960646786913399',
+            cookie: true,
+            xfbml: true,
+            version: 'v21.0'
+        });
+        FB.AppEvents.logPageView();
+
+        FB.getLoginStatus(function(response) {
+            statusChangeCallback(response);
+        });
+    };
+
+    (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    function checkLoginState() {
+        FB.getLoginStatus(function(response) {
+            statusChangeCallback(response);
+        });
+    }
+
+    function statusChangeCallback(res){
+        console.log(res,123);
+        $.ajax({
+            url: "//www.gogo198.net/?s=api/facebook_callback",
+            method: 'post',
+            data: {'data':res},
+            dataType: 'JSON',
+            success: function (res) {
+
+            }
+        });
+    }
+    //facebook===============================end
+
+    // 初始化Auth0客户端
+    var webAuth = new auth0.WebAuth({
+        domain: 'gogo198.us.auth0.com',
+        clientID: '3LuZWceTu0CTzV5z4VBXfDWMaEE3yIVF',
+        redirectUri: 'https://www.gogo198.net/?s=api/authorization_callback', // 目标回调URL
+        // audience: 'https://gogo198.us.auth0.com/authorize',
+        responseType: 'code',
+        scope: 'openid profile email'
+    });
+    layui.use(['layer','form','laydate','upload'],function() {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , laydate = layui.laydate
+            , upload = layui.upload;
+
+        //授权应用======================================start
+        $(".dropbtn").click(function() {
+            $(".dropdown-content").toggle();
+        });
+
+        $(document).click(function(event) {
+            if (!$(event.target).closest(".dropdown").length) {
+                $(".dropdown-content").hide();
+            }
+        });
+        //授权应用======================================end
+
+        {if(!empty($email) && !empty($code))}
+            //自动登录
+            setTimeout(function(){
+                $('.btn-submit').click();
+            },1000);
+        {/if}
+
+        {if !empty(session('account'))}
+            window.location.href="/";
+        {/if}
+
+        //手机区号=====================================start
+        $('.country_code').chosen();
+
+        $('.country_code').on('change', function(e, params) {
+            $.getJSON("?s=gather/getminiprogramcode", {pa:4,id:params.selected}, function(data) {
+                $('.loginBox .methodContent .phone_login .selectBox .chosen-container-single .chosen-single span').text(data.data);
+            });
+        });
+        //手机区号=====================================end
+    });
+
+    //选择社交平台
+    function select_apps(t,id,pic,name){
+        var $ = layui.$
+            , layer = layui.layer;
+        let html = '<a href="javascript:void(0);" class="option" data-id="'+id+'">\n' +
+            '          <img src="'+pic+'" alt="'+name+'">\n' +
+            '          <span>'+name+'</span>\n' +
+            '       </a>';
+        $('.dropdown .dropbtn').html(html);
+        $('.dropdown .dropdown-content').hide();
+    }
+
+    $(function(){
+        $('#reg_method').change(function(){
+            let val = $(this).val();
+            if(val==1){
+                $('.email').hide();
+                $('.phone').show();
+            }else if(val==2){
+                $('.email').show();
+                $('.phone').hide();
+            }
+        });
+
+        //表单授权
+        $('#loginForm2').submit(function(){
+            // let json = $('#regForm').serialize();
+
+            let number = '';
+            let country_code = 0;
+            if($('#reg_method').val()==1){
+                number = $('#phone').val();
+                if(number==''){
+                    alert('请输入您的手机号码');return false;
+                }
+                country_code = $('#country_code').val();
+            }else if($('#reg_method').val()==2){
+                number = $('#email').val();
+                if(number==''){
+                    alert('请输入您的邮箱地址');return false;
+                }
+            }
+
+            if($('#code').val()==''){
+                alert('请输入验证码');return false;
+            }
+
+
+            $.ajax({
+                url: "?s=index/customer_login",
+                method: 'post',
+                data: {'reg_method':$('#reg_method').val(),'number':number,'country_code':country_code,'code':$('#code').val(),'inquiry_id':"{$inquiry_id}",'company_id':"{$company_id}",'company_type':"{$company_type}"},
+                dataType: 'JSON',
+                success: function (res) {
+                    if(res.code==-1){
+                        alert(res.msg);
+                        return false;
+                    }else{
+                        alert(res.msg);
+                        if({$open}==1){
+                            parent.location.href="/?s=index/thanks";
+                        }else if({$open}==2){
+                            window.location.href="http://chat.gogo198.net/?s=index/chat&refresh=1&uid="+res.uid;
+                        }else if({$open}==3){
+                            var layer = layui.layer;
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index);
+                        }else if({$open}==4){
+                            if("{$param2}"!=''){
+                                window.location.href="{$param2}&company_id={$company_id}&company_type={$company_type}";
+                            }else{
+                                window.history.back(-1);
+                            }
+                        }else if({$open}==5){
+                            window.location.href="/?s=index/save_template&buss_pid={$param[0]}&buss_id={$param[1]}&ordersn={$param[2]}";
+                        }else{
+                            if("{$company_id}">0){
+                              window.location.href = "/?s=index/merch_website_index&company_id={$company_id}&company_type={$company_type}"
+                            } else {
+                                window.location.href = "/";
+                            }
+                        }
+                    }
+                },
+                error: function (data) {
+
+                }
+            });
+
+            return false;
+        });
+
+        //前往授权
+        $('.btn-submit2').click(function(){
+            layer.load();
+            let app_id = $('.dropdown .dropbtn .option').attr('data-id');
+            let account = $('input[name="account"]').val();
+
+            if(account==''){
+                alert('请输入你要授权的平台帐户');
+                layer.closeAll('loading');
+                return false;
+            }
+
+            $.ajax({
+                url: "?s=index/login_log",
+                method: 'post',
+                data: {
+                    'app_id': app_id,
+                    'account': account,
+                },
+                dataType: 'JSON',
+                success: function (res) {
+                    if(res.insertId>0){
+                        //跳转到auth0
+                        // window.location.href='//www.gogo198.net/?s=api/goto_login&id='+res.insertId;
+
+                        webAuth.authorize({connection: res.app.auth});
+
+                        layer.closeAll();
+                    }
+                }
+            });
+        });
+    });
+
+    function change_method(typ,t){
+        if(typ==1){
+            $('.email_login,.codeDiv').show();
+            $('.phone_login').hide();
+            $('#code').val("");
+            $('#reg_method').val(2);
+        }
+        else if(typ==2){
+            $('.email_login').hide();
+            $('.phone_login,.codeDiv').show();
+            $('#code').val("");
+            $('#reg_method').val(1);
+        }
+        else if(typ==3){
+            layer.load();
+            $('.email_login,.phone_login,.codeDiv').hide();
+            $('#code').val("");
+            $('#reg_method').val(3);
+
+            $.getJSON("?s=gather/getminiprogramcode", {pa:1}, function(data) {
+                layer.closeAll('loading');
+                layer.open({
+                    type: 1,
+                    title: '微信小程序登录：',
+                    shadeClose: true,
+                    shade: 0.3,
+                    area: ['300px', '300px'],
+                    content: '<div style="padding:20px;text-align: center;"><img src="'+data.img+'" style="width:180px;"><p style="margin-top:15px;font-size: 15px;color:#000;text-align: center;">请打开手机扫描</p></div>',
+                });
+                //开始每5秒查询
+                setInterval(function(){
+                    $.getJSON("?s=gather/getminiprogramcode", {pa:2,auth_id:data.auth_id}, function(data2) {
+                        if(data2.code==1){
+                            //授权成功
+                            // alert(data2.msg);
+                            if("{$open}"==1){
+                                window.location.href="/?s=gather/service_center";
+                            }else if("{$open}"==3){
+                                var layer = layui.layer;
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(index);
+                            }else if("{$open}"==4){
+                                if("{$param2}"!=''){
+                                    window.location.href="{$param2}";
+                                }else{
+                                    window.history.back(-1);
+                                }
+                            }else if("{$open}"==5){
+                                window.location.href="/?s=index/save_template&buss_pid={$param[0]}&buss_id={$param[1]}&ordersn={$param[2]}";
+                            }else{
+                                //会员中心
+                                // $('.auto_link').attr('href',"https://boss.gogo198.cn/?s=index/member_login&uid="+data2.base64_uid);
+                                // setTimeout(function(){
+                                //     $('.auto_link').click();
+                                // },800);
+
+                                window.location.href="/";
+                            }
+                        }else if(data2.code==-1){
+                            //拒绝授权
+                            // alert(data2.msg);
+                            window.location.reload();
+                        }else if(data2.code==0){
+                            //继续每5秒查询你
+                        }
+                    });
+                },5000);
+            });
+        }
+        $(t).addClass('methodAct');
+        $(t).siblings().removeClass('methodAct');
+    }
+
+    //倒计时
+    var n=60;
+    function timers(){
+        n-=1;
+        if(n==0){
+            n=60;
+            $("#sendCode").html("获取验证码");
+        }else{
+            $("#sendCode").html(n+" 秒后可重试");
+            setTimeout(function () {
+                timers();
+            },1000);
+        }
+    }
+
+    function send_code(){
+        let val = $('#reg_method').val();
+        let number = '';
+        let country_code = 0;
+        if(val==1){
+            number = $('input[name="phone"]').val();
+            if(number==''){
+                alert('手机格式错误');return false;
+            }
+            country_code = $('#country_code').val();
+        }else if(val==2){
+            number = $('input[name="email"]').val();
+            var myreg=/^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/; //邮箱正则
+            if (!myreg.test(number)){
+                alert('邮箱格式错误');return false;
+            }
+        }
+        if(n==60){
+            timers();
+            $.ajax({
+                url: "?s=index/send_code",
+                method: 'post',
+                data: {'code_type':val,'number':number,'country_code':country_code,'islogin':1,'open':"{$open}",'param2':"<?php echo base64_encode($param2);?>"},
+                dataType: 'JSON',
+                success: function (res) {
+                    if(res.code==-1){
+                        alert(res.msg);
+                        return false;
+                    }else{
+
+                    }
+                },
+                error: function (data) {
+
+                }
+            });
+        }
+    }
+
+    //显示客服
+    function show_customer(){
+        var $ = layui.$
+            , layer = layui.layer;
+
+        let html = '<iframe src="//boss.gogo198.cn/?s=customer/customer_online&pa=2&who_send=2&id=0&pid=0&isframe=1&uid=G00014" frameborder="0" style="width:100%;height:100%;"></iframe>';
+        layer.open({
+            type: 1,
+            title: '联系客服：',
+            shadeClose: true,
+            shade: 0.3,
+            area: ['350px', '375px'],
+            content: html,
+        });
+    }
+</script>
+</html>

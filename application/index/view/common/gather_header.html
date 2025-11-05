@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <style>
+        .header {width: 100%;background-color: #fff;position: -webkit-sticky;position: sticky;top: 0;z-index: 999;transition: .5s;box-shadow: 0 0 10px rgba(0,0,0,.1);}
+        .header .nav {display: flex;justify-content: space-between;align-items: center;}
+        .container-xl {width: 80%;max-width: 1200px;margin-right: auto;margin-left: auto;}
+        .header .nav .nav-left, .header .nav .nav-left .logo {display: flex;align-items: center;}
+        .header .nav .nav-left .logo img {width: 120px;height: 48px;}
+        .header .nav .nav-bar {display: flex;flex-wrap: wrap;align-items: center;padding: 0;}
+        .header .nav .nav-bar .nav-item {cursor: pointer;position: relative;padding: 0 30px;display: inline-block;line-height: 80px;}
+        li, ul {padding: 0;margin: 0;list-style: none;}
+        .nav-is-select:after {position: absolute;width: 70%;height: 3px;bottom: 2px;left: 50%;transform: translateX(-50%);content: "";background-color: #ffd400;}
+    </style>
+    <link rel="stylesheet" href="/css/gather_header.css?v=231">
+    <link rel="stylesheet" href="/css/gather_aside.css">
+</head>
+<body>
+<div class="header" id="header">
+    <div class="container-xl nav">
+        <div class="nav-left">
+            <a href="/?s=gather" class="logo"><img src="https://shop.gogo198.cn/collect_website/public/uploads/centralize/website_index/64a5282e9bdbf.png" alt=""></a>
+        </div>
+        <ul class="nav-bar">
+            <li class="nav-item"><a href="/?s=gather" class="nav-select-item">首页</a></li>
+            <li class="nav-item nav-is-select "><a href="/?s=gather/freight_estimation" class="nav-select-item">运费估算</a></li>
+            <li class="nav-item"><a href="/?s=gather/package_forecast" class="nav-select-item">我要集运</a></li>
+            <li class="nav-item"><a href="/?s=gather/service_center" class="nav-select-item">服务中心</a></li>
+<!--            <li class="nav-item "><a href="/?s=gather/tracking" class="nav-select-item">物流跟踪</a></li>-->
+<!--            <li class="nav-item "><a href="/?s=gather/appraise" class="nav-select-item">用户评价</a></li>-->
+            <li class="nav-item"><a href="/?s=gather/article">服务介绍</a></li>
+<!--            <li class="nav-item "><a href="/?s=gather/about" class="nav-select-item">关于平台</a></li>-->
+            <li class="nav-item"><!----><a href="/?s=gather/login">{if empty(session('account.id'))}登录 | 注册{else}<?php echo session('account.custom_id');?>{/if}</a></li>
+        </ul>
+        <div class="nav-mobile"><div class="menu"><span></span> <span></span> <span></span></div></div>
+    </div>
+</div>
+<div id="aside" class="aside closed" style="display: none;">
+    <a><div class="el-icon-close close">X</div></a>
+    <div class="aside-nav">
+        <div class="nav-list">
+            <li class="item">
+                <a href="/?s=gather">首页</a>
+            </li>
+            <li class="item is-select">
+                <a href="/?s=gather/freight_estimation" class="nav-select-item">运费估算</a>
+            </li>
+            <li class="item">
+                <a href="/?s=gather/package_forecast" class="nav-select-item">我要集运</a>
+            </li>
+            <li class="item">
+                <a href="/?s=gather/service_center" class="nav-select-item">服务中心</a>
+            </li>
+<!--            <li class="item">-->
+<!--                <a href="/?s=gather/tracking" class="nav-select-item">物流跟踪</a>-->
+<!--            </li>-->
+<!--            <li class="item">-->
+<!--                <a href="/?s=gather/appraise" class="nav-select-item">用户评价</a>-->
+<!--            </li>-->
+            <li class="item">
+                <a href="/?s=gather/article">服务介绍</a>
+            </li>
+<!--            <li class="item">-->
+<!--                <a href="/?s=gather/about" class="nav-select-item">关于我们</a>-->
+<!--            </li>-->
+<!--            <button type="button" class="el-button member-center  el-button&#45;&#45;default"><span>会员中心</span></button>-->
+        </div>
+    </div>
+</div>
