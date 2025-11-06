@@ -267,6 +267,7 @@ class Merch
             }
         }
 
+        dd(1);
         $data['websites'] = $this->websites;
 //        dd($data['websites']['rotate_info']['content'][1]);
         $data['source_link'] = '//dtc.gogo198.net';
