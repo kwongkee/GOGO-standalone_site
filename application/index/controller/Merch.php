@@ -179,26 +179,28 @@ class Merch
 
                 #商家上架信息==start
                 $shelf_info = Db::connect($this->config)->name('goods_shelf')->whereRaw('cid='.$company_id.' and type=1 and guide_id='.$v['id'].' and keywords <> ""')->select();
-                foreach($shelf_info as $k2=>$v2) {
-                    $arr1 = explode('、', $v2['keywords']);
-                    $arr2 = explode('、', $v['gkeywords']);
+                if(!empty($shelf_info)){
+                    foreach($shelf_info as $k2=>$v2) {
+                        $arr1 = explode('、', $v2['keywords']);
+                        $arr2 = explode('、', $v['gkeywords']);
 
-                    $intersection = array_intersect($arr1, $arr2);
+                        $intersection = array_intersect($arr1, $arr2);
 
-                    if (!empty($intersection)) {
-                        #有当前导流关键字的商品
-                        $goods = Db::connect($this->config)->name('goods')->where(['goods_id'=>$v2['gid'],'goods_status'=>1])->find();
+                        if (!empty($intersection)) {
+                            #有当前导流关键字的商品
+                            $goods = Db::connect($this->config)->name('goods')->where(['goods_id'=>$v2['gid'],'goods_status'=>1])->find();
 
-                        if(!empty($goods)) {
-                            $keywords_content = [
-                                'name' => $goods['goods_name'],
-                                'back_type' => 2,
-                                'back_content' => str_replace('//dtc.gogo198.net', '', $goods['goods_image']),
-                                'back_content2' => str_replace('//dtc.gogo198.net', '', $goods['goods_image']),
-                                'go_other' => 2,
-                                'other_goods' => $goods['goods_id'],
-                            ];
-                            $this->websites['guide'][$k]['children'] = array_merge($this->websites['guide'][$k]['children'], [$keywords_content]);
+                            if(!empty($goods)) {
+                                $keywords_content = [
+                                    'name' => $goods['goods_name'],
+                                    'back_type' => 2,
+                                    'back_content' => str_replace('//dtc.gogo198.net', '', $goods['goods_image']),
+                                    'back_content2' => str_replace('//dtc.gogo198.net', '', $goods['goods_image']),
+                                    'go_other' => 2,
+                                    'other_goods' => $goods['goods_id'],
+                                ];
+                                $this->websites['guide'][$k]['children'] = array_merge($this->websites['guide'][$k]['children'], [$keywords_content]);
+                            }
                         }
                     }
                 }
@@ -210,6 +212,7 @@ class Merch
                         $this->websites['guide'][$k]['children'][$k2]['info'] = Db::connect($this->config)->name('goods')->where(['goods_id'=>$v2['other_goods'],'goods_status'=>1])->find();
 
                         $sku_prices = Db::connect($this->config)->name('goods_sku')->where(['sku_id'=>$this->websites['guide'][$k]['children'][$k2]['info']['sku_id']])->find()['sku_prices'];
+                        $sku_prices = json_decode($sku_prices,true);
 
                         if($this->websites['guide'][$k]['children'][$k2]['info']['goods_price']==0){
                             $this->websites['guide'][$k]['children'][$k2]['info']['goods_price'] = number_format(end($sku_prices['price']),2);
