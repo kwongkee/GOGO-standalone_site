@@ -2,7 +2,7 @@ window._bd_share_main ? window._bd_share_is_recently_loaded = !0 : (window._bd_s
     version: "2.0",
     jscfg: {
         domain: {
-            staticUrl: "/"
+            staticUrl: "/js/"
         }
     }
 }),
