@@ -96,12 +96,12 @@
             </div>
             <div class="disf col-md-9 col-sm-9 foot-menu" style="justify-content: space-between;align-items:baseline;">
                 {if !empty($data['websites']['footer_menu'])}
-                {volist name="data['websites']['footer_menu']" key="k" id="v"}
+                {foreach name="data['websites']['footer_menu']" key="k" id="v"}
                 <div class="col-md-4 col-sm-4">
                     <div class="widget">
                         <h4 class="widgetheading f18" style="margin-bottom:5px;text-align:center;">{$v['name']}</h4>
                         <ul class="link-list" style="text-align:center;">
-                            {volist name="v['children']" key="k2" id="v2"}
+                            {foreach name="v['children']" key="k2" id="v2"}
                             {if $v2['type']==0}
                             <!--下级卡片-->
                             <li><a href="javascript:void(0);" class="f18">&nbsp;&nbsp;{$v2['name']}</a></li>
@@ -121,11 +121,11 @@
                             <li><a href="/?s=merch/detail&id={$v2['other_navbar']}&is_footer=1&company_id={$company_id}&company_type={$company_type}" class="f18" target="_blank">&nbsp;&nbsp;{$v2['name']}</a></li>
                             {/if}
                             {/if}
-                            {/volist}
+                            {/foreach}
                         </ul>
                     </div>
                 </div>
-                {/volist}
+                {/foreach}
                 {/if}
             </div>
         </div>
@@ -141,13 +141,13 @@
                         <div class="box" style="">
                             <ul class="social-network" style="overflow-x:unset;position:absolute;">
                                 {if !empty($data['websites']['website_contact'])}
-                                {volist name="data['websites']['website_contact']" key="key" id="vo"}
+                                {foreach name="data['websites']['website_contact']" key="key" id="vo"}
                                 {if $vo['type']==1}
                                 <li style="margin-left:0;"><a href="{$vo['link']}" data-placement="top" title="{$vo['name']}" target="_blank"><img src="{$data['source_link']}{$vo['ico']}" alt="" style="width:18px;margin-bottom: 3px;"/></a></li>
                                 {else}
                                 <li style="margin-left:0;"><a href="/?s=merch/social_detail&id={$vo['id']}&company_id={$company_id}&company_type={$company_type}" data-placement="top" title="{$vo['name']}"><img src="{$data['source_link']}{$vo['ico']}" alt="" style="width:18px;margin-bottom: 3px;"/></a></li>
                                 {/if}
-                                {/volist}
+                                {/foreach}
                                 {/if}
                             </ul>
                         </div>
@@ -162,9 +162,9 @@
                         </div>
                         <p style="text-align:center;" class="f16">
                             {if !empty($data['websites']['website_qualification'])}
-                            {volist name="data['websites']['website_qualification']" key="k" id="v"}
+                            {foreach name="data['websites']['website_qualification']" key="k" id="v"}
                             {if $k!=0} <span>|</span> {/if} &nbsp;<a href="/?s=merch/qualific&id={$v['id']}&company_id={$company_id}&company_type={$company_type}" class="f16" target="_blank">{$v['name']}</a>&nbsp;
-                            {/volist}
+                            {/foreach}
                             {/if}
                         </p>
                     </div>
@@ -174,9 +174,9 @@
                 <div class="col-lg-12">
                     <div style="text-align:center;">
                         {if !empty($data['websites']['info']['publicity_info'])}
-                        {volist name="data['websites']['info']['publicity_info']" key="k" id="v"}
+                        {foreach name="data['websites']['info']['publicity_info']" key="k" id="v"}
                         {if $k!=0} <span>|</span> {/if} &nbsp;<a href="{$v['link']}" class="f16" target="_blank">{$v['name']}</a>&nbsp;
-                        {/volist}
+                        {/foreach}
                         {/if}
                         <br>
                         {$data['websites']['info']['copyright']}
@@ -332,7 +332,7 @@
         });
     }
 
-    {volist name="data['websites']['rotate_info']['content_id']" key="k" id="v"}
+    {foreach name="data['websites']['rotate_info']['content_id']" key="k" id="v"}
     {if $v==1}
     <!--新闻内容-->
     //新闻轮播
@@ -441,7 +441,7 @@
         });
     }
     {/if}
-    {/volist}
+    {/foreach}
     {/if}
     {/if}
 
@@ -497,7 +497,7 @@
     //推荐区B
     {if isset($data['websites']['recommendB'])}
     {if !empty($data['websites']['recommendB'])}
-    {volist name="data['websites']['recommendB']" key="k2" id="v2"}
+    {foreach name="data['websites']['recommendB']" key="k2" id="v2"}
     new Swiper ('.news{$k2}', {
         direction:'vertical',
         loop: true, // 循环模式选项
@@ -509,7 +509,7 @@
         centeredSlides: true,
         spaceBetween: 0,
     });
-    {/volist}
+    {/foreach}
 
     //切换新闻/疾病
     function change_news(type,keys,t){
@@ -538,7 +538,7 @@
     //导流区
     {if isset($data['websites']['guide'])}
     {if !empty($data['websites']['guide'])}
-    {volist name="data['websites']['guide']" key="k" id="v"}
+    {foreach name="data['websites']['guide']" key="k" id="v"}
     {if $v['format_info']['id']==1}
     <!--店铺展示版式-->
     if(IsPhone()){
@@ -648,7 +648,7 @@
                 $('.industryDiv').find('.rightBox').find('.serviceContent').find('.guide_content_pc').css('display','none');
                 $('.industryDiv').find('.rightBox').find('.serviceContent').find('.guide_content_pc').eq(aidx).css('display','block');
                 // console.log(aidx,$('.industryDiv').find('.serviceContent').find('.swiper-container').eq(aidx).css('display'));
-                {volist name="v['big_children']" key="k2" id="v2"}
+                {foreach name="v['big_children']" key="k2" id="v2"}
                 if ({$k2}==aidx){
                     new Swiper('.guide_content{$v2['id']}', {
                         direction: 'horizontal',
@@ -666,13 +666,13 @@
                         },
                     });
                 }
-                {/volist}
+                {/foreach}
             }
         }
     });
 
     //产业集聚-小卡片
-    {volist name="v['big_children']" key="k2" id="v2"}
+    {foreach name="v['big_children']" key="k2" id="v2"}
     var guide_content{$v2['id']} = new Swiper ('.guide_content{$v2['id']}', {
         direction:'horizontal',
         loop: false,
@@ -688,10 +688,10 @@
             prevEl: ".sp-industry{$v2['id']}",
         },
     });
-    {/volist}
+    {/foreach}
 
     //手机版循环滚动小卡片
-    {volist name="v['big_children']"  key="k2" id="v2"}
+    {foreach name="v['big_children']"  key="k2" id="v2"}
     new Swiper ('.cont6_children_content{$v2['id']}', {
         direction:'horizontal',
         loop: true,
@@ -704,9 +704,9 @@
         centeredSlides: true,
         speed:500,
     });
-    {/volist}
+    {/foreach}
     {/if}
-    {/volist}
+    {/foreach}
     {/if}
     {/if}
 
