@@ -147,7 +147,7 @@
 
         table.render({
             elem: '#mainTable'
-            ,url: "/?s=index/shop_guide_content_list&pa=1&company_id={$company_id}&company_type={$company_type}"
+            ,url: "/?s=index/shop_guide_content_list&pa=1&company_id={$company_id}&company_type={$company_type}&guide_id={$guide_id}&top_id={$top_id}"
             ,cellMinWidth: 200
             ,cols: [[
                 {field:'id', width:80, title: '编号'}
@@ -226,7 +226,7 @@
             var modal = document.getElementById('saveRotateModal');
             modal.style.display = 'flex';
 
-            $('#saveRotateModal .rotate_iframe').attr('src','/?s=index/save_shop_guide_content&company_id={$company_id}&company_type={$company_type}&id='+id);
+            $('#saveRotateModal .rotate_iframe').attr('src','/?s=index/save_shop_guide_content&company_id={$company_id}&company_type={$company_type}&guide_id={$guide_id}&top_id={$top_id}&id='+id);
         }
     }
 
