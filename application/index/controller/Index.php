@@ -2231,7 +2231,7 @@ class Index
             }
 
             #模块版式
-            $type['format'] = Db::connect($this->config)->name('merchsite_guide_format')->select();
+            $type['format'] = Db::connect($this->config)->name('merchsite_guide_format')->where(['isshow'=>0])->select();
 
             return view('index/shop_backend/save_shop_guide',compact('company_type','company_id','data','id','type'));
         }
