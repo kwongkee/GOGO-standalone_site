@@ -87,7 +87,7 @@ class Merch
 
     public function list() {
         $keyword = input('get.keyword');
-        $where = ['name|description' => ['like', "%{$keyword}%"]]; // 修复：多字段安全搜索
+        $where = ['name|description' => ['like', "%{$keyword}%"]]; // 修复：多字段安全搜索123
         $products = Db::name('product')->where($where)->select();
         return json($products);
     }
