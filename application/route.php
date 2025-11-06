@@ -62,7 +62,7 @@ Route::any('index/shop_guide_content_list', 'index/Index/shop_guide_content_list
 Route::any('index/save_shop_guide_content', 'index/Index/save_shop_guide_content');#企业网店-模块内容管理
 Route::any('index/del_shop_guide_content', 'index/Index/del_shop_guide_content');#企业网店-模块内容管理
 Route::any('index/shop_guide_content_list2', 'index/Index/shop_guide_content_list2');#企业网店-模块内容管理2
-Route::any('index/shop_shop_guide_content2', 'index/Index/save_shop_guide_content2');#企业网店-模块内容管理2
+Route::any('index/save_shop_guide_content2', 'index/Index/save_shop_guide_content2');#企业网店-模块内容管理2
 Route::any('index/del_shop_guide_content2', 'index/Index/del_shop_guide_content2');#企业网店-模块内容管理2
 Route::any('index/shop_recommend', 'index/Index/shop_recommend');#企业网店-首页推荐管理
 Route::any('index/save_shop_recommend', 'index/Index/save_shop_recommend');#企业网店-保存首页推荐
