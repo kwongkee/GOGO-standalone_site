@@ -46,7 +46,7 @@ class Merch
         #获取商户的企业配置的基本信息
         $this->websites['cid'] = $cid;
         $domain = $_SERVER['HTTP_HOST'];
-        $this->websites['domain'] = 'https://'.$domain.'/?cid='.$cid;
+        $this->websites['domain'] = 'https://'.$domain;
         $this->websites['rand'] = rand(11111,99999);
         $this->websites['info'] = Db::name('website_basic')->where(['company_id'=>$cid,'company_type'=>$company_type])->find();
 

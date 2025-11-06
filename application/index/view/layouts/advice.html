@@ -75,7 +75,7 @@
 
             $.ajax({
                 url: "/?s=merch/advice",
-                data: {'name': name,'email':email,'content':content,'mobile':mobile,'code_origin':code_origin,'code_input':code_input},
+                data: {'name': name,'email':email,'content':content,'mobile':mobile,'code_origin':code_origin,'code_input':code_input,'company_id':"{$company_id}",'company_type':"{$company_type}"},
                 type: 'post',
                 cache: false,
                 dataType: 'json',
