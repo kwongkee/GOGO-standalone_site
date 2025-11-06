@@ -204,6 +204,12 @@ Route::any('merch/detail', 'index/Merch/detail'); // 菜单详情
 Route::any('merch/goods_list', 'index/Merch/goods_list'); // 商品结果页
 Route::any('merch/taozg', 'index/Merch/taozg'); // 淘中国
 Route::any('merch/advice', 'index/Merch/advice'); // 建议
+Route::any('merch/social_detail', 'index/Merch/social_detail'); // 社媒
+Route::any('merch/qualific', 'index/Merch/qualific'); // 资质
+Route::any('merch/rule_list', 'index/Merch/rule_list'); // 规则列表
+Route::any('merch/version_list', 'index/Merch/version_list'); // 版本列表
+Route::any('merch/rule_detail', 'index/Merch/rule_detail'); // 规则详情
+Route::any('merch/getFrame', 'index/Merch/getFrame'); // 规则详情
 
 //**商家商城界面**====END
 

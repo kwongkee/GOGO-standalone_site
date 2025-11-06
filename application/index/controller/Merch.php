@@ -87,7 +87,7 @@ class Merch
 
     public function list() {
         $keyword = input('get.keyword');
-        $where = ['name|description' => ['like', "%{$keyword}%"]]; // 修复：多字段安全搜索12345646
+        $where = ['name|description' => ['like', "%{$keyword}%"]]; // 修复：多字段安全搜索
         $products = Db::name('product')->where($where)->select();
         return json($products);
     }
@@ -277,7 +277,6 @@ class Merch
 
     #税率页
     public function rate_detail(Request $request){
-
         $dat = input();
         $id = isset($dat['id'])?intval($dat['id']):0;
         $isframe = isset($dat['isframe'])?intval($dat['isframe']):0;
@@ -926,4 +925,398 @@ class Merch
         }
     }
 
+    #我要咨询
+    public function advice(Request $request){
+        $dat = $request->except(['_token']);
+
+        if($dat['code_origin'] != trim($dat['code_input'])){
+            return json(['code'=>-1,'msg'=>'验证码不正确']);
+        }
+
+        if(empty($dat['name']) || empty($dat['email']) || empty($dat['mobile']) || empty($dat['content'])){
+            return json(['code'=>-1,'msg'=>'请输入信息']);
+        }
+
+        if(!preg_match("/^1[34578]\d{9}$/", trim($dat['mobile']))){
+            return json(['code'=>-1,'msg'=>'请输入正确的手机号码']);
+        }
+
+        if(!preg_match('/([\w\-]+\@[\w\-]+\.[\w\-]+)/',trim($dat['email']))){
+            return json(['code'=>-1,'msg'=>'请输入正确的邮箱号码']);
+        }
+
+        $res = Db::name('website_message')->insert([
+            'name'=>trim($dat['name']),
+            'email'=>trim($dat['email']),
+            'tel'=>trim($dat['mobile']),
+            'remark'=>$dat['content'],
+            'createtime'=>time(),
+        ]);
+        if($res){
+            return json(['code'=>0,'msg'=>'提交成功！']);
+        }else{
+            return json(['code'=>-1,'msg'=>'提交失败！']);
+        }
+    }
+
+    #关注我们详情
+    public function social_detail(Request $request){
+        $dat = input();
+        $id = isset($dat['id'])?intval($dat['id']):0;
+        $isframe = isset($dat['isframe'])?intval($dat['isframe']):0;
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);
+
+        $origin_page = '/?s=merch/social_detail?id='.$id.'&company_id='.$company_id.'&company_type='.$company_type;
+
+        if($request->isAjax()){
+
+        }else{
+            #获取配置信息
+            $data = ['websites'=>$this->websites,'source_link'=>$this->source_link];
+
+            $info = Db::name('website_contact')->where(['company_id'=>$this->websites['cid'],'id'=>$id])->find();
+
+            return view('index/shop_frontend/social_detail',compact('data','id','info','isframe','origin_page','company_id','company_type'));
+        }
+    }
+
+    #资质详情
+    public function qualific(Request $request){
+        $dat = input();
+        $id = isset($dat['id'])?intval($dat['id']):0;
+        $isframe = isset($dat['isframe'])?intval($dat['isframe']):0;
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);
+        $origin_page = '/?s=merch/qualific?id='.$id.'&company_id='.$company_id.'&company_type='.$company_type;
+
+        if($request->isAjax()){
+
+        }else{
+            #获取配置信息
+            $data = ['websites'=>$this->websites,'source_link'=>$this->source_link];
+
+            $info = Db::name('merchsite_qualification')->where(['company_id'=>$this->websites['cid'],'id'=>$id])->find();
+
+            return view('index/shop_frontend/qualific',compact('data','id','info','isframe','origin_page','company_id','company_type'));
+        }
+    }
+
+    #平台规则列表
+    public function rule_list(Request $request){
+        $dat = input();
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);
+
+        if($request->isAjax()){
+            $limit = $dat['limit'];
+            $page = $dat['page'] - 1;
+
+            if ($page != 0) {
+                $page = $limit * $page;
+            }
+            $count = Db::name('website_platform_keywords')->order('id desc')->count();
+            $rows = DB::name('website_platform_keywords as a')
+                ->join('website_platform_type as b','b.id','=','a.type_id')
+                ->limit($page.','.$limit)
+                ->order('id desc')
+                ->field(['a.*','b.name as type_name'])
+                ->select();
+
+            foreach($rows as $k=>$v){
+                $rows[$k]['name'] = $v['type_name'].'['.$v['name'].']';
+            }
+            return json(['code'=>0,'count'=>$count,'data'=>$rows]);
+        }else{
+            $list = Db::name('website_platform_type')->select();
+
+            foreach($list as $k=>$v){
+                $list[$k]['children'] = Db::name('website_platform_keywords')->where(['type_id'=>$v['id']])->select();
+
+                foreach($list[$k]['children'] as $k2=>$v2){
+                    $list[$k]['children'][$k2]['children'] = Db::name('website_platform_rule')->where(['type_id'=>$v['id'],'key_id'=>$v2['id'],'pid'=>0])->select();
+                }
+            }
+
+            $origin_page = '/?s=merch/rule_list'.'&company_id='.$company_id.'&company_type='.$company_type;;
+
+            #获取配置信息
+            $data['websites'] = $this->websites;
+            $data['source_link'] = $this->source_link;
+
+            return view('index/shop_frontend/rule_list',compact('data','list','page_info','origin_page','company_id','company_type'));
+        }
+    }
+
+    #规则版本列表
+    public function version_list(Request $request){
+        $dat = input();
+        $pid = isset($dat['pid'])?intval($dat['pid']):0;
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);
+
+        if(isset($dat['pa'])){
+            $limit = $dat['limit'];
+            $page = $dat['page'] - 1;
+
+            if ($page != 0) {
+                $page = $limit * $page;
+            }
+            $count = Db::name('website_platform_rule')->whereRaw('(pid='.$pid.' and status=0) or id='.$pid)->count();
+            $rows = DB::name('website_platform_rule')
+                ->whereRaw('(pid='.$pid.' and status=0) or id='.$pid)
+                ->limit($page,$limit)
+                ->order('createtime desc')
+                ->select();
+
+            foreach($rows as $k=>$v){
+                $rows[$k]['createtime'] = date('Y-m-d H:i',$v['createtime']);
+            }
+            return json(['code'=>0,'count'=>$count,'data'=>$rows]);
+        }else{
+            $history = Db::name('website_platform_rule')->where(['id'=>$pid])->find();
+
+            #获取配置信息
+            $data['websites'] = $this->websites;
+            $data['source_link'] = $this->source_link;
+
+            $origin_page = '/?s=merch/version_list?pid='.$pid.'&company_id='.$company_id.'&company_type='.$company_type;;
+
+            return view('index/shop_frontend/version_list',compact('data','pid','page_info','history','origin_page','company_id','company_type'));
+        }
+    }
+
+    #平台规则详情
+    public function rule_detail(Request $request){
+        $dat = input();
+        $foid = isset($dat['foid'])?intval($dat['foid']):0;
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);
+
+        if($request->isAjax()){
+            $data = Db::name('website_platform_rule')->where(['id'=>$dat['id']])->find();
+
+            $data['content'] = json_decode($data['content'],true);
+            $content = [];
+            $first = [];
+            $second = [];
+            foreach($data['content'] as $k=>$v){
+                if($v['pnum']==$dat['parag_num']){
+                    array_push($first,[
+                        'title'=>$v['title'],
+                        'parag_num'=>$v['parag_num'],
+                        'pnum'=>$v['pnum'],
+                        'content'=>$v['content'],
+                        'children'=>[],
+                    ]);
+                }else{
+                    array_push($second,[
+                        'title'=>$v['title'],
+                        'parag_num'=>$v['parag_num'],
+                        'pnum'=>$v['pnum'],
+                        'content'=>$v['content'],
+                        'children'=>[],
+                    ]);
+                }
+            }
+
+            #最多嵌套3层
+            foreach($first as $k=>$v){
+                foreach($second as $k2=>$v2){
+                    if($v['parag_num']==$v2['pnum']){
+                        #1.1.
+                        array_push($first[$k]['children'],$v2);
+                    }else{
+                        foreach($first[$k]['children'] as $k3=>$v3){
+                            if($v3['parag_num']==$v2['pnum']){
+                                #1.1.1.
+                                array_push($first[$k]['children'][$k3]['children'],[
+                                    'title'=>$v2['title'],
+                                    'parag_num'=>$v2['parag_num'],
+                                    'pnum'=>$v2['pnum'],
+                                    'content'=>$v2['content'],
+                                    'children'=>[],
+                                ]);
+                            }
+                        }
+                    }
+                }
+            }
+            $content = $first;
+            return json(['code'=>0,'data'=>$content]);
+        }else{
+            #获取配置信息
+            $data['websites'] = $this->websites;
+            $data['source_link'] = $this->source_link;
+
+            #规则内容
+            $rule = Db::name('website_platform_rule')->where(['id'=>$dat['id']])->find();
+
+            #分享
+            $rule['url'] = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER["REQUEST_URI"];
+            $rule['desc'] = $rule['version'];
+            $rule['name'] = $rule['rule_name'];
+            $rule['url_this'] = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER["REQUEST_URI"];
+            $signPackage = weixin_share($rule);
+
+            #序言
+            if($rule['is_preamble']==1){
+                $rule['preamble_con'] = json_decode($rule['preamble_con'],true);
+            }
+            $rule['content'] = json_decode($rule['content'],true);
+            #整理树形结构代码
+            if($rule['type']==1){
+                $first = [];
+                $second = [];
+                foreach($rule['content'] as $k=>$v){
+                    if($v['pnum']==0){
+                        array_push($first,[
+                            'title'=>$v['title'],
+                            'parag_num'=>$v['parag_num'],
+                            'pnum'=>$v['pnum'],
+                            'content'=>$v['content'],
+                            'children'=>[],
+                        ]);
+                    }else{
+                        array_push($second,[
+                            'title'=>$v['title'],
+                            'parag_num'=>$v['parag_num'],
+                            'pnum'=>$v['pnum'],
+                            'content'=>$v['content'],
+                            'children'=>[],
+                        ]);
+                    }
+                }
+
+                #最多嵌套3层
+                foreach($first as $k=>$v){
+                    foreach($second as $k2=>$v2){
+                        if($v['parag_num']==$v2['pnum']){
+                            #1.1.
+                            array_push($first[$k]['children'],$v2);
+                        }else{
+                            foreach($first[$k]['children'] as $k3=>$v3){
+                                if($v3['parag_num']==$v2['pnum']){
+                                    #1.1.1.
+                                    array_push($first[$k]['children'][$k3]['children'],[
+                                        'title'=>$v2['title'],
+                                        'parag_num'=>$v2['parag_num'],
+                                        'pnum'=>$v2['pnum'],
+                                        'content'=>$v2['content'],
+                                        'children'=>[],
+                                    ]);
+                                }
+                            }
+                        }
+                    }
+                }
+                $rule['content2'] = $first;
+            }
+
+            $origin_page = '/?s=merch/rule_detail&id='.$dat['id'].'&foid='.$foid.'&company_id='.$company_id.'&company_type='.$company_type;
+
+            #是否有配置跳转其他应用
+            $footerInfo = Db::connect($this->config)->name('footer_body')->where(['id'=>$foid])->find();
+
+            if(isset($footerInfo['have_link'])){
+                $footerInfo['link'] = $this->getAppLink(2,['other_navbar'=>$footerInfo['content_id'],'company_id'=>$company_id,'company_type'=>$company_type]);
+            }
+
+            return view('index/shop_frontend/rule_detail',compact('rule','data','signPackage','page_info','footerInfo','origin_page','company_id','company_type'));
+        }
+    }
+
+    #获取弹框内容
+    public function getFrame(Request $request){
+        $data = input();
+        $id = intval($data['id']);
+        $type = intval($data['type']);
+        $company_id = intval($data['company_id']);
+        $company_type = intval($data['company_type']);
+
+        if($type==0){
+            $list = Db::connect($this->config)->name('frame_body')->where(['pid'=>$id])->select();
+
+            return json(['code'=>0,'list'=>$list]);
+        }
+        elseif($type==99){
+            #提示框图片
+            $adv = Db::connect($this->config)->name('frame_adv')->where(['id'=>$id])->find();
+
+            return json(['code'=>0,'adv'=>$adv]);
+        }
+        else{
+            $list = Db::connect($this->config)->name('frame_body')->where(['type'=>$type,'pid'=>0,'id'=>$id])->order('displayorder asc')->select();
+
+            foreach($list as $k=>$v){
+                if($v['id']==$id){
+                    $list[$k]['children'] = Db::connect($this->config)->name('frame_body')->where(['pid'=>$id])->select();
+
+                    foreach($list[$k]['children'] as $k2=>$v2){
+                        $list[$k]['children'][$k2]['link'] = $this->getAppLink(2,['other_navbar'=>$v2['app_id'],'company_id'=>$company_id,'company_type'=>$company_type]);
+                        if(strpos($list[$k]['children'][$k2]['link'],'?') !== false){
+                            $list[$k]['children'][$k2]['link'] .= '&isframe=1';
+                        }else{
+                            $list[$k]['children'][$k2]['link'] .= '?isframe=1';
+                        }
+                    }
+                }
+
+                if($v['id']==11){
+                    #社交平台（获取后台配置的社交平台数据）
+                    $list[$k]['children'] = Db::name('website_contact')->where(['system_id'=>3])->select();
+
+                    foreach($list[$k]['children'] as $k2=>$v2){
+                        if($v2['type']==2){
+                            $list[$k]['children'][$k2]['link'] = '/?s=merch/social_detail&id='.$v2['id'].'&isframe=1&company_id='.$company_id.'&company_type='.$company_type;
+                        }
+                    }
+                }
+
+                if($v['id']==21) {
+                    #搜索中心（获取后台配置的搜索管理数据）
+                    $list[$k]['children'] = Db::connect($this->config)->name('search_list')->select();
+
+                    foreach($list[$k]['children'] as $k2=>$v2){
+                        $list[$k]['children'][$k2]['link'] = '/?s=merch/search_list&id='.$v2['id'].'&isframe=1&company_id='.$company_id.'&company_type='.$company_type;
+                    }
+                }
+            }
+            $adv = Db::connect($this->config)->name('frame_adv')->where(['type'=>$type])->find();
+
+            return json(['code'=>0,'list'=>$list,'adv'=>$adv]);
+        }
+    }
+
+    public function getAppLink($go=0,$data=[],$type=''){
+        if($go==1){
+            #第三方链接
+            if(isset($data['other_link'])){
+                return $data['other_link'];
+            }
+            elseif(isset($data['origin_link'])){
+                return $data['origin_link'];
+            }
+            else{
+                return $data['link'];
+            }
+        }elseif($go==2){
+            #菜单（应用）链接
+            $link = Db::connect($this->config)->name('guide_frame')->where(['id'=>$data['other_navbar']])->find();
+
+            return $link['link'];
+        }elseif($go==3){
+            #图文链接
+            return '/?s=merch/txt_detail&id='.$data['other_pic'].'&type='.$type.'&oid='.$data['id'].'&company_id='.$data['company_id'].'&company_type='.$data['company_type'];
+        }elseif($go==4){
+            #消息链接
+            return '/?s=merch/msg_detail&id='.$data['other_msg'].'&type='.$type.'&oid='.$data['id'].'&company_id='.$data['company_id'].'&company_type='.$data['company_type'];
+        }elseif($go==5){
+            #店铺链接
+            return '/?s=merch/shop_detail&id='.isset($data['other_shop'])??$data['other_shop'];
+        }elseif($go==6){
+            #政策链接
+            return '/?s=merch/policy_detail&id='.$data['other_privacy'].'&type='.$type.'&oid='.$data['id'].'&company_id='.$data['company_id'].'&company_type='.$data['company_type'];
+        }
+    }
 }

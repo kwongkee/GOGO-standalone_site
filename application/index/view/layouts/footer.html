@@ -107,7 +107,7 @@
                             <li><a href="javascript:void(0);" class="f18">&nbsp;&nbsp;{$v2['name']}</a></li>
                             {elseif($v2['type']==1)}
                             <!--详情内容-->
-                            <li><a href="/?s=index/detail&id={$v2['id']}&is_footer=1" class="f18" target="_blank">&nbsp;&nbsp;{$v2['name']}</a></li>
+                            <li><a href="/?s=merch/detail&id={$v2['id']}&is_footer=1&company_id={$company_id}&company_type={$company_type}" class="f18" target="_blank">&nbsp;&nbsp;{$v2['name']}</a></li>
                             {elseif($v2['type']==2)}
                             <!--跳转其它-->
                             {if $v2['go_other']==0}
@@ -118,7 +118,7 @@
                             <li><a href="{$v2['other_link']}" class="f18" target="_blank">&nbsp;&nbsp;{$v2['name']}</a></li>
                             {elseif($v2['go_other']==2)}
                             <!--跳转其它菜单-->
-                            <li><a href="/?s=index/detail&id={$v2['other_navbar']}&is_footer=1" class="f18" target="_blank">&nbsp;&nbsp;{$v2['name']}</a></li>
+                            <li><a href="/?s=merch/detail&id={$v2['other_navbar']}&is_footer=1&company_id={$company_id}&company_type={$company_type}" class="f18" target="_blank">&nbsp;&nbsp;{$v2['name']}</a></li>
                             {/if}
                             {/if}
                             {/volist}
@@ -145,7 +145,7 @@
                                 {if $vo['type']==1}
                                 <li style="margin-left:0;"><a href="{$vo['link']}" data-placement="top" title="{$vo['name']}" target="_blank"><img src="{$data['source_link']}{$vo['ico']}" alt="" style="width:18px;margin-bottom: 3px;"/></a></li>
                                 {else}
-                                <li style="margin-left:0;"><a href="/?s=index/social_detail&id={$vo['id']}" data-placement="top" title="{$vo['name']}"><img src="{$data['source_link']}{$vo['ico']}" alt="" style="width:18px;margin-bottom: 3px;"/></a></li>
+                                <li style="margin-left:0;"><a href="/?s=merch/social_detail&id={$vo['id']}&company_id={$company_id}&company_type={$company_type}" data-placement="top" title="{$vo['name']}"><img src="{$data['source_link']}{$vo['ico']}" alt="" style="width:18px;margin-bottom: 3px;"/></a></li>
                                 {/if}
                                 {/volist}
                                 {/if}
@@ -163,7 +163,7 @@
                         <p style="text-align:center;" class="f16">
                             {if !empty($data['websites']['website_qualification'])}
                             {volist name="data['websites']['website_qualification']" key="k" id="v"}
-                            {if $k!=0} <span>|</span> {/if} &nbsp;<a href="/?s=index/qualific&id={$v['id']}" class="f16" target="_blank">{$v['name']}</a>&nbsp;
+                            {if $k!=0} <span>|</span> {/if} &nbsp;<a href="/?s=merch/qualific&id={$v['id']}&company_id={$company_id}&company_type={$company_type}" class="f16" target="_blank">{$v['name']}</a>&nbsp;
                             {/volist}
                             {/if}
                         </p>
