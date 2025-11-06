@@ -2369,6 +2369,115 @@ class Index
         }
     }
 
+    #杂志模式-内容管理
+    public function shop_guide_content_list2(Request $request){
+        $dat = input();
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);#0商城，1官网
+        $pid = isset($dat['pid'])?intval($dat['pid']):0;
+        $guide_id = isset($dat['guide_id'])?intval($dat['guide_id']):0;
+        $top_id = isset($dat['top_id'])?intval($dat['top_id']):0;
+
+        if(isset($dat['pa'])){
+            $limit = $request->get('limit');
+            $page = $request->get('page') - 1;
+            if ($page != 0) {
+                $page = $limit * $page;
+            }
+            $where =['company_id'=>$company_id,'top_id'=>$top_id,'pid'=>$guide_id];
+            $keyword = isset($dat['keywords']) ? trim($dat['keywords']) : '';
+
+            $count = Db::connect($this->config)->name('guide_content')->where($where)->where('name', 'like', '%'.$keyword.'%')->count();
+            $rows = DB::connect($this->config)->name('guide_content')->where($where)
+                ->where('name', 'like', '%'.$keyword.'%')
+                ->limit($page . ',' . $limit)
+                ->order('id desc')
+                ->select();
+
+            $go_method_name = ['无','分享插件','商品详情','网站菜单','网址链接','搜索结果','我要咨询','去找客服'];
+            foreach ($rows as &$item) {
+                $item['go_method'] = $go_method_name[$item['go_other']];
+            }
+
+            return json(['code'=>0,'count'=>$count,'data'=>$rows]);
+        }else{
+            #模块信息-版式
+            $guide_info = Db::connect($this->config)->name('merchsite_guide_body')->where(['id'=>$guide_id])->find();
+
+            return view('index/shop_backend/shop_guide_content_list2',compact('company_type','company_id','pid','guide_info','guide_id','top_id'));
+        }
+    }
+
+    #保存导流模块-内容
+    public function save_shop_guide_content2(Request $request){
+        $dat = input();
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);#0商城，1官网
+        $id = isset($dat['id'])?$dat['id']:0;
+        $top_id = isset($dat['top_id'])?$dat['top_id']:0;
+        $guide_id = isset($dat['guide_id'])?intval($dat['guide_id']):0;
+        $guide_info = Db::connect($this->config)->name('merchsite_guide_body')->where(['id'=>$guide_id])->find();
+
+        if($request->isAjax()){
+            if($id>0){
+                $res = Db::connect($this->config)->name('guide_content')->where('id',$dat['id'])->update([
+                    'name'=>trim($dat['name']),
+                    'back_content'=>isset($dat['back_content'])?$dat['back_content'][0]:'',
+                    'back_content2'=>isset($dat['back_content'])?$dat['back_content'][0]:'',
+                    'go_other'=>intval($dat['go_other']),
+                    'other_goods'=>$dat['go_other']==2?intval($dat['other_goods']):0,
+                    'link'=>$dat['go_other']==4?trim($dat['link']):'',
+                    'other_navbar'=>$dat['go_other']==3?intval($dat['other_navbar']):0,
+                    'gkeywords'=>$dat['go_other']==5?trim($dat['gkeywords']):'',
+                    'desc'=>isset($dat['desc'])?trim($dat['desc']):'',
+                ]);
+            }
+            else{
+                $res = Db::connect($this->config)->name('guide_content')->insert([
+                    'system_id'=>0,
+                    'company_id'=>$company_id,
+                    'pid'=>$guide_id,
+                    'top_id'=>$top_id,
+                    'name'=>trim($dat['name']),
+                    'back_type'=>2,
+                    'back_content'=>isset($dat['back_content'])?$dat['back_content'][0]:'',
+                    'back_content2'=>isset($dat['back_content'])?$dat['back_content'][0]:'',
+                    'go_other'=>intval($dat['go_other']),
+                    'other_goods'=>$dat['go_other']==2?intval($dat['other_goods']):0,
+                    'link'=>$dat['go_other']==4?trim($dat['link']):'',
+                    'other_navbar'=>$dat['go_other']==3?intval($dat['other_navbar']):0,
+                    'gkeywords'=>$dat['go_other']==5?trim($dat['gkeywords']):'',
+                    'desc'=>isset($dat['desc'])?trim($dat['desc']):'',
+                ]);
+            }
+
+            if($res){
+                if($dat['go_other']==5 && !empty(trim($dat['gkeywords']))) {
+                    $this->save_keywords($this->config,explode('、',trim($dat['gkeywords'])));
+                }
+                return json(['code' => 0, 'msg' => '保存成功']);
+            }
+            else{
+                return json(['code' => -1, 'msg' => '暂无修改']);
+            }
+
+        }else{
+            $data = ['name'=>'','type'=>0,'img_name'=>'','desc'=>'','back_type'=>0,'back_content'=>'','gkeywords'=>'','go_other'=>0,'link'=>'','other_navbar'=>'','other_goods'=>''];
+            if($id>0){
+                $data = Db::connect($this->config)->name('guide_content')->where('id',$id)->find();
+            }
+
+            #导流方式
+            #1、菜单
+            $type['list'] = $this->shop_menu($company_id,$company_type);
+            #2、商品
+            $type['goods'] = Db::connect($this->config)->name('goods')->where(['shop_id'=>$company_id,'goods_status'=>1])->select();
+
+
+            return view('index/shop_backend/save_shop_guide_content2',compact('id','data','company_id','company_type','type','guide_info','guide_id','top_id'));
+        }
+    }
+
     #首页推荐管理
     public function shop_recommend(Request $request){
         $dat = input();

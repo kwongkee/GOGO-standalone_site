@@ -148,7 +148,7 @@
 
         table.render({
             elem: '#mainTable'
-            ,url: "/?s=index/shop_guide_content_list&pa=1&company_id={$company_id}&company_type={$company_type}&guide_id={$guide_id}&top_id={$top_id}"
+            ,url: "/?s=index/shop_guide_content_list2&pa=1&company_id={$company_id}&company_type={$company_type}&guide_id={$guide_id}&top_id={$top_id}&pid={$pid}"
             ,cellMinWidth: 200
             ,cols: [[
                 {field:'id', width:80, title: '编号'}
@@ -156,10 +156,7 @@
                 ,{field:'go_method', title: '导流方式'}
                 ,{width:180,align:'center', fixed: 'right', title: '操作', templet: function(d){
                         var result = "";
-                        if("{$guide_info['content_id']}" == 4){
-                            //杂志样式的下级管理
-                            result += '<a onclick="content_manage('+d.id+',1);" class="layui-btn layui-btn-xs btn-warn"><i class="fas fa-edit"></i> 内容管理</a>';
-                        }
+
                         result += '<a onclick="save('+d.id+',1);" class="layui-btn layui-btn-xs btn-edit"><i class="fas fa-edit"></i> 编辑</a>';
                         result += '<a onclick="del_component('+ "'"+d.id+"'" +');" class="layui-btn layui-btn-xs btn-delete"><i class="fas fa-trash"></i> 删除</a>';
 
@@ -192,10 +189,6 @@
             active[type] ? active[type].call(this) : '';
         });
     });
-
-    function content_manage(pid,typ){
-        parent.location.href="/?s=index/shop_guide_content_list2&company_id={$company_id}&company_type={$company_type}&guide_id={$guide_id}&top_id={$top_id}&pid="+pid;
-    }
 
     //内容删除
     function del_component(id){
@@ -234,21 +227,8 @@
             var modal = document.getElementById('saveRotateModal');
             modal.style.display = 'flex';
 
-            $('#saveRotateModal .rotate_iframe').attr('src','/?s=index/save_shop_guide_content&company_id={$company_id}&company_type={$company_type}&guide_id={$guide_id}&top_id={$top_id}&id='+id);
+            $('#saveRotateModal .rotate_iframe').attr('src','/?s=index/save_shop_guide_content2&company_id={$company_id}&company_type={$company_type}&guide_id={$guide_id}&top_id={$top_id}&id='+id);
         }
-    }
-
-    function delPic(obj)
-    {
-        var layer = layui.layer,$ = layui.$;
-        layer.confirm('确认要删除该附件？', {
-            btn: ['删除','取消']
-        }, function(){
-            $(obj).parent().remove();
-            layer.closeAll();
-        }, function(){
-
-        });
     }
 </script>
 </html>

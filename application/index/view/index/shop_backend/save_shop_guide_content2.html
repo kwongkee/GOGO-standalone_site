@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>独立站平台 - website.gogo198.net</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {--primary: #8a2be2;--primary-dark: #6a1cb9;--primary-light: #9b4de3;--secondary: #bb86fc;--accent: #e6d7f5;--text: #333333;--text-light: #f8f8f8;--background: #f9f5fd;--card-bg: #ffffff;--gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));--gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary));--shadow: 0 10px 30px rgba(138, 43, 226, 0.15);--shadow-hover: 0 15px 35px rgba(138, 43, 226, 0.25);}
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        body {color: var(--text);line-height: 1.6;overflow-x: hidden;}
+        h1, h2, h3, h4, h5, h6 {font-family: 'Montserrat', sans-serif;font-weight: 700;}
+
+        /* 导航栏样式 */
+        header {background: rgba(255, 255, 255, 0.95);color: var(--text);padding: 15px 0;box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);position: sticky;top: 0;z-index: 1000;backdrop-filter: blur(10px);}
+        nav {display: flex;justify-content: space-between;align-items: center;position: relative;}
+        .logo {font-size: 1.8rem;font-weight: 700;display: flex;align-items: center;background: var(--gradient);-webkit-background-clip: text;background-clip: text;color: transparent;z-index: 1001;}
+        .logo i {margin-right: 10px;color: var(--primary);}
+        .nav-links {display: flex;list-style: none;}
+        .nav-links li {margin-left: 25px;position: relative;}
+        .nav-links a {color: var(--text);text-decoration: none;font-weight: 500;transition: all 0.3s ease;padding: 8px 12px;border-radius: 4px;position: relative;display: flex;align-items: center;}
+        .nav-links a::after {content: '';position: absolute;bottom: 0;left: 50%;width: 0;height: 2px;background: var(--gradient);transition: all 0.3s ease;transform: translateX(-50%);}
+        .nav-links a:hover {color: var(--primary);}
+        .nav-links a:hover::after {width: 80%;}
+        .auth-buttons {display: flex;align-items: center;}
+        .btn {padding: 12px 25px;border-radius: 50px;text-decoration: none;font-weight: 600;transition: all 0.3s ease;cursor: pointer;display: inline-block;text-align: center;border: none;font-family: 'Montserrat', sans-serif;}
+        .btn-outline {border: 2px solid var(--primary);color: var(--primary);background: transparent;margin-right: 15px;}
+        .btn-outline:hover {background: var(--primary);color: white;transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-primary {background: var(--gradient);color: white;border: 2px solid transparent;}
+        .btn-primary:hover {background: transparent;border-color: var(--primary);color: var(--primary);transform: translateY(-3px);box-shadow: var(--shadow);}
+
+        /* 表单样式 */
+        .form-section {margin-bottom: 30px;}
+        .form-title {font-size: 1.3rem;margin-bottom: 20px;color: var(--primary-dark);display: flex;align-items: center}
+        .form-title i {margin-right: 10px;}
+        .form-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));gap: 20px;}
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select,
+        .form-group textarea {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;}
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {border-color: var(--primary);outline: none;}
+        .form-group textarea {min-height: 120px;resize: vertical;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
+
+
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}
+        .form-group input:focus,
+        .form-group select:focus {border-color: var(--primary);outline: none;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
+
+        .layui-form-item .layui-form-label{width:100px;}
+        /* 动画 */
+        @keyframes fadeIn {
+            from {opacity: 0;transform: translateY(10px);}
+            to {opacity: 1;transform: translateY(0);}
+        }
+
+        @media (max-width: 576px) {
+            .btn {padding: 10px 20px;font-size: 0.9rem;}
+            /*.form-actions {flex-direction: column;}*/
+        }
+    </style>
+    <link rel="stylesheet" href="layui/css/layui.css">
+</head>
+<body>
+<form class="layui-form" id="siteForm" action="" method="post" lay-filter="component-form-demo" style="padding:10px;">
+    <input type="hidden" name="company_id" value="{$company_id}">
+    <input type="hidden" name="company_type" value="{$company_type}">
+    <input type="hidden" name="id" value="{$id}">
+    <input type="hidden" name="guide_id" value="{$guide_id}">
+    <input type="hidden" name="top_id" value="{$top_id}">
+
+    <div class="form-group" style="padding:0px;">
+        <div class="layui-form-item">
+            <div class="layui-form-label">导流方式</div>
+            <div class="layui-input-block">
+                <select name="go_other" id="go_other" lay-filter="go_other">
+                    <option value="0" {if $data['go_other']==0}selected{/if}>无</option>
+                    <option value="1" {if $data['go_other']==1}selected{/if}>分享插件</option>
+                    <option value="2" {if $data['go_other']==2}selected{/if}>商品详情</option>
+                    <option value="3" {if $data['go_other']==3}selected{/if}>网站菜单</option>
+                    <option value="4" {if $data['go_other']==4}selected{/if}>网址链接</option>
+                    <option value="5" {if $data['go_other']==5}selected{/if}>搜索结果</option>
+                    <option value="6" {if $data['go_other']==6}selected{/if}>我要咨询</option>
+                    <option value="7" {if $data['go_other']==7}selected{/if}>去找客服</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item goods_link" style="display:{if $data['go_other']==2}block{else}none{/if}">
+            <div class="layui-form-label">选择商品</div>
+            <div class="layui-input-block">
+                <select name="other_goods" lay-filter="other_goods" lay-search>
+                    <option value="">请选择</option>
+                    {if !empty($type['goods'])}
+                    {volist name="type['goods']" id="vo"}
+                    <option value="{$vo['goods_id']}" {if $vo['goods_id']==$data['other_goods']}selected{/if} data-name="{$vo['goods_name']}" data-img="{$vo['goods_image']}">{$vo['goods_name']}</option>
+                    {/volist}
+                    {/if}
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item other_link" style="display:{if $data['go_other']==4}block{else}none{/if}">
+            <div class="layui-form-label">网址链接</div>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" name="link" placeholder="请输入第三方链接" value="{$data['link']}">
+            </div>
+        </div>
+        <div class="layui-form-item other_navbar" style="display:{if $data['go_other']==3}block{else}none{/if}">
+            <div class="layui-form-label">菜单链接</div>
+            <div class="layui-input-block">
+                <select name="other_navbar" lay-filter="other_navbar" lay-search>
+                    <option value="">请选择菜单</option>
+                    {volist name="type['list']" id="vo"}
+                    <option value="{$vo.id}" data-name="{$vo.name}" {if $data['other_navbar']==$vo.id}selected{/if}>{$vo.name}</option>
+                    {if !empty($vo.childMenu)}
+                    {volist name="vo.childMenu" id="vo2"}
+                    <option value="{$vo2.id}" data-name="{$vo2.name}" {if $data['other_navbar']==$vo2.id}selected{/if}>--{$vo2.name}</option>
+                    {if !empty($vo2.childMenu)}
+                    {volist name="vo2.childMenu" id="vo3"}
+                    <option value="{$vo3.id}" data-name="{$vo3.name}" {if $data['other_navbar']==$vo3.id}selected{/if}>----{$vo3.name}</option>
+                    {if !empty($vo3.childMenu)}
+                    {volist name="vo3.childMenu" id="vo4"}
+                    <option value="{$vo4.id}" data-name="{$vo4.name}" {if $data['other_navbar']==$vo4.id}selected{/if}>------{$vo4.name}</option>
+                    {/volist}
+                    {/if}
+                    {/volist}
+                    {/if}
+                    {/volist}
+                    {/if}
+                    {/volist}
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item other_keywords" style="display:{if $data['go_other']==5}block{else}none{/if}">
+            <div class="layui-form-label">搜索结果</div>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" name="gkeywords" value="{$data['gkeywords']}" placeholder="更多搜索结果关键字用顿号“、”分割">
+            </div>
+        </div>
+
+        <div class="layui-form-item need_name">
+            <div class="layui-form-label">卡片名称</div>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" lay-verify="" name="name" value="{$data['name']}">
+            </div>
+        </div>
+
+        <div class="layui-form-item need_name">
+            <div class="layui-form-label">卡片图片<br/>({if $guide_info['content_id']==4}140*190{else}375*305{/if})</div>
+            <div class="layui-input-block">
+                <div class="layui-upload" style="margin-top: 10px;">
+                    <button type="button" class="layui-btn" id="img_file-upload">上传图片(一张)</button>
+                    <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                        预览图：
+                        <div class="layui-upload-list" id="img_file-upload-list">
+                            {if !empty($data['back_content'])}
+                            <div style="display: inline-block;">
+                                <img onclick="seePic(this);" src="{$data['back_content']}" class="layui-upload-img" style="width:80px;height:80px;">
+                                <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
+                                <input type="hidden" name="back_content[]" value="{$data['back_content']}">
+                            </div>
+                            {/if}
+                        </div>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+
+        {if $guide_info['content_id']==4}
+        <!--节日版式-->
+        <div class="layui-form-item need_name">
+            <div class="layui-form-label">卡片描述</div>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" lay-verify="" name="desc" value="{$data['desc']}">
+            </div>
+        </div>
+        {/if}
+    </div>
+
+    <div class="form-actions">
+        <button type="button" class="btn btn-outline" id="cancelBtn" style="background:transparent;border: 2px solid var(--primary);color: var(--primary);">取消</button>
+        <button type="submit" class="btn btn-primary" lay-submit lay-filter="component-form-demo">立即保存</button>
+    </div>
+</form>
+
+</body>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="layui/layui.js"></script>
+
+<script>
+    layui.use(['layer','form','laydate','upload','colorpicker'],function() {
+        laydate = layui.laydate;
+        layer = layui.layer;
+        var form = layui.form;
+        $ = layui.jquery;
+        var upload = layui.upload;
+        var colorpicker = layui.colorpicker;
+
+        const modal = parent.document.getElementById('saveRotateModal');
+        // const closeBtn = document.querySelector('.close-modal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        // 关闭模态框
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+        // closeBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+
+        // 点击模态框外部关闭
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        form.on('select(go_other)',function(data){
+            let val = data.value;
+
+            if(val==0 || val==1 || val==6 || val==7){
+                $('.goods_link,.other_link,.other_navbar,.other_keywords').hide();
+            }
+            else if(val==2){
+                //商品详情
+                $('.goods_link').show();
+                $('.other_link,.other_navbar,.other_keywords').hide();
+            }
+            else if(val==3){
+                //网站菜单
+                $('.other_navbar').show();
+                $('.other_link,.goods_link,.other_keywords').hide();
+            }
+            else if(val==4){
+                //网址链接
+                $('.other_link').show();
+                $('.goods_link,.other_navbar,.other_keywords').hide();
+            }
+            else if(val==5){
+                //搜索结果
+                $('.other_keywords').show();
+                $('.other_link,.other_navbar,.goods_link').hide();
+            }
+
+            $('input[name="name"]').val('');
+            $('#img_file-upload-list').html("");
+        });
+
+        //选择菜单
+        form.on('select(other_navbar)',function(data){
+            let val = data.value;
+            var selectElement = document.querySelector('select[name="other_navbar"]');
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+
+            let name = selectedOption.getAttribute('data-name');
+
+            $('input[name="name"]').val(name);
+        });
+
+        //选择商品
+        form.on('select(other_goods)',function(data){
+            let val = data.value;
+            var selectElement = document.querySelector('select[name="other_goods"]');
+            var selectedOption = selectElement.options[selectElement.selectedIndex];
+
+            let img = selectedOption.getAttribute('data-img');
+            img = img.replace("//rte.gogo198.cn","");
+            let name = selectedOption.getAttribute('data-name');
+
+            $('input[name="name"]').val(name);
+            $('#img_file-upload-list').html('<div style="display: inline-block;"><img onclick="seePic(this);" src="' + img + '" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="back_content[]" value="' + img + '"></div>');
+        });
+
+        // 轮播图
+        upload.render({
+            elem: '#img_file-upload'
+            ,url: '/?s=index/upload_file'
+            ,accept: 'image'
+            ,data: { folder:'merch_file', type: 'shop_home'}
+            ,multiple: false
+            ,number:1
+            ,before: function(obj){
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                layer.msg(res.message, {time: 2000}, function () {
+                    if (res.error == 1) {
+                        $('#img_file-upload-list').append('<div style="display: inline-block;"><img onclick="seePic(this);" src="' + res.file_path + '" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="back_content[]" value="' + res.file_path + '"></div>')
+                    }
+                });
+            }
+        });
+
+        /* 监听提交 */
+        form.on('submit(component-form-demo)', function (data) {
+            layer.load();
+            $.ajax({
+                url: "/?s=index/save_shop_guide_content2",
+                method: 'post',
+                data: data.field,
+                dataType: 'JSON',
+                success: function (res) {
+                    layer.closeAll('loading'); //关闭loading
+                    layer.msg(res.msg, {time: 2000}, function () {
+                        if (res.code == 0) {
+
+                            parent.location.reload();
+                        }
+                    });
+                },
+                error: function (data) {
+                    layer.msg('系统错误', {time: 2000});
+                }
+            });
+            return false;
+        });
+    });
+
+    function delPic(obj)
+    {
+        var layer = layui.layer,$ = layui.$;
+        layer.confirm('确认要删除该附件？', {
+            btn: ['删除','取消']
+        }, function(){
+            $(obj).parent().remove();
+            layer.closeAll();
+        }, function(){
+
+        });
+    }
+</script>
+</html>
