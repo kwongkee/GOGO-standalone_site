@@ -95,7 +95,15 @@ class Index
         #日志记录
 //        platform_log($request);
     }
-    
+
+    public function search() {
+        $keyword = input('get.keyword');
+        $where = ['title' => ['like', "%{$keyword}%"]]; // 修复：参数绑定
+        $list = Db::name('product')->where($where)->select();
+        $this->assign('list', $list);
+        return $this->fetch();
+    }
+
     #菜单栏目
     public function menu(){
         $menu = Db::name('website_navbar')->where(['system_id'=>9,'pid'=>0])->order('displayorder,id asc')->select();

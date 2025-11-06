@@ -85,6 +85,13 @@ class Merch
         $this->websites['customer'] = Db::name('merchsite_customer_group')->where(['company_id'=>$cid])->find();
     }
 
+    public function list() {
+        $keyword = input('get.keyword');
+        $where = ['name|description' => ['like', "%{$keyword}%"]]; // 修复：多字段安全搜索
+        $products = Db::name('product')->where($where)->select();
+        return json($products);
+    }
+
     public function groupByArray($array, $key)
     {
         $result = [];
