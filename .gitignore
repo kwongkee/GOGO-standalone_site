@@ -2,3 +2,24 @@
 composer.lock
 *.log
 thinkphp
+
+```gitignore
+# 环境变量
+.env
+.env.local
+.env.prod
+
+# 依赖（可选提交）
+# vendor/
+
+# 日志与缓存
+/runtime/
+/public/uploads/
+/public/static/temp/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+.DS_Store
+```
