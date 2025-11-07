@@ -3,9 +3,10 @@
 <script src="layui/layui.js"></script>
 <link href="css/gallery-1.css" rel="stylesheet">
 <style type="text/css" media="all">
+    body{background:{$website['color_inner']};}
     .title{font-size:30px;font-weight:600;color:{$website['color_word']};text-align:center;margin-bottom:18px;}
     /*.disf{display:flex;align-items: center;}*/
-    #content{padding-top:20px;}
+    #content{padding-top:50px;}
     #content .container .content{border: 1px solid {$website['color_word']};padding:30px 20px 60px;box-sizing:border-box;position:relative;margin-top:10px;}
     #content .container .content .in_mask{background-color: #000;opacity: 0.4;position: absolute;left: 0;top: 0;height: 100%;width: 100%;z-index: 1;}
     #content .container .content .contents{z-index:2;position:relative;color:{$website['color_word']};}
@@ -20,7 +21,7 @@
         .contents img{width:500px;}
     }
     @media (min-width: 1000px){
-        #content .container{padding-top:30px;}
+        #content .container{padding-top:140px;}
         #content{padding-top:0;margin:0;}
         /*.need_service_box{margin-top: 180px;margin-left: 180px;}*/
         .main_img,.color_word{width:400px;height:280px;text-align:center;margin:20px auto;}
