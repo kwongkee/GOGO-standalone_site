@@ -1,0 +1,148 @@
+@'
+diff --git a/application/command/GenerateSitemap.php b/application/command/GenerateSitemap.php
+new file mode 100644
+index 0000000..abcdef1
+--- /dev/null
++++ b/application/command/GenerateSitemap.php
+@@ -0,0 +1,38 @@
++<?php
++namespace app\command;
++use think\console\Command;
++use think\console\Input;
++use think\console\Output;
++use think\Db;
++
++class GenerateSitemap extends Command
++{
++    protected function configure()
++    {
++        $this->setName('sitemap')->setDescription('Generate sitemap.xml');
++    }
++
++    protected function execute(Input $input, Output $output)
++    {
++        $products = Db::name('product')->field('id,update_time')->select();
++        $xml = '<?xml version="1.0" encoding="UTF-8"?>';
++        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
++        
++        $xml .= '<url><loc>https://dt.gogo198.net/</loc><priority>1.0</priority></url>';
++        
++        foreach ($products as $p) {
++            $xml .= "<url>";
++            $xml .= "<loc>https://dt.gogo198.net/product/{$p['id']}</loc>";
++            $xml .= "<lastmod>" . date('c', $p['update_time']) . "</lastmod>";
++            $xml .= "<changefreq>daily</changefreq>";
++            $xml .= "<priority>0.8</priority>";
++            $xml .= "</url>";
++        }
++        
++        $xml .= '</urlset>';
++        file_put_contents(root_path('public') . 'sitemap.xml', $xml);
++        $output->writeln('Sitemap generated: public/sitemap.xml');
++    }
++}
+diff --git a/view/layout/head.html b/view/layout/head.html
+index abc123..def456 100644
+--- a/view/layout/head.html
++++ b/view/layout/head.html
+@@ -1,5 +1,20 @@
+ <head>
+     <meta charset="utf-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+     <title>{$title|default='GOGO 跨境独立站'}</title>
+     <meta name="description" content="{$description|default='优质跨境商品，一站式购物体验'}">
+     
++    <!-- Open Graph -->
++    <meta property="og:title" content="{$title}">
++    <meta property="og:description" content="{$description}">
++    <meta property="og:image" content="https://dt.gogo198.net/static/images/og-image.jpg">
++    <meta property="og:url" content="{:request()->url(true)}">
++    <meta property="og:type" content="website">
++
++    <!-- Hreflang -->
++    <link rel="alternate" hreflang="zh-TW" href="https://dt.gogo198.net{:request()->pathinfo()}" />
++    <link rel="alternate" hreflang="en" href="https://dt.gogo198.net/en{:request()->pathinfo()}" />
++    <link rel="alternate" hreflang="x-default" href="https://dt.gogo198.net/en{:request()->pathinfo()}" />
++
++    <!-- Canonical -->
++    <link rel="canonical" href="{:request()->url(true)}" />
++
++    <!-- PWA -->
++    <link rel="manifest" href="/manifest.json">
+     
+     <!-- Bootstrap CSS -->
+     <link rel="stylesheet" href="/static/css/bootstrap.min.css">
++    
++    <!-- GA4 -->
++    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
++    <script>
++      window.dataLayer = window.dataLayer || [];
++      function gtag(){dataLayer.push(arguments);}
++      gtag('js', new Date());
++      gtag('config', 'G-XXXXXXXXXX');
++    </script>
+ </head>
+diff --git a/public/robots.txt b/public/robots.txt
+new file mode 100644
+index 0000000..1234567
+--- /dev/null
++++ b/public/robots.txt
+@@ -0,0 +1,4 @@
++User-agent: *
++Allow: /
++Sitemap: https://dt.gogo198.net/sitemap.xml
+diff --git a/public/manifest.json b/public/manifest.json
+new file mode 100644
+index 0000000..7890123
+--- /dev/null
++++ b/public/manifest.json
+@@ -0,0 +1,20 @@
++{
++  "name": "GOGO 跨境独立站",
++  "short_name": "GOGO",
++  "start_url": "/",
++  "display": "standalone",
++  "background_color": "#ffffff",
++  "theme_color": "#000000",
++  "icons": [
++    {
++      "src": "/static/images/logo-192.png",
++      "sizes": "192x192",
++      "type": "image/png"
++    }
++  ]
++}
+diff --git a/view/product/detail.html b/view/product/detail.html
+index def456..ghi789 100644
+--- a/view/product/detail.html
++++ b/view/product/detail.html
+@@ -1,5 +1,25 @@
+ <div class="product-detail">
+     <h1>{$product.name}</h1>
+     <img src="{$product.image}" alt="{$product.name}">
+     <p>{$product.description}</p>
+     <span class="price">{$product.price}</span>
+ </div>
++
++<script type="application/ld+json">
++{
++  "@context": "https://schema.org",
++  "@type": "Product",
++  "name": "{$product.name}",
++  "image": "{:image_url($product.image)}",
++  "description": "{$product.description|strip_tags}",
++  "sku": "{$product.id}",
++  "brand": {
++    "@type": "Brand",
++    "name": "GOGO"
++  },
++  "offers": {
++    "@type": "Offer",
++    "url": "{:request()->url(true)}",
++    "priceCurrency": "USD",
++    "price": "{$product.price}",
++    "availability": "https://schema.org/InStock"
++  }
++}
++</script>
+'@ | Out-File -FilePath "cleaned_seo.patch" -Encoding UTF8
