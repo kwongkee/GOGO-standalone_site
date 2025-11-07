@@ -155,7 +155,7 @@
         </div>
 
         <div class="layui-form-item need_name">
-            <div class="layui-form-label">卡片图片<br/>({if $guide_info['content_id']==4}140*190{else}375*305{/if})</div>
+            <div class="layui-form-label">卡片图片<br/>({if $guide_info['content_id']==4}{if $top_id==0}140*190{else}370*560{/if}{elseif($guide_info['content_id']==1)}600*500{elseif($guide_info['content_id']==3)}370*200{else}370*300{/if})</div>
             <div class="layui-input-block">
                 <div class="layui-upload" style="margin-top: 10px;">
                     <button type="button" class="layui-btn" id="img_file-upload">上传图片(一张)</button>
