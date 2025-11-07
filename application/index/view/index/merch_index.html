@@ -593,13 +593,13 @@
             <div class="change_body">
                 <!-- 头部切换区域 -->
                 <div class="tab-header">
-                    <div class="arrow left" id="prevArrow">&lt;</div>
+                    <div class="arrow left" id="prevArrow" style="display: none;">&lt;</div>
                     <div class="tab-nav" id="tabNav">
                         {volist name="vo['info']['children']" key="k2" id="vo2"}
                         <div class="tab-item {if $k2==1}active{/if} f18" data-target="service{$vo2['id']}">{$vo2['name']}</div>
                         {/volist}
                     </div>
-                    <div class="arrow right" id="nextArrow">&gt;</div>
+                    <div class="arrow right" id="nextArrow" style="display: none;">&gt;</div>
                 </div>
                 <!-- 内容区域 -->
                 <div class="container">
