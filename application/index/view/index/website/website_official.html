@@ -643,7 +643,7 @@
     }).extend({
         index: 'lib/index', //主入口模块
         treetable: 'treetable-lay/treetable'
-    }).use(['index', 'form','upload', 'colorpicker','treetable'], function() {
+    }).use(['index', 'form','upload', 'colorpicker','treetable','table'], function() {
         var $ = layui.$
             , admin = layui.admin
             , element = layui.element
@@ -651,6 +651,7 @@
             , form = layui.form
             , colorpicker = layui.colorpicker
             , upload = layui.upload
+            , table = layui.table
             , treetable = layui.treetable;
 
         //页面跳转进来跳转到指定tab框
