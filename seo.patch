@@ -1,0 +1,42 @@
+diff --git a/application/command/GenerateSitemap.php b/application/command/GenerateSitemap.php
+new file mode 100644
+index 0000000..abcdef1
+--- /dev/null
++++ b/application/command/GenerateSitemap.php
+@@ -0,0 +1,38 @@
++<?php
++namespace app\command;
++use think\console\Command;
++use think\console\Input;
++use think\console\Output;
++use think\Db;
++
++class GenerateSitemap extends Command
++{
++    protected function configure()
++    {
++        $this->setName('sitemap')->setDescription('Generate sitemap.xml');
++    }
++
++    protected function execute(Input $input, Output $output)
++    {
++        $products = Db::name('product')->field('id,update_time')->select();
++        $xml = '<?xml version="1.0" encoding="UTF-8"?>';
++        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
++
++        $xml .= '<url><loc>https://dt.gogo198.net/</loc><priority>1.0</priority></url>';
++
++        foreach ($products as $p) {
++            $xml .= "<url>";
++            $xml .= "<loc>https://dt.gogo198.net/product/{$p['id']}</loc>";
++            $xml .= "<lastmod>" . date('c', $p['update_time']) . "</lastmod>";
++            $xml .= "<changefreq>daily</changefreq>";
++            $xml .= "<priority>0.8</priority>";
++            $xml .= "</url>";
++        }
++
++        $xml .= '</urlset>';
++        file_put_contents(root_path('public') . 'sitemap.xml', $xml);
++        $output->writeln('Sitemap generated: public/sitemap.xml');
++    }
++}

@@ -1,0 +1,25 @@
+<link rel="alternate" hreflang="zh-TW" href="https://dte.gogo198.net/zh/product/{$id}" />
+<link rel="alternate" hreflang="en" href="https://dte.gogo198.net/en/product/{$id}" />
+<link rel="alternate" hreflang="x-default" href="https://dte.gogo198.net/en/product/{$id}" />
+
+<script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": "{$product.name}",
+        "image": "{:image_url($product.image)}",
+        "description": "{$product.description|strip_tags}",
+        "sku": "{$product.id}",
+        "brand": {
+            "@type": "Brand",
+            "name": "GOGO"
+        },
+        "offers": {
+            "@type": "Offer",
+            "url": "{:request()->url(true)}",
+            "priceCurrency": "USD",
+            "price": "{$product.price}",
+            "availability": "https://schema.org/InStock"
+        }
+    }
+</script>

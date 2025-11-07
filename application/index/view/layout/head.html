@@ -1,0 +1,36 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{$title|default='GOGO 跨境独立站'}</title>
+    <meta name="description" content="{$description|default='优质跨境商品，一站式购物体验'}">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="{$title}">
+    <meta property="og:description" content="{$description}">
+    <meta property="og:image" content="https://dt.gogo198.net/static/images/og-image.jpg">
+    <meta property="og:url" content="{:request()->url(true)}">
+    <meta property="og:type" content="website">
+
+    <!-- Hreflang -->
+    <link rel="alternate" hreflang="zh-TW" href="https://dt.gogo198.net{:request()->pathinfo()}" />
+    <link rel="alternate" hreflang="en" href="https://dt.gogo198.net/en{:request()->pathinfo()}" />
+    <link rel="alternate" hreflang="x-default" href="https://dt.gogo198.net/en{:request()->pathinfo()}" />
+
+    <!-- Canonical -->
+    <link rel="canonical" href="{:request()->url(true)}" />
+
+    <!-- PWA -->
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- GA4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX');
+    </script>
+</head>
+
+</html>
