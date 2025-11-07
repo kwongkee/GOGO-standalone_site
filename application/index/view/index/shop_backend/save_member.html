@@ -96,7 +96,7 @@
                 <th>手机号码</th>
             </thead>
             <tbody>
-`                   <tr>
+                <tr>
                     <td><input type="text" class="layui-input" name="realname" value="{$data['realname']}" lay-verify="required" placeholder="买家名称"></td>
                     <td><input type="text" class="layui-input" name="nickname" value="{$data['nickname']}" lay-verify="required" placeholder="买家昵称"></td>
                     <td><input type="text" class="layui-input" name="email" value="{$data['email']}" lay-verify="required" placeholder="邮箱地址"></td>
@@ -115,16 +115,17 @@
                 </tr>
             </tbody>
         </table>
-
-        <div class="layui-form-item">
-            <div class="layui-form-label">历史信息</div>
-            <div class="layui-input-block">
-                <a href="javascript:open_history('/?s=index/sorder_manage&company_type={$company_type}&company_id={$company_id}&uid={$id}');" class="btn btn-default" style="margin-top:0px;color:#fff;">选购历史</a>
-                <a href="javascript:open_history('/?s=index/porder_manage&company_type={$company_type}&company_id={$company_id}&uid={$id}');" class="btn btn-default" style="margin-top:0px;color:#fff;">订购历史</a>
-                <a href="javascript:open_history('/?s=index/order_manage&company_type={$company_type}&company_id={$company_id}&uid={$id}');" class="btn btn-default" style="margin-top:0px;color:#fff;">支付历史</a>
-                <a href="javascript:open_history('/?s=index/consolidation_manage&company_type={$company_type}&company_id={$company_id}&uid={$id}');" class="btn btn-default" style="margin-top:0px;color:#fff;">集运历史</a>
+        {if $company_type==0}
+            <div class="layui-form-item">
+                <div class="layui-form-label">历史信息</div>
+                <div class="layui-input-block">
+                    <a href="javascript:open_history('/?s=index/sorder_manage&company_type={$company_type}&company_id={$company_id}&uid={$id}');" class="btn btn-default" style="margin-top:0px;color:#fff;">选购历史</a>
+                    <a href="javascript:open_history('/?s=index/porder_manage&company_type={$company_type}&company_id={$company_id}&uid={$id}');" class="btn btn-default" style="margin-top:0px;color:#fff;">订购历史</a>
+                    <a href="javascript:open_history('/?s=index/order_manage&company_type={$company_type}&company_id={$company_id}&uid={$id}');" class="btn btn-default" style="margin-top:0px;color:#fff;">支付历史</a>
+                    <a href="javascript:open_history('/?s=index/consolidation_manage&company_type={$company_type}&company_id={$company_id}&uid={$id}');" class="btn btn-default" style="margin-top:0px;color:#fff;">集运历史</a>
+                </div>
             </div>
-        </div>
+        {/if}
     {else}
         <table class="layui-table memberTable">
             <thead>
