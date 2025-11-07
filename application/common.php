@@ -922,4 +922,10 @@ function get_auth0_api($data){
 //        echo $response;
     }
 }
+
+function sitemap(){
+    return [
+        'sitemap' => 'application\command\GenerateSitemap',
+    ];
+}
 #auth0接口====================================================end
