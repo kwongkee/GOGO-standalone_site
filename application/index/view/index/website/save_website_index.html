@@ -79,6 +79,8 @@
     <link rel="stylesheet" href="layui/css/layui.css">
     <style>
         .layui-form-label{width:90px;}
+        .layui-colorpicker-trigger-i{display: block;}
+        .layui-colorpicker-main-input .layui-btn-container .layui-btn{margin:0 0 0 5px;}
     </style>
 </head>
 
@@ -866,7 +868,7 @@
         {/if}
 
         // 选择板块
-        xmSelect.render({
+        var menu_plate = xmSelect.render({
             el: '#connect_menus',
             autoRow: true, //自动换行
             filterable: true, //可搜索
@@ -920,6 +922,8 @@
                         form.render(null,'component-form-index');
                     });
                 }
+
+                menu_plate.closed();
             },
         });
 
