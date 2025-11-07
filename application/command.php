@@ -10,5 +10,5 @@
 // +----------------------------------------------------------------------
 
 return [
-    'sitemap' => 'application\command\GenerateSitemap',
+    'sitemap' => 'app\command\GenerateSitemap',
 ];
