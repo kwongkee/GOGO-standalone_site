@@ -673,7 +673,7 @@ class Index
         foreach($website_index as $k=>$v){
             if($v['navbar_id']=='A1'){
                 $website_index[$k]['name'] = '发现轮播+信息切换框';
-            }elseif($v['navbar_id']=='A1'){
+            }elseif($v['navbar_id']=='A2'){
                 $website_index[$k]['name'] = '常见问题';
             }else{
                 $name = Db::name('website_navbar')->where(['id'=>intval($v['navbar_id'])])->field('name')->find()['name'];
