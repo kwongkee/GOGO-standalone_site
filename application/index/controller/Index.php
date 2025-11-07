@@ -2384,7 +2384,7 @@ class Index
             if ($page != 0) {
                 $page = $limit * $page;
             }
-            $where =['company_id'=>$company_id,'top_id'=>$top_id,'pid'=>$pid];
+            $where =['company_id'=>$company_id,'top_id'=>$top_id];
             $keyword = isset($dat['keywords']) ? trim($dat['keywords']) : '';
 
             $count = Db::connect($this->config)->name('guide_content')->where($where)->where('name', 'like', '%'.$keyword.'%')->count();
