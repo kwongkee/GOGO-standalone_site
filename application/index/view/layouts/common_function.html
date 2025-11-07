@@ -36,7 +36,7 @@
             let area = ['600px','450px'];
             let html = '<div class="body" style="padding:10px;box-sizing: border-box;height:100%;">' +
                 // '<iframe src="https://boss.gogo198.cn/?s=customer/customer_online&pa=2&who_send=2&id=0&pid=0&isframe=1&company_id=<?php echo $company_id;?>&uid=<?php echo session('account.gogo_id');?>" frameborder="0" style="width:100%;height:100%;"></iframe>' +
-                    '<iframe src="https://boss.gogo198.cn/?s=memberc/member_center&identify=0&outsideUrl=\'https://dtc.gogo198.net/?s=merch/merch_shop_index&company_id=<?php echo $company_id;?>&company_type=<?php echo $company_type;?>\'&mid=<?php echo base64_encode(session('account.id'));?>" frameborder="0" style="width:100%;height:100%;"></iframe>\n'+
+                    '<iframe src="https://boss.gogo198.cn/?s=memberc/member_center&identify=0&outsideUrl=\'https://dtc.gogo198.net/?s=merch/merch_shop_index&company_id=<?php echo $company_id;?>&company_type=<?php echo $company_type;?>\'&mid=<?php echo base64_encode(session('account.id'));?>&height_limit=0" frameborder="0" style="width:100%;height:100%;"></iframe>\n'+
             '</div>';
 
             var layer_frame_div = layer.open({
