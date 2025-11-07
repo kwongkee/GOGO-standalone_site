@@ -921,7 +921,7 @@
         //会员管理=================end
         table.render({
             elem: '#memberTable'
-            ,url: "/?s=index/member_manage&pa=1&company_type={$company_type}&company_id={$company_id}"
+            ,url: "/?s=index/member_manage&pa=1&company_type=1&company_id={$company_id}"
             ,cellMinWidth: 200
             ,cols: [[
                 {field:'realname', width:200, title: '买家名称'}
@@ -932,7 +932,7 @@
                 ,{align:'center', fixed: 'right', title: '操作', templet: function(d){
                         var result = "";
 
-                        result += '<a onclick="save_member(1,' + "'/?s=index/save_member&company_type={$company_type}&company_id={$company_id}&id="+ d.id + '\');" class="layui-btn layui-btn-xs btn-edit btn"><i class="fas fa-edit"></i> 编辑</a>';
+                        result += '<a onclick="save_member(1,' + "'/?s=index/save_member&company_type=1&company_id={$company_id}&id="+ d.id + '\');" class="layui-btn layui-btn-xs btn-edit btn"><i class="fas fa-edit"></i> 编辑</a>';
                         // result += '<a onclick="del('+ "'"+d.id+"'" +',1);" class="layui-btn layui-btn-xs btn-delete btn"><i class="fas fa-trash"></i> 删除</a>';
 
                         return [
