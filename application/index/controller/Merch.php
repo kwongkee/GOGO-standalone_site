@@ -697,9 +697,9 @@ class Merch
             if($sort_info[1]==1){
                 #升序
                 if(empty($whereIn)) {
-                    $list = Db::connect($this->config)->name('goods')->where($where)->offset($limit['page'])->limit($limit['limit'])->order($sort_field->field.' asc')->select();
+                    $list = Db::connect($this->config)->name('goods')->where($where)->limit($limit['page'],$limit['limit'])->order($sort_field->field.' asc')->select();
                 }else{
-                    $list = Db::connect($this->config)->name('goods')->where($where)->whereIn('keywords_id', $whereIn)->offset($limit['page'])->limit($limit['limit'])->order($sort_field->field.' asc')->select();
+                    $list = Db::connect($this->config)->name('goods')->where($where)->whereIn('keywords_id', $whereIn)->limit($limit['page'],$limit['limit'])->order($sort_field->field.' asc')->select();
                 }
             }
             elseif($sort_info[1]==2){
