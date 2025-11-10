@@ -3563,6 +3563,7 @@ class Index
 
                 #插入库存
                 $sku_id = 0;
+                $min_goods_price = 0;
                 if($dat['have_specs']==2){
                     #无规格
                     $goodsSkuInsert = [
@@ -3588,6 +3589,9 @@ class Index
                             'price'=>$dat['nospecs']['price'],
                         ],true)#该规格的区间价格
                     ];
+
+                    #最低价
+                    $min_goods_price = end($dat['nospecs']['price']);
 
                     if(isset($dat['is_edit'])){
                         $sku_id = $dat['sku_id'];
@@ -3714,6 +3718,9 @@ class Index
                         }
                     }
 
+                    #最低价
+                    $min_goods_price = end($dat['havespecs']['price'][0]);
+
                     #插入数据表
                     foreach($dat['havespecs']['option_name'] as $k=>$v){
                         $goodsSkuInsert = [
@@ -3792,6 +3799,7 @@ class Index
                 #修改商品商户表
                 Db::connect($this->config)->name('goods_merchant')->where(['id'=>$dat['goods_id']])->update([
                     'sku_id'=>$sku_id,
+                    'goods_price'=>$min_goods_price,
                     'nospecs'=>$dat['have_specs']==2?json_encode(['goods_number'=>0, 'start_num'=>$dat['nospecs']['start_num'], 'unit'=>[$dat['nospecs']['unit'][0]], 'select_end'=>$dat['nospecs']['select_end'], 'end_num'=>$dat['nospecs']['end_num'], 'currency'=>[$goods['goods_currency']], 'price'=>$dat['nospecs']['price']],true):''
                 ]);
 
@@ -3800,6 +3808,7 @@ class Index
                     Db::connect($this->config)->name('goods')->where(['goods_id'=>$dat['shelf_id']])->update([
                         'currency_type'=>$dat['currency_type'],
                         'goods_currency'=>$dat['currency_type']==1?$dat['other_currency']:$goods['goods_currency'],
+                        'goods_price'=>$min_goods_price,
                         'have_specs'=>$dat['have_specs'],
                         'sku_id'=>$sku_id,
                         'nospecs'=>$dat['have_specs']==2?json_encode(['goods_number'=>0, 'start_num'=>$dat['nospecs']['start_num'], 'unit'=>[$dat['nospecs']['unit'][0]], 'select_end'=>$dat['nospecs']['select_end'], 'end_num'=>$dat['nospecs']['end_num'], 'currency'=>[$goods['goods_currency']], 'price'=>$dat['nospecs']['price']],true):''
