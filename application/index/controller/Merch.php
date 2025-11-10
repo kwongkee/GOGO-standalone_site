@@ -488,7 +488,7 @@ class Merch
                 if(isset($cateinfo1[0]['goods_id'])){
 //                    $cateinfo1['goods_id']>0
                     #获取高级条件
-                    $list_info = $this->getTotalWhere($catename,$g_condition,$field_condition,$condition_arr2,[['goods_status','=',1],['shop_id','=',$this->websites['cid']]],$keywords_id,$sort_info,['page'=>$page,'limit'=>$limit]);
+                    $list_info = $this->getTotalWhere($catename,$g_condition,$field_condition,$condition_arr2,['goods_status'=>['=',1],'shop_id'=>['=',$this->websites['cid']]],$keywords_id,$sort_info,['page'=>$page,'limit'=>$limit]);
 
                     $list = $list_info[0];
                     $goods_count = $list_info[1];
@@ -519,14 +519,14 @@ class Merch
                 if($cateinfo1['goods_id']>0){
                     #获取高级条件
 
-                    $list_info = $this->getTotalWhere($catename,$g_condition,$field_condition,$condition_arr2,[['goods_name', 'like', '%'.$catename.'%'],['goods_status','=',1],['shop_id','=',$this->websites['cid']]],[],$sort_info,['page'=>$page,'limit'=>$limit]);
+                    $list_info = $this->getTotalWhere($catename,$g_condition,$field_condition,$condition_arr2,['goods_name'=>['like','%'.$catename.'%'],'goods_status'=>['=',1],'shop_id'=>['=',$this->websites['cid']]],[],$sort_info,['page'=>$page,'limit'=>$limit]);
 
                     $list = $list_info[0];
                     $goods_count = $list_info[1];
                     $minprice = $list_info[2];
                     $maxprice = $list_info[3];
                     #获取原“商品名称/分类名称”的条件
-                    $list2 = Db::connect($this->config)->name('goods')->where([['goods_name', 'like', '%'.$catename.'%'],['shop_id','=',$this->websites['cid']]])->select();
+                    $list2 = Db::connect($this->config)->name('goods')->where(['goods_name'=>['like','%'.$catename.'%'],'goods_status'=>['=',1],'shop_id'=>['=',$this->websites['cid']]])->select();
 
                     $condition = $this->get_condition($id,$list2,1,['value_show'=>0,'brand_show'=>0]);
                 }
@@ -541,7 +541,7 @@ class Merch
                     $maxprice = $list_info[3];
 
                     #获取原“商品名称/分类名称”的条件
-                    $list2 = Db::connect($this->config)->name('goods')->where(['cat_id'=>$cateinfo1['cat_id'],'shop_id','=',$this->websites['cid']])->select();
+                    $list2 = Db::connect($this->config)->name('goods')->where(['cat_id'=>$cateinfo1['cat_id'],'shop_id'=>$this->websites['cid']])->select();
 
                     $condition = $this->get_condition($id,$list2,1,['value_show'=>1,'brand_show'=>1]);
                 }
@@ -705,17 +705,17 @@ class Merch
             elseif($sort_info[1]==2){
                 #降序
                 if(empty($whereIn)) {
-                    $list = Db::connect($this->config)->name('goods')->where($where)->offset($limit['page'])->limit($limit['limit'])->order($sort_field->field.' desc')->select();
+                    $list = Db::connect($this->config)->name('goods')->where($where)->limit($limit['page'],$limit['limit'])->order($sort_field->field.' desc')->select();
                 }else{
-                    $list = Db::connect($this->config)->name('goods')->where($where)->whereIn('keywords_id', $whereIn)->offset($limit['page'])->limit($limit['limit'])->order($sort_field->field.' desc')->select();
+                    $list = Db::connect($this->config)->name('goods')->where($where)->whereIn('keywords_id', $whereIn)->limit($limit['page'],$limit['limit'])->order($sort_field->field.' desc')->select();
                 }
             }
         }else{
             #无排序（最新>最旧）
             if(empty($whereIn)) {
-                $list = Db::connect($this->config)->name('goods')->where($where)->offset($limit['page'])->limit($limit['limit'])->select();
+                $list = Db::connect($this->config)->name('goods')->where($where)->limit($limit['page'],$limit['limit'])->select();
             }else{
-                $list = Db::connect($this->config)->name('goods')->where($where)->whereIn('keywords_id',$whereIn)->offset($limit['page'])->limit($limit['limit'])->select();
+                $list = Db::connect($this->config)->name('goods')->where($where)->whereIn('keywords_id',$whereIn)->limit($limit['page'],$limit['limit'])->select();
             }
         }
 
