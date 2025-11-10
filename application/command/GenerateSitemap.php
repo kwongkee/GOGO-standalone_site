@@ -71,7 +71,7 @@ class GenerateSitemap extends Command
         foreach ($products as $p) {
             $xml .= "  <url>" . PHP_EOL;
             $xml .= "    <loc>{$this->baseUrl}/product/{$p['goods_id']}</loc>" . PHP_EOL;
-            $xml .= "    <lastmod>" . date('c', $p['created_at']) . "</lastmod>" . PHP_EOL;
+            $xml .= "    <lastmod>" . date('c', strtotime($p['created_at'])) . "</lastmod>" . PHP_EOL;
             $xml .= "    <changefreq>weekly</changefreq>" . PHP_EOL;
             $xml .= "    <priority>0.8</priority>" . PHP_EOL;
             $xml .= "  </url>" . PHP_EOL;
