@@ -644,20 +644,23 @@ class Merch
                 elseif($column_condition['stype']==2){
                     #下拉选择 todo 下拉选择可能要选表中参数
                     if(!empty($column_condition['field'])){
-                        $where = array_merge($where,[[$column_condition['field'],'=',$v['val'],'and']]);
+                        $where = array_merge($where,[$column_condition['field']=>['=',$v['val']]]);
+//                        $where = array_merge($where,[[$column_condition['field'],'=',$v['val'],'and']]);
                     }
                 }
                 elseif($column_condition['stype']==3){
                     #单选参数 todo 有些参数是1/2/3的，请求只会给0/1
                     if(!empty($column_condition['field'])){
-                        $where = array_merge($where,[[$column_condition['field'],'=',$v['val'],'and']]);
+                        $where = array_merge($where,[$column_condition['field']=>['=',$v['val']]]);
+//                        $where = array_merge($where,[[$column_condition['field'],'=',$v['val'],'and']]);
                     }
                 }
                 elseif($column_condition['stype']==4){
                     #发货地区
                     if(!empty($column_condition['field'])){
                         $area = Db::name('centralize_adminstrative_area')->where(['code_name'=>$v['val']])->find();
-                        $where = array_merge($where,[[$column_condition['field'],'=',$area->id,'and']]);
+                        $where = array_merge($where,[$column_condition['field']=>['=',$area['id']]]);
+//                        $where = array_merge($where,[[$column_condition['field'],'=',$area->id,'and']]);
                     }
                 }
             }
@@ -669,11 +672,13 @@ class Merch
             foreach($condition_arr2 as $k=>$v){
                 if(!empty($v)){
                     $value = Db::connect($this->config)->name('merchsite_search_column_two')->where(['id'=>$v])->find();
-                    $where = array_merge($where,[[$value['field'],'=',1,'and']]);
+                    $where = array_merge($where,[$value['field']=>['=',1]]);
+//                    $where = array_merge($where,[[$value['field'],'=',1,'and']]);
                 }
             }
         }
 
+        $minprice = 0;$maxprice = 0;
         if(empty($whereIn)){
             #总数量
             $count = Db::connect($this->config)->name('goods')->where($where)->count();

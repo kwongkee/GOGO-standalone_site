@@ -608,64 +608,64 @@
         });
 
         //默认点击事件--商品字段START
-    {if !empty($g_condition)}
-        let html ='';
-    {foreach name="g_condition" key="k" id="v"}
-    <?php $now_val = explode('_',$v);?>
-    {if $now_val[0]=='cate'}
-        <!--分类-->
-    {foreach name="condition['category']" key="k2" id="v2"}
-    {if $v2['cat_id']==$now_val[1]}
-        html = '<div class="conditionCate_{$now_val[1]} condition_cdiv">类别：{$v2['cat_name']}<span onclick="delSelect(this,{$now_val[1]},0,1)">x</span></div>';
-        $('.selected').find('.condition_div').append(html);
-        $('.category{$now_val[1]}').addClass('valItem_act');
-    {/if}
-    {/foreach}
-    {elseif($now_val[0]=='opt')}
-        <!--属性-->
-    <?php $now_val = explode('|',$now_val[1]);?>
-    {foreach name="condition['options']" key="k2" id="v2"}
-    {if $v2['spec_ids']==$now_val[0]}
-    {foreach name="v2['children']" key="k3" id="v3"}
-    {if $v3['value_id']==$now_val[1]}
-        html = '<div class="conditionOpt_{$now_val[1]} condition_cdiv">{$v2['spec_name']}：{$v3['value_name']}<span onclick="delSelect(this,{$now_val[1]},{$now_val[0]},2)">x</span></div>';
-        $('.selected').find('.condition_div').append(html);
-        $('.option{$now_val[0]}_{$now_val[1]}').addClass('valItem_act');
-    {/if}
-    {/foreach}
-    {/if}
-    {/foreach}
-    {elseif($now_val[0]=='brand')}
-    <!--品牌-->
-    {foreach name="condition['brand']" key="k2" id="v2"}
-    {if $v2==$now_val[1]}
-        html = '<div class="conditionBrand_{$now_val[1]} condition_cdiv">品牌：{$v2}<span onclick="delSelect(this,{$now_val[1]},0,3)">x</span></div>';
-        $('.selected').find('.condition_div').append(html);
-        $('.brand{$now_val[1]}').addClass('valItem_act');
-    {/if}
-    {/foreach}
-    {/if}
-    {/foreach}
-    {/if}
-    //默认点击事件--商品字段END
+        {if !empty($g_condition)}
+            let html ='';
+            {foreach name="g_condition" key="k" id="v"}
+                <?php $now_val = explode('_',$v);?>
+                {if $now_val[0]=='cate'}
+                    <!--分类-->
+                    {foreach name="condition['category']" key="k2" id="v2"}
+                        {if $v2['cat_id']==$now_val[1]}
+                            html = '<div class="conditionCate_{$now_val[1]} condition_cdiv">类别：{$v2['cat_name']}<span onclick="delSelect(this,{$now_val[1]},0,1)">x</span></div>';
+                            $('.selected').find('.condition_div').append(html);
+                            $('.category{$now_val[1]}').addClass('valItem_act');
+                        {/if}
+                    {/foreach}
+                {elseif($now_val[0]=='opt')}
+                    <!--属性-->
+                    <?php $now_val = explode('|',$now_val[1]);?>
+                    {foreach name="condition['options']" key="k2" id="v2"}
+                        {if $v2['spec_ids']==$now_val[0]}
+                            {foreach name="v2['children']" key="k3" id="v3"}
+                                {if $v3['value_id']==$now_val[1]}
+                                    html = '<div class="conditionOpt_{$now_val[1]} condition_cdiv">{$v2['spec_name']}：{$v3['value_name']}<span onclick="delSelect(this,{$now_val[1]},{$now_val[0]},2)">x</span></div>';
+                                    $('.selected').find('.condition_div').append(html);
+                                    $('.option{$now_val[0]}_{$now_val[1]}').addClass('valItem_act');
+                                {/if}
+                            {/foreach}
+                        {/if}
+                    {/foreach}
+                {elseif($now_val[0]=='brand')}
+                    <!--品牌-->
+                    {foreach name="condition['brand']" key="k2" id="v2"}
+                        {if $v2==$now_val[1]}
+                            html = '<div class="conditionBrand_{$now_val[1]} condition_cdiv">品牌：{$v2}<span onclick="delSelect(this,{$now_val[1]},0,3)">x</span></div>';
+                            $('.selected').find('.condition_div').append(html);
+                            $('.brand{$now_val[1]}').addClass('valItem_act');
+                        {/if}
+                    {/foreach}
+                {/if}
+            {/foreach}
+        {/if}
+        //默认点击事件--商品字段END
 
-    //默认点击事件--自定字段START
-    {if $field_condition}
-    {if !empty($condition['column_content'])}
-    {foreach name="condition['column_content']" key="k" id="v"}
-    {if $v['stype']==1}
-        <!--价格幅度-->
+        //默认点击事件--自定字段START
+        {if $field_condition}
+            {if !empty($condition['column_content'])}
+                {foreach name="condition['column_content']" key="k" id="v"}
+                    {if $v['stype']==1}
+                        <!--价格幅度-->
 
-    {elseif($v['stype']==2)}
-    <!--下拉选择-->
+                    {elseif($v['stype']==2)}
+                    <!--下拉选择-->
 
-    {elseif($v['stype']==3)}
-    <!--单选参数-->
+                    {elseif($v['stype']==3)}
+                    <!--单选参数-->
 
-    {/if}
-    {/foreach}
-    {/if}
-    {/if}
+                    {/if}
+                {/foreach}
+            {/if}
+        {/if}
         //默认点击事件--自定字段END
 
         //点击空白地方，如不是指定的元素则执行某某事件
@@ -722,7 +722,7 @@
                 '            </div>'+
                 '       </div>';
 
-                var area = ['300px', '200px'];
+                var area = ['330px', '200px'];
                 if(IsPhone()){
                     area = ['100%', '350px'];
                 }
@@ -1156,7 +1156,7 @@
         // console.log(field_arr);return false;
         condition_arr = btoa(unescape(encodeURIComponent(condition_arr)));
         field_arr = btoa(unescape(encodeURIComponent(JSON.stringify((field_arr)))));
-        window.location.href="/?s=merch/goods_list&cate_name={$catename}&frame_id={$id}&g_condition="+condition_arr+"&field_condition="+field_arr+'&sort_info='+sort_info+'&hotsearchId={$hotsearchId}&currency_sel='+currency_sel+'&condition_arr2='+condition_arr2+'&company_id={$company_id}&company_type={$company_type}';
+        window.location.href="/?s=merch/goods_list&cate_name={$catename}&frame_id={$id}&g_condition="+condition_arr+"&field_condition="+field_arr+'&sort_info='+sort_info+'&hotsearchId={$hotsearchId}&searchTitle={$searchTitle}&currency_sel='+currency_sel+'&condition_arr2='+condition_arr2+'&company_id={$company_id}&company_type={$company_type}';
     }
 
     function checkbox_click(t){
