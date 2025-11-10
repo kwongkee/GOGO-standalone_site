@@ -37,7 +37,7 @@ class Merch
 
 //        if(empty($cid)){
 //            $cid = cookie::get('cid');
-//        }
+//        }1111
 
         if(empty($cid)){
             echo '<h1>商家站点ID不能为空，正在跳转至淘中国</h1><script>setTimeout(function(){ window.location.href="//www.gogo198.cn"; },1000);</script>';
