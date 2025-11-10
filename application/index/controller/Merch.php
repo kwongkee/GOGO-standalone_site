@@ -588,7 +588,9 @@ class Merch
             #二级字段
             $two_fields = Db::connect($this->config)->name('merchsite_search_column_two')->where(['company_id'=>$this->websites['cid']])->select();
 
-            return view('index/shop_frontend/goods_list',compact('condition','list','data','origin_field_condition','field_condition','origin_condition','g_condition','catename','id','g_o','sort_info','sort','hotsearchId','goods_count','limit','currency','currency_sel','minprice','maxprice','result','searchTitle','origin_page','two_fields','condition_arr2','company_id','company_type'));
+            $websites = $this->websites;
+
+            return view('index/shop_frontend/goods_list',compact('condition','list','data','origin_field_condition','field_condition','origin_condition','g_condition','catename','id','g_o','sort_info','sort','hotsearchId','goods_count','limit','currency','currency_sel','minprice','maxprice','result','searchTitle','origin_page','two_fields','condition_arr2','company_id','company_type','websites'));
         }
     }
 
