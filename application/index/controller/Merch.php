@@ -764,7 +764,7 @@ class Merch
                     $cate_id = $v['cat_id'];
                     #1.1、查找同级分类
                     $last_cat = Db::connect($this->config)->name('category')->where(['cat_id'=>$v['cat_id']])->find();
-                    $category = Db::connect($this->config)->name('category')->where(['parent_id'=>$last_cat->parent_id])->select();
+                    $category = Db::connect($this->config)->name('category')->where(['parent_id'=>$last_cat['parent_id']])->select();
                 }
             }
 
