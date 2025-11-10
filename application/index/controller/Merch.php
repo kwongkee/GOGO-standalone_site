@@ -636,8 +636,9 @@ class Merch
                     #价幅
                     $num = explode('_',$v['val']);
                     if($num[1]>0 && !empty($column_condition['field'])){
-                        $where = array_merge($where,[[$column_condition['field'],'>=',$num[0],'and']]);
-                        $where = array_merge($where,[[$column_condition['field'],'<=',$num[1],'and']]);
+                        $where = array_merge($where,[$column_condition['field']=>['between',[$num[0],$num[1]]]]);
+//                        $where = array_merge($where,[[$column_condition['field'],'>=',$num[0],'and']]);
+//                        $where = array_merge($where,[[$column_condition['field'],'<=',$num[1],'and']]);
                     }
                 }
                 elseif($column_condition['stype']==2){
