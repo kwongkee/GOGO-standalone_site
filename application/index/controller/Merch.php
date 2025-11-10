@@ -357,11 +357,12 @@ class Merch
         $data = input();
         $company_id = intval($data['company_id']);
         $company_type = intval($data['company_type']);
+        $frame_id = isset($data['frame_id'])?intval($data['frame_id']):0;
         $hotsearchId = isset($data['hotsearchId'])?intval($data['hotsearchId']):0;#导页id、节日id、轮播id、发现id
         $searchTitle = isset($data['searchTitle'])?trim($data['searchTitle']):'';#板块名称
 
         #当前页面的链接
-        $origin_page = '/?s=merch/goods_list&frame_id='.intval($data['frame_id']).'&hotsearchId='.$hotsearchId.'&searchTitle='.$searchTitle.'&company_id='.$company_id.'&company_type='.$company_type;
+        $origin_page = '/?s=merch/goods_list&frame_id='.$frame_id.'&hotsearchId='.$hotsearchId.'&searchTitle='.$searchTitle.'&company_id='.$company_id.'&company_type='.$company_type;
 
         if(isset($data['pa2'])){
 
@@ -369,7 +370,7 @@ class Merch
         else{
             $currency_sel = isset($data['currency_sel'])?trim($data['currency_sel']):158;
             $catename = isset($data['cate_name'])?trim($data['cate_name']):'';#关键字搜索
-            $id = isset($data['frame_id'])?intval($data['frame_id']):0;//1导页数据、2节日、3首页轮播、4发现好货
+            $id = $frame_id;//1导页数据、2节日、3首页轮播、4发现好货
             $sort_info = isset($data['sort_info'])?trim($data['sort_info']):0;
 
             #获取商户配置的展示版式
@@ -467,16 +468,25 @@ class Merch
                 }
 
                 $keywords_id = [];
-                foreach($keywords as $k=>$v){
-                    $this_keyword = Db::connect($this->config)->name('goods_keywords')->where(['keywords'=>$v])->find();
+//                foreach($keywords as $k=>$v){
+//                    $this_keyword = Db::connect($this->config)->name('goods_keywords')->where(['keywords'=>$v])->find();
+//
+//                    array_push($keywords_id,$this_keyword['id']);
+//                }
 
-                    array_push($keywords_id,$this_keyword['id']);
+                #找当前企业的商品信息
+                $query = Db::connect($this->config)->name('goods')->where(['shop_id'=>$this->websites['cid'],'goods_status'=>1]);
+
+                foreach ($keywords as $keyword) {
+                    $query->whereOr('goods_name', 'like', '%' . $keyword . '%');
                 }
-                $cateinfo1 = Db::connect($this->config)->name('goods')->where(['shop_id'=>$this->websites['cid']])->whereIn('keywords_id',$keywords_id)->find();
+
+                $cateinfo1 = $query->select();
 
                 $list = [];
                 $condition = [];
-                if($cateinfo1['goods_id']>0){
+                if(isset($cateinfo1[0]['goods_id'])){
+//                    $cateinfo1['goods_id']>0
                     #获取高级条件
                     $list_info = $this->getTotalWhere($catename,$g_condition,$field_condition,$condition_arr2,[['goods_status','=',1],['shop_id','=',$this->websites['cid']]],$keywords_id,$sort_info,['page'=>$page,'limit'=>$limit]);
 
@@ -484,10 +494,9 @@ class Merch
                     $goods_count = $list_info[1];
                     $minprice = $list_info[2];
                     $maxprice = $list_info[3];
-//                    if($hotsearchId==0) {
-                    #获取原“商品名称/分类名称”的条件
-//                    ,['hotsearch_id', '=', $hotsearchId]
-                    $list2 = Db::connect($this->config)->name('goods')->where(['shop_id'=>$this->websites['cid']])->whereIn('keywords_id',$keywords_id)->select();
+
+                    $list2 = $cateinfo1;
+//                    $list2 = Db::connect($this->config)->name('goods')->where(['shop_id'=>$this->websites['cid'],'goods_status'=>1])->whereIn('keywords_id',$keywords_id)->select();
 
                     $condition = $this->get_condition($id, $list2, 1,['value_show'=>0,'brand_show'=>0]);
 //                    }
@@ -503,7 +512,7 @@ class Merch
                 $searchTitle = $catename;
                 #先查询有无此商品名称
                 #后再查询分类名称
-                $cateinfo1 = Db::connect($this->config)->name('goods')->where(['shop_id'=>$this->websites['cid']])->where('goods_name', 'like', '%'.$catename.'%')->find();
+                $cateinfo1 = Db::connect($this->config)->name('goods')->where(['shop_id'=>$this->websites['cid'],'goods_status'=>1])->where('goods_name', 'like', '%'.$catename.'%')->find();
 
                 $list = [];
                 $condition = [];
