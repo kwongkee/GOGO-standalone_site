@@ -794,7 +794,7 @@ class Merch
                 #5、获取品牌
                 if ($v['brand_type'] == 1) {
                     $brand = Db::name('centralize_diycountry_content')->where(['pid' => 8, 'id' => $v['brand_id']])->find();
-                    $condition['brand'] = array_merge($condition['brand'], [['type' => 1, 'name' => $brand->param1, 'id' => $brand->id]]);
+                    $condition['brand'] = array_merge($condition['brand'], [['type' => 1, 'name' => $brand['param1'], 'id' => $brand['id']]]);
                 }
             }
         }
