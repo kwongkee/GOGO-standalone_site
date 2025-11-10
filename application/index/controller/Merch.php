@@ -593,19 +593,22 @@ class Merch
     public function getTotalWhere($catename,$g_condition,$field_condition,$condition_arr2,$where,$whereIn,$sort_info='',$limit=['page'=>0,'limit'=>10]){
         #条件存在时，打包搜索
         $opt_arr = [];
+        $whereOr = [];
         if(!empty($g_condition)){
             #商品字段条件
             foreach($g_condition as $k=>$v){
                 $now_val = explode('_',$v);
                 if($now_val[0]=='cate'){
-                    $where = array_merge($where,[['cat_id','=',$now_val[1],'or']]);
+                    $whereOr = array_merge($whereOr,['cat_id'=>['=',$now_val[1]]]);
+//                    $where = array_merge($where,[['cat_id','=',$now_val[1],'or']]);
                 }
                 elseif($now_val[0]=='opt'){
                     $now_val = explode('|',$now_val[1]);
                     $opt_arr = array_merge($opt_arr,[['attr_id'=>$now_val[0],'attr_vid'=>$now_val[1]]]);
                 }
                 elseif($now_val[0]=='brand'){
-                    $where = array_merge($where,[['brand_id','=',$now_val[1],'or']]);
+                    $whereOr = array_merge($whereOr,['brand_id'=>['=',$now_val[1]]]);
+//                    $where = array_merge($where,[['brand_id','=',$now_val[1],'or']]);
                 }
             }
         }
@@ -681,18 +684,38 @@ class Merch
         $minprice = 0;$maxprice = 0;
         if(empty($whereIn)){
             #总数量
-            $count = Db::connect($this->config)->name('goods')->where($where)->count();
+            $count_query = Db::connect($this->config)->name('goods')->where($where);
 
             #价钱——最低值/最高值
-            $minprice = Db::connect($this->config)->name('goods')->where($where)->min('goods_price');
-            $maxprice = Db::connect($this->config)->name('goods')->where($where)->max('goods_price');
+            $minprice_query = Db::connect($this->config)->name('goods')->where($where);
+            $maxprice_query = Db::connect($this->config)->name('goods')->where($where);
+
+            if(!empty($whereOr)){
+                $count_query->whereOr($whereOr);
+                $minprice_query->whereOr($whereOr);
+                $maxprice_query->whereOr($whereOr);
+            }
+
+            $count = $count_query->count();
+            $minprice = $minprice_query->min('goods_price');
+            $maxprice = $maxprice_query->max('goods_price');
         }else{
             #总数量
-            $count = Db::connect($this->config)->name('goods')->where($where)->whereIn('keywords_id',$whereIn)->count();
+            $count_query = Db::connect($this->config)->name('goods')->where($where)->whereIn('keywords_id',$whereIn);
 
             #价钱——最低值/最高值
-            $minprice = Db::connect($this->config)->name('goods')->where($where)->whereIn('keywords_id',$whereIn)->min('goods_price');
-            $maxprice = Db::connect($this->config)->name('goods')->where($where)->whereIn('keywords_id',$whereIn)->max('goods_price');
+            $minprice_query = Db::connect($this->config)->name('goods')->where($where)->whereIn('keywords_id',$whereIn);
+            $maxprice_query = Db::connect($this->config)->name('goods')->where($where)->whereIn('keywords_id',$whereIn);
+
+            if(!empty($whereOr)){
+                $count_query->whereOr($whereOr);
+                $minprice_query->whereOr($whereOr);
+                $maxprice_query->whereOr($whereOr);
+            }
+
+            $count = $count_query->count();
+            $minprice = $minprice_query->min('goods_price');
+            $maxprice = $maxprice_query->max('goods_price');
         }
 
 
@@ -703,25 +726,25 @@ class Merch
             if($sort_info[1]==1){
                 #升序
                 if(empty($whereIn)) {
-                    $list = Db::connect($this->config)->name('goods')->where($where)->limit($limit['page'],$limit['limit'])->order($sort_field['field'].' asc')->select();
+                    $list = Db::connect($this->config)->name('goods')->where($where)->whereOr($whereOr)->limit($limit['page'],$limit['limit'])->order($sort_field['field'].' asc')->select();
                 }else{
-                    $list = Db::connect($this->config)->name('goods')->where($where)->whereIn('keywords_id', $whereIn)->limit($limit['page'],$limit['limit'])->order($sort_field['field'].' asc')->select();
+                    $list = Db::connect($this->config)->name('goods')->where($where)->whereOr($whereOr)->whereIn('keywords_id', $whereIn)->limit($limit['page'],$limit['limit'])->order($sort_field['field'].' asc')->select();
                 }
             }
             elseif($sort_info[1]==2){
                 #降序
                 if(empty($whereIn)) {
-                    $list = Db::connect($this->config)->name('goods')->where($where)->limit($limit['page'],$limit['limit'])->order($sort_field['field'].' desc')->select();
+                    $list = Db::connect($this->config)->name('goods')->where($where)->whereOr($whereOr)->limit($limit['page'],$limit['limit'])->order($sort_field['field'].' desc')->select();
                 }else{
-                    $list = Db::connect($this->config)->name('goods')->where($where)->whereIn('keywords_id', $whereIn)->limit($limit['page'],$limit['limit'])->order($sort_field['field'].' desc')->select();
+                    $list = Db::connect($this->config)->name('goods')->where($where)->whereOr($whereOr)->whereIn('keywords_id', $whereIn)->limit($limit['page'],$limit['limit'])->order($sort_field['field'].' desc')->select();
                 }
             }
         }else{
             #无排序（最新>最旧）
             if(empty($whereIn)) {
-                $list = Db::connect($this->config)->name('goods')->where($where)->limit($limit['page'],$limit['limit'])->select();
+                $list = Db::connect($this->config)->name('goods')->where($where)->whereOr($whereOr)->limit($limit['page'],$limit['limit'])->select();
             }else{
-                $list = Db::connect($this->config)->name('goods')->where($where)->whereIn('keywords_id',$whereIn)->limit($limit['page'],$limit['limit'])->select();
+                $list = Db::connect($this->config)->name('goods')->where($where)->whereOr($whereOr)->whereIn('keywords_id',$whereIn)->limit($limit['page'],$limit['limit'])->select();
             }
         }
 
