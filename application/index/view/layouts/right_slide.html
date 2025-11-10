@@ -1,0 +1,374 @@
+<style>
+    .close{opacity:1;}
+    .close:hover{opacity:1;}
+
+    /**右侧滑动**/
+    .left-contents{position: fixed;right:1%;top:30%;background:#fff;border-radius:5px;box-shadow: 0px 0px 8px 0px #797777;padding:40px 0 30px;z-index: 11;transition: .4s ease-in-out;}
+    .left-contents .leftList{text-align: center;position: relative;}
+    .left-contents .leftList .leftCont{height:310px;width:100%;overflow: hidden;transition: transform 2s;}
+    .left-contents .leftList .topArrow{position: absolute;top:-25px;left:30px;width:15px;height:15px;border-right:3px solid #b1b1b1;border-bottom:3px solid #b1b1b1;transform:rotate(225deg);cursor: pointer;display: none;}
+    .left-contents .leftList .btmArrow{position: absolute;bottom:-15px;left:30px;width:15px;height:15px;border-right:3px solid #b1b1b1;border-bottom:3px solid #b1b1b1;transform:rotate(45deg);cursor: pointer;}
+    .left-contents .leftList .leftItem{padding:0px 14px;cursor: pointer;}
+    .left-contents .leftList .leftItem:hover{background:#e60000;transition: all 0.3s ease;}
+    .left-contents .leftList .leftItem img{width:35px;height:35px;}
+    .left-contents .leftList .leftLine{width: 25px;height: 2px;background: #b1b1b1;margin: 10px auto;}
+    .left-contents .leftList .leftLine:last-child{display:none;}
+
+    /**浮窗默认状态**/
+    .startFace{padding: 10px 0 10px;height: 110px;overflow: hidden;box-sizing: border-box;}
+    .startFace .turnDown{margin-top:-13px;cursor:pointer;}
+    .startFace .turnDown img{width:35px;height:35px;}
+
+    /**弹窗**/
+    .windowMask{display: none;width: 100%;height:100%;position: fixed;top:0;left:0;background:rgba(0,0,0,0.5);z-index:19;}
+    .windowBox{display: none;position: fixed;top:50%;left:50%;transform: translate(-50%,-50%);z-index: 20;width: 950px;height:635px;border:2px solid {$website['color']};box-shadow: 0px 0px 8px 0px #797777;border-radius: 25px;background:#fff;box-sizing: border-box;}
+    .windowBox *{box-sizing: border-box;}
+    .windowBox .close{position: absolute;right: -25px;top: -27px;background: #fff;border-radius: 50%;cursor:pointer;}
+    .windowBox .close img{width:45px;height:45px;}
+    .windowBox .windowDiv{width: 100%;height:100%;overflow: hidden;}
+    .windowBox .leftBox{width: 30%;height:100%;border-top-left-radius: 22px;border-bottom-left-radius: 22px;overflow: hidden;cursor:pointer;}
+    .windowBox .leftBox img{width: 100%;height:100%;}
+    .windowBox .rightBox{width: 71%;height:100%;background:{$website['color']};border-bottom-right-radius: 25px;}
+    .windowBox .rightBox .levelList1{width:97%;padding: 0 10px 0 30px;position: relative;box-sizing: border-box;}
+    .windowBox .rightBox .levelList1 .innerContent{width: 100%;overflow: hidden;border: 1px solid #fff;border-top:0;border-bottom: 0;}
+    .windowBox .rightBox .levelList1 .turnleft{position: absolute;border-top: 2px solid #fff;border-right: 2px solid #fff;width: 12px;height: 12px;top: 35%;left: 2%;transform: rotate(225deg);cursor:pointer;}
+    .windowBox .rightBox .levelList1 .turnright{position: absolute;border-top: 2px solid #fff;border-right: 2px solid #fff;width: 12px;height: 12px;top: 35%;right: -1%;transform: rotate(45deg);cursor:pointer;}
+    .windowBox .rightBox .levelList1 .levelItem{padding:10px 39.85px;font-size: 18px;font-weight:800;display: table-cell;color:#fff;background:{$website['color']};border-right:1px solid #fff;cursor: pointer;white-space: nowrap;box-sizing: border-box;}
+    .windowBox .rightBox .levelList1 .levelItem:last-child{/**border-right: 0;**/}
+    .windowBox .rightBox .levelList1 .levelItem:hover{background:#e60000;position: relative;}
+    .windowBox .rightBox .levelList1 .levelActive{background:#e60000;position: relative;}
+    .windowBox .rightBox .levelList1 .levelActive:after{content:'';position: absolute;top: 13px;right: 15px;width: 10px;height: 10px;border-top: 2px solid #fff;border-right: 2px solid #fff;transform: rotate(135deg);}
+    .windowBox .rightBox .levelList2{/**padding:10px 30px 10px 72px;background: #cbc9c9;**/border-bottom:1px solid #cdcccc;}
+    .windowBox .rightBox .levelList2 .item{min-height:25px;}
+    .windowBox .rightBox .levelList2 .levelItem{color:#fff;font-size: 16px;font-weight:800;display: inline-block;margin-right: 10px;cursor: pointer;}
+    .windowBox .rightBox .levelList2 .levelItem:hover{color:#fff;position: relative;}
+    .windowBox .rightBox .levelList2 .levelActive{color:#fff;position: relative;}
+    .windowBox .rightBox .levelList2 .levelActive:after{content:'';position:absolute;bottom:-10px;left:0;background:#fff;width:100%;height:2px;}
+    .windowBox .windowContent{padding:20px 30px;background:#8f8f8f;height: 93%;border-bottom-right-radius: 25px;box-sizing: border-box;}
+    .windowBox .windowContent .windowDiv{width:100%;height:100%;border-radius: 10px;background: #fff;}
+    .windowBox .windowContent .newsDiv{width:100%;height:8%;border-radius: 10px;background: #fff;margin-top:15px;padding:10px;}
+    .windowBox .windowContent .newsDiv .icon{position: relative;}
+    .windowBox .windowContent .newsDiv .icon:after{content:'';position: absolute;right: -14px;top: 1px;width: 1px;height: 18px;background: {$website['color']};}
+    .windowBox .windowContent .newsDiv .icon img{width: 20px;}
+    .windowBox .windowContent .newsDiv .newsContent{width: 100%;margin-left: 25px;}
+    .windowBox .windowContent .newsDiv .newsContent .cont7{height:20px;overflow: hidden;}
+    .windowBox .windowContent .newsDiv .newsContent .cont7 a{font-size: 15px;color:{$website['color']};display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 1;overflow: hidden;text-overflow: ellipsis;}
+</style>
+
+<!--右侧滑动-->
+<div class="fuchuang left-contents startFace" style="display: none;">
+    <div class="leftList">
+        <div class="topArrow" onclick="topArrow('left',1)"></div>
+        <div class="leftCont">
+            {foreach name="website['leftFrame']" key="k" id="v")
+            <div class="leftItem" onclick="showWindows({$v['id']},{$v['type']},this)">
+                <img src="https://shop.gogo198.cn/{$v['icon']}" alt="">
+                <p class="f12">{$v['name']}</p>
+            </div>
+            <div class="leftLine"></div>
+            {if $k==0}
+            <div class="turnDown" onclick="checkStartFace(this)">
+                <img src="/assets/d2eace91/images/newhome/turndown.png" alt="">
+            </div>
+            {/if}
+            {/foreach}
+        </div>
+        <div class="btmArrow" onclick="btmArrow('left',1)"></div>
+    </div>
+</div>
+
+<!--弹窗-->
+<div class="windowMask" onclick="closeWindows()"></div>
+<div class="windowBox">
+    <div class="close" onclick="closeWindows()"><img src="/assets/d2eace91/images/newhome/close.png" alt=""></div>
+    <div class="windowDiv disf" style="align-items: flex-start;">
+        <div class="leftBox">
+            <img src="" class="windowsAdv" alt="">
+        </div>
+        <div class="rightBox">
+            <div class="levelList1">
+
+            </div>
+            <div class="levelList2">
+
+            </div>
+            <div class="windowContent">
+                <div class="windowDiv"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var leftContentHeight = 0;
+    var rightContentHeight = 0;
+    $(document).ready(function() {
+    {if isset($isframe)}
+        {if $isframe==1}
+            $('.startFace').hide();
+        {/if}
+    {/if}
+            //左侧浮动框高度
+        let leftItemHeight = Math.round($('.left-contents .leftItem').length * $('.left-contents .leftItem').eq(0).outerHeight() * 100) / 100;
+        let leftLineHeight = Math.round(($('.left-contents .leftLine').length * $('.left-contents .leftLine').eq(0).outerHeight()) + ($('.left-contents .leftLine').length * 18) * 100) / 100;
+        leftContentHeight = Math.floor(Math.round((leftItemHeight + leftLineHeight) * 100) /100);
+
+        //右侧浮动框高度
+        let rightItemHeight = Math.round($('.right-content .rightItem').length * $('.right-content .rightItem').eq(0).outerHeight() * 100) / 100;
+        let rightLineHeight = Math.round(($('.right-content .rightLine').length * $('.right-content .rightLine').eq(0).outerHeight()) + ($('.right-content .rightLine').length * 18) * 100) / 100;
+        rightContentHeight = Math.floor(Math.round((rightItemHeight + rightLineHeight) * 100) /100);
+
+        //定时折叠右侧浮动框，3分钟
+        setInterval(function(){
+            if(!$('.fuchuang').hasClass('startFace')){
+                $('.fuchuang').addClass('startFace');
+                $('.fuchuang').find('.turnDown').show();
+                $('.fuchuang').find('.leftCont').animate({
+                    scrollTop:'0px'
+                });
+            }
+        },180000);
+    });
+
+    //左右上下滑动效果START=================
+    var btmHeight = 0;
+    function btmArrow(classname,type){
+        btmHeight +=95;
+        var canHeight = 0;
+        if(type==1){
+            canHeight = Math.floor(Math.round((leftContentHeight-$('.left-contents').find('.leftList .leftCont').height()+118) * 100)/100);
+        }else if(type==2){
+            canHeight = Math.floor(Math.round((rightContentHeight-$('.left-contents').find('.rightList .rightCont').height()+118) * 100)/100);
+        }
+
+        if(btmHeight < canHeight){
+            $('.'+classname+'-contents .'+classname+'Cont').animate({
+                scrollTop:btmHeight+'px'
+            });
+            $('.'+classname+'-contents .topArrow').show();
+        }else{
+            btmHeight -=95;
+            $('.'+classname+'-contents .btmArrow').hide();
+        }
+    }
+
+    function topArrow(classname,type){
+        btmHeight -=95;
+        var canHeight = 0;
+        if(type==1) {
+            canHeight = Math.floor(Math.round((leftContentHeight - $('.left-contents').find('.leftList .leftCont').height() - 118) * 100) / 100);
+        }else if(type==2){
+            canHeight = Math.floor(Math.round((rightContentHeight - $('.left-contents').find('.rightList .rightCont').height() - 118) * 100)/100);
+        }
+
+        if(btmHeight > canHeight) {
+            $('.'+classname+'-contents .'+classname+'Cont').animate({
+                scrollTop:btmHeight+'px'
+            });
+            $('.'+classname+'-contents .btmArrow').show();
+        }else{
+            btmHeight +=95;
+            $('.'+classname+'-contents .topArrow').hide();
+        }
+    }
+    //左右上下滑动效果END===================
+
+    //弹窗START============================
+    function checkStartFace(t){
+        if($(t).parents(":eq(2)").hasClass('startFace')){
+            $(t).parents(":eq(2)").removeClass('startFace');
+            $('.left-contents').find('.turnDown').hide();
+        }
+    }
+
+    function showWindows(id,type,t){
+        checkStartFace(t);
+        layer.load();
+        $.post('/?s=merch/getFrame',{'id':id,'type':type,'company_id':'{$company_id}','company_type':'{$company_type}'},function(res){
+            let list = res.list;
+            let html = '<div class="innerContent">';
+            let html2 = '';
+            for(let i=0;i<list.length;i++){
+                if(list[i].id==id){
+                    for(let i2=0;i2<list[i].children.length;i2++) {
+                        if (i2 == 0) {
+                            html += '<div class="levelItem levelActive" onclick="showChildInfo(' + list[i].children[i2].id + ',this,\'' + list[i].children[i2].link + '\')">' + list[i].children[i2].name + '</div>';
+                        } else {
+                            html += '<div class="levelItem" onclick="showChildInfo(' + list[i].children[i2].id + ',this,\'' + list[i].children[i2].link + '\')">' + list[i].children[i2].name + '</div>';
+                        }
+
+                        html2 += '<div class="item" style="display: none;">\n';
+                        html2 += '              <div class="levelItem" onclick="showChildInfo(' + list[i].children[i2].id + ',this,\'' + list[i].children[i2].link + '\')">' + list[i].children[i2].name + '</div>\n';
+                        html2 += '                    </div>';
+                    }
+                }else{
+                    html += '<div class="levelItem" onclick="changeLevel('+list[i].id+','+list[i].type+',this)">'+list[i].name+'</div>';
+                }
+            }
+            html += '</div><div class="turnleft" onclick="windowLeveltrun(1,1)"></div>';
+            html += '<div class="turnright" onclick="windowLeveltrun(1,2)"></div>';
+
+            $('.windowBox .windowDiv .rightBox .levelList1').html(html);
+            $('.windowBox .windowDiv .rightBox .levelList2').html(html2);
+
+            //广告图
+            $('.windowBox .windowDiv .leftBox').find('.windowsAdv').attr('src','//shop.gogo198.cn/'+res.adv['img']);
+            if(res.adv['link']!=''){
+                $('.windowBox .windowDiv .leftBox').find('.windowsAdv').click(function(){
+                    $('#chat').attr('src',res.adv['link']);
+                    $('.levelActive').removeClass('levelActive');
+                });
+            }else{
+                $('.windowBox .windowDiv .leftBox').find('.windowsAdv').off('click');
+            }
+
+            $('.windowMask').fadeIn();
+            $('.windowBox').fadeIn();
+            layer.closeAll("loading");
+
+            //默认点击
+            $('.windowBox').find('.levelList2').find('.item').find('.levelItem').eq(0).click();
+        },'json');
+        $('body').css('overflow-y','hidden');
+    }
+
+    function showWindows2(id,search_id,type,t){
+        layer.load();
+        var now_click_num = 0;
+        $.post('/?s=merch/getFrame',{'id':id,'type':type,'company_id':'{$company_id}','company_type':'{$company_type}'},function(res){
+            let list = res.list;
+            let html = '<div class="innerContent">';
+            let html2 = '';
+            for(let i=0;i<list.length;i++){
+                if(list[i].id==id){
+                    for(let i2=0;i2<list[i].children.length;i2++) {
+                        if (search_id == list[i].children[i2].id) {
+                            now_click_num = i2;
+                            html += '<div class="levelItem levelActive" onclick="showChildInfo(' + list[i].children[i2].id + ',this,\'' + list[i].children[i2].link + '\')">' + list[i].children[i2].name + '</div>';
+                        } else {
+                            html += '<div class="levelItem" onclick="showChildInfo(' + list[i].children[i2].id + ',this,\'' + list[i].children[i2].link + '\')">' + list[i].children[i2].name + '</div>';
+                        }
+
+                        html2 += '<div class="item" style="display: none;">\n';
+                        html2 += '              <div class="levelItem" onclick="showChildInfo(' + list[i].children[i2].id + ',this,\'' + list[i].children[i2].link + '\')">' + list[i].children[i2].name + '</div>\n';
+                        html2 += '                    </div>';
+                    }
+                }else{
+                    html += '<div class="levelItem" onclick="changeLevel('+list[i].id+','+list[i].type+',this)">'+list[i].name+'</div>';
+                }
+            }
+            html += '</div><div class="turnleft" onclick="windowLeveltrun(1,1)"></div>';
+            html += '<div class="turnright" onclick="windowLeveltrun(1,2)"></div>';
+
+            $('.windowBox .windowDiv .rightBox .levelList1').html(html);
+            $('.windowBox .windowDiv .rightBox .levelList2').html(html2);
+
+            //广告图
+            $('.windowBox .windowDiv .leftBox').find('.windowsAdv').attr('src','//shop.gogo198.cn/'+res.adv['img']);
+            if(res.adv['link']!=''){
+                $('.windowBox .windowDiv .leftBox').find('.windowsAdv').click(function(){
+                    $('#chat').attr('src',res.adv['link']);
+                    $('.levelActive').removeClass('levelActive');
+                });
+            }else{
+                $('.windowBox .windowDiv .leftBox').find('.windowsAdv').off('click');
+            }
+
+            $('.windowMask').fadeIn();
+            $('.windowBox').fadeIn();
+            layer.closeAll("loading");
+
+            //默认点击
+            $('.windowBox').find('.levelList2').find('.item').find('.levelItem').eq(now_click_num).click();
+        },'json');
+        $('body').css('overflow-y','hidden');
+    }
+
+    var windowLeveltrunLeft = 0;
+    function windowLeveltrun(type,direction){
+        if(type==1){
+            //浮窗，一级
+            var levelItemWidth = $(".windowBox").find('.rightBox').find('.levelList1 .innerContent .levelItem').outerWidth();
+
+            if(direction==1){
+                //向左
+                if(windowLeveltrunLeft>0){
+                    windowLeveltrunLeft -= levelItemWidth;
+                    $(".windowBox").find('.rightBox').find('.levelList1 .innerContent').stop().animate({
+                        scrollLeft: windowLeveltrunLeft
+                    }, 500);
+                }
+            }else if(direction==2){
+                //向右
+                let levelItem = ($(".windowBox").find('.rightBox').find('.levelList1 .innerContent .levelItem').length - 4);
+                let totalWidth = parseInt(levelItem * levelItemWidth);
+                if(windowLeveltrunLeft<totalWidth) {
+                    windowLeveltrunLeft += levelItemWidth;
+                    $(".windowBox").find('.rightBox').find('.levelList1 .innerContent').stop().animate({
+                        scrollLeft: windowLeveltrunLeft
+                    }, 500);
+                }
+            }
+        }
+    }
+    function closeWindows(){
+        $('.windowMask').fadeOut();
+        $('.windowBox').fadeOut();
+        $('body').css('overflow-y','scroll');
+    }
+    function changeLevel(id,type,t){
+        layer.load();
+        $.post('/?s=merch/getFrame',{'id':id,'type':type,'company_id':'{$company_id}','company_type':'{$company_type}'},function(res) {
+            let list = res.list;
+            let html = '<div class="innerContent">';
+            let html2 = '';
+            for(let i=0;i<list.length;i++){
+                if(list[i].id==id){
+                    html += '<div class="levelItem levelActive" onclick="changeLevel('+list[i].id+','+list[i].type+',this)">'+list[i].name+'</div>';
+                    html2 += '<div class="item">\n';
+                    for(let i2=0;i2<list[i].children.length;i2++){
+                        html2 += '              <div class="levelItem" onclick="showChildInfo('+list[i].children[i2].id+',this,\''+list[i].children[i2].link+'\')">'+list[i].children[i2].name+'</div>\n';
+                    }
+                    // '                        <div class="levelItem levelActive">whatsapp</div>\n' +
+
+                    html2 += '                    </div>';
+                }else{
+                    html += '<div class="levelItem" onclick="changeLevel('+list[i].id+','+list[i].type+',this)">'+list[i].name+'</div>';
+                }
+            }
+
+            html += '</div><div class="turnleft" onclick="windowLeveltrun(1,1)"></div>';
+            html += '<div class="turnright" onclick="windowLeveltrun(1,2)"></div>';
+
+            $('.windowBox .windowDiv .rightBox .levelList1').html(html);
+            $('.windowBox .windowDiv .rightBox .levelList2').html(html2);
+
+            layer.closeAll("loading");
+
+            $(t).addClass('levelActive');
+            $(t).siblings().removeClass('levelActive');
+
+            //默认点击
+            $('.windowBox').find('.levelList2').find('.item').find('.levelItem').eq(0).click();
+        },'json');
+    }
+    function showChildInfo(id,t,link){
+        $(t).addClass('levelActive');
+        $(t).siblings().removeClass('levelActive');
+        if("{session('account.id')}" ==''){
+            // $.login.show();
+            window.location.href='{$origin_page}';
+            return false;
+        }
+
+        if(link!='' && link!='null'){
+            if (link.includes("http")) {
+                window.open(link);
+            }else{
+                let html = '<iframe id="chat" name="chat" style="width: 100%;height: 100%;" frameborder="0" scrolling="yes" src="'+link+'"></iframe>';
+                $('.windowContent .windowDiv').html(html);
+            }
+        }
+    }
+    //弹窗END==============================
+</script>

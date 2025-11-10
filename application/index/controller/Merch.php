@@ -60,6 +60,9 @@ class Merch
             $this->websites['info']['search_format'] = [5,5];
         }
 
+        #左侧弹框
+        $this->websites['leftFrame'] = Db::connect($this->config)->name('frame_body')->where(['pid'=>0,'type'=>2])->order('displayorder asc')->select();
+
         #获取商户的企业配置的头部菜单
         $this->websites['menu'] = Db::name('website_navbar')->where(['company_id'=>$cid,'company_type'=>$company_type,'pid'=>0])->select();
         foreach($this->websites['menu'] as $k=>$v){
