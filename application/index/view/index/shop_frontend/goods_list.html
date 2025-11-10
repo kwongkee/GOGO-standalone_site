@@ -1156,7 +1156,7 @@
         // console.log(field_arr);return false;
         condition_arr = btoa(unescape(encodeURIComponent(condition_arr)));
         field_arr = btoa(unescape(encodeURIComponent(JSON.stringify((field_arr)))));
-        window.location.href="/?s=merch/goods_list?cate_name={$catename}&frame_id={$id}&g_condition="+condition_arr+"&field_condition="+field_arr+'&sort_info='+sort_info+'&hotsearchId={$hotsearchId}&currency_sel='+currency_sel+'&condition_arr2='+condition_arr2+'&company_id={$company_id}&company_type={$company_type}';
+        window.location.href="/?s=merch/goods_list&cate_name={$catename}&frame_id={$id}&g_condition="+condition_arr+"&field_condition="+field_arr+'&sort_info='+sort_info+'&hotsearchId={$hotsearchId}&currency_sel='+currency_sel+'&condition_arr2='+condition_arr2+'&company_id={$company_id}&company_type={$company_type}';
     }
 
     function checkbox_click(t){
