@@ -1,3 +1,5 @@
 User-agent: *
 Allow: /
-Sitemap: https://dt.gogo198.net/sitemap.xml
+Disallow: /admin/
+Disallow: /runtime/
+Sitemap: https://dtc.gogo198.net/sitemapindex.xml
