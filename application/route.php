@@ -525,6 +525,11 @@ Route::any('shop/shunt_edit','index/Shop/shunt_edit');
 Route::any('shop/shunt_addr','index/Shop/shunt_addr');#修改地址
 Route::any('shop/become_buyer','index/Shop/become_buyer');
 
+//SEO优化
+Route::get('sitemap.xml', 'index/Index/sitemap');
+Route::get('robots.txt', 'index/Index/robots');
+
+
 //api
 Route::any('api/chatgpt', 'api/Chatgpt/index');
 Route::any('api/logout', 'api/Account/index');

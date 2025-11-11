@@ -7,6 +7,12 @@ use think\Controller;
 use app\index\model\Parceltask;
 use think\Log;
 
+// 开启 GZIP
+if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') && !ob_get_length()) {
+    ob_start('ob_gzhandler');
+} else {
+    ob_start();
+}
 
 class Index
 {
@@ -24,6 +30,8 @@ class Index
     public $website_colorhead='';
     public $website_inpic='';
     public $website_contact=[];
+    public $website_canonical='';
+    public $website_og='';
     public $config = [
         //数据库类型
         'type'     => 'mysql',
@@ -87,11 +95,19 @@ class Index
         $this->website_colorhead = $website['color_head'];
         $this->website_inpic = $website['inpic'];
 
-//        if(empty(session('account.id')) && ($_SERVER['REQUEST_URI']!='/' && $_SERVER['REQUEST_URI']!='/?s=index/customer_login')){
-//            header('Location: /?s=index/customer_login');
-//            exit;
-//        }
-
+        $current_url = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        // 清理参数，保留主要路径
+        $canonical = preg_replace('/(\?.*)$/', '', $current_url);
+        if (substr($canonical, -1) !== '/') $canonical .= '/';
+        
+        $this->website_canonical = '<link rel="canonical" href="' . $canonical . '">';
+        $this->website_og = '
+            <meta property="og:title" content="'.$this->website_name.'">
+            <meta property="og:description" content="'.$this->website_description.'">
+            <meta property="og:image" content="https://shop.gogo198.cn/'.$this->website_ico.'">
+            <meta property="og:url" content="'.$current_url.'">
+            <meta property="og:type" content="website">
+        ';
         #日志记录
 //        platform_log($request);
     }
@@ -104,7 +120,7 @@ class Index
         return $this->fetch();
     }
 
-    #菜单栏目
+    #网站菜单栏目
     public function menu(){
         $menu = Db::name('website_navbar')->where(['system_id'=>9,'pid'=>0])->order('displayorder,id asc')->select();
         foreach($menu as $k=>$v){
@@ -257,6 +273,8 @@ class Index
         $website['color_word'] = $this->website_colorword;
         $website['color_head'] = $this->website_colorhead;
         $website['website_contact'] = $this->website_contact;
+        $website['website_canonical'] = $this->website_canonical;
+        $website['website_og'] = $this->website_og;
 
         #首页板块
         $services = Db::name('website_index')->where(['system_id'=>9])->order('displayorder asc')->select();
@@ -390,7 +408,7 @@ class Index
         $data['url_this'] = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER["REQUEST_URI"];
         $data['thumb'] = 'https://shop.gogo198.cn/collect_website/public/uploads/centralize/website_index/64a5282e9bdbf.png';
         $signPackage = weixin_share($data);
-
+        
         return view('/index/index',compact('menu','rotate','website','services','services2','link','news','signPackage','discovery_rotate'));
     }
 
@@ -412,7 +430,10 @@ class Index
         #独立站菜单
         $menuList = Db::name('centralize_manage_menu')->where(['auth_type'=>5])->select();
 
-        return view('/index/website_manage',compact('company','mid','cid','menuList'));
+        $website['website_canonical'] = $this->website_canonical;
+        $website['website_og'] = $this->website_og;
+        
+        return view('/index/website_manage',compact('company','mid','cid','menuList','website'));
     }
 
     #获取企业信息
@@ -507,6 +528,8 @@ class Index
         $website['color_word'] = $this->website_colorword;
         $website['color_head'] = $this->website_colorhead;
         $website['website_contact'] = $this->website_contact;
+        $website['website_canonical'] = $this->website_canonical;
+        $website['website_og'] = $this->website_og;
 
         #首页板块
         $services = Db::name('website_index')->where(['company_id'=>$company_id,'company_type'=>$company_type])->order('displayorder asc')->select();
@@ -624,7 +647,7 @@ class Index
         $data['url_this'] = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER["REQUEST_URI"];
         $data['thumb'] = 'https://shop.gogo198.cn/collect_website/public/uploads/centralize/website_index/64a5282e9bdbf.png';
         $signPackage = weixin_share($data);
-
+        
         return view('/index/merch_index',compact('menu','rotate','website','services','services2','link','news','signPackage','discovery_rotate','company_id','company_type'));
     }
 
@@ -689,8 +712,11 @@ class Index
 
         #企业网站-会员管理
         $user = Db::name('website_user')->where(['company_id'=>$company_id])->select();
+        
+        $website['website_canonical'] = $this->website_canonical;
+        $website['website_og'] = $this->website_og;
 
-        return view('index/website/website_official',compact('company','company_info','user','company_id','rotate','website_basic','tab','website_index','website_discovery'));
+        return view('index/website/website_official',compact('company','company_info','user','company_id','rotate','website_basic','tab','website_index','website_discovery','website'));
     }
 
     #企业菜单
@@ -1299,8 +1325,11 @@ class Index
         foreach($website_discovery as $k=>$v){
             $website_discovery[$k]['createtime'] = date('Y-m-d H:i',$v['createtime']);
         }
+        
+        $website['website_canonical'] = $this->website_canonical;
+        $website['website_og'] = $this->website_og;
 
-        return view('index/shop_backend/website_shop',compact('company','company_info','company_id','rotate','website_basic','tab','website_discovery'));
+        return view('index/shop_backend/website_shop',compact('company','company_info','company_id','rotate','website_basic','tab','website','website_discovery'));
     }
 
     #店铺基本信息
@@ -11048,7 +11077,9 @@ class Index
         }
 
         #栏目
-        $menu = $this->menu();
+        #$menu = $this->menu();
+        $menu =  $this->company_menu($company_id,$company_type);
+        
         $data['content'] = str_replace('src="https://shop.gogo198.cn','src="',json_decode($data['content'],true)[session('lang')]);
         $data['content'] = str_replace('src="','src="https://admin.gogo198.cn',$data['content']);
         $data['content'] = str_replace('src="https://admin.gogo198.cnhttps','src="https',$data['content']);
@@ -11082,6 +11113,8 @@ class Index
         $website['inpic'] = $this->website_inpic;
         $website['color_inner'] = $this->website_color_inner;
         $website['website_contact'] = $this->website_contact;
+        $website['website_canonical'] = $this->website_canonical;
+        $website['website_og'] = $this->website_og;
         
         #随机码
         $rand = $this->random_str();
@@ -11099,7 +11132,7 @@ class Index
         $all_comment = Db::name('website_crossborder_news_chat')->where(['news_id'=>$dat['id'],'type'=>$type])->order('id','desc')->select();
         $news['comment_num'] = Db::name('website_crossborder_news_chat')->where(['news_id'=>$news['id'],'type'=>$type])->count();
         $news['share_num'] = intval($data['share_num']);
-        return view('',compact('menu','website','data','rand','id','navbar_menu','next_menu','link','rotate','isrotate','news','signPackage','all_comment','type','news','company_id','company_type'));
+        return view('',compact('menu','website','data','rand','id','navbar_menu','next_menu','link','rotate','isrotate','news','signPackage','all_comment','type','news','company_id','company_type','website'));
     }
 
     #图文详情
@@ -23280,6 +23313,56 @@ Hello, Your one-time code is:</p><br/><p>'.$code.'</p><br/><p>或直接点击：
         $signPackage = ['url' => $data['url'], 'desc' => '', 'name' => $data['name'], 'url_this' => $data['url_this'], 'appId' => '', 'timestamp' => '', 'nonceStr' => '', 'signature' => ''];
 
         return view('/index/exception/notfound', compact('menu', 'link', 'website', 'data', 'signPackage'));
+    }
+    
+    public function sitemap() {
+        $urls = [];
+        $base = 'https://' . $_SERVER['HTTP_HOST'];
+    
+        // 首页
+        $urls[] = ['loc' => $base . '/', 'priority' => '1.0', 'changefreq' => 'daily'];
+    
+        // 调试：输出数据库配置
+        $db_config = config('database');
+        $debug = "DEBUG: DB=" . $db_config['database'] . ", Host=" . $db_config['hostname'];
+    
+        try {
+            $menus = Db::name('website_navbar')->where('status', 1)->select();
+            if (empty($menus)) {
+                $menus = Db::name('website_navbar')->limit(5)->select(); // 强制取
+            }
+            foreach ($menus as $m) {
+                $urls[] = [
+                    'loc' => $base . '/?s=index/detail&id=' . $m['id'],
+                    'priority' => '0.8',
+                    'changefreq' => 'weekly'
+                ];
+            }
+            $debug .= ", Menus=" . count($menus);
+        } catch (\Exception $e) {
+            $debug .= ", ERROR=" . $e->getMessage();
+        }
+    
+        // 输出调试 + XML
+        $xml = '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL;
+        $xml .= "<!-- $debug -->" . PHP_EOL;
+        $xml .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . PHP_EOL;
+        foreach ($urls as $u) {
+            $xml .= "  <url><loc>" . htmlspecialchars($u['loc']) . "</loc><priority>{$u['priority']}</priority><changefreq>{$u['changefreq']}</changefreq></url>" . PHP_EOL;
+        }
+        $xml .= '</urlset>';
+    
+        return response($xml, 200, ['Content-Type' => 'text/xml']);
+    }
+    
+    public function robots() {
+        $host = $_SERVER['HTTP_HOST'];
+        $txt = "User-agent: *\n";
+        $txt .= "Allow: /\n";
+        $txt .= "Disallow: /index.php\n";
+        $txt .= "Disallow: /admin/\n";
+        $txt .= "Sitemap: https://$host/sitemap.xml";
+        return response($txt, 200, ['Content-Type' => 'text/plain']);
     }
 
     //判断文件夹是否存在，没有则新建。

@@ -6,6 +6,13 @@ use think\Db;
 use think\Controller;
 use think\Log;
 
+// 开启 GZIP
+if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') && !ob_get_length()) {
+    ob_start('ob_gzhandler');
+} else {
+    ob_start();
+}
+
 class Merch
 {
     public $websites;
@@ -35,7 +42,7 @@ class Merch
         $cid = isset($dat['company_id'])?intval($dat['company_id']):0;
         $company_type = isset($dat['company_type'])?intval($dat['company_type']):0;
 
-//        if(empty($cid)){11
+//        if(empty($cid)){
 //            $cid = cookie::get('cid');
 //        }
 
@@ -86,6 +93,20 @@ class Merch
 
         #客服信息
         $this->websites['customer'] = Db::name('merchsite_customer_group')->where(['company_id'=>$cid])->find();
+        
+        $current_url = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        // 清理参数，保留主要路径
+        $canonical = preg_replace('/(\?.*)$/', '', $current_url);
+        if (substr($canonical, -1) !== '/') $canonical .= '/';
+        
+        $this->websites['website_canonical'] = '<link rel="canonical" href="' . $canonical . '">';
+        $this->websites['website_og'] = '
+            <meta property="og:title" content="'.$this->websites['info']['name'].'">
+            <meta property="og:description" content="'.$this->websites['info']['desc'].'">
+            <meta property="og:image" content="https://dtc.gogo198.net'.$this->websites['info']['logo'].'">
+            <meta property="og:url" content="'.$current_url.'">
+            <meta property="og:type" content="website">
+        ';
     }
 
     public function list() {

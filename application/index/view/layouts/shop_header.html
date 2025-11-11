@@ -5,9 +5,12 @@
     <link rel="icon" href="{$data['source_link']}{$data['websites']['info']['slogo']}" type="image/x-icon" />
     <title>{$data['websites']['info']['name']}</title>
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <!--<meta name="viewport" content="width=device-width, initial-scale=1.0" />-->
     <meta name="description" content="{$data['websites']['info']['desc']}" />
     <meta name="keywords" content="{$data['websites']['info']['keywords']}" />
+    {:$data['websites']['website_canonical']}
+    {:$data['websites']['website_og']}
     <!-- 头部元数据 -->
 <!--    <meta name="csrf-param" content="_csrf">-->
 <!--    <meta name="csrf-token" content="csrf_token()">-->

@@ -196,6 +196,13 @@
     }
 
     $(function(){
+        //图片懒加载
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll('img').forEach(img => {
+                if (!img.hasAttribute('loading')) img.setAttribute('loading', 'lazy');
+            });
+        });
+        
         //菜单栏start
         // 1. 桌面端：二级菜单 hover 交互（缓动显示/隐藏）
         $('.has-sub').hover(

@@ -226,6 +226,13 @@
             , form = layui.form
             , upload = layui.upload;
 
+        //图片懒加载
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll('img').forEach(img => {
+                if (!img.hasAttribute('loading')) img.setAttribute('loading', 'lazy');
+            });
+        });
+
         //我要咨询关闭
         // $('.advice .cancel').click(function(){
         //     $('.mask').fadeOut('slow');
