@@ -46,11 +46,11 @@ class GenerateSitemap extends Command
 
             $xml = $this->buildSitemapXml($products);
             $filename = "sitemap_{$page}.xml";
-            $filepath = public_path() . $filename;
+            $filepath = __DIR__ . '/../../public' . $filename;
             file_put_contents($filepath, $xml);
             $sitemaps[] = $this->baseUrl . '/' . $filename;
 
-            $output->writeln("生成 {$filename} ({$products->count()} 条)");
+            $output->writeln("生成 $filename (" . count($products) . " 条)");
         }
 
         // 3. 生成 sitemapindex.xml
@@ -89,6 +89,6 @@ class GenerateSitemap extends Command
             $xml .= "  <sitemap><loc>{$url}</loc><lastmod>" . date('c') . "</lastmod></sitemap>" . PHP_EOL;
         }
         $xml .= '</sitemapindex>';
-        file_put_contents(public_path() . 'sitemapindex.xml', $xml);
+        file_put_contents(__DIR__ . '/../../public/' . 'sitemapindex.xml', $xml);
     }
 }
