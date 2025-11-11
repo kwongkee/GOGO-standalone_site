@@ -115,6 +115,59 @@
 <!--<script type="text/javascript" charset="utf-8">-->
 <!--    var head= document.getElementsByTagName('head')[0]; var script= document.createElement('script'); script.type= 'text/javascript'; script.src= 'https://www.gogo198.net/js/res.zvo.cn_translate_inspector_v2.js?v=12<?php echo time();?>'; head.appendChild(script);-->
 <!--</script>-->
+    <!-- SEO & Social -->
+
+    <meta name="keywords" content="{$website.keywords|default='跨境电商,台湾代购,全球购物'}">
+
+    <link rel="canonical" href="{:request()->url(true)}">
+
+    <meta property="og:title" content="{$title}">
+
+    <meta property="og:description" content="{$description}">
+
+    <meta property="og:image" content="{$website.ico}">
+
+    <meta property="og:url" content="{:request()->url(true)}">
+
+    <meta property="og:type" content="website">
+
+    <link rel="alternate" hreflang="zh-tw" href="{:request()->url(true)}">
+
+    <link rel="alternate" hreflang="en" href="{:url('/', [], '' , '' , 'en')}">
+
+    <!-- Schema.org -->
+
+    <script type="application/ld+json">{
+
+      "@context": "https://schema.org",
+
+      "@type": "WebSite",
+
+      "name": "{$website.title}",
+
+      "url": "https://dtc.gogo198.net"
+
+    }</script>
+
+    <!-- GA4 -->
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+
+    <script>
+
+      window.dataLayer = window.dataLayer || [];
+
+      function gtag(){dataLayer.push(arguments);}
+
+      gtag('js', new Date());
+
+      gtag('config', 'G-XXXXXXXXXX');
+
+    </script>
+
+    <!-- 懒加载 -->
+
+    <style>img{loading:lazy}</style>
 </head>
 <body style="background:{$website['color']};">
 <div id="wrapper" class="home-page">
