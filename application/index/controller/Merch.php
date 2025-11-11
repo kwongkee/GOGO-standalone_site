@@ -35,7 +35,7 @@ class Merch
         $cid = isset($dat['company_id'])?intval($dat['company_id']):0;
         $company_type = isset($dat['company_type'])?intval($dat['company_type']):0;
 
-//        if(empty($cid)){
+//        if(empty($cid)){11
 //            $cid = cookie::get('cid');
 //        }
 
