@@ -1,0 +1,9 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li><a href="/">首頁</a></li>
+    {if !empty($navbar_menu)}
+    <li><a href="{$navbar_menu.url}">{$navbar_menu.name}</a></li>
+    {/if}
+    {block name="breadcrumb_last"}{/block}
+  </ol>
+</nav>
