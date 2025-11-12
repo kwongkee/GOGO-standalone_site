@@ -111,6 +111,11 @@ class Index
         #日志记录
 //        platform_log($request);
     }
+    
+    public function _empty()
+    {
+        return redirect("https://dtc.gogo198.net/", 301);
+    }
 
     public function search() {
         $keyword = input('get.keyword');

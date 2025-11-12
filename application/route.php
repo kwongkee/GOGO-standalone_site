@@ -541,3 +541,8 @@ Route::any('api/protected_resource', 'api/Authlogin/protected_resource');
 Route::any('api/userinfo_callback', 'api/Authlogin/userinfo_callback');
 Route::any('api/auto_login', 'api/Authlogin/auto_login');
 Route::any('api/facebook_callback', 'api/Authlogin/facebook_callback');
+
+// 捕获所有未定义路由 → 301
+Route::miss(function() {
+    return redirect('https://dtc.gogo198.net/', 301);
+});
