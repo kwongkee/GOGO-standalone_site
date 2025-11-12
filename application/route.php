@@ -526,9 +526,9 @@ Route::any('shop/shunt_addr','index/Shop/shunt_addr');#修改地址
 Route::any('shop/become_buyer','index/Shop/become_buyer');
 
 //SEO优化
-Route::get('sitemap.xml', 'index/Index/sitemap');
+// Route::get('sitemap.xml', 'index/Index/sitemap');
 Route::get('robots.txt', 'index/Index/robots');
-
+Route::get('sitemap.xml', 'index/sitemap/index');
 
 //api
 Route::any('api/chatgpt', 'api/Chatgpt/index');
