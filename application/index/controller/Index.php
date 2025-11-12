@@ -10984,6 +10984,7 @@ class Index
     #详情
     public function detail(){
         $dat = input();
+        
         $id = $dat['id'];
         $company_id = intval($dat['company_id']);
         $company_type = intval($dat['company_type']); #企业类型，0商家商店，1商家网站
