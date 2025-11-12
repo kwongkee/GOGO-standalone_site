@@ -16,22 +16,22 @@
             {foreach name="data['websites']['rotate']" id="vo"}
             {if $vo['go_other']==0}
             <!--无跳转-->
-            <div class="swiper-slide"><a href="javascript:void(0);"><img src="{$data['source_link']}{$vo['thumb']}" alt="" style="width:100%;" class="carousel-image"/></a></div>
+            <div class="swiper-slide"><a href="javascript:void(0);"><img loading="lazy" alt="GOGO198 網站圖片" src="{$data['source_link']}{$vo['thumb']}" alt="" style="width:100%;" class="carousel-image"/></a></div>
             {elseif($vo['go_other']==1 || $vo['go_other']==6 || $vo['go_other']==7)}
             <!--分享&我要咨询&去找客服-->
-            <div class="swiper-slide"><a href="javascript:common_operation({$vo['go_other']},this);"><img src="{$data['source_link']}{$vo['thumb']}" alt="" style="width:100%;" class="carousel-image"/></a></div>
+            <div class="swiper-slide"><a href="javascript:common_operation({$vo['go_other']},this);"><img loading="lazy" alt="GOGO198 網站圖片" src="{$data['source_link']}{$vo['thumb']}" alt="" style="width:100%;" class="carousel-image"/></a></div>
             {elseif($vo['go_other']==2)}
             <!--商品链接-->
-            <div class="swiper-slide"><a href="//www.gogo198.cn/goods-{$vo['other_goods']}.html" target="_blank"><img src="{$data['source_link']}{$vo['thumb']}" alt="" style="width:100%;" class="carousel-image"/></a></div>
+            <div class="swiper-slide"><a href="//www.gogo198.cn/goods-{$vo['other_goods']}.html" target="_blank"><img loading="lazy" alt="GOGO198 網站圖片" src="{$data['source_link']}{$vo['thumb']}" alt="" style="width:100%;" class="carousel-image"/></a></div>
             {elseif($vo['go_other']==3)}
             <!--菜单链接-->
-            <div class="swiper-slide"><a href="/?s=merch/detail&id={$vo['other_navbar']}&company_id={$company_id}&company_type={$company_type}" target="_blank"><img src="{$data['source_link']}{$vo['thumb']}" alt="" style="width:100%;" class="carousel-image"/></a></div>
+            <div class="swiper-slide"><a href="/?s=merch/detail&id={$vo['other_navbar']}&company_id={$company_id}&company_type={$company_type}" target="_blank"><img loading="lazy" alt="GOGO198 網站圖片" src="{$data['source_link']}{$vo['thumb']}" alt="" style="width:100%;" class="carousel-image"/></a></div>
             {elseif($vo['go_other']==4)}
             <!--第三方链接-->
-            <div class="swiper-slide"><a href="{$vo['other_link']}" target="_blank"><img src="{$data['source_link']}{$vo['thumb']}" alt="" style="width:100%;" class="carousel-image"/></a></div>
+            <div class="swiper-slide"><a href="{$vo['other_link']}" target="_blank"><img loading="lazy" alt="GOGO198 網站圖片" src="{$data['source_link']}{$vo['thumb']}" alt="" style="width:100%;" class="carousel-image"/></a></div>
             {elseif($vo['go_other']==5)}
             <!--搜索关键字-->
-            <div class="swiper-slide"><a href="/?s=merch/goods_list&frame_id=3&hotsearchId={$vo['id']}&searchTitle={$vo['other_keywords']}&company_id={$company_id}&company_type={$company_type}" target="_blank"><img src="{$data['source_link']}{$vo['thumb']}" alt="" style="width:100%;" class="carousel-image"/></a></div>
+            <div class="swiper-slide"><a href="/?s=merch/goods_list&frame_id=3&hotsearchId={$vo['id']}&searchTitle={$vo['other_keywords']}&company_id={$company_id}&company_type={$company_type}" target="_blank"><img loading="lazy" alt="GOGO198 網站圖片" src="{$data['source_link']}{$vo['thumb']}" alt="" style="width:100%;" class="carousel-image"/></a></div>
             {/if}
             {/foreach}
         </div>

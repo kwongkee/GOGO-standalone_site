@@ -504,7 +504,7 @@
                         {foreach name="list" key="k" id="v"}
                         <div class="goods_box" onclick="view_detail({$v['goods_id']})" title="{$v['goods_name']}">
                             <div class="goods_image">
-                                <img src="{$v['goods_image']}" class="img">
+                                <img loading="lazy" alt="GOGO198 網站圖片" src="{$v['goods_image']}" class="img">
                             </div>
                             <div class="goods_info">
                                 <div class="gcon">
@@ -530,7 +530,7 @@
                     </div>
                     {else}
                     <div class="noresult-content">
-                        <img src="https://cbu01.alicdn.com/cms/upload/2013/909/997/1799909_1367035968.png" >
+                        <img loading="lazy" alt="GOGO198 網站圖片" src="https://cbu01.alicdn.com/cms/upload/2013/909/997/1799909_1367035968.png" >
                         <h2 class="noresult-hd">{$result}</h2>
                     </div>
                     {/if}
@@ -585,7 +585,7 @@
                                 for(let i=0;i<res.data.length;i++){
                                     html += '<div class="goods_box" onclick="view_detail('+res.data[i].goods_id+')" title="'+res.data[i].goods_name+'">\n' +
                                         '                                <div class="goods_image">\n' +
-                                        '                                    <img src="'+res.data[i].goods_image+'" class="img">\n' +
+                                        '                                    <img loading="lazy" alt="GOGO198 網站圖片" src="'+res.data[i].goods_image+'" class="img">\n' +
                                         '                                </div>\n' +
                                         '                                <div class="goods_info">\n' +
                                         '                                    <div class="gcon">\n' +
@@ -708,7 +708,7 @@
             $.post('/?s=merch/getFrame',{'id':3,'type':99,'company_id':'{$company_id}','company_type':'{$company_type}'},function(res) {
                 let html = '<div class="disf" style="align-items: flex-start;width:100%;height:100%;">'+
                     '       <div class="leftBox" style="width:29%;height:100%;">\n' +
-                    '                 <img src="https://shop.gogo198.cn/'+res.adv['img']+'" class="windowsAdv" alt="" style="cursor:pointer;width:100%;height:100%;">\n' +
+                    '                 <img loading="lazy" alt="GOGO198 網站圖片" src="https://shop.gogo198.cn/'+res.adv['img']+'" class="windowsAdv" alt="" style="cursor:pointer;width:100%;height:100%;">\n' +
                     '            </div>'+
                     '            <div class="rightBox" style="width:71%;height:100%;border-left:1px solid {$data['websites']['info']['color_word']};">'+
                 '                 <div class="page_innerhead disf">'+

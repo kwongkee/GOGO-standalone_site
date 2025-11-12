@@ -70,13 +70,13 @@
         <div class="swiper-wrapper">
             {volist name="rotate" id="vo"}
             <!--<div class="swiper-slide" style="background:url(https://admin.gogo198.cn/$vo.url);width: 100%;height: 100%;background-repeat: no-repeat;background-size: cover;background-position: center center;max-height: 500px !important;height: 500px;"></div>-->
-            <!--<div class="swiper-slide"><a href="?s=index/detail&id={$vo.id}&isrotate=2"><img src="https://admin.gogo198.cn/{$vo.thumb}" alt="" style="width:100%;" class="carousel-image"/></a></div>-->
+            <!--<div class="swiper-slide"><a href="?s=index/detail&id={$vo.id}&isrotate=2"><img loading="lazy" alt="GOGO198 網站圖片" src="https://admin.gogo198.cn/{$vo.thumb}" alt="" style="width:100%;" class="carousel-image"/></a></div>-->
             {if $vo.go_other==1}
-            <div class="swiper-slide"><a href="{$vo.other_link}" target="_blank"><img src="https://admin.gogo198.cn/{$vo.thumb}" alt="" style="width:100%;" class="carousel-image"/></a></div>
+            <div class="swiper-slide"><a href="{$vo.other_link}" target="_blank"><img loading="lazy" alt="GOGO198 網站圖片" src="https://admin.gogo198.cn/{$vo.thumb}" alt="" style="width:100%;" class="carousel-image"/></a></div>
             {elseif($vo.go_other==2)}
-            <div class="swiper-slide"><a href="?s=index/detail&id={$vo.other_navbar}"><img src="https://admin.gogo198.cn/{$vo.thumb}" alt="" style="width:100%;" class="carousel-image"/></a></div>
+            <div class="swiper-slide"><a href="?s=index/detail&id={$vo.other_navbar}"><img loading="lazy" alt="GOGO198 網站圖片" src="https://admin.gogo198.cn/{$vo.thumb}" alt="" style="width:100%;" class="carousel-image"/></a></div>
             {else}
-            <div class="swiper-slide"><a href="javascript:;"><img src="https://admin.gogo198.cn/{$vo.thumb}" alt="" style="width:100%;" class="carousel-image"/></a></div>
+            <div class="swiper-slide"><a href="javascript:;"><img loading="lazy" alt="GOGO198 網站圖片" src="https://admin.gogo198.cn/{$vo.thumb}" alt="" style="width:100%;" class="carousel-image"/></a></div>
             {/if}
             {/volist}
         </div>

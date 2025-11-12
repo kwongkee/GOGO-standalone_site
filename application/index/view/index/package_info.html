@@ -155,7 +155,7 @@
                             <!--待签收的包裹可修改-->
                             <div class="parcel_info" style="padding:10px;">
                                 <fieldset class="layui-elem-field">
-                                    <legend style="display: flex;align-items: center;">入仓方式 <img src="./img/edit.png" alt="" class="edit_img" onclick="edit_info(1,this)"></legend>
+                                    <legend style="display: flex;align-items: center;">入仓方式 <img loading="lazy" alt="GOGO198 網站圖片" src="./img/edit.png" alt="" class="edit_img" onclick="edit_info(1,this)"></legend>
                                     <div class="layui-field-box">
                                         <div class="need_edit" style="display: none;">
                                             <div class="warehouse_delivery">
@@ -227,7 +227,7 @@
                                     </div>
                                 </fieldset>
                                 <fieldset class="layui-elem-field">
-                                    <legend>物品信息<img src="./img/edit.png" alt="" class="edit_img" onclick="edit_info(2,this)"></legend>
+                                    <legend>物品信息<img loading="lazy" alt="GOGO198 網站圖片" src="./img/edit.png" alt="" class="edit_img" onclick="edit_info(2,this)"></legend>
                                     {if(!empty($goods))}
                                     <div class="layui-field-box">
                                         <blockquote class="layui-elem-quote">物品信息</blockquote>
@@ -574,7 +574,7 @@
                                                     <div class="layui-upload-list" id="file-upload-list">
                                                         {volist name="parcel['condition_file']" id="vo"}
                                                         <div style="display: inline-block;">
-                                                            <img onclick="seePic(this);" src="https://decl.gogo198.cn/{$vo}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png">
+                                                            <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="https://decl.gogo198.cn/{$vo}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png">
                                                         </div>
                                                         {/volist}
                                                     </div>
@@ -771,7 +771,7 @@
                                                                     {if(!empty($parcel['pic_file']))}
                                                                     {volist name="parcel['pic_file']" id="vo"}
                                                                     <div style="display: inline-block;">
-                                                                        <img onclick="seePic(this);" src="https://decl.gogo198.cn/{$vo}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png">
+                                                                        <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="https://decl.gogo198.cn/{$vo}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png">
                                                                     </div>
                                                                     {/volist}
                                                                     {/if}
@@ -813,7 +813,7 @@
                                                     <div class="layui-upload-list" id="file-upload-list">
                                                         {volist name="parcel['condition_file']" id="vo"}
                                                         <div style="display: inline-block;">
-                                                            <img onclick="seePic(this);" src="https://decl.gogo198.cn/{$vo}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png">
+                                                            <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="https://decl.gogo198.cn/{$vo}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png">
                                                         </div>
                                                         {/volist}
                                                     </div>
@@ -1590,7 +1590,7 @@
                                 area: ['auto'],
                                 skin: 'layui-layer-nobg',
                                 shadeClose: true,
-                                content: '<img width="100%" src="' + $(obj)[0].src + '" />'
+                                content: '<img loading="lazy" alt="GOGO198 網站圖片" width="100%" src="' + $(obj)[0].src + '" />'
                             });
                         }
 

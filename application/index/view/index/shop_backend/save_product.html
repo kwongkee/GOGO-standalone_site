@@ -197,7 +197,7 @@
                         <div class="layui-upload-list" id="img_file-upload-list">
                             {if !empty($data['goods_image'])}
                             <div style="display: inline-block;">
-                                <img onclick="seePic(this);" src="{$data['goods_image']}" data-src2="{$data['goods_image']}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png" style="width:80px;height:80px;">
+                                <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$data['goods_image']}" data-src2="{$data['goods_image']}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png" style="width:80px;height:80px;">
                                 <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
                                 <input type="hidden" name="goods_image" value="{$data['goods_image']}">
                             </div>
@@ -218,7 +218,7 @@
                             {if !empty($data['images_arr'])}
                             {volist name="data['images_arr']" id="vo"}
                             <div style="display: inline-block;">
-                                <img onclick="seePic(this);" src="{$vo['path']}" data-src2="{$vo['path']}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png" style="width:80px;height:80px;">
+                                <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$vo['path']}" data-src2="{$vo['path']}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png" style="width:80px;height:80px;">
                                 <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
                                 <input type="hidden" name="images_arr[]" value="{$vo['path']}">
                             </div>
@@ -239,7 +239,7 @@
                         <div class="layui-upload-list" id="video_file-upload-list">
                             {if !empty($data['goods_video'])}
                             <div style="display: inline-block;">
-                                <img onclick="seePic(this);" src="{$data['goods_video']}" data-src2="{$data['goods_video']}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png" style="width:80px;height:80px;">
+                                <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$data['goods_video']}" data-src2="{$data['goods_video']}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png" style="width:80px;height:80px;">
                                 <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
                                 <input type="hidden" name="video" value="{$data['goods_video']}">
                             </div>
@@ -415,7 +415,7 @@
                 layer.msg(res.message, {time: 2000}, function () {
                     if (res.error == 1) {
 
-                        $('#img_file-upload-list').append('<div style="display: inline-block;"><img onclick="seePic(this);" src="' + res.file_path + '" data-src2="' + res.file_path + '" class="layui-upload-img" style="width:80px;height:80px;" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="goods_image" value="' + res.file_path + '"></div>')
+                        $('#img_file-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="' + res.file_path + '" data-src2="' + res.file_path + '" class="layui-upload-img" style="width:80px;height:80px;" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="goods_image" value="' + res.file_path + '"></div>')
                     }
                 });
             }
@@ -435,7 +435,7 @@
                 layer.closeAll('loading'); //关闭loading
                 layer.msg(res.message, {time: 2000}, function () {
                     if (res.error == 1) {
-                        $('#img_file2-upload-list').append('<div style="display: inline-block;"><img onclick="seePic(this);" src="' + res.file_path + '" data-src2="' + res.file_path + '"  class="layui-upload-img" style="width:80px;height:80px;" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="images_arr[]" value="' + res.file_path + '"></div>')
+                        $('#img_file2-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="' + res.file_path + '" data-src2="' + res.file_path + '"  class="layui-upload-img" style="width:80px;height:80px;" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="images_arr[]" value="' + res.file_path + '"></div>')
                     }
                 });
             }
@@ -455,7 +455,7 @@
                 layer.closeAll('loading'); //关闭loading
                 layer.msg(res.message, {time: 2000}, function () {
                     if (res.error == 1) {
-                        $('#video_file-upload-list').append('<div style="display: inline-block;"><img onclick="seePic(this);" src="' + res.file_path + '" data-src2="' + res.file_path + '"  class="layui-upload-img" style="width:80px;height:80px;" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="video" value="' + res.file_path + '"></div>')
+                        $('#video_file-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="' + res.file_path + '" data-src2="' + res.file_path + '"  class="layui-upload-img" style="width:80px;height:80px;" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="video" value="' + res.file_path + '"></div>')
                     }
                 });
             }

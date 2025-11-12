@@ -67,7 +67,7 @@
 <div class="m-gotop">
     <div class="m-gotop-box" style="background:{$data['websites']['info']['color']};color:{$data['websites']['info']['color_word']};position:fixed;top:{if $data['websites']['customer']['direction']==1} 20% {elseif($data['websites']['customer']['direction']==2)} 50% {elseif($data['websites']['customer']['direction']==2)} 80% {/if};right:0;z-index: 11;">
         <a href="javascript:common_operation(7,this);" class="a a-top" style="right:0;z-index:9;box-shadow: rgb(102, 102, 102) 0px 0px 10px;">
-            <img src="{$data['source_link']}/shop/img/kefu.png" alt="" style="margin-top:22%;">
+            <img loading="lazy" alt="GOGO198 網站圖片" src="{$data['source_link']}/shop/img/kefu.png" alt="" style="margin-top:22%;">
         </a>
     </div>
 </div>
@@ -79,17 +79,17 @@
 
             <div class="col-md-3 col-sm-3">
                 <div class="widget">
-                    <img src="{$data['source_link']}{$data['websites']['info']['slogo']}" class="trademark">
+                    <img loading="lazy" alt="GOGO198 網站圖片" src="{$data['source_link']}{$data['websites']['info']['slogo']}" class="trademark">
                     <h4 class="widgetheading f18" style="margin-bottom:5px;">联系信息</h4>
                     <p>
                         {if !empty($data['websites']['info']['mobile'])}
-                        <img src="/shop/img/tel.png" alt="" style="width:18px;"/> <a href="tel:{$data['websites']['info']['mobile']}">{$data['websites']['info']['mobile']}</a> <br>
+                        <img loading="lazy" alt="GOGO198 網站圖片" src="/shop/img/tel.png" alt="" style="width:18px;"/> <a href="tel:{$data['websites']['info']['mobile']}">{$data['websites']['info']['mobile']}</a> <br>
                         {/if}
                         {if !empty($data['websites']['info']['email'])}
-                        <img src="/shop/img/email.png" alt="" style="width:18px;"/> <a href="mailto:{$data['websites']['info']['email']}">{$data['websites']['info']['email']}</a> <br>
+                        <img loading="lazy" alt="GOGO198 網站圖片" src="/shop/img/email.png" alt="" style="width:18px;"/> <a href="mailto:{$data['websites']['info']['email']}">{$data['websites']['info']['email']}</a> <br>
                         {/if}
                         {if !empty($data['websites']['info']['address'])}
-                        <img src="/shop/img/address.png" alt="" style="width:18px;"/> <a href="javascript:void(0);">{$data['websites']['info']['address']}</a>
+                        <img loading="lazy" alt="GOGO198 網站圖片" src="/shop/img/address.png" alt="" style="width:18px;"/> <a href="javascript:void(0);">{$data['websites']['info']['address']}</a>
                         {/if}
                     </p>
                 </div>
@@ -143,9 +143,9 @@
                                 {if !empty($data['websites']['website_contact'])}
                                 {foreach name="data['websites']['website_contact']" key="key" id="vo"}
                                 {if $vo['type']==1}
-                                <li style="margin-left:0;"><a href="{$vo['link']}" data-placement="top" title="{$vo['name']}" target="_blank"><img src="{$data['source_link']}{$vo['ico']}" alt="" style="width:18px;margin-bottom: 3px;"/></a></li>
+                                <li style="margin-left:0;"><a href="{$vo['link']}" data-placement="top" title="{$vo['name']}" target="_blank"><img loading="lazy" alt="GOGO198 網站圖片" src="{$data['source_link']}{$vo['ico']}" alt="" style="width:18px;margin-bottom: 3px;"/></a></li>
                                 {else}
-                                <li style="margin-left:0;"><a href="/?s=merch/social_detail&id={$vo['id']}&company_id={$company_id}&company_type={$company_type}" data-placement="top" title="{$vo['name']}"><img src="{$data['source_link']}{$vo['ico']}" alt="" style="width:18px;margin-bottom: 3px;"/></a></li>
+                                <li style="margin-left:0;"><a href="/?s=merch/social_detail&id={$vo['id']}&company_id={$company_id}&company_type={$company_type}" data-placement="top" title="{$vo['name']}"><img loading="lazy" alt="GOGO198 網站圖片" src="{$data['source_link']}{$vo['ico']}" alt="" style="width:18px;margin-bottom: 3px;"/></a></li>
                                 {/if}
                                 {/foreach}
                                 {/if}

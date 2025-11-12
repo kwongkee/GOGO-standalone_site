@@ -61,7 +61,7 @@
 </style>
     {if !empty($isrotate)}
         <div class="topimg" style="position:relative;display:none;">
-            <img class="detail_topimg" src="https://dtc.gogo198.net{if !empty($navbar_menu)}{$website['inpic']}{else}{$data['thumb']}{/if}" alt="" style="max-width:100%;width:100%;">
+            <img loading="lazy" alt="文章圖片：{$data.title|default='GOGO198 內容圖'}" class="detail_topimg" src="https://dtc.gogo198.net{if !empty($navbar_menu)}{$website['inpic']}{else}{$data['thumb']}{/if}" alt="" style="max-width:100%;width:100%;">
             <div class="topimg_frame" style="border:1px solid {$website['color_word']};position:absolute;width:100%;height:100%;position:absolute;left:0;top:0;">
                 
             </div>
@@ -76,15 +76,15 @@
             	        {if $vo.go_other==1}
                             <div class="swiper-slide"><a href="{$vo.other_link}" target="_blank">
                                 <div style="background: url(https://dtc.gogo198.net{$vo.thumb});background-repeat: no-repeat;background-size:cover;background-position:top center;" class="carousel-image"></div>
-                                <!--                                <img src="https://website.gogo198.net{$vo.thumb}" alt="" style="width:100%;" class="carousel-image"/>-->
+                                <!--                                <img loading="lazy" alt="文章圖片：{$data.title|default='GOGO198 內容圖'}" src="https://website.gogo198.net{$vo.thumb}" alt="" style="width:100%;" class="carousel-image"/>-->
                             </a></div>
             	        {elseif($vo.go_other==2)}
-<!--            	            <div class="swiper-slide"><a href="?s=index/detail&company_id={$company_id}&company_type={$company_type}&id={$vo.other_navbar}"><img src="https://website.gogo198.net{$vo.thumb}" alt="" style="width:100%;" class="carousel-image"/></a></div>-->
+<!--            	            <div class="swiper-slide"><a href="?s=index/detail&company_id={$company_id}&company_type={$company_type}&id={$vo.other_navbar}"><img loading="lazy" alt="文章圖片：{$data.title|default='GOGO198 內容圖'}" src="https://website.gogo198.net{$vo.thumb}" alt="" style="width:100%;" class="carousel-image"/></a></div>-->
                             <div class="swiper-slide"><a href="{$vo.other_link}">
                                 <div style="background: url(https://dtc.gogo198.net{$vo.thumb});background-repeat: no-repeat;background-size:cover;background-position:top center;" class="carousel-image"></div>
                             </a></div>
             	        {else}
-<!--            	            <div class="swiper-slide"><a href="javascript:;"><img src="https://website.gogo198.net{$vo.thumb}" alt="" style="width:100%;" class="carousel-image"/></a></div>-->
+<!--            	            <div class="swiper-slide"><a href="javascript:;"><img loading="lazy" alt="文章圖片：{$data.title|default='GOGO198 內容圖'}" src="https://website.gogo198.net{$vo.thumb}" alt="" style="width:100%;" class="carousel-image"/></a></div>-->
                             <div class="swiper-slide"><a href="javascript:;">
                                 <div style="background: url(https://dtc.gogo198.net{$vo.thumb});background-repeat: no-repeat;background-size:cover;background-position:top center;" class="carousel-image"></div>
                             </a></div>
@@ -139,7 +139,7 @@
                                                     <div class="gallery-item">
                                                         <div class="gallery-thumb">
                                                             {if $vo2.format==1}
-                                                                <img src="https://dtc.gogo198.net{$vo2.thumb}" class="img-responsive" alt="1st gallery Thumb">
+                                                                <img loading="lazy" alt="文章圖片：{$data.title|default='GOGO198 內容圖'}" src="https://dtc.gogo198.net{$vo2.thumb}" class="img-responsive" alt="1st gallery Thumb">
                                                             {elseif($vo2.format==2)}
                                                                 <div class="color_word" style="background:{$vo2['color']};color:{$vo2['word_color']};margin:0;width:100%;height:200px;">{$vo2['color_word']}</div>
                                                             {/if}
@@ -165,7 +165,7 @@
                                                 <div class="gallery-item">
                                                     <div class="gallery-thumb">
                                                         {if $vo.format==1}
-                                                            <img src="https://dtc.gogo198.net{$vo.thumb}" class="img-responsive" alt="1st gallery Thumb">
+                                                            <img loading="lazy" alt="文章圖片：{$data.title|default='GOGO198 內容圖'}" src="https://dtc.gogo198.net{$vo.thumb}" class="img-responsive" alt="1st gallery Thumb">
                                                         {elseif($vo.format==2)}
                                                             <div class="color_word" style="background:{$vo['color']};color:{$vo['word_color']};margin:0;width:100%;height:200px;">{$vo['color_word']}</div>
                                                         {/if}
@@ -198,7 +198,7 @@
                             {if $data['avatar_location']==1}
                                 <div class="" style="text-align:center;">
                                     {if $data['format']==1 && isset($data['thumb'])}
-                                        <img class="main_img" src="https://dtc.gogo198.net{$data['thumb']}" alt="" />
+                                        <img loading="lazy" alt="文章圖片：{$data.title|default='GOGO198 內容圖'}" class="main_img" src="https://dtc.gogo198.net{$data['thumb']}" alt="" />
                                     {elseif($data['format']==2 && isset($data['color']))}
                                         <div class="color_word" style="background:{$data['color']} !important;color:{$data['word_color']};width:500px;height:280px;">{$data['color_word']}</div>
                                     {/if}
@@ -208,7 +208,7 @@
                             {if $data['avatar_location']==2}
                                 <div class="" style="text-align:center;">
                                     {if $data['format']==1 && isset($data['thumb'])}
-                                        <img class="main_img" src="https://dtc.gogo198.net{$data['thumb']}" alt="" />
+                                        <img loading="lazy" alt="文章圖片：{$data.title|default='GOGO198 內容圖'}" class="main_img" src="https://dtc.gogo198.net{$data['thumb']}" alt="" />
                                     {elseif($data['format']==2 && isset($data['color']))}
                                         <div class="color_word" style="background:{$data['color']} !important;color:{$data['word_color']};font-size:16px;width:500px;height:280px;">{$data['color_word']}</div>
                                     {/if}
@@ -219,11 +219,11 @@
                         <div class="like">
                             <div class="disf">
                                 <div class="like_box disf" onclick="like_num()">
-                                    <img src="./img/like.png" alt="">
+                                    <img loading="lazy" alt="文章圖片：{$data.title|default='GOGO198 內容圖'}" src="./img/like.png" alt="">
                                     <div class="like_num upd_num">&nbsp;{$news['like_num']}</div>
                                 </div>
                                 <div class="like_box disf" onclick="comment()">
-                                    <img src="./img/comment.png" alt="">
+                                    <img loading="lazy" alt="文章圖片：{$data.title|default='GOGO198 內容圖'}" src="./img/comment.png" alt="">
                                     <div class="like_num upd_comment_num">&nbsp;{$news['comment_num']}</div>
                                 </div>
                                 <div class="like_box disf" onclick="show_share()">

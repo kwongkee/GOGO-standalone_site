@@ -75,7 +75,7 @@
                     {if $news['avatar_location']==1}
                     <div class="" style="text-align:center;">
                         {if $news['format']==1 && isset($news['thumb'])}
-                        <img class="main_img" src="//shop.gogo198.cn/{$news['thumb']}" alt="" />
+                        <img loading="lazy" alt="GOGO198 網站圖片" class="main_img" src="//shop.gogo198.cn/{$news['thumb']}" alt="" />
                         {elseif($news['format']==2 && isset($news['color']))}
                         <div class="color_word" style="background:{$news['color']} !important;color:{$news['word_color']};width:500px;height:280px;">{$news['color_word']}</div>
                         {/if}
@@ -85,7 +85,7 @@
                     {if $news['avatar_location']==2}
                     <div class="" style="text-align:center;">
                         {if $news['format']==1 && isset($news['thumb'])}
-                        <img class="main_img" src="//shop.gogo198.cn/{$news['thumb']}" alt="" />
+                        <img loading="lazy" alt="GOGO198 網站圖片" class="main_img" src="//shop.gogo198.cn/{$news['thumb']}" alt="" />
                         {elseif($news['format']==2 && isset($news['color']))}
                         <div class="color_word" style="background:{$news['color']} !important;color:{$news['word_color']};font-size:16px;width:500px;height:280px;">{$news['color_word']}</div>
                         {/if}
@@ -96,11 +96,11 @@
                 <div class="like">
                     <div class="disf">
                         <div class="like_box disf" onclick="like_num()">
-                            <img src="./img/like.png" alt="">
+                            <img loading="lazy" alt="GOGO198 網站圖片" src="./img/like.png" alt="">
                             <div class="like_num upd_num">&nbsp;{$news['like_num']}</div>
                         </div>
                         <div class="like_box disf" onclick="comment()">
-                            <img src="./img/comment.png" alt="">
+                            <img loading="lazy" alt="GOGO198 網站圖片" src="./img/comment.png" alt="">
                             <div class="like_num upd_comment_num">&nbsp;{$news['comment_num']}</div>
                         </div>
                         <div class="like_box disf" onclick="show_share()">

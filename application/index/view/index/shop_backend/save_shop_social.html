@@ -96,7 +96,7 @@
                         <div class="layui-upload-list" id="img_file-upload-list">
                             {if !empty($data['ico'])}
                             <div style="display: inline-block;">
-                                <img onclick="seePic(this);" src="{$data['ico']}" class="layui-upload-img" style="width:80px;height:80px;">
+                                <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$data['ico']}" class="layui-upload-img" style="width:80px;height:80px;">
                                 <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
                                 <input type="hidden" name="ico[]" value="{$data['ico']}">
                             </div>
@@ -133,7 +133,7 @@
                     <div class="layui-upload-list" id="img_file2-upload-list" style="background: #e6e6e6;">
                         {if !empty($data['img'])}
                         <div style="display: inline-block;">
-                            <img onclick="seePic(this);" src="{$data['img']}" class="layui-upload-img" style="width:80px;height:80px;">
+                            <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$data['img']}" class="layui-upload-img" style="width:80px;height:80px;">
                             <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
                             <input type="hidden" name="img[]" value="{$data['img']}">
                         </div>
@@ -201,7 +201,7 @@
                 layer.closeAll('loading'); //关闭loading
                 layer.msg(res.message, {time: 2000}, function () {
                     if (res.error == 1) {
-                        $('#img_file-upload-list').append('<div style="display: inline-block;"><img onclick="seePic(this);" src="' + res.file_path + '" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="ico[]" value="' + res.file_path + '"></div>')
+                        $('#img_file-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="' + res.file_path + '" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="ico[]" value="' + res.file_path + '"></div>')
                     }
                 });
             }
@@ -222,7 +222,7 @@
                 layer.closeAll('loading'); //关闭loading
                 layer.msg(res.message, {time: 2000}, function () {
                     if (res.error == 1) {
-                        $('#img_file2-upload-list').append('<div style="display: inline-block;"><img onclick="seePic(this);" src="' + res.file_path + '" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="img[]" value="' + res.file_path + '"></div>')
+                        $('#img_file2-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="' + res.file_path + '" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="img[]" value="' + res.file_path + '"></div>')
                     }
                 });
             }

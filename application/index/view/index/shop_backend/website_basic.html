@@ -59,7 +59,7 @@
                             <div class="layui-upload-list" id="slogo_file-upload-list">
                                 {if !empty($data['slogo'])}
                                 <div style="display: inline-block;">
-                                    <img onclick="seePic(this);" src="{$data['slogo']}" class="layui-upload-img" style="width:80px;height:80px;" alt="网站图标图片">
+                                    <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$data['slogo']}" class="layui-upload-img" style="width:80px;height:80px;" alt="网站图标图片">
                                     <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
                                     <input type="hidden" name="slogo_file[]" value="{$data['slogo']}">
                                 </div>
@@ -79,7 +79,7 @@
                             <div class="layui-upload-list" id="logo_file-upload-list">
                                 {if !empty($data['logo'])}
                                 <div style="display: inline-block;">
-                                    <img onclick="seePic(this);" src="{$data['logo']}" class="layui-upload-img" style="width:80px;height:80px;" alt="网站logo图片">
+                                    <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$data['logo']}" class="layui-upload-img" style="width:80px;height:80px;" alt="网站logo图片">
                                     <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
                                     <input type="hidden" name="logo_file[]" value="{$data['logo']}">
                                 </div>
@@ -243,7 +243,7 @@
                 layer.msg(res.message, {time: 2000}, function () {
                     if (res.error == 1) {
 
-                        $('#slogo_file-upload-list').append('<div style="display: inline-block;"><img onclick="seePic(this);" src="' + res.file_path + '" class="layui-upload-img" style="width:80px;height:80px;" alt="网站图标图片"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="slogo_file[]" value="' + res.file_path + '"></div>')
+                        $('#slogo_file-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="' + res.file_path + '" class="layui-upload-img" style="width:80px;height:80px;" alt="网站图标图片"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="slogo_file[]" value="' + res.file_path + '"></div>')
                     }
                 });
             }
@@ -266,7 +266,7 @@
                     if (res.error == 1)
                     {
 
-                        $('#logo_file-upload-list').append('<div style="display: inline-block;"><img onclick="seePic(this);" src="'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;" alt="网站logo图片"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="logo_file[]" value="'+res.file_path+'"></div>')
+                        $('#logo_file-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;" alt="网站logo图片"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="logo_file[]" value="'+res.file_path+'"></div>')
                     }
                 });
             }

@@ -26,7 +26,7 @@
                 {if $data['avatar_location']==1}
                 <div class="" style="text-align:center;">
                     {if $data['format']==1 && isset($data['thumb'])}
-                    <img class="main_img" src="{$data['source_link']}{$data['thumb']}" alt="" />
+                    <img loading="lazy" alt="文章圖片：{$data.title|default='GOGO198 內容圖'}" class="main_img" src="{$data['source_link']}{$data['thumb']}" alt="" />
                     {elseif($data['format']==2 && isset($data['color']))}
                     <div class="color_word" style="background:{$data['color']} !important;color:{$data['word_color']};width:500px;height:280px;">{$data['color_word']}</div>
                     {/if}
@@ -38,7 +38,7 @@
                 {if $data['avatar_location']==2}
                 <div class="" style="text-align:center;">
                     {if $data['format']==1 && isset($data['thumb'])}
-                    <img class="main_img" src="{$data['source_link']}{$data['thumb']}" alt="" />
+                    <img loading="lazy" alt="文章圖片：{$data.title|default='GOGO198 內容圖'}" class="main_img" src="{$data['source_link']}{$data['thumb']}" alt="" />
                     {elseif($data['format']==2 && isset($data['color']))}
                     <div class="color_word" style="background:{$data['color']} !important;color:{$data['word_color']};font-size:16px;width:500px;height:280px;">{$data['color_word']}</div>
                     {/if}

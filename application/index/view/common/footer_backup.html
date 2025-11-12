@@ -21,7 +21,7 @@
     					<h4 class="widgetheading f18" style="margin-bottom:5px;">联系我们</h4>
     					<p>
     						<i class="fa fa-phone" style="width: 18px;font-size: 15px;padding-left: 4px;"></i> <a href="tel:{$website['tel']}">{$website['tel']}</a> <br>
-    						<img src="img/email.png" alt="" style="width:18px;"/> <a href="mailto:{$website['email']}">{$website['email']}</a>
+    						<img loading="lazy" alt="GOGO198 網站圖片" src="img/email.png" alt="" style="width:18px;"/> <a href="mailto:{$website['email']}">{$website['email']}</a>
     					</p>
     				</div>
     			</div>
@@ -65,9 +65,9 @@
                 				<ul class="social-network" style="overflow-x:unset;position:absolute;">
                 					{volist name="website.website_contact" key="key" id="vo"}
             					        {if $vo['type']==1}
-            						    <li style="margin-left:0;"><a href="{$vo['link']}" data-placement="top" title="{$vo['name']}" target="_blank"><img src="https://shop.gogo198.cn/{$vo.ico}" alt="" style="width:18px;margin-bottom: 3px;"/></a></li>
+            						    <li style="margin-left:0;"><a href="{$vo['link']}" data-placement="top" title="{$vo['name']}" target="_blank"><img loading="lazy" alt="GOGO198 網站圖片" src="https://shop.gogo198.cn/{$vo.ico}" alt="" style="width:18px;margin-bottom: 3px;"/></a></li>
             						    {else}
-            						        <li><a href="?s=index/contact_detail&id={$vo['id']}" data-placement="top" title="{$vo['name']}"><img src="https://shop.gogo198.cn/{$vo.ico}" alt="" style="width:18px;margin-bottom: 3px;"/></a></li>
+            						        <li><a href="?s=index/contact_detail&id={$vo['id']}" data-placement="top" title="{$vo['name']}"><img loading="lazy" alt="GOGO198 網站圖片" src="https://shop.gogo198.cn/{$vo.ico}" alt="" style="width:18px;margin-bottom: 3px;"/></a></li>
             						    {/if}
             						{/volist}
                 				</ul>
@@ -78,9 +78,9 @@
     					<ul class="social-network2" style="display:none;">
     					    {volist name="website.website_contact" key="key" id="vo"}
     					        {if $vo['type']==1}
-    						    <li style="margin-left:0;"><a href="{$vo['link']}" data-placement="top" title="{$vo['name']}" target="_blank"><img src="https://shop.gogo198.cn/{$vo.ico}" alt="" style="width:18px;margin-bottom: 3px;"/></a></li>
+    						    <li style="margin-left:0;"><a href="{$vo['link']}" data-placement="top" title="{$vo['name']}" target="_blank"><img loading="lazy" alt="GOGO198 網站圖片" src="https://shop.gogo198.cn/{$vo.ico}" alt="" style="width:18px;margin-bottom: 3px;"/></a></li>
     						    {else}
-    						        <li><a href="?s=index/contact_detail&id={$vo['id']}" data-placement="top" title="{$vo['name']}"><img src="https://shop.gogo198.cn/{$vo.ico}" alt="" style="width:18px;margin-bottom: 3px;"/></a></li>
+    						        <li><a href="?s=index/contact_detail&id={$vo['id']}" data-placement="top" title="{$vo['name']}"><img loading="lazy" alt="GOGO198 網站圖片" src="https://shop.gogo198.cn/{$vo.ico}" alt="" style="width:18px;margin-bottom: 3px;"/></a></li>
     						    {/if}
     						{/volist}
     					</ul>    

@@ -837,7 +837,7 @@
                         // 如果有变体且所有变体都已添加，或者没有变体但产品已添加，则禁用父级复选框
                         var parentDisabled = (hasVariants && allVariantsDisabled) || (!hasVariants && isProductDisabled);
                         content += '<td><input type="checkbox" name="product_variant" value="' + product.goods_id + '" lay-skin="primary" class="parent-checkbox" data-has-variants="' + hasVariants + '" data-product-id="' + product.goods_id + '" ' + (parentDisabled ? 'disabled' : '') + '></td>';
-                        content += '<td><img style="width:40px;height:40px;margin-right:5px;" src="'+product.goods_image+'">' + product.goods_name + '</td>';
+                        content += '<td><img loading="lazy" alt="GOGO198 網站圖片" style="width:40px;height:40px;margin-right:5px;" src="'+product.goods_image+'">' + product.goods_name + '</td>';
                         content += '<td>' + (product.goods_number || 0) + '</td>';
                         content += '</tr>';
 

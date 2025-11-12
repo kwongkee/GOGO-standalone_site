@@ -123,10 +123,10 @@
 
                             <div class="disf rightBtm" style="align-items: end;">
                                 <div class="chatIcon">
-                                    <img src="/img/chat_upload.png" alt="" id="fileUpload">
+                                    <img loading="lazy" alt="GOGO198 網站圖片" src="/img/chat_upload.png" alt="" id="fileUpload">
                                 </div>
                                 <div class="chatIcon">
-                                    <img src="/img/chat_share.png" alt="" style="width: 26px;height:26px;" id="shareBox" onclick="shareInfo()">
+                                    <img loading="lazy" alt="GOGO198 網站圖片" src="/img/chat_share.png" alt="" style="width: 26px;height:26px;" id="shareBox" onclick="shareInfo()">
                                 </div>
                                 <button class="layui-btn submit-btn" lay-submit="" lay-filter="component-form-demo1" style="margin-top:0px;height:130px;">发送</button>
                             </div>
@@ -224,7 +224,7 @@
                 layer.closeAll('loading'); //关闭loading
                 if(res.code == 1)
                 {
-                    let content = '<a href="//shop.gogo198.cn/'+ res.file_path +'" target="_blank"><img src="//shop.gogo198.cn/'+ res.file_path +'" onerror=src="//shop.gogo198.cn/attachment/images/default_file.png" /></a>';
+                    let content = '<a href="//shop.gogo198.cn/'+ res.file_path +'" target="_blank"><img loading="lazy" alt="GOGO198 網站圖片" src="//shop.gogo198.cn/'+ res.file_path +'" onerror=src="//shop.gogo198.cn/attachment/images/default_file.png" /></a>';
                     let pid = $('#pid').val();
                     let origin_page = window.parent.location.href;
 
@@ -371,7 +371,7 @@
                                     html += '                             <div class="chatlog">' + res.data[i].info[i2]['content'] + '</div>';
 
                                     html += '                            <div class="toolbar disf">\n' +
-                                        '                                    <div class="more_sel toolbarImg" onclick="more_sel(this,'+res.data[i].info[i2]['id']+')"><img src="/img/more_sel.png"></div>';
+                                        '                                    <div class="more_sel toolbarImg" onclick="more_sel(this,'+res.data[i].info[i2]['id']+')"><img loading="lazy" alt="GOGO198 網站圖片" src="/img/more_sel.png"></div>';
                                     html += '                                <div class="more_sel_box">\n'+
                                         '                                      <div class="quote_sel toolbar_info" onclick="quoteInfo(this,' + res.data[i].info[i2]['id'] + ')">引用</div>\n'+
                                         '                                      <div class="copy_sel toolbar_info" onclick="copyInfo(this,'+res.data[i].info[i2]['id']+')">复制</div>\n';
@@ -379,9 +379,9 @@
                                         html += '                                      <div class="withdraw_sel toolbar_info" onclick="withdrawInfo(this,' + res.data[i].info[i2]['id'] + ')">撤回</div>\n';
                                     }
                                     html += '                                </div>\n';
-                                    //     '                                 <div class="quote toolbarImg" onclick="quoteInfo(this,' + res.data[i].info[i2]['id'] + ')"><img src="https://www.gogo198.cn/assets/d2eace91/images/newhome/chat_quote.png"></div>\n';
+                                    //     '                                 <div class="quote toolbarImg" onclick="quoteInfo(this,' + res.data[i].info[i2]['id'] + ')"><img loading="lazy" alt="GOGO198 網站圖片" src="https://www.gogo198.cn/assets/d2eace91/images/newhome/chat_quote.png"></div>\n';
                                     // if (res.data[i].info[i2]['is_read'] == 0) {
-                                    //     html += '                                 <div class="withdraw toolbarImg" onclick="withdrawInfo(this,' + res.data[i].info[i2]['id'] + ')"><img src="https://www.gogo198.cn/assets/d2eace91/images/newhome/chat_withdraw.png"></div>';
+                                    //     html += '                                 <div class="withdraw toolbarImg" onclick="withdrawInfo(this,' + res.data[i].info[i2]['id'] + ')"><img loading="lazy" alt="GOGO198 網站圖片" src="https://www.gogo198.cn/assets/d2eace91/images/newhome/chat_withdraw.png"></div>';
                                     // }
                                     html += '                            </div>\n';
                                     html += '                           </div>\n';
@@ -422,12 +422,12 @@
                                     }
                                     html += '                              <div class="chatlog">' + res.data[i].info[i2]['content'] + '</div>\n' +
                                         '                                  <div class="toolbar disf">\n' +
-                                        '                                    <div class="more_sel toolbarImg" onclick="more_sel(this,'+res.data[i].info[i2]['id']+')"><img src="/img/more_sel.png"></div>'+
+                                        '                                    <div class="more_sel toolbarImg" onclick="more_sel(this,'+res.data[i].info[i2]['id']+')"><img loading="lazy" alt="GOGO198 網站圖片" src="/img/more_sel.png"></div>'+
                                         '                                    <div class="more_sel_box">\n'+
                                         '                                      <div class="quote_sel toolbar_info" onclick="quoteInfo(this,' + res.data[i].info[i2]['id'] + ')">引用</div>\n'+
                                         '                                      <div class="copy_sel toolbar_info" onclick="copyInfo(this,'+res.data[i].info[i2]['id']+')">复制</div>\n'+
                                         '                                    </div>\n'+
-                                        // '                                         <div class="quote toolbarImg" onclick="quoteInfo(this,' + res.data[i].info[i2]['id'] + ')"><img src="https://www.gogo198.cn/assets/d2eace91/images/newhome/chat_quote.png"></div>\n' +
+                                        // '                                         <div class="quote toolbarImg" onclick="quoteInfo(this,' + res.data[i].info[i2]['id'] + ')"><img loading="lazy" alt="GOGO198 網站圖片" src="https://www.gogo198.cn/assets/d2eace91/images/newhome/chat_quote.png"></div>\n' +
                                         '                                  </div>\n'+
                                         '                                </div>\n'+
                                         '                                <div class="disf time_info">\n' +
