@@ -103,11 +103,6 @@
 
     <section id="content" style="background:{$website['color_inner']};">
         <div class="container detail_container">
-            {include file="common/breadcrumb" /}
-            {block name="breadcrumb_last"}
-                <li class="active">{$product.name}</li>
-            {/block}
-            
             {if !empty($navbar_menu)}
                 <!--<p class="navbar_menu"><i class="fa fa-sign-in" style="margin-right:5px;display:none;"></i><a href="/">HOME</a>&nbsp;<span style="color:#d1a575;">\</span>&nbsp;{$navbar_menu}</p>-->
             {/if}
@@ -328,5 +323,4 @@
         });
     }
 </script>
-
  
