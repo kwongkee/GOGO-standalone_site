@@ -103,6 +103,15 @@
 
     <section id="content" style="background:{$website['color_inner']};">
         <div class="container detail_container">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li><a href="/">首頁</a></li>
+                {if !empty($navbar_menu)}
+                <li><a href="#">{$navbar_menu}</a></li>
+                {/if}
+                <li class="active">{$data.title|default="文章詳情"}</li>
+              </ol>
+            </nav>
             {if !empty($navbar_menu)}
                 <!--<p class="navbar_menu"><i class="fa fa-sign-in" style="margin-right:5px;display:none;"></i><a href="/">HOME</a>&nbsp;<span style="color:#d1a575;">\</span>&nbsp;{$navbar_menu}</p>-->
             {/if}
