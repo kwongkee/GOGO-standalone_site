@@ -551,7 +551,7 @@ class Merch
                     $maxprice = $list_info[3];
                     #获取原“商品名称/分类名称”的条件
                     $list2 = Db::connect($this->config)->name('goods')->where(['goods_name'=>['like','%'.$catename.'%'],'goods_status'=>['=',1],'shop_id'=>['=',$this->websites['cid']]])->select();
-
+                    dd($list2);
                     $condition = $this->get_condition($id,$list2,1,['value_show'=>0,'brand_show'=>0]);
                 }
                 else{
