@@ -420,7 +420,7 @@ class Index
 
 
     #站点管理
-    public function website_manage(Request $request){
+    public function website_manage($company,Request $request){
         $data = input();
         $cid = isset($data['cid'])?base64_decode($data['cid']):0;
         $mid = isset($data['mid'])?base64_decode($data['mid']):0;
