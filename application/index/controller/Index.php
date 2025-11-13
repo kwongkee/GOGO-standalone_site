@@ -420,7 +420,7 @@ class Index
 
 
     #站点管理
-    public function website_manage($company,Request $request){
+    public function website_manage($company_id = 0,Request $request){
         $data = input();
         $cid = isset($data['cid'])?base64_decode($data['cid']):0;
         $mid = isset($data['mid'])?base64_decode($data['mid']):0;
@@ -495,7 +495,7 @@ class Index
 
     #企业网站==============================================start
     #商家网站首页
-    public function merch_website_index(Request $request)
+    public function merch_website_index($company_id = 0,Request $request)
     {
         $data = input();
         $company_id = intval($data['company_id']);

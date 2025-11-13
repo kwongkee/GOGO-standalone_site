@@ -14,7 +14,7 @@ use think\Route;
 Route::get('/', 'index/index/index'); // 定义GET请求路由规则
 //独立网站界面===========start
 //Route::get('index/website_manage', 'index/Index/website_manage');#企业管理
-Route::rule(':company_id/admin/', 'index/Index/website_manage')
+Route::rule(':company_id/admin/', 'index/index/website_manage')
     ->pattern(['company_id' => '\d+']);
 Route::any('index/get_enterprise_info', 'index/Index/get_enterprise_info');#获取企业信息
 Route::any('index/save_domainname', 'index/Index/save_domainname');#保存企业二级域名
@@ -206,7 +206,7 @@ Route::rule(':company_id/web/', 'index/index/merch_website_index')
 
 //**商家商城界面**====START
 //Route::get('merch/merch_shop_index', 'index/Merch/merch_shop_index'); // 定义GET请求路由规则
-Route::rule(':company_id/shop/', 'index/Merch/merch_shop_index')
+Route::rule(':company_id/shop/', 'index/merch/merch_shop_index')
     ->pattern(['company_id' => '\d+']);
 Route::any('merch/rate_detail', 'index/Merch/rate_detail'); // 定义GET请求路由规则
 Route::any('merch/detail', 'index/Merch/detail'); // 菜单详情

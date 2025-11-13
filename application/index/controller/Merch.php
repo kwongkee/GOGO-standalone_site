@@ -130,7 +130,7 @@ class Merch
     }
 
     #商家商城首页
-    public function merch_shop_index(Request $request){
+    public function merch_shop_index($company_id = 0,Request $request){
         $dat = input();
         $company_id = intval($dat['company_id']);
         $company_type = intval($dat['company_type']);
