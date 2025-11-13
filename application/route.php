@@ -206,7 +206,7 @@ Route::rule('web', 'index/index/merch_website_index');
 
 //**商家商城界面**====START
 //Route::get('merch/merch_shop_index', 'index/Merch/merch_shop_index'); // 定义GET请求路由规则
-Route::rule('shop', 'index/Merch/merch_shop_index');
+Route::rule('shops', 'index/Merch/merch_shop_index');
 //    ->pattern(['company_id' => '\d+']);
 Route::any('merch/rate_detail', 'index/Merch/rate_detail'); // 定义GET请求路由规则
 Route::any('merch/detail', 'index/Merch/detail'); // 菜单详情
