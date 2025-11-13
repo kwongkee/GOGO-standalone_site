@@ -11,6 +11,29 @@
 
 use think\Route;
 
+// 静态资源路由排除
+$staticPatterns = [
+    'css/:file' => '.*',
+    'js/:file' => '.*',
+    'images/:file' => '.*',
+    'uploads/:file' => '.*',
+    'static/:file' => '.*'
+];
+
+foreach ($staticPatterns as $pattern => $filePattern) {
+    Route::rule($pattern, function() {
+        return false; // 交由Web服务器处理
+    })->pattern(['file' => $filePattern]);
+}
+
+// 扩展名排除
+Route::rule(':path\.:ext', function() {
+    return false;
+})->pattern([
+    'path' => '.*',
+    'ext' => '(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|map)'
+]);
+
 Route::get('/', 'index/index/index'); // 定义GET请求路由规则
 //独立网站界面===========start
 //Route::get('index/website_manage', 'index/Index/website_manage');#企业管理
