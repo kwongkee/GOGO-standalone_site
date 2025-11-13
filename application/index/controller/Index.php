@@ -661,6 +661,7 @@ class Index
     #企业网站管理
     public function website_official(Request $request){
         $dat = input();
+        dd($dat);
 
         $company = Db::name('website_user_company')->where(['user_id'=>session('account.id'),'status'=>0])->select();
 
