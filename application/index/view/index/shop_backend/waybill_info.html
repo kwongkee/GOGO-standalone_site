@@ -279,7 +279,7 @@
                                 {if(!empty($package['condition_file']))}
                                 {volist name="package['condition_file']" key="k2" id="v2"}
                                 <div style="display: inline-block;">
-                                    <img onclick="seePic(this);" src="{$v2}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png">
+                                    <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$v2}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png">
                                     <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="condition_file[]" value="{$v2}">
                                 </div>
                                 {/volist}
@@ -880,7 +880,7 @@
                                 {if(!empty($package['condition_file']))}
                                 {volist name="package['condition_file']" key="k2" id="v2"}
                                 <div style="display: inline-block;">
-                                    <img onclick="seePic(this);" src="{$v2}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png">
+                                    <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$v2}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png">
                                     <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="condition_file[]" value="{$v2}">
                                 </div>
                                 {/volist}
@@ -912,7 +912,7 @@
                                 {if(!empty($package['pic_file']))}
                                 {volist name="package['pic_file']" key="k" id="v"}
                                 <div style="display: inline-block;">
-                                    <img onclick="seePic(this);" src="{$v}" class="layui-upload-img">
+                                    <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$v}" class="layui-upload-img">
                                     {if(!isset($order_fee_log['id']))}
                                     <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="pic_file[]" value="{$v}">
                                     {/if}
@@ -1086,7 +1086,7 @@
                                 {if(!empty($package['condition_file']))}
                                 {volist name="package['condition_file']" key="k2" id="v2"}
                                 <div style="display: inline-block;">
-                                    <img onclick="seePic(this);" src="{$v2}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png">
+                                    <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$v2}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png">
                                     <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="condition_file[]" value="{$v2}">
                                 </div>
                                 {/volist}
@@ -1809,7 +1809,7 @@
                 layer.closeAll('loading'); //关闭loading
                 if(res.error == 1)
                 {
-                    $('#pic-upload-list').append('<div style="display: inline-block;"><img src="'+ res.file_path +'" onclick="seePic(this);" class="layui-upload-img"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="pic_file[]" value="'+res.file_path+'"></div>')
+                    $('#pic-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" src="'+ res.file_path +'" onclick="seePic(this);" class="layui-upload-img"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="pic_file[]" value="'+res.file_path+'"></div>')
                 }
             }
         });
@@ -1828,7 +1828,7 @@
                 layer.closeAll('loading'); //关闭loading
                 if(res.error == 1)
                 {
-                    $('#file-upload-list').append('<div style="display: inline-block;"><img src="'+ res.file_path +'" onclick="seePic(this);"  onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png" class="layui-upload-img"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="condition_file[]" value="'+res.file_path+'"></div>')
+                    $('#file-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" src="'+ res.file_path +'" onclick="seePic(this);"  onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png" class="layui-upload-img"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="condition_file[]" value="'+res.file_path+'"></div>')
                 }
             }
         });
@@ -2254,7 +2254,7 @@
             area: ['auto'],
             skin: 'layui-layer-nobg',
             shadeClose: true,
-            content: '<img width="100%" src="' + $(obj)[0].src + '" />'
+            content: '<img loading="lazy" alt="GOGO198 網站圖片" width="100%" src="' + $(obj)[0].src + '" />'
         });
     }
 </script>

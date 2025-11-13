@@ -46,7 +46,7 @@ class GenerateSitemap extends Command
 
             $xml = $this->buildSitemapXml($products);
             $filename = "sitemap_{$page}.xml";
-            $filepath = __DIR__ . '/../../public' . $filename;
+            $filepath = __DIR__ . '/../../public/' . $filename;
             file_put_contents($filepath, $xml);
             $sitemaps[] = $this->baseUrl . '/' . $filename;
 

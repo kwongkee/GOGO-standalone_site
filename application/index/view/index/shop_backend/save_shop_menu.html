@@ -124,7 +124,7 @@
                             <div class="layui-upload-list" id="img_file-upload-list">
                                 {if !empty($data['thumb'])}
                                 <div style="display: inline-block;">
-                                    <img onclick="seePic(this);" src="{$data['thumb']}" class="layui-upload-img" style="width:80px;height:80px;">
+                                    <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$data['thumb']}" class="layui-upload-img" style="width:80px;height:80px;">
                                     <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
                                     <input type="hidden" name="thumb[]" value="{$data['thumb']}">
                                 </div>
@@ -409,7 +409,7 @@
                 layer.closeAll('loading'); //关闭loading
                 layer.msg(res.message, {time: 2000}, function () {
                     if (res.error == 1) {
-                        $('#img_file-upload-list').append('<div style="display: inline-block;"><img onclick="seePic(this);" src="' + res.file_path + '" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="thumb[]" value="' + res.file_path + '"></div>')
+                        $('#img_file-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="' + res.file_path + '" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="thumb[]" value="' + res.file_path + '"></div>')
                     }
                 });
             }

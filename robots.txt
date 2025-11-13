@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /index/customer_login
+Disallow: /runtime/
+Sitemap: https://dtc.gogo198.net/sitemap.xml

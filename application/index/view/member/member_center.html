@@ -82,7 +82,7 @@
                             <li class="li_pid{$v['id']} li_elem" style="display:{if $k==$footer}block{else}none{/if};margin-top:28px;">
                                 <a href="javascript:;" data-href="{$v2['url']}&pid={$v2['id']}" data-idx="{$v2['id']}" class="menu_li2 f15 {if($tz_url==$v2['url'].'&pid='.$v2['id'])}child_a_active{/if}">
                                     {if($v2['icon_type']==1)}
-                                    <!--                            <img src="//shop.gogo198.cn/{$v2['icon']}" class="child_img">-->
+                                    <!--                            <img loading="lazy" alt="GOGO198 網站圖片" src="//shop.gogo198.cn/{$v2['icon']}" class="child_img">-->
                                     {/if}
                                     <span class="child_txt">{$v2['title']}</span>
                                 </a>
@@ -96,14 +96,14 @@
                 <div class="close_menu" onclick="open_menu(this)"><div class="arrow"></div></div>
             </div>
             <div class="logo">
-<!--                <img src="//shop.gogo198.cn/{$website['sico']}" class="logo_img" title="决策系统">-->
+<!--                <img loading="lazy" alt="GOGO198 網站圖片" src="//shop.gogo198.cn/{$website['sico']}" class="logo_img" title="决策系统">-->
                 GoChat
             </div>
         </div>
         <div class="right">
             <div class="menu_head_box" style="width:100%;height: 30px;background:#603160;border-bottom: 1px solid #fff;border-top: 1px solid #fff;color: #fff;text-align: center;line-height: 30px;font-size: 16px;font-weight: 800;">
                 会员中心
-                <img src="/img/share.png" style="width:23px;height:23px;float:right;margin:3px 6px 0 0;cursor:pointer;" onclick="share_website()">
+                <img loading="lazy" alt="GOGO198 網站圖片" src="/img/share.png" style="width:23px;height:23px;float:right;margin:3px 6px 0 0;cursor:pointer;" onclick="share_website()">
             </div>
             <div class="menu_label">
                 <div class="left_label"><div class="label_box menu_label9 menu_label_active" data-index="9" data-parent="客服中心"><span class="f12" onclick="change_menu(this,9)">客服中心</span>&nbsp;<span class="closeBtn f18" onclick="closeWindow(this)" style="display: none;">×</span></div></div>
@@ -343,7 +343,7 @@
             var index = layer.open({
                 type: 1,
                 title: '分享网站',
-                content: '<div style="padding:10px;box-sizing:border-box;text-align:center;"><img src="'+data.img+'" style="width:200px;"></div>',
+                content: '<div style="padding:10px;box-sizing:border-box;text-align:center;"><img loading="lazy" alt="GOGO198 網站圖片" src="'+data.img+'" style="width:200px;"></div>',
                 area:['250px','270px']
             });
         });

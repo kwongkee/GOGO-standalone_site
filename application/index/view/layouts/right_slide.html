@@ -62,13 +62,13 @@
         <div class="leftCont">
             {foreach name="data['websites']['leftFrame']" key="k" id="v")
                 <div class="leftItem" onclick="showWindows({$v['id']},{$v['type']},this)">
-                    <img src="https://shop.gogo198.cn/{$v['icon']}" alt="">
+                    <img loading="lazy" alt="GOGO198 網站圖片" src="https://shop.gogo198.cn/{$v['icon']}" alt="">
                     <p class="f12">{$v['name']}</p>
                 </div>
                 <div class="leftLine"></div>
                 {if $k==0}
                     <div class="turnDown" onclick="checkStartFace(this)">
-                        <img src="img/turndown.png" alt="">
+                        <img loading="lazy" alt="GOGO198 網站圖片" src="img/turndown.png" alt="">
                     </div>
                 {/if}
             {/foreach}
@@ -80,10 +80,10 @@
 <!--弹窗-->
 <div class="windowMask" onclick="closeWindows()"></div>
 <div class="windowBox">
-    <div class="close" onclick="closeWindows()"><img src="img/close.png" alt=""></div>
+    <div class="close" onclick="closeWindows()"><img loading="lazy" alt="GOGO198 網站圖片" src="img/close.png" alt=""></div>
     <div class="windowDiv disf" style="align-items: flex-start;">
         <div class="leftBox">
-            <img src="" class="windowsAdv" alt="">
+            <img loading="lazy" alt="GOGO198 網站圖片" src="" class="windowsAdv" alt="">
         </div>
         <div class="rightBox">
             <div class="levelList1">

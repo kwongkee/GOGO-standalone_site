@@ -525,6 +525,11 @@ Route::any('shop/shunt_edit','index/Shop/shunt_edit');
 Route::any('shop/shunt_addr','index/Shop/shunt_addr');#修改地址
 Route::any('shop/become_buyer','index/Shop/become_buyer');
 
+//SEO优化
+// Route::get('sitemap.xml', 'index/Index/sitemap');
+Route::get('robots.txt', 'index/Index/robots');
+Route::get('sitemap.xml', 'index/sitemap/index');
+
 //api
 Route::any('api/chatgpt', 'api/Chatgpt/index');
 Route::any('api/logout', 'api/Account/index');
@@ -536,3 +541,8 @@ Route::any('api/protected_resource', 'api/Authlogin/protected_resource');
 Route::any('api/userinfo_callback', 'api/Authlogin/userinfo_callback');
 Route::any('api/auto_login', 'api/Authlogin/auto_login');
 Route::any('api/facebook_callback', 'api/Authlogin/facebook_callback');
+
+// 捕获所有未定义路由 → 301
+Route::miss(function() {
+    return redirect('https://dtc.gogo198.net/', 301);
+});

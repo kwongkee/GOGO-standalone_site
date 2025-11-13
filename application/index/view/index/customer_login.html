@@ -124,7 +124,7 @@
     <section id="content" class="non_topimg" >
         <div class="container">
             <div class="disf" style="align-items: center;justify-content: space-between;">
-                <img src="https://shop.gogo198.cn/collect_website/public/uploads/centralize/website_index/64a5282e9bdbf.png" class="logo">
+                <img loading="lazy" alt="GOGO198 網站圖片" src="https://shop.gogo198.cn/collect_website/public/uploads/centralize/website_index/64a5282e9bdbf.png" class="logo">
                 <div id="translate" class="web_translate"></div>
             </div>
             <p class="title">登入/注册</p>
@@ -167,7 +167,7 @@
                             {volist name="autologin_apps2" key="key" id="vo"}
                                 {if $key==1}
                                     <a href="javascript:void(0);" class="option" data-id="{$vo['id']}">
-                                        <img src="{$vo['pic']}" alt="{$vo['name']}">
+                                        <img loading="lazy" alt="GOGO198 網站圖片" src="{$vo['pic']}" alt="{$vo['name']}">
                                         <span>{$vo['name']}</span>
                                     </a>
                                 {/if}
@@ -176,7 +176,7 @@
                         <div class="dropdown-content">
                             {volist name="autologin_apps2" id="vo"}
                             <a href="javascript:select_apps(this,{$vo['id']},'{$vo['pic']}','{$vo['name']}');" class="option" data-id="{$vo['id']}">
-                                <img src="{$vo['pic']}" alt="{$vo['name']}">
+                                <img loading="lazy" alt="GOGO198 網站圖片" src="{$vo['pic']}" alt="{$vo['name']}">
                                 <span>{$vo['name']}</span>
                             </a>
                             {/volist}
@@ -196,7 +196,7 @@
             </div>
             <div class="customerBox">
                 <div class="customerDiv" onclick="show_customer()">
-                    <img src="/img/kefu_black.png" alt="">
+                    <img loading="lazy" alt="GOGO198 網站圖片" src="/img/kefu_black.png" alt="">
                     <p>客服</p>
                 </div>
             </div>
@@ -312,7 +312,7 @@
         var $ = layui.$
             , layer = layui.layer;
         let html = '<a href="javascript:void(0);" class="option" data-id="'+id+'">\n' +
-            '          <img src="'+pic+'" alt="'+name+'">\n' +
+            '          <img loading="lazy" alt="GOGO198 網站圖片" src="'+pic+'" alt="'+name+'">\n' +
             '          <span>'+name+'</span>\n' +
             '       </a>';
         $('.dropdown .dropbtn').html(html);
@@ -464,7 +464,7 @@
                     shadeClose: true,
                     shade: 0.3,
                     area: ['300px', '300px'],
-                    content: '<div style="padding:20px;text-align: center;"><img src="'+data.img+'" style="width:180px;"><p style="margin-top:15px;font-size: 15px;color:#000;text-align: center;">请打开手机扫描</p></div>',
+                    content: '<div style="padding:20px;text-align: center;"><img loading="lazy" alt="GOGO198 網站圖片" src="'+data.img+'" style="width:180px;"><p style="margin-top:15px;font-size: 15px;color:#000;text-align: center;">请打开手机扫描</p></div>',
                 });
                 //开始每5秒查询
                 setInterval(function(){

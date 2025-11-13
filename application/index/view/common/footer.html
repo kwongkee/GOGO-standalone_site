@@ -47,7 +47,7 @@
             <span>联系我们</span>
             <div class="footerChildren">
                 <div class="footerChildrenItem"><i class="fa fa-phone" style="width: 18px;font-size: 15px;padding-left: 4px;"></i> <a href="tel:{$website['tel']}" class="f15">{$website['tel']}</a></div>
-                <div class="footerChildrenItem"><img src="img/email.png" alt="" style="width:18px;"/> <a href="mailto:{$website['email']}" class="f15">{$website['email']}</a></div>
+                <div class="footerChildrenItem"><img loading="lazy" alt="GOGO198 網站圖片" src="img/email.png" alt="" style="width:18px;"/> <a href="mailto:{$website['email']}" class="f15">{$website['email']}</a></div>
             </div>
         </div>
         <div class="footerItem f15">
@@ -196,6 +196,13 @@
     }
 
     $(function(){
+        //图片懒加载
+        document.addEventListener("DOMContentLoaded", function() {
+            document.querySelectorAll('img').forEach(img => {
+                if (!img.hasAttribute('loading')) img.setAttribute('loading', 'lazy');
+            });
+        });
+        
         //菜单栏start
         // 1. 桌面端：二级菜单 hover 交互（缓动显示/隐藏）
         $('.has-sub').hover(
@@ -288,5 +295,52 @@
     }
 </script>
 {include file="common/kefu"}
+
+<!-- Google Analytics 4 (GA4) - dtc.gogo198.net -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LQH9QBW547"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  // GA4 配置（台湾隐私 + 电商优化）
+  gtag('config', 'G-LQH9QBW547', {
+    'send_page_view': true,
+    'cookie_prefix': 'gogo_',
+    'cookie_domain': 'gogo198.net',  // 主域名
+    'cookie_expires': 63072000,      // 2 年
+    'anonymize_ip': true,            // 隐私保护（台湾法规）
+    'linker': {
+      'domains': ['gogo198.net', 'dtc.gogo198.net']
+    }
+  });
+
+  // 自定义事件：页面加载（兼容 ThinkPHP 动态页）
+  document.addEventListener('DOMContentLoaded', function() {
+    gtag('event', 'page_view', {
+      'page_location': window.location.href,
+      'page_title': document.title,
+      'page_path': window.location.pathname + window.location.search
+    });
+  });
+
+  // 自动点击追踪（按钮、链接）
+  document.addEventListener('click', function(e) {
+    let target = e.target.closest('a, button, .btn, [data-track]');
+    if (!target) return;
+
+    let label = (target.innerText || target.value || '').trim().substring(0, 50);
+    let url = target.href || '';
+
+    gtag('event', 'click', {
+      'event_category': 'engagement',
+      'event_label': label,
+      'link_url': url,
+      'page_path': window.location.pathname
+    });
+  });
+</script>
+<!-- End GA4 -->
+
 </body>
 </html>

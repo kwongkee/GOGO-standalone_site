@@ -1,0 +1,21 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": <?php echo json_encode($data['title'] ?? ''); ?>,
+  "image": "{if !empty($data.thumb)}https://dtc.gogo198.net{$data.thumb}{else}https://dtc.gogo198.net/public/default.jpg{/if}",
+  "datePublished": "{if !empty($data.create_time)}{$data.create_time|date='c'}{else}<?php echo date('c'); ?>{/if}",
+  "dateModified": "{if !empty($data.update_time)}{$data.update_time|date='c'}{else}<?php echo date('c'); ?>{/if}",
+  "author": {"@type": "Organization", "name": "GOGO198"},
+  "publisher": {
+    "@type": "Organization",
+    "name": "GOGO198",
+    "logo": {"@type": "ImageObject", "url": "https://dtc.gogo198.net/public/logo.png"}
+  },
+  "description": <?php echo json_encode(strip_tags($data['desc'] ?? '')); ?>,
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://dtc.gogo198.net/?s=index/detail&id=<?php echo input('id') ?? '0'; ?>&company_id=<?php echo input('company_id') ?? '0'; ?>&company_type=<?php echo input('company_type') ?? '0'; ?>"
+  }
+}
+</script>

@@ -46,7 +46,7 @@
     .page_box{padding:10px 0;box-sizing: border-box;justify-content: space-between;color:{$website['color_word']};padding-bottom:0;}
     footer {display: block !important;}
 </style>
-<!--<img class="detail_topimg" src="https://shop.gogo198.cn/{$website['inpic']}" alt="" style="max-width:100%;width:100%;">-->
+<!--<img loading="lazy" alt="GOGO198 網站圖片" class="detail_topimg" src="https://shop.gogo198.cn/{$website['inpic']}" alt="" style="max-width:100%;width:100%;">-->
 <section id="content" class="non_topimg"  style="background:{$website['color_inner']};">
     <div class="container detail_container">
         {if !empty($navbar_menu)}
@@ -63,11 +63,11 @@
             <div class="like">
                 <div class="disf">
                     <div class="like_box disf" onclick="like_num()">
-                        <img src="./img/like.png" alt="">
+                        <img loading="lazy" alt="GOGO198 網站圖片" src="./img/like.png" alt="">
                         <div class="like_num upd_num">&nbsp;{$news['like_num']}</div>
                     </div>
                     <div class="like_box disf" onclick="comment()">
-                        <img src="./img/comment.png" alt="">
+                        <img loading="lazy" alt="GOGO198 網站圖片" src="./img/comment.png" alt="">
                         <div class="like_num upd_comment_num">&nbsp;{$news['comment_num']}</div>
                     </div>
                     <div class="like_box disf" onclick="show_share()">

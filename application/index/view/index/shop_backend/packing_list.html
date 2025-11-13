@@ -393,7 +393,7 @@
                             if (data.data.goods[i].picture == '') {
                                 html += '<td><input type="file" accept="image/*" class="table-input product_pic"></td>\n';
                             } else {
-                                html += '      <td><img src="' + data.data.goods[i].picture + '" style="width:60px;height:60px;"></td>\n';
+                                html += '      <td><img loading="lazy" alt="GOGO198 網站圖片" src="' + data.data.goods[i].picture + '" style="width:60px;height:60px;"></td>\n';
                             }
 
                             html += '      <td><input type="text" class="table-input product_brand" value="' + data.data.goods[i].brand + '"></td>\n' +
@@ -435,7 +435,7 @@
                                 '                    <td><input type="text" class="table-input product_price" value="'+data.data.goods[i].currency+' '+data.data.goods[i].price+'"></td>\n' +
                                 '                    <td><input type="text" class="table-input product_total_price" value="'+data.data.goods[i].currency+' '+data.data.goods[i].total_price+'"></td>\n';
                             if (data.data.goods[i].picture != '') {
-                                html+='                    <td><img src="'+data.data.goods[i].picture+'" style="width:60px;height:60px;"></td>\n';
+                                html+='                    <td><img loading="lazy" alt="GOGO198 網站圖片" src="'+data.data.goods[i].picture+'" style="width:60px;height:60px;"></td>\n';
                             }
                             else{
                                 html +='                    <td><input type="file" accept="image/*" class="table-input product_pic" value=""></td>\n';
@@ -879,7 +879,7 @@
             const t = $(this);
 
             reader.onload = function(e) {
-                $(t).parents(':eq(0)').html('<img src="'+e.target.result+'" style="width:60px;height:60px;">'); // 存储 Base64
+                $(t).parents(':eq(0)').html('<img loading="lazy" alt="GOGO198 網站圖片" src="'+e.target.result+'" style="width:60px;height:60px;">'); // 存储 Base64
             };
             reader.readAsDataURL(file);
         });
