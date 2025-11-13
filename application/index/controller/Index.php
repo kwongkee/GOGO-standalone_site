@@ -278,6 +278,7 @@ class Index
         $website['color_word'] = $this->website_colorword;
         $website['color_head'] = $this->website_colorhead;
         $website['website_contact'] = $this->website_contact;
+        $website['company_id'] = $this->company_id;
         $website['website_canonical'] = $this->website_canonical;
         $website['website_og'] = $this->website_og;
 
@@ -413,7 +414,7 @@ class Index
         $data['url_this'] = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER["REQUEST_URI"];
         $data['thumb'] = 'https://shop.gogo198.cn/collect_website/public/uploads/centralize/website_index/64a5282e9bdbf.png';
         $signPackage = weixin_share($data);
-        
+
         return view('/index/index',compact('menu','rotate','website','services','services2','link','news','signPackage','discovery_rotate'));
     }
 
@@ -435,9 +436,10 @@ class Index
         #独立站菜单
         $menuList = Db::name('centralize_manage_menu')->where(['auth_type'=>5])->select();
 
+        $website['company_id'] = $this->company_id;
         $website['website_canonical'] = $this->website_canonical;
         $website['website_og'] = $this->website_og;
-        
+
         return view('/index/website_manage',compact('company','mid','cid','menuList','website'));
     }
 

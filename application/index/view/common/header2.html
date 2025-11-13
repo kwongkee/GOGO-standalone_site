@@ -6,7 +6,7 @@
     <meta name="uri-translation" content="on" />
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>独立站平台 - website.gogo198.net</title>
+    <title>独立站平台 - dtc.gogo198.net</title>
     <meta name="description" content="独立站平台" />
     <meta name="keywords" content="独立站平台" />
     <link rel="stylesheet" href="css/all.min.css">
@@ -173,30 +173,30 @@
 <!--                <li><a href="#contact">联系我们</a></li>-->
                 <li class="nav_login">
                     {if !empty(session('account'))}
-                    <!-- 这里假设用户已登录 -->
-                    <a href="#" class="nav-link f18 has-submenu">GoFriend <i class="fas fa-chevron-down"></i></a>
-                    <ul class="submenu">
-                        <li class="subitem">
-                            <a href="#" class="sublink f16">站点管理 <i class="fas fa-chevron-right"></i></a>
-                            <ul class="submenu">
-                                <li class="subitem"><a href="/?s=index/website_manage" target="_blank" class="sublink f16">服务管理</a></li>
-                            </ul>
-                        </li>
-                        <li class="subitem">
-                            <a href="https://boss.gogo198.cn/?s=index/member_login&uid=<?php echo base64_encode(session('account.id'));?>" target="_blank" class="sublink f16">
-                                <i class="fas fa-user-circle"></i> 个人中心
-                            </a>
-                        </li>
-                        <li class="subitem">
-                            <a href="/?s=index/change_account" class="sublink f16">
-                                <i class="fas fa-sign-out-alt"></i> 切换账号
-                            </a>
-                        </li>
-                    </ul>
+                        <!-- 这里假设用户已登录 -->
+                        <a href="#" class="nav-link f18 has-submenu">GoFriend <i class="fas fa-chevron-down"></i></a>
+                        <ul class="submenu">
+                            <li class="subitem">
+                                <a href="#" class="sublink f16">站点管理 <i class="fas fa-chevron-right"></i></a>
+                                <ul class="submenu">
+                                    <li class="subitem"><a href="/?s=index/website_manage" target="_blank" class="sublink f16">服务管理</a></li>
+                                </ul>
+                            </li>
+                            <li class="subitem">
+                                <a href="https://boss.gogo198.cn/?s=index/member_login&uid=<?php echo base64_encode(session('account.id'));?>" target="_blank" class="sublink f16">
+                                    <i class="fas fa-user-circle"></i> 个人中心
+                                </a>
+                            </li>
+                            <li class="subitem">
+                                <a href="/?s=index/change_account" class="sublink f16">
+                                    <i class="fas fa-sign-out-alt"></i> 切换账号
+                                </a>
+                            </li>
+                        </ul>
                     {else}
-                    <div class="auth-buttons">
-                        <a class="btn btn-outline" href="/?s=index/customer_login"><i class="fas fa-user"></i> 登录/注册</a>
-                    </div>
+                        <div class="auth-buttons">
+                            <a class="btn btn-outline" href="/?s=index/customer_login"><i class="fas fa-user"></i> 登录/注册</a>
+                        </div>
                     {/if}
                 </li>
             </ul>
@@ -205,34 +205,34 @@
             </button>
 
             {if !empty(session('account'))}
-            <!-- 桌面端登录状态 -->
-            <ul class="already_login">
-                <li class="nav-item">
-                    <a href="#" class="nav-link f18 has-submenu">GoFriend <i class="fas fa-chevron-down"></i></a>
-                    <ul class="submenu">
-                        <li class="subitem">
-                            <a href="/?s=index/website_manage" class="sublink f16">
-                                <i class="fas fa-sitemap"></i>
-                                站点管理
-                            </a>
-                        </li>
-                        <li class="subitem">
-                            <a href="https://boss.gogo198.cn/?s=index/member_login&uid=<?php echo base64_encode(session('account.id'));?>" target="_blank" class="sublink f16">
-                                <i class="fas fa-user-circle"></i> 个人中心
-                            </a>
-                        </li>
-                        <li class="subitem">
-                            <a href="/?s=index/change_account" class="sublink f16">
-                                <i class="fas fa-sign-out-alt"></i> 切换账号
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
+                <!-- 桌面端登录状态 -->
+                <ul class="already_login">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link f18 has-submenu">GoFriend <i class="fas fa-chevron-down"></i></a>
+                        <ul class="submenu">
+                            <li class="subitem">
+                                <a href="/{$website['company_id']}/admin?cid={$website['company_id']}" class="sublink f16">
+                                    <i class="fas fa-sitemap"></i>
+                                    站点管理
+                                </a>
+                            </li>
+                            <li class="subitem">
+                                <a href="https://boss.gogo198.cn/?s=index/member_login&uid=<?php echo base64_encode(session('account.id'));?>" target="_blank" class="sublink f16">
+                                    <i class="fas fa-user-circle"></i> 个人中心
+                                </a>
+                            </li>
+                            <li class="subitem">
+                                <a href="/?s=index/change_account" class="sublink f16">
+                                    <i class="fas fa-sign-out-alt"></i> 切换账号
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             {else}
-            <div class="auth-buttons">
-                <a class="btn btn-outline" href="/?s=index/customer_login"><i class="fas fa-user"></i> 登录/注册</a>
-            </div>
+                <div class="auth-buttons">
+                    <a class="btn btn-outline" href="/?s=index/customer_login"><i class="fas fa-user"></i> 登录/注册</a>
+                </div>
             {/if}
         </nav>
     </div>
