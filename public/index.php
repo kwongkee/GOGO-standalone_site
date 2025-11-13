@@ -14,14 +14,5 @@
 // 定义应用目录
 define('APP_PATH', __DIR__ . '/../application/');
 
-// 检测是否为静态资源请求
-$requestUri = $_SERVER['REQUEST_URI'];
-$staticExtensions = ['css', 'js', 'png', 'jpg', 'jpeg', 'gif', 'ico', 'svg', 'woff', 'ttf'];
-
-if (preg_match('/\.('.implode('|', $staticExtensions).')$/i', $requestUri)) {
-    // 如果是静态资源，直接返回false，让Web服务器处理
-    return false;
-}
-
 // 加载框架引导文件
 require __DIR__ . '/../thinkphp/start.php';
