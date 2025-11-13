@@ -502,7 +502,7 @@ class Merch
                 $query = Db::connect($this->config)->name('goods')->where(['shop_id'=>$this->websites['cid'],'goods_status'=>1]);
 
                 foreach ($keywords as $keyword) {
-                    $query->whereOr('goods_name', 'like', '%' . $keyword . '%');
+                    $query->where('goods_name', 'like', '%' . $keyword . '%');
                 }
 
                 $cateinfo1 = $query->select();
@@ -551,7 +551,7 @@ class Merch
                     $maxprice = $list_info[3];
                     #获取原“商品名称/分类名称”的条件
                     $list2 = Db::connect($this->config)->name('goods')->where(['goods_name'=>['like','%'.$catename.'%'],'goods_status'=>['=',1],'shop_id'=>['=',$this->websites['cid']]])->select();
-                    dd($list2);
+
                     $condition = $this->get_condition($id,$list2,1,['value_show'=>0,'brand_show'=>0]);
                 }
                 else{
@@ -610,7 +610,7 @@ class Merch
             $two_fields = Db::connect($this->config)->name('merchsite_search_column_two')->where(['company_id'=>$this->websites['cid']])->select();
 
             $data['websites'] = $this->websites;
-            dd($condition);
+
             return view('index/shop_frontend/goods_list',compact('condition','list','data','origin_field_condition','field_condition','origin_condition','g_condition','catename','id','g_o','sort_info','sort','hotsearchId','goods_count','limit','currency','currency_sel','minprice','maxprice','result','searchTitle','origin_page','two_fields','condition_arr2','company_id','company_type','websites'));
         }
     }
