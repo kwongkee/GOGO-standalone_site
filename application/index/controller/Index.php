@@ -244,6 +244,7 @@ class Index
 //        dd(base64_encode('https://rte.gogo198.cn/uploads/knowledge_files/20250521/huasa.jpg'));
         $data = input();
 
+        $company_id = $this->company_id;
         #授权登录跳转
         if(isset($data['authid'])){
             $ip = $_SERVER['REMOTE_ADDR'];
@@ -278,7 +279,6 @@ class Index
         $website['color_word'] = $this->website_colorword;
         $website['color_head'] = $this->website_colorhead;
         $website['website_contact'] = $this->website_contact;
-        $website['company_id'] = $this->company_id;
         $website['website_canonical'] = $this->website_canonical;
         $website['website_og'] = $this->website_og;
 
@@ -415,7 +415,7 @@ class Index
         $data['thumb'] = 'https://shop.gogo198.cn/collect_website/public/uploads/centralize/website_index/64a5282e9bdbf.png';
         $signPackage = weixin_share($data);
 
-        return view('/index/index',compact('menu','rotate','website','services','services2','link','news','signPackage','discovery_rotate'));
+        return view('/index/index',compact('menu','rotate','website','services','services2','link','news','signPackage','discovery_rotate','company_id'));
     }
 
 
@@ -436,11 +436,11 @@ class Index
         #独立站菜单
         $menuList = Db::name('centralize_manage_menu')->where(['auth_type'=>5])->select();
 
-        $website['company_id'] = $this->company_id;
+        $company_id = $this->company_id;
         $website['website_canonical'] = $this->website_canonical;
         $website['website_og'] = $this->website_og;
 
-        return view('/index/website_manage',compact('company','mid','cid','menuList','website'));
+        return view('/index/website_manage',compact('company','mid','cid','menuList','website','company_id'));
     }
 
     #获取企业信息
@@ -661,7 +661,6 @@ class Index
     #企业网站管理
     public function website_official(Request $request){
         $dat = input();
-        dd($dat);
 
         $company = Db::name('website_user_company')->where(['user_id'=>session('account.id'),'status'=>0])->select();
 
