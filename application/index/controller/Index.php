@@ -12309,16 +12309,18 @@ class Index
     public function change_account(Request $request){
         $dat = input();
         $account = session('account');
+        $company_id = isset($dat['company_id'])?intval($dat['company_id']):0;
+        $company_type = isset($dat['company_type'])?intval($dat['company_type']):0;
         session('company',null);
         session('account',null);
 
         sleep(1);
 
         if(!empty($account['auth0_info'])){
-            header('Location: https://gogo198.us.auth0.com/v2/logout?client_id=3LuZWceTu0CTzV5z4VBXfDWMaEE3yIVF&returnTo=https://www.gogo198.net'.urlencode('/?s=api/protected_resource&redirect_url=//www.gogo198.net/?s=index/customer_login'));exit;
+            header('Location: https://gogo198.us.auth0.com/v2/logout?client_id=3LuZWceTu0CTzV5z4VBXfDWMaEE3yIVF&returnTo=https://www.gogo198.net'.urlencode('/?s=api/protected_resource&redirect_url=//dtc.gogo198.net/?s=index/customer_login&company_id='.$company_id.'&company_type='.$company_type));exit;
         }
 
-        header('Location:/?s=index/customer_login');exit;
+        header('Location:/?s=index/customer_login&company_id='.$company_id.'&company_type='.$company_type);exit;
     }
 
     #注销账号
