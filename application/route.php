@@ -11,6 +11,13 @@
 
 use think\Route;
 
+// 静态资源排除（放在最前面）
+Route::get('css/:file', function() { return false; });
+Route::get('js/:file', function() { return false; });
+Route::get('images/:file', function() { return false; });
+Route::get('fonts/:file', function() { return false; });
+Route::get('static/:file', function() { return false; });
+
 Route::get('/', 'index/index/index'); // 定义GET请求路由规则
 //独立网站界面===========start
 //Route::get('index/website_manage', 'index/Index/website_manage');#企业管理
