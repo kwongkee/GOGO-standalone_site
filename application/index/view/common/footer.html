@@ -65,9 +65,9 @@
                                 {if $vo2.go_other==1}
                                 <li><a href="{$vo2.other_link}" target="_blank" class="f15">{$vo2.name}</a></li>
                                 {elseif($vo2.go_other==2)}
-                                <li><a href="?s=index/detail&id={$vo2.other_navbar}" target="_blank" class="f15">{$vo2.name}</a></li>
+                                <li><a href="?s=index/detail&id={$vo2.other_navbar}&company_id={$company_id}&company_type={$company_type}" target="_blank" class="f15">{$vo2.name}</a></li>
                                 {else}
-                                <li><a href="?s=index/detail&id={$vo2.id}" class="f15">{$vo2.name}</a></li>
+                                <li><a href="?s=index/detail&id={$vo2.id}&company_id={$company_id}&company_type={$company_type}" class="f15">{$vo2.name}</a></li>
                                 {/if}
                                 {/volist}
                             </ul>
