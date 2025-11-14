@@ -104,6 +104,9 @@
         .fees_table select{width:150px;}
         .fees_table input{width:150px;}
 
+        .spec_table select{width:150px;}
+        .spec_table input{width:150px;}
+
         /* 动画 */
         @keyframes fadeIn {
             from {opacity: 0;transform: translateY(10px);}
@@ -528,7 +531,7 @@
                                                                 {/if}
                                                             </select>
                                                         </div>
-                                                        <div class="layui-input w70" style="line-height: 38px;padding-left:0;">触发收费</div>
+                                                        <div class="layui-input w70" style="line-height: 38px;padding-left:0;white-space: nowrap;">触发收费</div>
                                                     </div>
                                                 </div>
                                                 <!--物流触发-->
@@ -3244,7 +3247,7 @@
             html+='                                                               </select>\n' +
                 '                                                                </div>\n' +
                 '                                                                <input type="number" class="layui-input w100" name="fees_trigger2_num[]" placeholder="输入数值" value="'+res.data['goods']['otherfees_content']['fees_trigger2_num'][i]+'">\n' +
-                '                                                                <div class="layui-input w70" style="line-height: 38px;padding-left:0;">触发收费</div>\n' +
+                '                                                                <div class="layui-input w70" style="line-height: 38px;padding-left:0;white-space:nowrap;">触发收费</div>\n' +
                 '                                                            </div>\n' +
                 '                                                        </div>\n' +
                 '                                                        <!--型号触发-->\n';
@@ -3273,7 +3276,7 @@
             }
             html+='                                                              </select>\n' +
                 '                                                                </div>\n' +
-                '                                                                <div class="layui-input w70" style="line-height: 38px;padding-left:0;">触发收费</div>\n' +
+                '                                                                <div class="layui-input w70" style="line-height: 38px;padding-left:0;white-space:nowrap;">触发收费</div>\n' +
                 '                                                            </div>\n' +
                 '                                                        </div>\n' +
                 '                                                        <!--物流触发-->\n';
@@ -5289,7 +5292,7 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
             '                                                                </select>\n' +
             '                                                            </div>\n' +
             '                                                            <input type="number" class="layui-input w100" name="fees_trigger2_num['+tr_num+']" value="" placeholder="输入数值">\n' +
-            '                                                            <div class="layui-input w70" style="line-height: 38px;padding-left:0;">触发收费</div>\n' +
+            '                                                            <div class="layui-input w70" style="line-height: 38px;padding-left:0;white-space:nowrap;">触发收费</div>\n' +
             '                                                        </div>\n' +
             '                                                    </div>\n' +
             '                                                    <!--型号触发-->\n' +
@@ -5312,7 +5315,7 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
 
         html+='                                                          </select>\n' +
             '                                                            </div>\n' +
-            '                                                            <div class="layui-input w70" style="line-height: 38px;padding-left:0;">触发收费</div>\n' +
+            '                                                            <div class="layui-input w70" style="line-height: 38px;padding-left:0;white-space:nowrap;">触发收费</div>\n' +
             '                                                        </div>\n' +
             '                                                    </div>\n' +
             '                                                    <!--物流触发-->\n' +
