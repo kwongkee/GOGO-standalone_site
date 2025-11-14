@@ -5136,7 +5136,6 @@ class Index
                 return json(['code'=>0,'msg'=>'']);
             }
             elseif($dat['pa']==2){
-                dd($dat);
                 #管理上架
                 $res = '';
                 $g = Db::connect($this->config)->name('goods_merchant')->where(['id'=>$gid,'type'=>$type])->find();
@@ -5209,7 +5208,7 @@ class Index
                 }
 
                 #==平台商城
-                foreach($dat['guide']['my_shop'] as $k=>$v){
+                foreach($dat['guide']['platform_shop'] as $k=>$v){
                     $ishave = Db::connect($this->config)->name('goods_shelf')->where(['gid_merch'=>$gid,'type'=>4,'guide_id'=>$v])->find();
                     if(empty($ishave)){
                         $res=Db::connect($this->config)->name('goods_shelf')->insert([
