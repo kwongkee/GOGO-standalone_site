@@ -482,7 +482,7 @@
                                             {if isset($data['card1_content'][$i]['card1_img'])}
                                             {if !empty($data['card1_content'][$i]['card1_img'])}
                                             <div style="display: inline-block;">
-                                                <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="/{$data['card1_content'][$i]['card1_img']}" class="layui-upload-img" style="width:80px;height:80px;">
+                                                <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$data['card1_content'][$i]['card1_img']}" class="layui-upload-img" style="width:80px;height:80px;">
                                                 <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
                                                 <input type="hidden" name="card1_img[{$i}]" value="{$data['card1_content'][$i]['card1_img']}">
                                             </div>
@@ -600,7 +600,7 @@
                                             {if isset($data['card3_content'][$i]['card3_img'])}
                                             {if !empty($data['card3_content'][$i]['card3_img'])}
                                             <div style="display: inline-block;">
-                                                <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="/{$data['card3_content'][$i]['card3_img']}" class="layui-upload-img" style="width:80px;height:80px;">
+                                                <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$data['card3_content'][$i]['card3_img']}" class="layui-upload-img" style="width:80px;height:80px;">
                                                 <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
                                                 <input type="hidden" name="card3_img[{$i}]" value="{$data['card3_content'][$i]['card3_img']}">
                                             </div>
@@ -943,7 +943,7 @@
                 if(res.error == 1)
                 {
 
-                    $('#img_file-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="/'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="thumb[]" value="'+res.file_path+'"></div>')
+                    $('#img_file-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="thumb[]" value="'+res.file_path+'"></div>')
                 }
             }
         });
@@ -964,7 +964,7 @@
                 if(res.error == 1)
                 {
 
-                    $('#card1_file0-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="/'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="card1_img[0]" value="'+res.file_path+'"></div>')
+                    $('#card1_file0-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="card1_img[0]" value="'+res.file_path+'"></div>')
                 }
             }
         });
@@ -983,7 +983,7 @@
                 if(res.error == 1)
                 {
 
-                    $('#card1_file1-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="/'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="card1_img[1]" value="'+res.file_path+'"></div>')
+                    $('#card1_file1-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="card1_img[1]" value="'+res.file_path+'"></div>')
                 }
             }
         });
@@ -1002,7 +1002,7 @@
                 if(res.error == 1)
                 {
 
-                    $('#card1_file2-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="/'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="card1_img[2]" value="'+res.file_path+'"></div>')
+                    $('#card1_file2-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="card1_img[2]" value="'+res.file_path+'"></div>')
                 }
             }
         });
@@ -1021,7 +1021,7 @@
                 if(res.error == 1)
                 {
 
-                    $('#card1_file3-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="/'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="card1_img[3]" value="'+res.file_path+'"></div>')
+                    $('#card1_file3-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="card1_img[3]" value="'+res.file_path+'"></div>')
                 }
             }
         });
@@ -1043,7 +1043,7 @@
                 if(res.error == 1)
                 {
 
-                    $('#card3_file0-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="/'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="card3_img[0]" value="'+res.file_path+'"></div>')
+                    $('#card3_file0-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="card3_img[0]" value="'+res.file_path+'"></div>')
                 }
             }
         });
@@ -1062,7 +1062,7 @@
                 if(res.error == 1)
                 {
 
-                    $('#card3_file1-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="/'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="card3_img[1]" value="'+res.file_path+'"></div>')
+                    $('#card3_file1-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="card3_img[1]" value="'+res.file_path+'"></div>')
                 }
             }
         });
@@ -1081,7 +1081,7 @@
                 if(res.error == 1)
                 {
 
-                    $('#card3_file2-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="/'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="card3_img[2]" value="'+res.file_path+'"></div>')
+                    $('#card3_file2-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="card3_img[2]" value="'+res.file_path+'"></div>')
                 }
             }
         });
@@ -1100,7 +1100,7 @@
                 if(res.error == 1)
                 {
 
-                    $('#card3_file3-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="/'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="card3_img[3]" value="'+res.file_path+'"></div>')
+                    $('#card3_file3-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="card3_img[3]" value="'+res.file_path+'"></div>')
                 }
             }
         });
@@ -1122,7 +1122,7 @@
                 if(res.error == 1)
                 {
 
-                    $('#img_file2-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="/'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="bg_img[]" value="'+res.file_path+'"></div>')
+                    $('#img_file2-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="bg_img[]" value="'+res.file_path+'"></div>')
                 }
             }
         });
