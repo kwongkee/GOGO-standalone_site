@@ -914,7 +914,14 @@
                 }
                 else if(selectedValues[0]=='A2'){
                     //常见问题
-
+                    $('#format_type').find('option[value="1"]').attr('disabled', true);
+                    $('#format_type').find('option[value="2"]').attr('disabled', true);
+                    $('#format_type').find('option[value="3"]').attr('disabled', true);
+                    $('#format_type').find('option[value="6"]').attr('disabled', true);
+                    $('#format_type').find('option[value="7"]').attr('disabled', true);
+                    $('#format_type').find('option[value="8"]').attr('disabled', true);
+                    $('#format_type').find('option[value="4"]').removeAttr('disabled');
+                    $('#format_type').find('option[value="5"]').removeAttr('disabled');
                 }
                 else if(selectedValues[0]>0){
                     //菜单
@@ -946,7 +953,7 @@
                 }
 
                 form.render(null,'component-form-index');
-                
+
                 menu_plate.closed();
             },
         });
