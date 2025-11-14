@@ -103,15 +103,15 @@
             <label for="format_type">展示样式</label>
             <select name="format_type" id="format_type" lay-filter="format_type" lay-verify="required">
                 {if $id>0}
-                    <option value="" checked>请选择展示样式</option>
-                    <option value="1" {if $data['format_type']==1}selected{/if} checked>大轮播图内容（引用菜单里的导向图）</option>
-                    <option value="2" {if $data['format_type']==2}selected{/if} checked>切换框内容（在本页添加内容）</option>
-                    <option value="3" {if $data['format_type']==3}selected{/if} checked>发现轮播+信息切换框（前往“发现轮播管理”添加内容）</option>
-                    <option value="4" {if $data['format_type']==4}selected{/if} checked>标题+描述折叠框（在本页添加内容）</option>
-                    <option value="5" {if $data['format_type']==5}selected{/if} checked>一问一答图文内容（在本页添加内容）</option>
-                    <option value="6" {if $data['format_type']==6}selected{/if} checked>标题+描述+图片（一行四个）卡片（在本页添加内容）</option>
-                    <option value="7" {if $data['format_type']==7}selected{/if} checked>标题+图标（两行各五个）卡片（在本页添加内容）</option>
-                    <option value="8" {if $data['format_type']==8}selected{/if} checked>标题+描述+图片（两行各两个）卡片（在本页添加内容）</option>
+                    <option value="" disabled>请选择展示样式</option>
+                    <option value="1" {if $data['format_type']==1}selected{/if} disabled>大轮播图内容（引用菜单里的导向图）</option>
+                    <option value="2" {if $data['format_type']==2}selected{/if} disabled>切换框内容（在本页添加内容）</option>
+                    <option value="3" {if $data['format_type']==3}selected{/if} disabled>发现轮播+信息切换框（前往“发现轮播管理”添加内容）</option>
+                    <option value="4" {if $data['format_type']==4}selected{/if} disabled>标题+描述折叠框（在本页添加内容）</option>
+                    <option value="5" {if $data['format_type']==5}selected{/if} disabled>一问一答图文内容（在本页添加内容）</option>
+                    <option value="6" {if $data['format_type']==6}selected{/if} disabled>标题+描述+图片（一行四个）卡片（在本页添加内容）</option>
+                    <option value="7" {if $data['format_type']==7}selected{/if} disabled>标题+图标（两行各五个）卡片（在本页添加内容）</option>
+                    <option value="8" {if $data['format_type']==8}selected{/if} disabled>标题+描述+图片（两行各两个）卡片（在本页添加内容）</option>
                 {else}
                     <option value="">请选择展示样式</option>
                     <option value="1" {if $data['format_type']==1}selected{/if}>大轮播图内容（引用菜单里的导向图）</option>

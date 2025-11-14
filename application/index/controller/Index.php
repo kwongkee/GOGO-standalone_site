@@ -982,7 +982,7 @@ class Index
         if($request->isAjax()){
             $format = 0;
             $connect_menus = explode(',',$dat['select'])[0];
-
+            dd($dat);
             if(empty($connect_menus)){
                 return json(['code'=>-1, 'msg'=>'请选择板块']);
             }
