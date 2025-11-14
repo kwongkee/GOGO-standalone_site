@@ -953,6 +953,10 @@
                     });
                 }
 
+                var firstOptionValue = $('#format_type option:first').val();
+                // 设置第二个select的值为第一个选项的值
+                $('#format_type').val(firstOptionValue);
+
                 form.render(null,'component-form-index');
 
                 menu_plate.closed();
