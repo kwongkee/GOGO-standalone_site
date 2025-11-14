@@ -9,6 +9,7 @@
     <!--<meta name="viewport" content="width=device-width, initial-scale=1.0" />-->
     <meta name="description" content="{$data['websites']['info']['desc']}" />
     <meta name="keywords" content="{$data['websites']['info']['keywords']}" />
+    <meta name="robots" content="{:in_array(request()->path(),['admin','website_manage']) ? 'noindex,nofollow' : 'index,follow'}">
     {:$data['websites']['website_canonical']}
     {:$data['websites']['website_og']}
     <!-- 头部元数据 -->

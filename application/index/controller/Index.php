@@ -7,14 +7,7 @@ use think\Controller;
 use app\index\model\Parceltask;
 use think\Log;
 
-// 开启 GZIP
-if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') && !ob_get_length()) {
-    ob_start('ob_gzhandler');
-} else {
-    ob_start();
-}
-
-class Index
+class Index extends Controller
 {
     public $website_name='';
     public $website_keywords='';
@@ -50,9 +43,16 @@ class Index
     ];
     public $company_id = 0;
     public $company_type = 0;
-
+    // protected $website = [];
+    
+    public function initialize(){
+        parent::initialize();
+    }
+    
     #查询当前网址在系统中的配置
     public function __construct(Request $request){
+        parent::__construct();
+        
         $dat = input();
         $this->company_id = isset($dat['company_id'])?intval($dat['company_id']):0;
         $this->company_type = isset($dat['company_type'])?intval($dat['company_type']):0;
@@ -112,8 +112,7 @@ class Index
 //        platform_log($request);
     }
     
-    public function _empty()
-    {
+    public function _empty(){
         return redirect("https://dtc.gogo198.net/", 301);
     }
 
@@ -11095,6 +11094,29 @@ class Index
             }
         }
 
+        // === 生成 Article Schema（内容页）===
+        $schema = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Article',
+            'headline' => $data['name'],
+            'image' => !empty($data['thumb']) ? 'https://dtc.gogo198.net' . $data['thumb'] : 'https://shop.gogo198.cn/' . $this->website_ico,
+            'author' => ['@type' => 'Organization', 'name' => $this->website_name],
+            'publisher' => [
+                '@type' => 'Organization',
+                'name' => $this->website_name,
+                'logo' => ['@type' => 'ImageObject', 'url' => 'https://shop.gogo198.cn/' . $this->website_sico]
+            ],
+            'datePublished' => date('c', $data['create_time'] ?? time()),
+            'dateModified' => date('c', $data['update_time'] ?? time()),
+            'mainEntityOfPage' => ['@type' => 'WebPage', '@id' => 'https://'.$_SERVER['HTTP_HOST'].$_SERVER["REQUEST_URI"]],
+            'description' => strip_tags(mb_substr($data['content'] ?? '', 0, 200, 'utf-8')) . '...'
+        ];
+        
+        // 递归清理空值
+        $schema = $this->filterEmpty($schema);
+        $article_schema = json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        // -----------------------------------------
+
         #栏目
         #$menu = $this->menu();
         $menu =  $this->company_menu($company_id,$company_type);
@@ -11151,7 +11173,23 @@ class Index
         $all_comment = Db::name('website_crossborder_news_chat')->where(['news_id'=>$dat['id'],'type'=>$type])->order('id','desc')->select();
         $news['comment_num'] = Db::name('website_crossborder_news_chat')->where(['news_id'=>$news['id'],'type'=>$type])->count();
         $news['share_num'] = intval($data['share_num']);
-        return view('',compact('menu','website','data','rand','id','navbar_menu','next_menu','link','rotate','isrotate','news','signPackage','all_comment','type','news','company_id','company_type','website'));
+        
+        return view('',compact('menu','website','data','rand','id','navbar_menu','next_menu','link','rotate','isrotate','news','signPackage','all_comment','type','news','company_id','company_type','website','article_schema'));
+    }
+    
+    /**
+     * 递归过滤空值（防止 JSON 出错）
+     */
+    protected function filterEmpty($array)
+    {
+        foreach ($array as $k => &$v) {
+            if (is_array($v)) {
+                $v = $this->filterEmpty($v);
+            }
+        }
+        return array_filter($array, function ($v) {
+            return $v !== '' && $v !== null && !(is_array($v) && empty($v));
+        });
     }
 
     #图文详情

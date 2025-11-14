@@ -198,12 +198,6 @@ Route::any('index/chat_history', 'index/Index/chat_history');#企业网店-商�
 Route::any('index/chat_histories', 'index/Index/chat_histories');#企业网店-商家与客户聊天历史
 Route::any('index/chat_association_info', 'index/Index/chat_association_info');#企业网店-当前对话的关联信息
 
-//**商家官网界面**====START
-//Route::get('index/merch_website_index', 'index/index/merch_website_index'); // 定义GET请求路由规则
-Route::rule('web', 'index/index/merch_website_index');
-//    ->pattern(['company_id' => '\d+']);
-//**商家官网界面**====END
-
 //**商家商城界面**====START
 //Route::get('merch/merch_shop_index', 'index/Merch/merch_shop_index'); // 定义GET请求路由规则
 Route::rule('shops', 'index/Merch/merch_shop_index');
@@ -224,6 +218,8 @@ Route::any('merch/getFrame', 'index/Merch/getFrame'); // 规则详情
 
 //独立网站界面===========end
 Route::get('index/detail', 'index/Index/detail');
+Route::get('web', 'index/index/merch_website_index');
+//    ->pattern(['company_id' => '\d+']);
 Route::any('index/change_date', 'index/Index/change_date');
 Route::get('index/contact_detail', 'index/Index/contact_detail');
 Route::any('index/advice', 'index/Index/advice');

@@ -10,8 +10,20 @@
     <!--<meta name="viewport" content="width=device-width, initial-scale=1.0" />-->
     <meta name="description" content="{$website['description']}" />
     <meta name="keywords" content="{$website['keywords']}" />
+    <meta name="robots" content="{:in_array(request()->path(),['admin','website_manage']) ? 'noindex,nofollow' : 'index,follow'}">
+    
+    <!-- Canonical URL -->
     {:$website['website_canonical']}
+    
+    <!-- Open Graph -->
     {:$website['website_og']}
+    
+    <!-- Article Schema -->
+    {if isset($article_schema) && !empty($article_schema)}
+        <script type="application/ld+json">
+        {$article_schema}
+        </script>
+    {/if}
     <!-- css -->
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/fancybox/jquery.fancybox.css" rel="stylesheet">

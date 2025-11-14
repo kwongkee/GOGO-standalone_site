@@ -6,13 +6,6 @@ use think\Db;
 use think\Controller;
 use think\Log;
 
-// 开启 GZIP
-if (substr_count($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') && !ob_get_length()) {
-    ob_start('ob_gzhandler');
-} else {
-    ob_start();
-}
-
 class Merch
 {
     public $websites;

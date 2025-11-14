@@ -384,10 +384,10 @@
                             window.location.href="/?s=index/save_template&buss_pid={$param[0]}&buss_id={$param[1]}&ordersn={$param[2]}";
                         }else{
                             if("{$company_id}">0 && "{$company_type}"==1){
-                                window.location.href = "/?s=index/merch_website_index&company_id={$company_id}&company_type={$company_type}"
+                                window.location.href = "/web?company_id={$company_id}&company_type={$company_type}"
                             }
                             else if("{$company_id}">0 && "{$company_type}"==0){
-                                window.location.href = "/?s=merch/merch_shop_index&company_id={$company_id}&company_type={$company_type}"
+                                window.location.href = "/shops?company_id={$company_id}&company_type={$company_type}"
                             }
                             else {
                                 window.location.href = "/";

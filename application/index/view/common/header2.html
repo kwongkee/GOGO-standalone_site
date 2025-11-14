@@ -11,6 +11,7 @@
     <meta name="keywords" content="独立站平台" />
     <link rel="stylesheet" href="css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <meta name="robots" content="{:in_array(request()->path(),['admin','website_manage']) ? 'noindex,nofollow' : 'index,follow'}">
     {:$website['website_canonical']}
     {:$website['website_og']}
     <style>
