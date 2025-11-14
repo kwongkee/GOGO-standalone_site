@@ -1070,6 +1070,9 @@ class Index
                     'bg_color'=>$dat['bg_type']==1?trim($dat['bg_color']):'',
                     'bg_img'=>$dat['bg_type']==2?trim($dat['bg_img'][0]):'',
                     'fq_category_content'=>$dat['format_type']==5?json_encode($fq_category_content,true):'',
+                    'card1_content'=>$dat['format_type']==6?json_encode($card1_content,true):'',
+                    'card2_content'=>$dat['format_type']==7?json_encode($card2_content,true):'',
+                    'card3_content'=>$dat['format_type']==8?json_encode($card3_content,true):'',
                 ]);
             }
 

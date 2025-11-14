@@ -464,27 +464,26 @@
                         <th>图片</th>
                         </thead>
                         <tbody>
-                        <?php $fff = [0,1,2,3];?>
-                        {volist name="fff" key="k" id="i"}
+
                         <tr>
                             <td>
-                                <input type="text" class="layui-input" placeholder="请输入标题" name="card1_title[{$i}]" value="{if isset($data['card1_content'][$i]['card1_title'])}{$data['card1_content'][$i]['card1_title']}{/if}">
+                                <input type="text" class="layui-input" placeholder="请输入标题" name="card1_title[0]" value="{if isset($data['card1_content'][0]['card1_title'])}{$data['card1_content'][0]['card1_title']}{/if}">
                             </td>
                             <td>
-                                <input type="text" class="layui-input" placeholder="请输入描述" name="card1_desc[{$i}]" value="{if isset($data['card1_content'][$i]['card1_desc'])}{$data['card1_content'][$i]['card1_desc']}{/if}">
+                                <input type="text" class="layui-input" placeholder="请输入描述" name="card1_desc[0]" value="{if isset($data['card1_content'][0]['card1_desc'])}{$data['card1_content'][0]['card1_desc']}{/if}">
                             </td>
                             <td>
                                 <div class="layui-upload" style="margin-top: 10px;">
-                                    <button type="button" class="layui-btn" id="card1_file{$i}-upload">上传图片(一张：250*150px)</button>
+                                    <button type="button" class="layui-btn" id="card1_file0-upload">上传图片(一张：250*150px)</button>
                                     <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
                                         预览图：
-                                        <div class="layui-upload-list" id="card1_file{$i}-upload-list">
-                                            {if isset($data['card1_content'][$i]['card1_img'])}
-                                            {if !empty($data['card1_content'][$i]['card1_img'])}
+                                        <div class="layui-upload-list" id="card1_file0-upload-list">
+                                            {if isset($data['card1_content'][0]['card1_img'])}
+                                            {if !empty($data['card1_content'][0]['card1_img'])}
                                             <div style="display: inline-block;">
-                                                <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="/{$data['card1_content'][$i]['card1_img']}" class="layui-upload-img" style="width:80px;height:80px;">
+                                                <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="/{$data['card1_content'][0]['card1_img']}" class="layui-upload-img" style="width:80px;height:80px;">
                                                 <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
-                                                <input type="hidden" name="card1_img[{$i}]" value="{$data['card1_content'][$i]['card1_img']}">
+                                                <input type="hidden" name="card1_img[0]" value="{$data['card1_content'][0]['card1_img']}">
                                             </div>
                                             {/if}
                                             {/if}
@@ -493,7 +492,87 @@
                                 </div>
                             </td>
                         </tr>
-                        {/volist}
+                        <tr>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入标题" name="card1_title[1]" value="{if isset($data['card1_content'][1]['card1_title'])}{$data['card1_content'][1]['card1_title']}{/if}">
+                            </td>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入描述" name="card1_desc[1]" value="{if isset($data['card1_content'][1]['card1_desc'])}{$data['card1_content'][1]['card1_desc']}{/if}">
+                            </td>
+                            <td>
+                                <div class="layui-upload" style="margin-top: 10px;">
+                                    <button type="button" class="layui-btn" id="card1_file1-upload">上传图片(一张：250*150px)</button>
+                                    <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                                        预览图：
+                                        <div class="layui-upload-list" id="card1_file1-upload-list">
+                                            {if isset($data['card1_content'][1]['card1_img'])}
+                                            {if !empty($data['card1_content'][1]['card1_img'])}
+                                            <div style="display: inline-block;">
+                                                <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="/{$data['card1_content'][1]['card1_img']}" class="layui-upload-img" style="width:80px;height:80px;">
+                                                <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
+                                                <input type="hidden" name="card1_img[1]" value="{$data['card1_content'][1]['card1_img']}">
+                                            </div>
+                                            {/if}
+                                            {/if}
+                                        </div>
+                                    </blockquote>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入标题" name="card1_title[2]" value="{if isset($data['card1_content'][2]['card1_title'])}{$data['card1_content'][2]['card1_title']}{/if}">
+                            </td>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入描述" name="card1_desc[2]" value="{if isset($data['card1_content'][2]['card1_desc'])}{$data['card1_content'][2]['card1_desc']}{/if}">
+                            </td>
+                            <td>
+                                <div class="layui-upload" style="margin-top: 10px;">
+                                    <button type="button" class="layui-btn" id="card1_file2-upload">上传图片(一张：250*150px)</button>
+                                    <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                                        预览图：
+                                        <div class="layui-upload-list" id="card1_file2-upload-list">
+                                            {if isset($data['card1_content'][2]['card1_img'])}
+                                            {if !empty($data['card1_content'][2]['card1_img'])}
+                                            <div style="display: inline-block;">
+                                                <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="/{$data['card1_content'][2]['card1_img']}" class="layui-upload-img" style="width:80px;height:80px;">
+                                                <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
+                                                <input type="hidden" name="card1_img[2]" value="{$data['card1_content'][2]['card1_img']}">
+                                            </div>
+                                            {/if}
+                                            {/if}
+                                        </div>
+                                    </blockquote>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入标题" name="card1_title[3]" value="{if isset($data['card1_content'][3]['card1_title'])}{$data['card1_content'][3]['card1_title']}{/if}">
+                            </td>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入描述" name="card1_desc[3]" value="{if isset($data['card1_content'][3]['card1_desc'])}{$data['card1_content'][3]['card1_desc']}{/if}">
+                            </td>
+                            <td>
+                                <div class="layui-upload" style="margin-top: 10px;">
+                                    <button type="button" class="layui-btn" id="card1_file3-upload">上传图片(一张：250*150px)</button>
+                                    <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                                        预览图：
+                                        <div class="layui-upload-list" id="card1_file3-upload-list">
+                                            {if isset($data['card1_content'][3]['card1_img'])}
+                                            {if !empty($data['card1_content'][3]['card1_img'])}
+                                            <div style="display: inline-block;">
+                                                <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="/{$data['card1_content'][3]['card1_img']}" class="layui-upload-img" style="width:80px;height:80px;">
+                                                <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
+                                                <input type="hidden" name="card1_img[3]" value="{$data['card1_content'][3]['card1_img']}">
+                                            </div>
+                                            {/if}
+                                            {/if}
+                                        </div>
+                                    </blockquote>
+                                </div>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -581,28 +660,27 @@
                         <th>图片</th>
                         </thead>
                         <tbody>
-                        <?php $fff = [0,1,2,3];?>
-                        {volist name="fff" key="k" id="i"}
+
                         <tr>
-                            <td>第{if $i<=1}1{else}2{/if}行</td>
+                            <td>第1行</td>
                             <td>
-                                <input type="text" class="layui-input" placeholder="请输入标题" name="card3_title[{$i}]" value="{if isset($data['card3_content'][$i]['card3_title'])}{$data['card3_content'][$i]['card3_title']}{/if}">
+                                <input type="text" class="layui-input" placeholder="请输入标题" name="card3_title[0]" value="{if isset($data['card3_content'][0]['card3_title'])}{$data['card3_content'][0]['card3_title']}{/if}">
                             </td>
                             <td>
-                                <input type="text" class="layui-input" placeholder="请输入描述" name="card3_desc[{$i}]" value="{if isset($data['card3_content'][$i]['card3_desc'])}{$data['card3_content'][$i]['card3_desc']}{/if}">
+                                <input type="text" class="layui-input" placeholder="请输入描述" name="card3_desc[0]" value="{if isset($data['card3_content'][0]['card3_desc'])}{$data['card3_content'][0]['card3_desc']}{/if}">
                             </td>
                             <td>
                                 <div class="layui-upload" style="margin-top: 0px;">
-                                    <button type="button" class="layui-btn" id="card3_file{$i}-upload">上传图片(一张：200*200px)</button>
+                                    <button type="button" class="layui-btn" id="card3_file0-upload">上传图片(一张：200*200px)</button>
                                     <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
                                         预览图：
-                                        <div class="layui-upload-list" id="card3_file{$i}-upload-list">
-                                            {if isset($data['card3_content'][$i]['card3_img'])}
-                                            {if !empty($data['card3_content'][$i]['card3_img'])}
+                                        <div class="layui-upload-list" id="card3_file0-upload-list">
+                                            {if isset($data['card3_content'][0]['card3_img'])}
+                                            {if !empty($data['card3_content'][0]['card3_img'])}
                                             <div style="display: inline-block;">
-                                                <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="/{$data['card3_content'][$i]['card3_img']}" class="layui-upload-img" style="width:80px;height:80px;">
+                                                <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="/{$data['card3_content'][0]['card3_img']}" class="layui-upload-img" style="width:80px;height:80px;">
                                                 <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
-                                                <input type="hidden" name="card3_img[{$i}]" value="{$data['card3_content'][$i]['card3_img']}">
+                                                <input type="hidden" name="card3_img[0]" value="{$data['card3_content'][0]['card3_img']}">
                                             </div>
                                             {/if}
                                             {/if}
@@ -611,7 +689,90 @@
                                 </div>
                             </td>
                         </tr>
-                        {/volist}
+                        <tr>
+                            <td>第1行</td>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入标题" name="card3_title[1]" value="{if isset($data['card3_content'][1]['card3_title'])}{$data['card3_content'][1]['card3_title']}{/if}">
+                            </td>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入描述" name="card3_desc[1]" value="{if isset($data['card3_content'][1]['card3_desc'])}{$data['card3_content'][1]['card3_desc']}{/if}">
+                            </td>
+                            <td>
+                                <div class="layui-upload" style="margin-top: 0px;">
+                                    <button type="button" class="layui-btn" id="card3_file1-upload">上传图片(一张：200*200px)</button>
+                                    <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                                        预览图：
+                                        <div class="layui-upload-list" id="card3_file1-upload-list">
+                                            {if isset($data['card3_content'][1]['card3_img'])}
+                                            {if !empty($data['card3_content'][1]['card3_img'])}
+                                            <div style="display: inline-block;">
+                                                <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="/{$data['card3_content'][1]['card3_img']}" class="layui-upload-img" style="width:80px;height:80px;">
+                                                <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
+                                                <input type="hidden" name="card3_img[1]" value="{$data['card3_content'][1]['card3_img']}">
+                                            </div>
+                                            {/if}
+                                            {/if}
+                                        </div>
+                                    </blockquote>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>第2行</td>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入标题" name="card3_title[2]" value="{if isset($data['card3_content'][2]['card3_title'])}{$data['card3_content'][2]['card3_title']}{/if}">
+                            </td>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入描述" name="card3_desc[2]" value="{if isset($data['card3_content'][2]['card3_desc'])}{$data['card3_content'][2]['card3_desc']}{/if}">
+                            </td>
+                            <td>
+                                <div class="layui-upload" style="margin-top: 0px;">
+                                    <button type="button" class="layui-btn" id="card3_file2-upload">上传图片(一张：200*200px)</button>
+                                    <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                                        预览图：
+                                        <div class="layui-upload-list" id="card3_file2-upload-list">
+                                            {if isset($data['card3_content'][2]['card3_img'])}
+                                            {if !empty($data['card3_content'][2]['card3_img'])}
+                                            <div style="display: inline-block;">
+                                                <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="/{$data['card3_content'][2]['card3_img']}" class="layui-upload-img" style="width:80px;height:80px;">
+                                                <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
+                                                <input type="hidden" name="card3_img[2]" value="{$data['card3_content'][2]['card3_img']}">
+                                            </div>
+                                            {/if}
+                                            {/if}
+                                        </div>
+                                    </blockquote>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>第2行</td>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入标题" name="card3_title[3]" value="{if isset($data['card3_content'][3]['card3_title'])}{$data['card3_content'][3]['card3_title']}{/if}">
+                            </td>
+                            <td>
+                                <input type="text" class="layui-input" placeholder="请输入描述" name="card3_desc[3]" value="{if isset($data['card3_content'][3]['card3_desc'])}{$data['card3_content'][3]['card3_desc']}{/if}">
+                            </td>
+                            <td>
+                                <div class="layui-upload" style="margin-top: 0px;">
+                                    <button type="button" class="layui-btn" id="card3_file3-upload">上传图片(一张：200*200px)</button>
+                                    <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                                        预览图：
+                                        <div class="layui-upload-list" id="card3_file3-upload-list">
+                                            {if isset($data['card3_content'][3]['card3_img'])}
+                                            {if !empty($data['card3_content'][3]['card3_img'])}
+                                            <div style="display: inline-block;">
+                                                <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="/{$data['card3_content'][3]['card3_img']}" class="layui-upload-img" style="width:80px;height:80px;">
+                                                <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
+                                                <input type="hidden" name="card3_img[3]" value="{$data['card3_content'][3]['card3_img']}">
+                                            </div>
+                                            {/if}
+                                            {/if}
+                                        </div>
+                                    </blockquote>
+                                </div>
+                            </td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
