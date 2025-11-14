@@ -60,7 +60,7 @@ class Merch
         if(empty($this->websites['info'])){
             echo '<h1>请先配置电商网店信息后再访问</h1>';exit;
         }
-        
+
         #获取公示信息
         $this->websites['info']['publicity_info'] = json_decode($this->websites['info']['publicity_info'],true);
 
