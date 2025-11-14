@@ -5125,6 +5125,7 @@ class Index
         $type = isset($dat['type'])?intval($dat['type']):0;
 
         if($request->isAjax()){
+            dd($dat);
             if($dat['pa']==1){
                 #检测库存
                 $g = Db::connect($this->config)->name('goods_merchant')->where(['id'=>$gid,'type'=>$type])->find();
