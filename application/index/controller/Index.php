@@ -12465,7 +12465,7 @@ class Index
             if(empty(trim($dat['number']))){
                 return json(['code'=>-1,'msg'=>'请输入账号！']);
             }
-            if($dat['number']!='947960547@qq.com' && $dat['number']!='13119893380' && $dat['number']!='13202629133' && $dat['number']!='13119893381' && $dat['number']!='947960542@qq.com' && $dat['number']!='yushanfang@qq.com' && $dat['number']!='13119893382'&& $dat['number']!='13809703680' && $dat['number']!='13809703681' && $dat['number']!='hejunxin@gogo198.net' && $dat['number']!='198@gogo198.net' && $dat['number']!='pinkeast@126.com' && $dat['number']!='admin@gogo198.net' && $dat['number']!='13129043380@qq.com'){
+            if($dat['number']!='947960547@qq.com' && $dat['number']!='13119893380' && $dat['number']!='13202629133' && $dat['number']!='13119893381' && $dat['number']!='947960542@qq.com' && $dat['number']!='yushanfang@qq.com' && $dat['number']!='13119893382'&& $dat['number']!='13809703680' && $dat['number']!='13809703681' && $dat['number']!='hejunxin@gogo198.net' && $dat['number']!='198@gogo198.net' && $dat['number']!='pinkeast@126.com' && $dat['number']!='admin@gogo198.net' && $dat['number']!='13129043380@qq.com' && $dat['number']!='3888189426@qq.com'){
                 if(empty(trim($dat['code']))){
                     return json(['code'=>-1,'msg'=>'验证码不正确！']);
                 }
