@@ -207,6 +207,7 @@ class Merch
 
                 #商家上架信息==start
                 $shelf_info = Db::connect($this->config)->name('goods_shelf')->whereRaw('cid='.$company_id.' and type=1 and guide_id='.$v['id'].' and keywords <> ""')->select();
+                dd($shelf_info);
                 if(!empty($shelf_info)){
                     foreach($shelf_info as $k2=>$v2) {
                         $arr1 = explode('、', $v2['keywords']);
