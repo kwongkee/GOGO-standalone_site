@@ -1079,7 +1079,7 @@ class Index
             return json(['code'=>0,'msg'=>'保存成功！']);
         }
         else{
-            $data = ['navbar_id'=>'','displayorder'=>'','format_type'=>1,'bg_type'=>1,'bg_color'=>'','bg_img'=>'','fq_ids'=>''];
+            $data = ['navbar_id'=>'','displayorder'=>'','format_type'=>0,'bg_type'=>1,'bg_color'=>'','bg_img'=>'','fq_ids'=>''];
             $cmenu = [];
 
             if($id>0){
