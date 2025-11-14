@@ -135,6 +135,11 @@ class Merch
         $company_id = intval($dat['company_id']);
         $company_type = intval($dat['company_type']);
 
+        $ishave = Db::name('website_basic')->where(['company_id'=>$company_id,'company_type'=>$company_type])->find();
+        if(empty($ishave)){
+            echo '<h1>请先配置电商网店信息后再访问</h1>';exit;
+        }
+
         #获取滚动信息
         $this->websites['rotate_info'] = Db::name('merchsite_rotate')->where(['company_id'=>$company_id,'company_type'=>$company_type])->find();
         if(!empty($this->websites['rotate_info']['content_id'])){

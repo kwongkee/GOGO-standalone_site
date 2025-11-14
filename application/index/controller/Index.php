@@ -501,6 +501,11 @@ class Index
         $company_id = intval($data['company_id']);
         $company_type = intval($data['company_type']); #企业类型，0商家商店，1商家网站
 
+        $ishave = Db::name('website_basic')->where(['company_id'=>$this->company_id,'company_type'=>$this->company_type])->find();
+        if(empty($ishave)){
+            echo '<h1>请先配置资讯网站信息后再访问</h1>';exit;
+        }
+
         #授权登录跳转
         if(isset($data['authid'])){
             $ip = $_SERVER['REMOTE_ADDR'];
