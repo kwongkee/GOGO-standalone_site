@@ -103,7 +103,6 @@
             <label for="format_type">展示样式</label>
             <select name="format_type" id="format_type" lay-filter="format_type" lay-verify="required">
                 {if $id>0}
-                    <option value="" disabled>请选择展示样式</option>
                     <option value="1" {if $data['format_type']==1}selected{/if} disabled>大轮播图内容（引用菜单里的导向图）</option>
                     <option value="2" {if $data['format_type']==2}selected{/if} disabled>切换框内容（在本页添加内容）</option>
                     <option value="3" {if $data['format_type']==3}selected{/if} disabled>发现轮播+信息切换框（前往“发现轮播管理”添加内容）</option>

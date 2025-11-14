@@ -982,7 +982,7 @@ class Index
         if($request->isAjax()){
             $format = 0;
             $connect_menus = explode(',',$dat['select'])[0];
-            dd($dat);
+
             if(empty($connect_menus)){
                 return json(['code'=>-1, 'msg'=>'请选择板块']);
             }
@@ -1104,10 +1104,13 @@ class Index
             foreach($list as $k=>$v){
                 $list[$k]['value'] = $v['id'];
                 $list[$k]['children'] = [];
+                if($id>0){
+                    $list[$k]['disabled'] = true;
+                }
             }
             #针对系统添加内容
-            array_push($list,['id'=>'A1','name'=>'发现轮播+信息切换框','value'=>'A1','children'=>[]]);
-            array_push($list,['id'=>'A2','name'=>'常见问题','value'=>'A2','children'=>[]]);
+            array_push($list,['id'=>'A1','name'=>'发现轮播+信息切换框','value'=>'A1','children'=>[],'disabled'=>$id>0?true:false]);
+            array_push($list,['id'=>'A2','name'=>'常见问题','value'=>'A2','children'=>[],'disabled'=>$id>0?true:false]);
             $list = json_encode($list,true);
 
             if($id>0){
