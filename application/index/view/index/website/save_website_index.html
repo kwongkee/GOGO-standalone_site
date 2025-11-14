@@ -902,9 +902,18 @@
 
                 console.log(selectedValues[0]);
                 if(selectedValues[0]=='A1'){
+                    //发现轮播
+                    $('#format_type').not(2).attr('disabled','disabled');
+                }
+                else if(selectedValues[0]=='A2'){
+                    //常见问题
 
                 }
                 else if(selectedValues[0]>0){
+                    //菜单
+                    $('#format_type').eq(2).attr('disabled','disabled');
+                    $('#format_type').eq(0).removeAttr('disabled');
+
                     $.post("/?s=index/get_nextNavbar&id="+selectedValues,{},function(data2){
                         // var data2 = $.parseJSON(data2);
                         fnavbar = data2.list;
