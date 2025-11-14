@@ -903,7 +903,14 @@
                 console.log(selectedValues[0]);
                 if(selectedValues[0]=='A1'){
                     //发现轮播
-                    $('#format_type').not(2).attr('disabled','disabled');
+                    $('#format_type').find('option[value="3"]').removeAttr('disabled');
+                    $('#format_type').find('option[value="1"]').attr('disabled', true);
+                    $('#format_type').find('option[value="2"]').attr('disabled', true);
+                    $('#format_type').find('option[value="4"]').attr('disabled', true);
+                    $('#format_type').find('option[value="5"]').attr('disabled', true);
+                    $('#format_type').find('option[value="6"]').attr('disabled', true);
+                    $('#format_type').find('option[value="7"]').attr('disabled', true);
+                    $('#format_type').find('option[value="8"]').attr('disabled', true);
                 }
                 else if(selectedValues[0]=='A2'){
                     //常见问题
@@ -911,8 +918,14 @@
                 }
                 else if(selectedValues[0]>0){
                     //菜单
-                    $('#format_type').eq(2).attr('disabled','disabled');
-                    $('#format_type').eq(0).removeAttr('disabled');
+                    $('#format_type').find('option[value="3"]').attr('disabled', true);
+                    $('#format_type').find('option[value="4"]').attr('disabled', true);
+                    $('#format_type').find('option[value="5"]').attr('disabled', true);
+                    $('#format_type').find('option[value="1"]').removeAttr('disabled');
+                    $('#format_type').find('option[value="2"]').removeAttr('disabled');
+                    $('#format_type').find('option[value="6"]').removeAttr('disabled');
+                    $('#format_type').find('option[value="7"]').removeAttr('disabled');
+                    $('#format_type').find('option[value="8"]').removeAttr('disabled');
 
                     $.post("/?s=index/get_nextNavbar&id="+selectedValues,{},function(data2){
                         // var data2 = $.parseJSON(data2);
@@ -932,6 +945,8 @@
                     });
                 }
 
+                form.render(null,'component-form-index');
+                
                 menu_plate.closed();
             },
         });
