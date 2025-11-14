@@ -206,8 +206,8 @@ class Merch
                 $this->websites['guide'][$k]['children'] = Db::connect($this->config)->name('guide_content')->where(['pid'=>$v['id'],'company_id'=>$company_id])->select();
 
                 #商家上架信息==start
-                $shelf_info = Db::connect($this->config)->name('goods_shelf')->whereRaw('cid='.$company_id.' and type=1 and guide_id='.$v['id'].' and keywords <> ""')->select();
-                dd('cid='.$company_id.' and type=1 and guide_id='.$v['id'].' and keywords <> ""');
+                $shelf_info = Db::connect($this->config)->name('goods_shelf')->whereRaw('cid='.$company_id.' and type=3 and guide_id='.$v['id'].' and keywords <> ""')->select();
+
                 if(!empty($shelf_info)){
                     foreach($shelf_info as $k2=>$v2) {
                         $arr1 = explode('、', $v2['keywords']);
