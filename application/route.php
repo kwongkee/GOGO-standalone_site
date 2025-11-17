@@ -12,6 +12,7 @@
 use think\Route;
 
 Route::get('/', 'index/index/index'); // 定义GET请求路由规则
+
 //独立网站界面===========start
 //Route::get('index/website_manage', 'index/Index/website_manage');#企业管理
 Route::rule('admin', 'index/index/website_manage');
@@ -218,6 +219,7 @@ Route::any('merch/getFrame', 'index/Merch/getFrame'); // 规则详情
 //**商家商城界面**====END
 
 //独立网站界面===========end
+
 Route::get('index/detail', 'index/Index/detail');
 Route::get('web', 'index/index/merch_website_index');
 //    ->pattern(['company_id' => '\d+']);
@@ -233,23 +235,7 @@ Route::any('index/all_news', 'index/Index/all_news');
 Route::any('index/cross_news', 'index/Index/cross_news');#跨境新闻
 Route::any('index/cross_news_detail', 'index/Index/cross_news_detail');#跨境新闻详情
 Route::any('index/qualific', 'index/Index/qualific');
-Route::any('index/getLanguage', 'index/Index/getLanguage');
-Route::any('index/chooseMarket', 'index/Index/chooseMarket');#选市场
-Route::any('index/customers', 'index/Index/customers');#找客户
-Route::any('index/background_email', 'index/Index/background_email');#全球客户背景调查-邮箱
-Route::any('index/background_site', 'index/Index/background_site');#全球客户背景调查-网站
-Route::any('index/background_company', 'index/Index/background_company');#全球客户背景调查-企业
-Route::any('index/background_searchworld', 'index/Index/background_searchworld');#全球客户背景调查-查注册信息
-Route::any('index/background_overseasreport', 'index/Index/background_overseasreport');#全球客户背景调查-信用报告
-Route::any('index/KYBreport', 'index/Index/KYBreport');#全球客户背景调查-KYBreport（隐藏）
-Route::any('index/searchengine', 'index/Index/searchengine');#全球客户背景调查-搜索引擎获客
-Route::any('index/domainsearch', 'index/Index/domainsearch');#全球客户背景调查-域名获客
-Route::any('index/findcustomers', 'index/Index/findcustomers');#全球客户背景调查-海关数据
-Route::any('index/enterprise', 'index/Index/enterprise');#全球客户背景调查-社交媒体获客
-Route::any('index/goto_gld', 'index/Index/goto_gld');#跳转到格兰德
-Route::any('index/get_quotetext', 'index/Index/get_quotetext');#获得收费文本信息
-Route::any('index/save_quotetext', 'index/Index/save_quotetext');#保存商户收费文本的修改信息
-Route::any('index/quote_chat', 'index/Index/quote_chat');#聊天工具
+
 Route::any('index/rule_list', 'index/Index/rule_list');#平台规则-列表
 Route::any('index/version_list', 'index/Index/version_list');#平台规则-版本列表
 Route::any('index/rule', 'index/Index/rule');#平台规则-内容
@@ -259,148 +245,24 @@ Route::any('index/msg_detail', 'index/Index/msg_detail');#图文详情
 
 #账户管理
 Route::any('index/save_contact', 'index/Index/save_contact');#授权登录时，补充联系方式（邮箱+手机号）
-Route::any('index/save_basicinfo', 'index/Index/save_basicinfo');#主动注册的第二次进来就要补充资料
-Route::any('index/account_manage', 'index/Index/account_manage');
 Route::any('index/merchant_reg', 'index/Index/merchant_reg');
-Route::any('index/customer_reg', 'index/Index/customer_reg');
 Route::any('index/customer_login', 'index/Index/customer_login');
 Route::any('index/login_log', 'index/Index/login_log');#记录授权登录信息
 Route::any('index/authlogin_result', 'index/Index/authlogin_result');#授权登录结果页
-Route::any('index/account_center', 'index/Index/account_center');
-Route::any('index/basic_info', 'index/Index/basic_info');
-Route::any('index/service_manage', 'index/Index/service_manage');
-Route::any('index/buyer_service', 'index/Index/buyer_service');
-Route::any('index/seller_service', 'index/Index/seller_service');
-Route::any('index/distri_service', 'index/Index/distri_service');
+
+
 Route::any('index/merchant_reg', 'index/Index/merchant_reg');//商户认证
 Route::any('index/send_code', 'index/Index/send_code');
 Route::any('index/send_code2', 'index/Index/send_code2');#实名认证
-Route::any('index/connect_app', 'index/Index/connect_app');
-Route::any('index/distri_service', 'index/Index/distri_service');#分销服务
-Route::any('index/apply_distr', 'index/Index/apply_distr');#分销服务-申请分销
-Route::any('index/approve_distr', 'index/Index/approve_distr');#分销服务-审批分销
-Route::any('index/trade_manage', 'index/Index/trade_manage');#交易管理
 
-Route::any('index/tradeflow', 'index/Index/tradeflow');#交易管理-交易流水
-Route::any('index/tradeflow_buyer', 'index/Index/tradeflow_buyer');
-Route::any('index/tb_order_detail', 'index/Index/tb_order_detail');#订单详情
-Route::any('index/prescription_detail', 'index/Index/prescription_detail');#处方详情
-Route::any('index/tradeflow_seller', 'index/Index/tradeflow_seller');
-Route::any('index/tradeflow_distr', 'index/Index/tradeflow_distr');
-
-Route::any('index/settlement', 'index/Index/settlement');#交易管理-结算管理
-Route::any('index/trade_sure', 'index/Index/trade_sure');
-Route::any('index/collect', 'index/Index/collect');
-Route::any('index/account_list', 'index/Index/account_list');#账户配置
-Route::any('index/save_account', 'index/Index/save_account');#添加账户
-Route::any('index/del_account', 'index/Index/del_account');#删除账户
-Route::any('index/save_collect', 'index/Index/save_collect');#收款发起
-Route::any('index/collect_manage', 'index/Index/collect_manage');#收款管理
-Route::any('index/check_collect', 'index/Index/check_collect');#收款管理-收款待确认
-Route::any('index/collect_list', 'index/Index/collect_list');#收款管理-收款进度列表
-Route::any('index/collect_status', 'index/Index/collect_status');#收款管理-收款状态列表
-Route::any('index/collect_detail', 'index/Index/collect_detail');#收款管理-收款详情
-Route::any('index/withdraw_list', 'index/Index/withdraw_list');#收款管理-提现管理
-Route::any('index/save_withdraw', 'index/Index/save_withdraw');#收款管理-马上提现
-Route::any('index/withdraw_detail', 'index/Index/withdraw_detail');#提现详情
-
-Route::any('index/bussiness_manage', 'index/Index/bussiness_manage');#业务中心
-Route::any('index/bussiness_person', 'index/Index/bussiness_person');#业务中心
-Route::any('index/cross_gather', 'index/Index/cross_gather');#业务中心
-Route::any('index/cross_buy', 'index/Index/cross_buy');#业务中心
-Route::any('index/bussiness_merch', 'index/Index/bussiness_merch');#业务中心
-Route::any('index/chat', 'index/Index/chat');#聊天界面
-
-Route::any('index/order_sure', 'index/Index/order_sure');
-Route::any('index/bill_sure', 'index/Index/bill_sure');
-Route::any('index/view_bill', 'index/Index/view_bill');
-
-Route::any('index/inquiry_list', 'index/Index/inquiry_list');#询价中心-询价表单管理
-Route::any('index/inquiry_template_manage', 'index/Index/inquiry_template_manage');#询价中心-询价模板管理
-Route::any('index/inquiry_template', 'index/Index/inquiry_template');#询价中心-询价模板列表
-Route::any('index/create_inquiry_template', 'index/Index/create_inquiry_template');#询价中心-创建询价模板
-Route::any('index/inquiry_info', 'index/Index/inquiry_info');#询价中心-询价详情
-Route::any('index/save_inquiry', 'index/Index/save_inquiry');#询价中心-发起询价
-Route::any('index/save_page_inquiry', 'index/Index/save_page_inquiry');#询价中心-发起网页模板询价
-Route::any('index/thanks', 'index/Index/thanks');#询价中心-发起询价-感谢使用
-Route::any('index/inquiry_buss', 'index/Index/inquiry_buss');#询价中心-业务列表
-Route::any('index/inquiry_direction', 'index/Index/inquiry_direction');#询价中心-询价方向（模板/表单）
-Route::any('index/inquiry_quote', 'index/Index/inquiry_quote');#询价中心-报价列表
-Route::any('index/quote_detail', 'index/Index/quote_detail');#询价中心-报价详情
-Route::any('index/account_reg', 'index/Index/account_reg');#询价中心-会员认证
-Route::any('index/quote_direction', 'index/Index/quote_direction');#报价中心
-Route::any('index/share_order', 'index/Index/share_order');#报价中心-分享下单
-Route::any('index/quote_list', 'index/Index/quote_list');#报价中心-报价表单
-Route::any('index/share_inquiry', 'index/Index/share_inquiry');#报价中心-分享询价
-Route::any('index/save_quote', 'index/Index/save_quote');#报价中心-询价详情
-Route::any('index/quote_info', 'index/Index/quote_info');#报价中心-询价详情
-Route::any('index/save_template', 'index/Index/save_template');#报价中心-添加模板
-Route::any('index/select_template', 'index/Index/select_template');#报价中心-选择模板
-Route::any('index/upload_template', 'index/Index/upload_template');#报价中心-上架报价
-Route::any('index/save_upload', 'index/Index/save_upload');#报价中心-保存上架报价
-Route::any('index/upload_list', 'index/Index/upload_list');#报价中心-上架报价列表
-Route::any('index/get_country_lines', 'index/Index/get_country_lines');#报价中心-获取当前国线路
-Route::any('index/warehouse_reservation', 'index/Index/warehouse_reservation');#仓库预订
-Route::any('index/manage_reservation', 'index/Index/manage_reservation');#仓库预订-管理订仓
-Route::any('index/add_reservation', 'index/Index/add_reservation');#仓库预订-新增订仓
-Route::any('index/edit_booking', 'index/Index/edit_booking');#仓库预订-修改订仓
-Route::any('index/package_forecast', 'index/Index/package_forecast');#包裹预报
-Route::any('index/add_forecast', 'index/Index/add_forecast');#包裹预报-新增预报
-Route::any('index/order_info', 'index/Index/order_info');#包裹预报-新增预报-进入预报
-Route::any('index/package_info', 'index/Index/package_info');#包裹预报-新增预报-修改预报
-Route::any('index/manage_forecast', 'index/Index/manage_forecast');#包裹预报-管理预报
-Route::any('index/share_orders', 'index/Index/share_orders');#包裹预报-分享预报单
-Route::any('index/generate_distribute_code', 'index/Index/generate_distribute_code');#小程序-我的分销码
-Route::any('index/del_operation', 'index/Index/del_operation');#删除操作
-Route::any('index/distr_recon', 'index/Index/distr_recon');#分销对账列表
-Route::any('index/save_recon', 'index/Index/save_recon');#添加对账
-Route::any('index/del_recon', 'index/Index/del_recon');#删除对账
-Route::any('index/share_recon', 'index/Index/share_recon');#分享对账
-Route::any('index/view_recon', 'index/Index/view_recon');#查看对账单
-Route::any('index/save_newregion', 'index/Index/save_newregion');#新增国地
-Route::any('index/get_region', 'index/Index/get_region');#获取该国下的区域
-Route::any('index/save_overdue', 'index/Index/save_overdue');#保存账单逾期设置
-Route::any('index/bill_center', 'index/Index/bill_center');#账单中心
-Route::any('index/outstanding_list', 'index/Index/outstanding_list');#未结账单
-Route::any('index/notpay_list', 'index/Index/notpay_list');#未结账单-未支付
-Route::any('index/notcollect_list', 'index/Index/notcollect_list');#未结账单-未收款
-Route::any('index/finish_list', 'index/Index/finish_list');#已结账单
-Route::any('index/member_level', 'index/Index/member_level');#会员等级
-Route::any('index/info_center', 'index/Index/info_center');#信息管理
-Route::any('index/connect_manage', 'index/Index/connect_manage');#关联管理
-Route::any('index/sure_mange', 'index/Index/sure_mange');#确认管理
-Route::any('index/consume_center', 'index/Index/consume_center');#消费管理
-Route::any('index/bill_manage', 'index/Index/bill_manage');#账单管理
-Route::any('index/aftersales_manage', 'index/Index/aftersales_manage');#售后管理
-Route::any('index/distr_up', 'index/Index/distr_up');#对接上级
-Route::any('index/distr_down', 'index/Index/distr_down');#管理下级
-Route::any('index/distr_settlement', 'index/Index/distr_settlement');#分销结算
-Route::any('index/finance_center', 'index/Index/finance_center');#财务管理
-Route::any('index/change_identity', 'index/Index/change_identity');#切换身份
-Route::any('index/merchant_manage', 'index/Index/merchant_manage');#商家中心
 Route::any('index/change_account', 'index/Index/change_account');#切换账号
-Route::any('index/logout_account', 'index/Index/logout_account');#注销账号
 Route::any('index/auth_info', 'index/Index/auth_info');#认证信息
 Route::any('index/connect_info', 'index/Index/connect_info');#关联管理
 Route::any('index/intelligent', 'index/Index/intelligent');#智能服务体验-2025-08-21
 Route::any('index/knowledge_list', 'index/Index/knowledge_list');#智能服务体验-多语文档列表-2025-08-21
 Route::any('index/save_knowledge', 'index/Index/save_knowledge');#智能服务体验-多语文档编辑-2025-08-21
-
 //账户管理end
 
-//运单管理start
-Route::any('index/express', 'index/Index/express');
-Route::any('index/express_list', 'index/Index/express_list');
-Route::any('index/express_info', 'index/Index/express_info');
-Route::any('index/express_fee', 'index/Index/express_fee');
-Route::any('index/goods_info', 'index/Index/goods_info');
-Route::any('index/express_manage', 'index/Index/express_manage');
-Route::any('index/save_expressno', 'index/Index/save_expressno');
-Route::any('index/del_expressno', 'index/Index/del_expressno');
-Route::any('index/express_share', 'index/Index/express_share');
-Route::any('index/express_share_ginfo', 'index/Index/express_share_ginfo');
-Route::any('index/notfound', 'index/Index/notfound');
-//运单管理end
 
 //新的会员中心start2024-09-12
 Route::any('members/member_center', 'index/Members/member_center');
@@ -506,11 +368,10 @@ Route::any('gather/calclinecost', 'index/Gather/calclinecost');#计算线路的�
 Route::any('gather/getminiprogramcode', 'index/Gather/getminiprogramcode');#计算线路的计费重和计费额
 Route::any('gather/getweixin', 'index/Gather/getweixin');#获取微信账号信息
 Route::any('gather/get_volumn', 'index/Gather/get_volumn');#获取线路下的货物类别体积比
-Route::any('index/line_info', 'index/Index/line_info');#线路详情
 Route::any('gather/getphonenum', 'index/Gather/getphonenum');#获取国地的手机号前缀
 Route::any('gather/get_rate', 'index/Gather/get_rate');#获取当前币种汇率
-
 //物流官网end
+
 Route::any('index/upload_file', 'index/Index/upload_file');
 Route::any('index/upload_diy_file', 'index/Index/upload_diy_file');
 
