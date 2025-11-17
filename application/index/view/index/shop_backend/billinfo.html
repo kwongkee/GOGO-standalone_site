@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>独立站平台 - website.gogo198.net</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style>
+        :root {--primary: #8B5FBF;--primary-light: #9B7BC6;--primary-dark: #6A4A9C;--accent: #F0E6FF;--background: #f8f9fa;--card-bg: #ffffff;--text: #333333;--text-light: #666666;--shadow: 0 5px 15px rgba(0, 0, 0, 0.08);--shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.12);--gradient: linear-gradient(135deg, #8B5FBF 0%, #6A4A9C 100%);--border-radius: 12px;}
+
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        .action-buttons {display: flex;justify-content:end;gap: 15px;}
+        .btn {padding: 10px 20px;border-radius: 50px;font-weight: 600;cursor: pointer;transition: all 0.3s ease;display: flex;align-items: center;gap: 8px;border: none;}
+        .btn-primary {background: var(--gradient);color: white;}
+        .btn-primary:hover {transform: translateY(-3px);box-shadow: var(--shadow-hover);}
+        .btn-outline {background: transparent;color: var(--primary);border: 2px solid var(--primary-light);}
+        .btn-outline:hover {background: var(--primary-light);color: white;}
+        /* 表单样式 */
+        .form-container {max-width: 800px;}
+        .form-group {margin-bottom: 20px;}
+        .form-label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-control {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;}
+        .form-control:focus {border-color: var(--primary);outline: none;}
+        .form-row {display: grid;grid-template-columns: repeat(2, 1fr);gap: 20px;}
+
+        .content-header {display: flex;justify-content: space-between;align-items: center;margin-bottom: 25px;padding-bottom: 15px;border-bottom: 1px solid #eee;}
+        .content-title {font-size: 1.5rem;color: var(--primary-dark);}
+
+        .layui-form-label{width:100px;}
+        .layui-colorpicker-trigger-span{line-height: 24px;}
+        .layui-btn-container{display: flex;}
+    </style>
+</head>
+<body>
+    <form class="layui-form" action="" lay-filter="component-form-group">
+        <input type="hidden" name="company_id" value="{$company_id}">
+        <input type="hidden" name="company_type" value="{$company_type}">
+
+        <div class="content-header">
+            <h2 class="content-title">账单信息配置</h2>
+    <!--        <div class="action-buttons">-->
+    <!--            <button class="btn btn-primary" lay-submit lay-filter="formDemo">-->
+    <!--                <i class="fas fa-save"></i> 保存更改-->
+    <!--            </button>-->
+    <!--        </div>-->
+        </div>
+
+        <div class="form-container">
+            <div class="layui-form-item">
+                <label class="layui-form-label">法定公司名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="company_name" value="{$info['billinfo']['company_name']}"  lay-verify="required" placeholder="请输入法定公司名称" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label">国家/地区</div>
+                <div class="layui-input-block">
+                    <select name="country_id" id="country_id" lay-search>
+                        {volist name="country" id="vo"}
+                        <option value="{$vo['id']}" {if $info['billinfo']['country_id']==$vo['id']}selected{/if}>{$vo['param2']}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">邮政编码</label>
+                <div class="layui-input-block">
+                    <input type="text" name="postal_code" value="{$info['billinfo']['postal_code']}"  lay-verify="required" placeholder="请输入邮政编码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">详细地址</label>
+                <div class="layui-input-block">
+                    <input type="text" name="address" value="{$info['billinfo']['address']}"  lay-verify="required" placeholder="请输入详细地址" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-primary" lay-submit lay-filter="formDemo">
+                    <i class="fas fa-save"></i> 立即保存
+                </button>
+            </div>
+        </div>
+    </form>
+</body>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    layui.use(['layer','form','laydate','upload','colorpicker'],function() {
+        var laydate = layui.laydate
+        ,layer = layui.layer
+        ,form = layui.form
+        ,$ = layui.jquery
+        ,upload = layui.upload
+        ,colorpicker = layui.colorpicker;
+
+        form.on('submit(formDemo)', function(data){
+            layer.load();
+            $.ajax({
+                url:"/?s=index/billinfo",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.closeAll('loading');
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            let currentUrl = new URL(window.location.href);
+                            currentUrl.searchParams.set('tab', 'billinfo');
+                            window.history.pushState({}, '', currentUrl.toString());
+                            window.location.reload();
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+
+    function delPic(obj)
+    {
+        var layer = layui.layer,$ = layui.$;
+        layer.confirm('确认要删除该附件？', {
+            btn: ['删除','取消']
+        }, function(){
+            $(obj).parent().remove();
+            layer.closeAll();
+        }, function(){
+
+        });
+    }
+</script>
+</html>

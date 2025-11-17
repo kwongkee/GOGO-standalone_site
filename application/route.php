@@ -99,6 +99,7 @@ Route::any('index/get_name', 'index/Index/get_name');#企业网店-上架管理-
 Route::any('index/description_manage', 'index/Index/description_manage');#企业网店-上架管理-规则类别管理
 Route::any('index/save_description', 'index/Index/save_description');#企业网店-上架管理-保存规则类别
 Route::any('index/del_description', 'index/Index/del_description');#企业网店-上架管理-删除规则类别
+Route::any('index/billinfo', 'index/Index/billinfo');#企业网店-账单信息
 Route::any('index/keywords_manage', 'index/Index/keywords_manage');#企业网店-上架管理-规则分类管理
 Route::any('index/save_keywords2', 'index/Index/save_keywords2');#企业网店-上架管理-保存规则分类
 Route::any('index/del_keywords', 'index/Index/del_keywords');#企业网店-上架管理-删除规则分类

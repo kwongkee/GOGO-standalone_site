@@ -4469,6 +4469,38 @@ class Index extends Controller
         }
     }
 
+    #账单信息
+    public function billinfo(Request $request){
+        $dat = input();
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);
+        
+        if($request->isAjax()){
+            $billinfo = json_encode([
+                'company_name'=>trim($dat['company_name']),
+                'country_id'=>intval($dat['country_id']),
+                'postal_code'=>trim($dat['postal_code']),
+                'address'=>trim($dat['address']),
+            ]);
+            $res = Db::name('website_basic')->where(['company_id'=>$company_id,'company_type'=>$company_type])->update([
+                'billinfo'=>$billinfo
+            ]);
+            
+            return json(['code'=>0,'msg'=>'保存成功']);
+        }else{
+            $info = Db::name('website_basic')->where(['company_id'=>$company_id,'company_type'=>$company_type])->field('billinfo')->find();
+            if(!empty($info['billinfo'])){
+                $info['billinfo'] = json_decode($info['billinfo'],true);
+            }else{
+                $info['billinfo'] = ['company_name'=>'','country_id'=>162,'address'=>'','postal_code'=>''];
+            }
+            
+            $country = Db::name('centralize_diycountry_content')->where(['pid'=>5])->field('id,param2')->select();
+            
+            return view('index/shop_backend/billinfo',compact('company_id','company_type','info','country'));
+        }
+    }
+
     #规则管理-二级分类管理
     public function keywords_manage(Request $request){
         $dat = input();
