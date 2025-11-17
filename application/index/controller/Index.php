@@ -5,6 +5,7 @@ use think\Request;
 use think\Db;
 use think\Controller;
 use app\index\model\Parceltask;
+use app\index\model\WebsiteBasic;
 use think\Log;
 use think\Cache;
 
@@ -690,12 +691,14 @@ class Index extends Controller
     #企业网站管理
     public function website_official(Request $request){
         $dat = input();
-
-        $company = Db::name('website_user_company')->where(['user_id'=>session('account.id'),'status'=>0])->select();
-
 //        $typ = intval($dat['typ']);//企业类型，0商城，1网站
         $typ = 1;
         $company_id = intval($dat['company_id']);
+        if (empty($company_id) || !is_numeric($company_id)) {
+            return $this->error('无效的公司ID');
+        }
+        
+        $company = Db::name('website_user_company')->where(['user_id'=>session('account.id'),'status'=>0])->select();
         $tab = isset($dat['tab'])?trim($dat['tab']):'website-config';
 
         $company_info = Db::name('website_user_company')->where(['id'=>$company_id])->find();
@@ -707,19 +710,10 @@ class Index extends Controller
         }
 
         #企业网站-基本&页头页脚配置
-        $website_basic = Db::name('website_basic')->where(['company_id'=>$company_id,'company_type'=>$typ])->find();
-        if(isset($website_basic['name'])){
-            $website_basic['name'] = json_decode($website_basic['name'],true);
-        }
-        if(isset($website_basic['desc'])) {
-            $website_basic['desc'] = json_decode($website_basic['desc'], true);
-        }
-        if(isset($website_basic['keywords'])) {
-            $website_basic['keywords'] = json_decode($website_basic['keywords'], true);
-        }
-        if(isset($website_basic['copyright'])) {
-            $website_basic['copyright'] = json_decode($website_basic['copyright'], true);
-        }
+        $model = new WebsiteBasic();
+        $website_basic = $model->getByCompanyId($company_id, $typ);
+        // $website_basic = Db::name('website_basic')->where(['company_id'=>$company_id,'company_type'=>$typ])->find();
+        
 
         #企业网站-轮播图
         $rotate = Db::name('website_rotate')->where(['company_id'=>$company_id,'company_type'=>1])->select();
@@ -1342,19 +1336,8 @@ class Index extends Controller
         }
 
         #企业网站-基本&页头页脚配置
-        $website_basic = Db::name('website_basic')->where(['company_id'=>$company_id,'company_type'=>$typ])->find();
-        if(isset($website_basic['name'])){
-            $website_basic['name'] = json_decode($website_basic['name'],true);
-        }
-        if(isset($website_basic['desc'])) {
-            $website_basic['desc'] = json_decode($website_basic['desc'], true);
-        }
-        if(isset($website_basic['keywords'])) {
-            $website_basic['keywords'] = json_decode($website_basic['keywords'], true);
-        }
-        if(isset($website_basic['copyright'])) {
-            $website_basic['copyright'] = json_decode($website_basic['copyright'], true);
-        }
+        $model = new WebsiteBasic();
+        $website_basic = $model->getByCompanyId($company_id, $typ);
 
         #企业网站-轮播图
         $rotate = Db::name('website_rotate')->where(['company_id'=>$company_id,'company_type'=>$typ])->select();
@@ -3604,341 +3587,330 @@ class Index extends Controller
 
         if($request->isAjax()){
 //            dd($dat);
-            $page_type = isset($dat['page_type'])?$dat['page_type']:0;
-            if(empty($dat['goods_id'])){
-                return json(['code'=>-1,'msg'=>'请选择商品']);
-            }
-            #修改商品商户表
-            $goods = Db::connect($this->config)->name('goods_merchant')->where(['id'=>$dat['goods_id'],'type'=>$type2])->find();
-            #查找最低价钱的规格
-            $low_goods_sku = Db::connect($this->config)->name('goods_sku_merchant')->where(['goods_id'=>$dat['goods_id']])->order('goods_price','asc')->limit(1)->find();
-            Db::connect($this->config)->name('goods_merchant')->where(['id'=>$dat['goods_id']])->update([
-                'currency_type'=>$dat['currency_type'],
-                'goods_currency'=>$dat['currency_type']==1?$dat['other_currency']:$goods['goods_currency'],
-                'goods_price'=>$low_goods_sku['goods_price'],
-                'market_price'=>$low_goods_sku['market_price'],
-                'cost_price'=>$low_goods_sku['cost_price'],
-                'goods_number'=>$low_goods_sku['goods_number'],
-                'have_specs'=>$page_type==1?$dat['have_specs']:$goods['have_specs'],
-            ]);
-            $goods = Db::connect($this->config)->name('goods_merchant')->where(['id'=>$dat['goods_id']])->find();
-
-            if($page_type==1){
-                #商品价格
-                if($dat['currency_type']==1){
-                    #外币结算
-                    if(empty($dat['other_currency'])){
-                        return json(['code'=>-1,'msg'=>'请选择其他货币']);
-                    }
+            Db::startTrans();
+            try {
+                $page_type = isset($dat['page_type'])?$dat['page_type']:0;
+                if(empty($dat['goods_id'])){
+                    return json(['code'=>-1,'msg'=>'请选择商品']);
                 }
-
-                #插入库存
-                $sku_id = 0;
-                $min_goods_price = 0;
-                if($dat['have_specs']==2){
-                    #无规格
-                    $goodsSkuInsert = [
-                        'goods_id' => $dat['goods_id'],
-                        'goods_sn' => trim($dat['nospecs']['goods_sn']),
-                        'goods_barcode' => trim($dat['nospecs']['goods_barcode']),
-                        'goods_stockcode' => trim($dat['nospecs']['goods_stockcode']),
-                        'market_price' => trim($dat['nospecs']['market_price']),
-                        'cost_price' => trim($dat['nospecs']['cost_price']),
-                        'shelf_number' => trim($dat['nospecs']['shelf_number']),
-                        'warn_type' => trim($dat['nospecs']['warn_type']),
-                        'warn_number' => trim($dat['nospecs']['warn_number']),
-                        'goods_price' => end($dat['nospecs']['price']),
-                        'goods_number' => 0,
-                        'is_spu' => 1, // 无规格商品 是SPU商品
-                        'sku_prices' => json_encode([
-                            'goods_number'=>0,
-                            'start_num'=>$dat['nospecs']['start_num'],
-                            'unit'=>[$dat['nospecs']['unit'][0]],
-                            'select_end'=>$dat['nospecs']['select_end'],
-                            'end_num'=>$dat['nospecs']['end_num'],
-                            'currency'=>[$goods['goods_currency']],
-                            'price'=>$dat['nospecs']['price'],
-                        ],true)#该规格的区间价格
-                    ];
-
-                    #最低价
-                    $min_goods_price = end($dat['nospecs']['price']);
-
-                    if(isset($dat['is_edit'])){
-                        $sku_id = $dat['sku_id'];
-                        Db::connect($this->config)->name('goods_sku_merchant')->where(['goods_id'=>$dat['goods_id']])->update($goodsSkuInsert);
-
-                        #同步平台商品表
-                        if($goods['shelf_id']>0){
-                            $goodsSkuInsert['goods_id'] = $goods['shelf_id'];
-                            Db::connect($this->config)->name('goods_sku')->where(['goods_id'=>$goods['shelf_id']])->update($goodsSkuInsert);
+                #修改商品商户表
+                $goods = Db::connect($this->config)->name('goods_merchant')->where(['id'=>$dat['goods_id'],'type'=>$type2])->find();
+                #查找最低价钱的规格
+                $low_goods_sku = Db::connect($this->config)->name('goods_sku_merchant')->where(['goods_id'=>$dat['goods_id']])->order('goods_price','asc')->limit(1)->find();
+                Db::connect($this->config)->name('goods_merchant')->where(['id'=>$dat['goods_id']])->update([
+                    'currency_type'=>$dat['currency_type'],
+                    'goods_currency'=>$dat['currency_type']==1?$dat['other_currency']:$goods['goods_currency'],
+                    'goods_price'=>$low_goods_sku['goods_price'],
+                    'market_price'=>$low_goods_sku['market_price'],
+                    'cost_price'=>$low_goods_sku['cost_price'],
+                    'goods_number'=>$low_goods_sku['goods_number'],
+                    'have_specs'=>$page_type==1?$dat['have_specs']:$goods['have_specs'],
+                ]);
+                $goods = Db::connect($this->config)->name('goods_merchant')->where(['id'=>$dat['goods_id']])->find();
+    
+                if($page_type==1){
+                    #商品价格
+                    if($dat['currency_type']==1){
+                        #外币结算
+                        if(empty($dat['other_currency'])){
+                            return json(['code'=>-1,'msg'=>'请选择其他货币']);
                         }
                     }
-                    else{
-                        $sku_id = Db::connect($this->config)->name('goods_sku_merchant')->insertGetId($goodsSkuInsert);
-                    }
-                }
-                elseif($dat['have_specs']==1){
-                    #有规格
-                    $spec_ids_arr = [];#大分类
-                    $insert_specs_arr = [];#小分类
-
-                    foreach($dat['havespecs']['option_name'] as $k=>$v){
-                        $options = explode('<br/>',$v);
-                        $specs_vids_arr = [];
-                        foreach($options as $k2=>$v2){
-                            $options_2 = explode(':',$v2);
-
-                            #归口大分类
-                            if(!in_array($options_2[0], $spec_ids_arr)) {
-                                array_push($spec_ids_arr, $options_2[0]);
-                            }
-                            if(isset($options_2[1])){
-                                #归口小分类
-                                if(!in_array($options_2[1], $specs_vids_arr)) {
-                                    array_push($specs_vids_arr, $options_2[1]);
-                                }
-                            }
-                        }
-                        array_push($insert_specs_arr, $specs_vids_arr);
-                    }
-
-                    $date = date('Y-m-d H:i:s',time());
-                    $spec_ids = '';
-                    foreach($spec_ids_arr as $k=>$v){
-                        $have_attr = Db::connect($this->config)->name('attribute')->where(['attr_name'=>$v])->find();
-                        if(!empty($have_attr)){
-                            $spec_ids .= $have_attr['attr_id'].'|';
-                        }
-                        else{
-                            $have_attr = Db::connect($this->config)->name('attribute')->insertGetId([
-                                'attr_name'=>trim($v),
-                                'created_at'=>$date,
-                                'updated_at'=>$date,
-                            ]);
-                            $spec_ids .= $have_attr.'|';
-                        }
-                    }
-                    $spec_ids = rtrim($spec_ids,'|');
-//                    dd($spec_ids);
-
-                    $insert_specs = [];
-                    $spec_ids_arr2 = explode('|',$spec_ids);
-                    foreach($insert_specs_arr as $k=>$v){
-                        $spec_vids = '';
-
-                        foreach($v as $k2=>$v2){
-                            $os = explode('-@-',$v2);
-
-                            if(count($os)>1){
-                                $have_value = Db::connect($this->config)->name('attr_value')->where(['attr_vname'=>trim($os[0])])->find();
-                                if(!empty($have_value)){
-                                    $spec_vids .= $have_value['attr_vid'];
-                                }
-                                else{
-                                    $have_value = Db::connect($this->config)->name('attr_value')->insertGetId([
-                                        'attr_id'=>$spec_ids_arr2[$k2],
-                                        'attr_vname'=>trim($os[0]),
-                                        'created_at'=>$date,
-                                        'updated_at'=>$date,
-                                    ]);
-                                    $spec_vids .= $have_value['attr_vid'];
-                                }
-                                $have_value2 = Db::connect($this->config)->name('attr_value')->where(['attr_vname'=>trim($os[1])])->find();
-                                if(!empty($have_value2)){
-                                    $spec_vids .= '-'.$have_value2['attr_vid'].'|';
-                                }
-                                else{
-                                    $have_value2 = Db::connect($this->config)->name('attr_value')->insertGetId([
-                                        'attr_id'=>$spec_ids_arr2[$k2],
-                                        'attr_vname'=>trim($os[1]),
-                                        'created_at'=>$date,
-                                        'updated_at'=>$date,
-                                    ]);
-
-                                    $spec_vids .= '-'.$have_value2.'|';
-                                }
-                            }
-                            else{
-                                $have_value = Db::connect($this->config)->name('attr_value')->where(['attr_vname'=>$v2])->find();
-                                if(!empty($have_value)){
-                                    $spec_vids .= $have_value['attr_vid'].'|';
-                                }
-                                else{
-                                    $have_value = Db::connect($this->config)->name('attr_value')->insertGetId([
-                                        'attr_id'=>$spec_ids_arr2[$k2],
-                                        'attr_vname'=>trim($v2),
-                                        'created_at'=>$date,
-                                        'updated_at'=>$date,
-                                    ]);
-                                    $spec_vids .= $have_value.'|';
-                                }
-                            }
-                        }
-
-                        array_push($insert_specs,rtrim($spec_vids,'|'));
-                    }
-
-                    if(!isset($dat['havespecs']['sku_id'])) {
-                        #规格已重新刷新，删除之前的商品规格
-                        Db::connect($this->config)->name('goods_sku_merchant')->where(['goods_id' => $dat['id']])->delete();
-
-                        #同步平台商品表
-                        if($goods['shelf_id']>0){
-                            Db::connect($this->config)->name('goods_sku')->where(['goods_id' => $goods['shelf_id']])->delete();
-                        }
-                    }
-
-                    #最低价
-                    $min_goods_price = end($dat['havespecs']['price'][0]);
-
-                    #插入数据表
-                    foreach($dat['havespecs']['option_name'] as $k=>$v){
+    
+                    #插入库存
+                    $sku_id = 0;
+                    $min_goods_price = 0;
+                    if($dat['have_specs']==2){
+                        #无规格
                         $goodsSkuInsert = [
-                            'goods_id'=>$dat['goods_id'],
-                            'spec_ids'=>$spec_ids,
-                            'spec_vids'=>$insert_specs[$k],
-                            'sku_specs'=>str_replace("|","*",$insert_specs[$k]),
-                            'spec_names'=>str_replace('<br/>',' ',$v),
-                            'goods_sn'=>$dat['havespecs']['goods_sn'][$k],
-                            'goods_barcode'=>$dat['havespecs']['goods_barcode'][$k],
-                            'goods_stockcode'=>$dat['havespecs']['goods_stockcode'][$k],
-                            'market_price'=>$dat['havespecs']['market_price'][$k],
-                            'cost_price'=>$dat['havespecs']['cost_price'][$k],
-                            'shelf_number'=>$dat['havespecs']['shelf_number'][$k],
-                            'warn_type'=>$dat['havespecs']['warn_type'][$k],
-                            'warn_number'=>$dat['havespecs']['warn_number'][$k],
-                            'goods_price' => end($dat['havespecs']['price'][$k]),
+                            'goods_id' => $dat['goods_id'],
+                            'goods_sn' => trim($dat['nospecs']['goods_sn']),
+                            'goods_barcode' => trim($dat['nospecs']['goods_barcode']),
+                            'goods_stockcode' => trim($dat['nospecs']['goods_stockcode']),
+                            'market_price' => trim($dat['nospecs']['market_price']),
+                            'cost_price' => trim($dat['nospecs']['cost_price']),
+                            'shelf_number' => trim($dat['nospecs']['shelf_number']),
+                            'warn_type' => trim($dat['nospecs']['warn_type']),
+                            'warn_number' => trim($dat['nospecs']['warn_number']),
+                            'goods_price' => end($dat['nospecs']['price']),
                             'goods_number' => 0,
                             'is_spu' => 1, // 无规格商品 是SPU商品
                             'sku_prices' => json_encode([
                                 'goods_number'=>0,
-                                'start_num'=>$dat['havespecs']['start_num'][$k],
-                                'unit'=>[$dat['havespecs']['unit'][$k][0]],
-                                'select_end'=>$dat['havespecs']['select_end'][$k],
-                                'end_num'=>$dat['havespecs']['end_num'][$k],
+                                'start_num'=>$dat['nospecs']['start_num'],
+                                'unit'=>[$dat['nospecs']['unit'][0]],
+                                'select_end'=>$dat['nospecs']['select_end'],
+                                'end_num'=>$dat['nospecs']['end_num'],
                                 'currency'=>[$goods['goods_currency']],
-                                'price'=>$dat['havespecs']['price'][$k],
+                                'price'=>$dat['nospecs']['price'],
                             ],true)#该规格的区间价格
                         ];
-
-                        #整理规格
-                        $sku_id2 = 0;
+    
+                        #最低价
+                        $min_goods_price = end($dat['nospecs']['price']);
+    
                         if(isset($dat['is_edit'])){
-                            #修改
-                            if(!isset($dat['havespecs']['sku_id'])){
-                                #插入
-                                $sku_id2 = Db::connect($this->config)->name('goods_sku_merchant')->insertGetId($goodsSkuInsert);
-
-                                #同步平台商品表
-                                if($goods['shelf_id']>0){
-                                    $goodsSkuInsert['goods_id'] = $goods['shelf_id'];
-                                    Db::connect($this->config)->name('goods_sku')->insertGetId($goodsSkuInsert);
-                                }
-                            }else{
-                                if(isset($dat['havespecs']['sku_id'][$k])){
-                                    #修改
-                                    $sku_id2 = Db::connect($this->config)->name('goods_sku_merchant')->where(['sku_id'=>$dat['havespecs']['sku_id'][$k]])->update($goodsSkuInsert);
-
-                                    #同步平台商品表
-                                    if($goods['shelf_id']>0) {
-                                        $goodsSkuInsert['goods_id'] = $goods['shelf_id'];
-                                        $origin_sku = Db::connect($this->config)->name('goods_sku_merchant')->where(['sku_id'=>$dat['havespecs']['sku_id'][$k]])->find();
-                                        Db::connect($this->config)->name('goods_sku')->where(['goods_id'=>$goods['shelf_id'],'spec_vids'=>$origin_sku['spec_vids']])->update($goodsSkuInsert);
-                                    }
-                                }else{
-                                    $sku_id2 = Db::connect($this->config)->name('goods_sku_merchant')->insertGetId($goodsSkuInsert);
-                                    #同步平台商品表
-                                    if($goods['shelf_id']>0) {
-                                        $goodsSkuInsert['goods_id'] = $goods['shelf_id'];
-                                        Db::connect($this->config)->name('goods_sku')->insertGetId($goodsSkuInsert);
-                                    }
-                                }
+                            $sku_id = $dat['sku_id'];
+                            Db::connect($this->config)->name('goods_sku_merchant')->where(['goods_id'=>$dat['goods_id']])->update($goodsSkuInsert);
+    
+                            #同步平台商品表
+                            if($goods['shelf_id']>0){
+                                $goodsSkuInsert['goods_id'] = $goods['shelf_id'];
+                                Db::connect($this->config)->name('goods_sku')->where(['goods_id'=>$goods['shelf_id']])->update($goodsSkuInsert);
                             }
                         }
                         else{
-                            #插入
-                            $sku_id2 = Db::connect($this->config)->name('goods_sku_merchant')->insertGetId($goodsSkuInsert);
-                        }
-
-                        if($sku_id==0){
-                            $sku_id = $sku_id2;
+                            $sku_id = Db::connect($this->config)->name('goods_sku_merchant')->insertGetId($goodsSkuInsert);
                         }
                     }
-                }
-
-                #修改商品商户表
-                Db::connect($this->config)->name('goods_merchant')->where(['id'=>$dat['goods_id']])->update([
-                    'sku_id'=>$sku_id,
-                    'goods_price'=>$min_goods_price,
-                    'nospecs'=>$dat['have_specs']==2?json_encode(['goods_number'=>0, 'start_num'=>$dat['nospecs']['start_num'], 'unit'=>[$dat['nospecs']['unit'][0]], 'select_end'=>$dat['nospecs']['select_end'], 'end_num'=>$dat['nospecs']['end_num'], 'currency'=>[$goods['goods_currency']], 'price'=>$dat['nospecs']['price']],true):''
-                ]);
-
-                #同步平台商品表
-                if($goods['shelf_id']>0){
-                    Db::connect($this->config)->name('goods')->where(['goods_id'=>$dat['shelf_id']])->update([
-                        'currency_type'=>$dat['currency_type'],
-                        'goods_currency'=>$dat['currency_type']==1?$dat['other_currency']:$goods['goods_currency'],
-                        'goods_price'=>$min_goods_price,
-                        'have_specs'=>$dat['have_specs'],
+                    elseif($dat['have_specs']==1){
+                        #有规格
+                        $spec_ids_arr = [];#大分类
+                        $insert_specs_arr = [];#小分类
+    
+                        foreach($dat['havespecs']['option_name'] as $k=>$v){
+                            $options = explode('<br/>',$v);
+                            $specs_vids_arr = [];
+                            foreach($options as $k2=>$v2){
+                                $options_2 = explode(':',$v2);
+    
+                                #归口大分类
+                                if(!in_array($options_2[0], $spec_ids_arr)) {
+                                    array_push($spec_ids_arr, $options_2[0]);
+                                }
+                                if(isset($options_2[1])){
+                                    #归口小分类
+                                    if(!in_array($options_2[1], $specs_vids_arr)) {
+                                        array_push($specs_vids_arr, $options_2[1]);
+                                    }
+                                }
+                            }
+                            array_push($insert_specs_arr, $specs_vids_arr);
+                        }
+    
+                        $date = date('Y-m-d H:i:s',time());
+                        $spec_ids = '';
+                        foreach($spec_ids_arr as $k=>$v){
+                            $have_attr = Db::connect($this->config)->name('attribute')->where(['attr_name'=>$v])->find();
+                            if(!empty($have_attr)){
+                                $spec_ids .= $have_attr['attr_id'].'|';
+                            }
+                            else{
+                                $have_attr = Db::connect($this->config)->name('attribute')->insertGetId([
+                                    'attr_name'=>trim($v),
+                                    'created_at'=>$date,
+                                    'updated_at'=>$date,
+                                ]);
+                                $spec_ids .= $have_attr.'|';
+                            }
+                        }
+                        $spec_ids = rtrim($spec_ids,'|');
+    //                    dd($spec_ids);
+    
+                        $insert_specs = [];
+                        $spec_ids_arr2 = explode('|',$spec_ids);
+                        foreach($insert_specs_arr as $k=>$v){
+                            $spec_vids = '';
+    
+                            foreach($v as $k2=>$v2){
+                                $os = explode('-@-',$v2);
+    
+                                if(count($os)>1){
+                                    $have_value = Db::connect($this->config)->name('attr_value')->where(['attr_vname'=>trim($os[0])])->find();
+                                    if(!empty($have_value)){
+                                        $spec_vids .= $have_value['attr_vid'];
+                                    }
+                                    else{
+                                        $have_value = Db::connect($this->config)->name('attr_value')->insertGetId([
+                                            'attr_id'=>$spec_ids_arr2[$k2],
+                                            'attr_vname'=>trim($os[0]),
+                                            'created_at'=>$date,
+                                            'updated_at'=>$date,
+                                        ]);
+                                        $spec_vids .= $have_value['attr_vid'];
+                                    }
+                                    $have_value2 = Db::connect($this->config)->name('attr_value')->where(['attr_vname'=>trim($os[1])])->find();
+                                    if(!empty($have_value2)){
+                                        $spec_vids .= '-'.$have_value2['attr_vid'].'|';
+                                    }
+                                    else{
+                                        $have_value2 = Db::connect($this->config)->name('attr_value')->insertGetId([
+                                            'attr_id'=>$spec_ids_arr2[$k2],
+                                            'attr_vname'=>trim($os[1]),
+                                            'created_at'=>$date,
+                                            'updated_at'=>$date,
+                                        ]);
+    
+                                        $spec_vids .= '-'.$have_value2.'|';
+                                    }
+                                }
+                                else{
+                                    $have_value = Db::connect($this->config)->name('attr_value')->where(['attr_vname'=>$v2])->find();
+                                    if(!empty($have_value)){
+                                        $spec_vids .= $have_value['attr_vid'].'|';
+                                    }
+                                    else{
+                                        $have_value = Db::connect($this->config)->name('attr_value')->insertGetId([
+                                            'attr_id'=>$spec_ids_arr2[$k2],
+                                            'attr_vname'=>trim($v2),
+                                            'created_at'=>$date,
+                                            'updated_at'=>$date,
+                                        ]);
+                                        $spec_vids .= $have_value.'|';
+                                    }
+                                }
+                            }
+    
+                            array_push($insert_specs,rtrim($spec_vids,'|'));
+                        }
+    
+                        if(!isset($dat['havespecs']['sku_id'])) {
+                            #规格已重新刷新，删除之前的商品规格
+                            Db::connect($this->config)->name('goods_sku_merchant')->where(['goods_id' => $dat['id']])->delete();
+    
+                            #同步平台商品表
+                            if($goods['shelf_id']>0){
+                                Db::connect($this->config)->name('goods_sku')->where(['goods_id' => $goods['shelf_id']])->delete();
+                            }
+                        }
+    
+                        #最低价
+                        $min_goods_price = end($dat['havespecs']['price'][0]);
+    
+                        #插入数据表
+                        foreach($dat['havespecs']['option_name'] as $k=>$v){
+                            $goodsSkuInsert = [
+                                'goods_id'=>$dat['goods_id'],
+                                'spec_ids'=>$spec_ids,
+                                'spec_vids'=>$insert_specs[$k],
+                                'sku_specs'=>str_replace("|","*",$insert_specs[$k]),
+                                'spec_names'=>str_replace('<br/>',' ',$v),
+                                'goods_sn'=>$dat['havespecs']['goods_sn'][$k],
+                                'goods_barcode'=>$dat['havespecs']['goods_barcode'][$k],
+                                'goods_stockcode'=>$dat['havespecs']['goods_stockcode'][$k],
+                                'market_price'=>$dat['havespecs']['market_price'][$k],
+                                'cost_price'=>$dat['havespecs']['cost_price'][$k],
+                                'shelf_number'=>$dat['havespecs']['shelf_number'][$k],
+                                'warn_type'=>$dat['havespecs']['warn_type'][$k],
+                                'warn_number'=>$dat['havespecs']['warn_number'][$k],
+                                'goods_price' => end($dat['havespecs']['price'][$k]),
+                                'goods_number' => 0,
+                                'is_spu' => 1, // 无规格商品 是SPU商品
+                                'sku_prices' => json_encode([
+                                    'goods_number'=>0,
+                                    'start_num'=>$dat['havespecs']['start_num'][$k],
+                                    'unit'=>[$dat['havespecs']['unit'][$k][0]],
+                                    'select_end'=>$dat['havespecs']['select_end'][$k],
+                                    'end_num'=>$dat['havespecs']['end_num'][$k],
+                                    'currency'=>[$goods['goods_currency']],
+                                    'price'=>$dat['havespecs']['price'][$k],
+                                ],true)#该规格的区间价格
+                            ];
+    
+                            #整理规格
+                            $sku_id2 = 0;
+                            if(isset($dat['is_edit'])){
+                                #修改
+                                if(!isset($dat['havespecs']['sku_id'])){
+                                    #插入
+                                    $sku_id2 = Db::connect($this->config)->name('goods_sku_merchant')->insertGetId($goodsSkuInsert);
+    
+                                    #同步平台商品表
+                                    if($goods['shelf_id']>0){
+                                        $goodsSkuInsert['goods_id'] = $goods['shelf_id'];
+                                        Db::connect($this->config)->name('goods_sku')->insertGetId($goodsSkuInsert);
+                                    }
+                                }else{
+                                    if(isset($dat['havespecs']['sku_id'][$k])){
+                                        #修改
+                                        $sku_id2 = Db::connect($this->config)->name('goods_sku_merchant')->where(['sku_id'=>$dat['havespecs']['sku_id'][$k]])->update($goodsSkuInsert);
+    
+                                        #同步平台商品表
+                                        if($goods['shelf_id']>0) {
+                                            $goodsSkuInsert['goods_id'] = $goods['shelf_id'];
+                                            $origin_sku = Db::connect($this->config)->name('goods_sku_merchant')->where(['sku_id'=>$dat['havespecs']['sku_id'][$k]])->find();
+                                            Db::connect($this->config)->name('goods_sku')->where(['goods_id'=>$goods['shelf_id'],'spec_vids'=>$origin_sku['spec_vids']])->update($goodsSkuInsert);
+                                        }
+                                    }else{
+                                        $sku_id2 = Db::connect($this->config)->name('goods_sku_merchant')->insertGetId($goodsSkuInsert);
+                                        #同步平台商品表
+                                        if($goods['shelf_id']>0) {
+                                            $goodsSkuInsert['goods_id'] = $goods['shelf_id'];
+                                            Db::connect($this->config)->name('goods_sku')->insertGetId($goodsSkuInsert);
+                                        }
+                                    }
+                                }
+                            }
+                            else{
+                                #插入
+                                $sku_id2 = Db::connect($this->config)->name('goods_sku_merchant')->insertGetId($goodsSkuInsert);
+                            }
+    
+                            if($sku_id==0){
+                                $sku_id = $sku_id2;
+                            }
+                        }
+                    }
+    
+                    #修改商品商户表
+                    Db::connect($this->config)->name('goods_merchant')->where(['id'=>$dat['goods_id']])->update([
                         'sku_id'=>$sku_id,
+                        'goods_price'=>$min_goods_price,
                         'nospecs'=>$dat['have_specs']==2?json_encode(['goods_number'=>0, 'start_num'=>$dat['nospecs']['start_num'], 'unit'=>[$dat['nospecs']['unit'][0]], 'select_end'=>$dat['nospecs']['select_end'], 'end_num'=>$dat['nospecs']['end_num'], 'currency'=>[$goods['goods_currency']], 'price'=>$dat['nospecs']['price']],true):''
                     ]);
-                }
-            }
-            elseif($page_type==2){
-                #物流支撑
-                #修改商品商户表
-                if($dat['service_type']==1){
-                    #（发货国）国内配送
-                    Db::connect($this->config)->name('goods_merchant')->where(['id'=>$dat['goods_id']])->update([
-                        'service_type'=>$dat['service_type'],
-                        'domestic_logistics'=>json_encode($dat['domestic_logistics'],true)
-                    ]);
-
+    
                     #同步平台商品表
                     if($goods['shelf_id']>0){
-                        Db::connect($this->config)->name('goods')->where(['goods_id'=>$goods['shelf_id']])->update([
+                        Db::connect($this->config)->name('goods')->where(['goods_id'=>$dat['shelf_id']])->update([
+                            'currency_type'=>$dat['currency_type'],
+                            'goods_currency'=>$dat['currency_type']==1?$dat['other_currency']:$goods['goods_currency'],
+                            'goods_price'=>$min_goods_price,
+                            'have_specs'=>$dat['have_specs'],
+                            'sku_id'=>$sku_id,
+                            'nospecs'=>$dat['have_specs']==2?json_encode(['goods_number'=>0, 'start_num'=>$dat['nospecs']['start_num'], 'unit'=>[$dat['nospecs']['unit'][0]], 'select_end'=>$dat['nospecs']['select_end'], 'end_num'=>$dat['nospecs']['end_num'], 'currency'=>[$goods['goods_currency']], 'price'=>$dat['nospecs']['price']],true):''
+                        ]);
+                    }
+                }
+                elseif($page_type==2){
+                    #物流支撑
+                    #修改商品商户表
+                    if($dat['service_type']==1){
+                        #（发货国）国内配送
+                        Db::connect($this->config)->name('goods_merchant')->where(['id'=>$dat['goods_id']])->update([
                             'service_type'=>$dat['service_type'],
                             'domestic_logistics'=>json_encode($dat['domestic_logistics'],true)
                         ]);
-                    }
-                }
-                elseif($dat['service_type']==2){
-                    #（发货国）跨境配送
-                    if($dat['gather_method']==1){
-                        #平台集运
-                        Db::connect($this->config)->name('goods_merchant')->where(['id'=>$dat['goods_id']])->update([
-                            'service_type'=>$dat['service_type'],
-                            'gather_method'=>$dat['gather_method']
-                        ]);
-
+    
                         #同步平台商品表
                         if($goods['shelf_id']>0){
                             Db::connect($this->config)->name('goods')->where(['goods_id'=>$goods['shelf_id']])->update([
                                 'service_type'=>$dat['service_type'],
-                                'gather_method'=>$dat['gather_method']
+                                'domestic_logistics'=>json_encode($dat['domestic_logistics'],true)
                             ]);
                         }
                     }
-                    elseif($dat['gather_method']==2){
-                        #自主集运
-                        if($dat['support_export']==1){
-                            #支持集运到其他国家
+                    elseif($dat['service_type']==2){
+                        #（发货国）跨境配送
+                        if($dat['gather_method']==1){
+                            #平台集运
                             Db::connect($this->config)->name('goods_merchant')->where(['id'=>$dat['goods_id']])->update([
                                 'service_type'=>$dat['service_type'],
-                                'gather_method'=>$dat['gather_method'],
-                                'support_export'=>$dat['support_export'],
-                                'gather_countrys'=>json_encode([
-                                    'gather_zhou'=>$dat['gather_zhou'],
-                                    'gather_country'=>$dat['gather_country'],
-                                    'gather_postal'=>$dat['gather_postal'],
-                                ],true)
+                                'gather_method'=>$dat['gather_method']
                             ]);
-
+    
                             #同步平台商品表
                             if($goods['shelf_id']>0){
                                 Db::connect($this->config)->name('goods')->where(['goods_id'=>$goods['shelf_id']])->update([
+                                    'service_type'=>$dat['service_type'],
+                                    'gather_method'=>$dat['gather_method']
+                                ]);
+                            }
+                        }
+                        elseif($dat['gather_method']==2){
+                            #自主集运
+                            if($dat['support_export']==1){
+                                #支持集运到其他国家
+                                Db::connect($this->config)->name('goods_merchant')->where(['id'=>$dat['goods_id']])->update([
                                     'service_type'=>$dat['service_type'],
                                     'gather_method'=>$dat['gather_method'],
                                     'support_export'=>$dat['support_export'],
@@ -3948,388 +3920,388 @@ class Index extends Controller
                                         'gather_postal'=>$dat['gather_postal'],
                                     ],true)
                                 ]);
+    
+                                #同步平台商品表
+                                if($goods['shelf_id']>0){
+                                    Db::connect($this->config)->name('goods')->where(['goods_id'=>$goods['shelf_id']])->update([
+                                        'service_type'=>$dat['service_type'],
+                                        'gather_method'=>$dat['gather_method'],
+                                        'support_export'=>$dat['support_export'],
+                                        'gather_countrys'=>json_encode([
+                                            'gather_zhou'=>$dat['gather_zhou'],
+                                            'gather_country'=>$dat['gather_country'],
+                                            'gather_postal'=>$dat['gather_postal'],
+                                        ],true)
+                                    ]);
+                                }
                             }
                         }
+    
                     }
-
                 }
-            }
-            elseif($page_type==3){
-                #其它费用
-
-                $goodsInfo['otherfees_content'] = json_encode(['fees_name'=>$dat['fees_name'],'fees_desc'=>$dat['fees_desc'],'fees_condition'=>$dat['fees_condition'],'fees_trigger'=>$dat['fees_trigger'],'fees_trigger2'=>$dat['fees_trigger2'],'fees_trigger2_equal'=>$dat['fees_trigger2_equal'],'fees_trigger2_num'=>$dat['fees_trigger2_num'],'fees_options'=>$dat['fees_options'],'fees_trigger2_area'=>$dat['fees_trigger2_area'],'fees_trigger2_area1'=>$dat['fees_trigger2_area1'],'other_fees_area'=>$dat['other_fees_area'],'fees_standard'=>$dat['fees_standard'],'fees_standard_currency'=>$dat['fees_standard_currency'],'fees_standard_price'=>$dat['fees_standard_price'],'fees_standard_unit'=>$dat['fees_standard_unit'],'fees_standard_ratio'=>$dat['fees_standard_ratio'],'fees_standard_ratio_price'=>$dat['fees_standard_ratio_price'],'fees_standard_ratio_ratio'=>$dat['fees_standard_ratio_ratio']],true);
-
-                Db::connect($this->config)->name('goods_merchant')->where(['id'=>$dat['goods_id']])->update([
-                    'otherfees_content'=>$goodsInfo['otherfees_content'],
-                ]);
-
-                #同步平台商品表
-                if($goods['shelf_id']>0){
-                    Db::connect($this->config)->name('goods')->where(['goods_id'=>$goods['shelf_id']])->update([
+                elseif($page_type==3){
+                    #其它费用
+    
+                    $goodsInfo['otherfees_content'] = json_encode(['fees_name'=>$dat['fees_name'],'fees_desc'=>$dat['fees_desc'],'fees_condition'=>$dat['fees_condition'],'fees_trigger'=>$dat['fees_trigger'],'fees_trigger2'=>$dat['fees_trigger2'],'fees_trigger2_equal'=>$dat['fees_trigger2_equal'],'fees_trigger2_num'=>$dat['fees_trigger2_num'],'fees_options'=>$dat['fees_options'],'fees_trigger2_area'=>$dat['fees_trigger2_area'],'fees_trigger2_area1'=>$dat['fees_trigger2_area1'],'other_fees_area'=>$dat['other_fees_area'],'fees_standard'=>$dat['fees_standard'],'fees_standard_currency'=>$dat['fees_standard_currency'],'fees_standard_price'=>$dat['fees_standard_price'],'fees_standard_unit'=>$dat['fees_standard_unit'],'fees_standard_ratio'=>$dat['fees_standard_ratio'],'fees_standard_ratio_price'=>$dat['fees_standard_ratio_price'],'fees_standard_ratio_ratio'=>$dat['fees_standard_ratio_ratio']],true);
+    
+                    Db::connect($this->config)->name('goods_merchant')->where(['id'=>$dat['goods_id']])->update([
                         'otherfees_content'=>$goodsInfo['otherfees_content'],
                     ]);
+    
+                    #同步平台商品表
+                    if($goods['shelf_id']>0){
+                        Db::connect($this->config)->name('goods')->where(['goods_id'=>$goods['shelf_id']])->update([
+                            'otherfees_content'=>$goodsInfo['otherfees_content'],
+                        ]);
+                    }
                 }
-            }
-            elseif($page_type==4){
-                #价格说明
-
-                #优惠减免
-                $goodsInfo['reduction_content'] = json_encode(['preferential_blong'=>$dat['reduction']['preferential_blong'],'type'=>$dat['reduction']['type'],'strict'=>$dat['reduction']['strict'],'currency1'=>$goods['goods_currency'],'price1'=>$dat['reduction']['price1'],'currency2'=>$goods['goods_currency'],'price2'=>$dat['reduction']['price2']],true);
-                #优惠随赠
-                $goodsInfo['gift_content'] = json_encode(['preferential_blong'=>$dat['gift']['preferential_blong'],'type'=>$dat['gift']['type'],'operaer'=>$dat['gift']['operaer'],'points_type'=>$dat['gift']['points_type'],'points_currency'=>$goods['goods_currency'],'points_money'=>$dat['gift']['points_money'],'points_send'=>$dat['gift']['points_send'],'coupon_currency'=>$goods['goods_currency'],'coupon_money'=>$dat['gift']['coupon_money'],'coupon_num'=>$dat['gift']['coupon_num'],'accgift_type'=>$dat['gift']['accgift_type'],'accgift_content'=>$dat['gift']['accgift_content'],'accgift_num'=>$dat['gift']['accgift_num'],'strict'=>$dat['gift']['strict']],true);
-                #价格未含
-                $goodsInfo['noinclude_content'] = json_encode(['name'=>$dat['noinclude']['name'],'desc'=>$dat['noinclude']['desc'],'currency'=>$goods['goods_currency'],'price'=>$dat['noinclude']['price']],true);
-                #潜在收费
-                $goodsInfo['potential_content'] = json_encode(['currency'=>$dat['potential']['currency'],'name'=>$dat['potential']['name'],'desc'=>$dat['potential']['desc'],'currency2'=>$goods['goods_currency'],'price'=>$dat['potential']['price']],true);
-                Db::connect($this->config)->name('goods_merchant')->where(['id'=>$dat['goods_id']])->update([
-                    'reduction_content'=>$goodsInfo['reduction_content'],
-                    'gift_content'=>$goodsInfo['gift_content'],
-                    'noinclude_content'=>$goodsInfo['noinclude_content'],
-                    'potential_content'=>$goodsInfo['potential_content'],
-                ]);
-
-                #同步平台商品表
-                if($goods['shelf_id']>0) {
-                    Db::connect($this->config)->name('goods')->where(['goods_id' => $goods['shelf_id']])->update([
+                elseif($page_type==4){
+                    #价格说明
+    
+                    #优惠减免
+                    $goodsInfo['reduction_content'] = json_encode(['preferential_blong'=>$dat['reduction']['preferential_blong'],'type'=>$dat['reduction']['type'],'strict'=>$dat['reduction']['strict'],'currency1'=>$goods['goods_currency'],'price1'=>$dat['reduction']['price1'],'currency2'=>$goods['goods_currency'],'price2'=>$dat['reduction']['price2']],true);
+                    #优惠随赠
+                    $goodsInfo['gift_content'] = json_encode(['preferential_blong'=>$dat['gift']['preferential_blong'],'type'=>$dat['gift']['type'],'operaer'=>$dat['gift']['operaer'],'points_type'=>$dat['gift']['points_type'],'points_currency'=>$goods['goods_currency'],'points_money'=>$dat['gift']['points_money'],'points_send'=>$dat['gift']['points_send'],'coupon_currency'=>$goods['goods_currency'],'coupon_money'=>$dat['gift']['coupon_money'],'coupon_num'=>$dat['gift']['coupon_num'],'accgift_type'=>$dat['gift']['accgift_type'],'accgift_content'=>$dat['gift']['accgift_content'],'accgift_num'=>$dat['gift']['accgift_num'],'strict'=>$dat['gift']['strict']],true);
+                    #价格未含
+                    $goodsInfo['noinclude_content'] = json_encode(['name'=>$dat['noinclude']['name'],'desc'=>$dat['noinclude']['desc'],'currency'=>$goods['goods_currency'],'price'=>$dat['noinclude']['price']],true);
+                    #潜在收费
+                    $goodsInfo['potential_content'] = json_encode(['currency'=>$dat['potential']['currency'],'name'=>$dat['potential']['name'],'desc'=>$dat['potential']['desc'],'currency2'=>$goods['goods_currency'],'price'=>$dat['potential']['price']],true);
+                    Db::connect($this->config)->name('goods_merchant')->where(['id'=>$dat['goods_id']])->update([
                         'reduction_content'=>$goodsInfo['reduction_content'],
                         'gift_content'=>$goodsInfo['gift_content'],
                         'noinclude_content'=>$goodsInfo['noinclude_content'],
                         'potential_content'=>$goodsInfo['potential_content'],
                     ]);
+    
+                    #同步平台商品表
+                    if($goods['shelf_id']>0) {
+                        Db::connect($this->config)->name('goods')->where(['goods_id' => $goods['shelf_id']])->update([
+                            'reduction_content'=>$goodsInfo['reduction_content'],
+                            'gift_content'=>$goodsInfo['gift_content'],
+                            'noinclude_content'=>$goodsInfo['noinclude_content'],
+                            'potential_content'=>$goodsInfo['potential_content'],
+                        ]);
+                    }
                 }
-            }
-            elseif($page_type==5){
-                #商品促销
-                Db::connect($this->config)->name('goods_merchant')->where(['id'=>$dat['goods_id']])->update([
-                    'activity_info'=>$dat['activity_id'],
-                    'other_keywords'=>trim($dat['other_keywords']),
-                ]);
-
-                #同步平台商品表
-                if($goods['shelf_id']>0) {
-                    Db::connect($this->config)->name('goods')->where(['goods_id' => $goods['shelf_id']])->update([
+                elseif($page_type==5){
+                    #商品促销
+                    Db::connect($this->config)->name('goods_merchant')->where(['id'=>$dat['goods_id']])->update([
                         'activity_info'=>$dat['activity_id'],
                         'other_keywords'=>trim($dat['other_keywords']),
                     ]);
-                }
-            }
-            elseif($page_type==6){
-                #商品详情
-
-                #制造企业
-                $manufacture = '';
-                if(isset($dat['manufacture'])){
-                    $insert_arr = [];
-                    if(isset($dat['manufacture']['company_name'])){
-                        if(!empty($dat['manufacture']['company_name'])){
-                            $insert_arr['company_name'] = trim($dat['manufacture']['company_name']);
-                        }
-                    }
-                    if(isset($dat['manufacture']['country'])){
-                        if(!empty($dat['manufacture']['country'])){
-                            $insert_arr['country'] = $dat['manufacture']['country'];
-                            $insert_arr['address'] = trim($dat['manufacture']['address']);
-                        }
-                    }
-                    if(isset($dat['manufacture']['area1'])){
-                        if(!empty($dat['manufacture']['area1'])){
-                            $insert_arr['area1'] = $dat['manufacture']['area1'];
-                        }
-                    }
-                    if(isset($dat['manufacture']['area2'])){
-                        if(!empty($dat['manufacture']['area2'])){
-                            $insert_arr['area2'] = $dat['manufacture']['area2'];
-                        }
-                    }
-                    if(isset($dat['manufacture']['area3'])){
-                        if(!empty($dat['manufacture']['area3'])){
-                            $insert_arr['area3'] = $dat['manufacture']['area3'];
-                        }
-                    }
-                    if(isset($dat['manufacture']['area4'])){
-                        if(!empty($dat['manufacture']['area4'])){
-                            $insert_arr['area4'] = $dat['manufacture']['area4'];
-                        }
-                    }
-                    if(isset($dat['manufacture']['area5'])){
-                        if(!empty($dat['manufacture']['area5'])){
-                            $insert_arr['area5'] = $dat['manufacture']['area5'];
-                        }
-                    }
-                    if(isset($dat['manufacture']['area6'])){
-                        if(!empty($dat['manufacture']['area6'])){
-                            $insert_arr['area6'] = $dat['manufacture']['area6'];
-                        }
-                    }
-                    if(isset($dat['manufacture']['connect_info'])){
-                        if(!empty($dat['manufacture']['connect_info'])){
-                            $insert_arr['connect_type'] = $dat['manufacture']['connect_type'];
-                            $insert_arr['connect_info'] = trim($dat['manufacture']['connect_info']);
-                        }
-                    }
-                    if(isset($dat['manufacture']['product_license'])){
-                        if(!empty($dat['manufacture']['product_license'])){
-                            $insert_arr['product_license'] = trim($dat['manufacture']['product_license']);
-                        }
-                    }
-                    if(isset($dat['manufacture']['product_standard'])){
-                        if(!empty($dat['manufacture']['product_standard'])){
-                            $insert_arr['product_standard'] = trim($dat['manufacture']['product_standard']);
-                        }
-                    }
-
-                    if(!empty($insert_arr)){
-                        $manufacture = json_encode($insert_arr,true);
+    
+                    #同步平台商品表
+                    if($goods['shelf_id']>0) {
+                        Db::connect($this->config)->name('goods')->where(['goods_id' => $goods['shelf_id']])->update([
+                            'activity_info'=>$dat['activity_id'],
+                            'other_keywords'=>trim($dat['other_keywords']),
+                        ]);
                     }
                 }
-
-                #销售企业
-                $sales = '';
-                if(isset($dat['sales'])){
-                    $insert_arr = [];
-                    if(isset($dat['sales']['company_name'])){
-                        if(!empty($dat['sales']['company_name'])){
-                            $insert_arr['company_name'] = trim($dat['sales']['company_name']);
-                        }
-                    }
-                    if(isset($dat['sales']['country'])){
-                        if(!empty($dat['sales']['country'])){
-                            $insert_arr['country'] = $dat['sales']['country'];
-                            $insert_arr['address'] = trim($dat['sales']['address']);
-                        }
-                    }
-                    if(isset($dat['sales']['area1'])){
-                        if(!empty($dat['sales']['area1'])){
-                            $insert_arr['area1'] = $dat['sales']['area1'];
-                        }
-                    }
-                    if(isset($dat['sales']['area2'])){
-                        if(!empty($dat['sales']['area2'])){
-                            $insert_arr['area2'] = $dat['sales']['area2'];
-                        }
-                    }
-                    if(isset($dat['sales']['area3'])){
-                        if(!empty($dat['sales']['area3'])){
-                            $insert_arr['area3'] = $dat['sales']['area3'];
-                        }
-                    }
-                    if(isset($dat['sales']['area4'])){
-                        if(!empty($dat['sales']['area4'])){
-                            $insert_arr['area4'] = $dat['sales']['area4'];
-                        }
-                    }
-                    if(isset($dat['sales']['area5'])){
-                        if(!empty($dat['sales']['area5'])){
-                            $insert_arr['area5'] = $dat['sales']['area5'];
-                        }
-                    }
-                    if(isset($dat['sales']['area6'])){
-                        if(!empty($dat['sales']['area6'])){
-                            $insert_arr['area6'] = $dat['sales']['area6'];
-                        }
-                    }
-                    if(isset($dat['sales']['connect_info'])){
-                        if(!empty($dat['sales']['connect_info'])){
-                            $insert_arr['connect_type'] = $dat['sales']['connect_type'];
-                            $insert_arr['connect_info'] = trim($dat['sales']['connect_info']);
-                        }
-                    }
-                    if(isset($dat['sales']['product_license'])){
-                        if(!empty($dat['sales']['product_license'])){
-                            $insert_arr['product_license'] = trim($dat['sales']['product_license']);
-                        }
-                    }
-
-                    if(!empty($insert_arr)){
-                        $sales = json_encode($insert_arr,true);
-                    }
-                }
-
-                #外贸企业
-                $foreign = '';
-                if(isset($dat['foreign'])){
-                    $insert_arr = [];
-                    if(isset($dat['foreign']['company_name'])){
-                        if(!empty($dat['foreign']['company_name'])){
-                            $insert_arr['company_name'] = trim($dat['foreign']['company_name']);
-                        }
-                    }
-                    if(isset($dat['foreign']['country'])){
-                        if(!empty($dat['foreign']['country'])){
-                            $insert_arr['country'] = $dat['foreign']['country'];
-                            $insert_arr['address'] = trim($dat['foreign']['address']);
-                        }
-                    }
-                    if(isset($dat['foreign']['area1'])){
-                        if(!empty($dat['foreign']['area1'])){
-                            $insert_arr['area1'] = $dat['foreign']['area1'];
-                        }
-                    }
-                    if(isset($dat['foreign']['area2'])){
-                        if(!empty($dat['foreign']['area2'])){
-                            $insert_arr['area2'] = $dat['foreign']['area2'];
-                        }
-                    }
-                    if(isset($dat['foreign']['area3'])){
-                        if(!empty($dat['foreign']['area3'])){
-                            $insert_arr['area3'] = $dat['foreign']['area3'];
-                        }
-                    }
-                    if(isset($dat['foreign']['area4'])){
-                        if(!empty($dat['foreign']['area4'])){
-                            $insert_arr['area4'] = $dat['foreign']['area4'];
-                        }
-                    }
-                    if(isset($dat['foreign']['area5'])){
-                        if(!empty($dat['foreign']['area5'])){
-                            $insert_arr['area5'] = $dat['foreign']['area5'];
-                        }
-                    }
-                    if(isset($dat['foreign']['area6'])){
-                        if(!empty($dat['foreign']['area6'])){
-                            $insert_arr['area6'] = $dat['foreign']['area6'];
-                        }
-                    }
-                    if(isset($dat['foreign']['connect_info'])){
-                        if(!empty($dat['foreign']['connect_info'])){
-                            $insert_arr['connect_type'] = $dat['foreign']['connect_type'];
-                            $insert_arr['connect_info'] = trim($dat['foreign']['connect_info']);
-                        }
-                    }
-                    if(isset($dat['foreign']['product_license'])){
-                        if(!empty($dat['foreign']['product_license'])){
-                            $insert_arr['product_type'] = trim($dat['foreign']['product_type']);
-                            $insert_arr['product_license'] = trim($dat['foreign']['product_license']);
-                        }
-                    }
-
-                    if(!empty($insert_arr)){
-                        $foreign = json_encode($insert_arr,true);
-                    }
-                }
-
-                #有效期限
-                $effective = '';
-                if(isset($dat['effective'])){
-                    $insert_arr = [];
-                    if(isset($dat['effective']['type'])){
-                        $insert_arr['type'] = $dat['effective']['type'];
-                        $insert_arr['type2'] = $dat['effective']['type2'];
-                        $insert_arr['fixed_day'] = trim($dat['effective']['fixed_day']);
-                        $insert_arr['interval_day'] = trim($dat['effective']['interval_day']);
-                    }
-
-                    if(isset($dat['effective']['valid_period'])){
-                        if(!empty($dat['effective']['valid_period'])){
-                            $insert_arr['valid_period'] = trim($dat['effective']['valid_period']);
-                            $insert_arr['valid_unit'] = $dat['effective']['valid_unit'];
-                        }
-                    }
-
-                    if(!empty($insert_arr)){
-                        $effective = json_encode($insert_arr,true);
-                    }
-                }
-
-                #贮存条件
-                $store = '';
-                if(isset($dat['store'])){
-                    $insert_arr = [];
-                    if(isset($dat['store']['temperature_condition'])){
-                        if(!empty($dat['store']['temperature_condition'])){
-                            $insert_arr['temperature_condition'] = $dat['store']['temperature_condition'];
-                        }
-                    }
-                    if(isset($dat['store']['humidity_condition'])){
-                        if(!empty($dat['store']['humidity_condition'])){
-                            $insert_arr['humidity_condition'] = $dat['store']['humidity_condition'];
-                            $insert_arr['humidity_x'] = trim($dat['store']['humidity_x']);
-                            $insert_arr['humidity_y'] = trim($dat['store']['humidity_y']);
-                        }
-                    }
-                    if(isset($dat['store']['light_condition'])){
-                        if(!empty($dat['store']['light_condition'])){
-                            $insert_arr['light_condition'] = $dat['store']['light_condition'];
-                        }
-                    }
-                    if(isset($dat['store']['packing_condition'])){
-                        if(!empty($dat['store']['packing_condition'])){
-                            $insert_arr['packing_condition'] = $dat['store']['packing_condition'];
-                        }
-                    }
-                    if(isset($dat['store']['store_condition'])){
-                        if(!empty($dat['store']['store_condition'])){
-                            $insert_arr['store_condition'] = $dat['store']['store_condition'];
-                        }
-                    }
-                    if(isset($dat['store']['special_condition'])){
-                        if(!empty($dat['store']['special_condition'])){
-                            $insert_arr['special_condition'] = $dat['store']['special_condition'];
-                        }
-                    }
-
-                    if(!empty($insert_arr)){
-                        $store = json_encode($insert_arr,true);
-                    }
-                }
-
-                #产品包装
-                $packing = '';
-                if(isset($dat['packing'])){
-                    $insert_arr = [];
-                    if($dat['packing']['type']=='有包装'){
-                        if(isset($dat['packing']['method'])){
-                            if(!empty($dat['packing']['method'])){
-                                $insert_arr['type'] = $dat['packing']['type'];
-                                $insert_arr['no_pack'] = $dat['packing']['no_pack'];
-                                $insert_arr['method'] = $dat['packing']['method'];
-                                $insert_arr['packing_container'] = $dat['packing']['packing_container'];
-                                $insert_arr['packing_material'] = $dat['packing']['packing_material'];
+                elseif($page_type==6){
+                    #商品详情
+    
+                    #制造企业
+                    $manufacture = '';
+                    if(isset($dat['manufacture'])){
+                        $insert_arr = [];
+                        if(isset($dat['manufacture']['company_name'])){
+                            if(!empty($dat['manufacture']['company_name'])){
+                                $insert_arr['company_name'] = trim($dat['manufacture']['company_name']);
                             }
                         }
+                        if(isset($dat['manufacture']['country'])){
+                            if(!empty($dat['manufacture']['country'])){
+                                $insert_arr['country'] = $dat['manufacture']['country'];
+                                $insert_arr['address'] = trim($dat['manufacture']['address']);
+                            }
+                        }
+                        if(isset($dat['manufacture']['area1'])){
+                            if(!empty($dat['manufacture']['area1'])){
+                                $insert_arr['area1'] = $dat['manufacture']['area1'];
+                            }
+                        }
+                        if(isset($dat['manufacture']['area2'])){
+                            if(!empty($dat['manufacture']['area2'])){
+                                $insert_arr['area2'] = $dat['manufacture']['area2'];
+                            }
+                        }
+                        if(isset($dat['manufacture']['area3'])){
+                            if(!empty($dat['manufacture']['area3'])){
+                                $insert_arr['area3'] = $dat['manufacture']['area3'];
+                            }
+                        }
+                        if(isset($dat['manufacture']['area4'])){
+                            if(!empty($dat['manufacture']['area4'])){
+                                $insert_arr['area4'] = $dat['manufacture']['area4'];
+                            }
+                        }
+                        if(isset($dat['manufacture']['area5'])){
+                            if(!empty($dat['manufacture']['area5'])){
+                                $insert_arr['area5'] = $dat['manufacture']['area5'];
+                            }
+                        }
+                        if(isset($dat['manufacture']['area6'])){
+                            if(!empty($dat['manufacture']['area6'])){
+                                $insert_arr['area6'] = $dat['manufacture']['area6'];
+                            }
+                        }
+                        if(isset($dat['manufacture']['connect_info'])){
+                            if(!empty($dat['manufacture']['connect_info'])){
+                                $insert_arr['connect_type'] = $dat['manufacture']['connect_type'];
+                                $insert_arr['connect_info'] = trim($dat['manufacture']['connect_info']);
+                            }
+                        }
+                        if(isset($dat['manufacture']['product_license'])){
+                            if(!empty($dat['manufacture']['product_license'])){
+                                $insert_arr['product_license'] = trim($dat['manufacture']['product_license']);
+                            }
+                        }
+                        if(isset($dat['manufacture']['product_standard'])){
+                            if(!empty($dat['manufacture']['product_standard'])){
+                                $insert_arr['product_standard'] = trim($dat['manufacture']['product_standard']);
+                            }
+                        }
+    
+                        if(!empty($insert_arr)){
+                            $manufacture = json_encode($insert_arr,true);
+                        }
                     }
-                    elseif($dat['packing']['type']=='无包装'){
-                        $insert_arr['type'] = $dat['packing']['type'];
-                        $insert_arr['no_pack'] = $dat['packing']['no_pack'];
-                        $insert_arr['method'] = $dat['packing']['method'];
+    
+                    #销售企业
+                    $sales = '';
+                    if(isset($dat['sales'])){
+                        $insert_arr = [];
+                        if(isset($dat['sales']['company_name'])){
+                            if(!empty($dat['sales']['company_name'])){
+                                $insert_arr['company_name'] = trim($dat['sales']['company_name']);
+                            }
+                        }
+                        if(isset($dat['sales']['country'])){
+                            if(!empty($dat['sales']['country'])){
+                                $insert_arr['country'] = $dat['sales']['country'];
+                                $insert_arr['address'] = trim($dat['sales']['address']);
+                            }
+                        }
+                        if(isset($dat['sales']['area1'])){
+                            if(!empty($dat['sales']['area1'])){
+                                $insert_arr['area1'] = $dat['sales']['area1'];
+                            }
+                        }
+                        if(isset($dat['sales']['area2'])){
+                            if(!empty($dat['sales']['area2'])){
+                                $insert_arr['area2'] = $dat['sales']['area2'];
+                            }
+                        }
+                        if(isset($dat['sales']['area3'])){
+                            if(!empty($dat['sales']['area3'])){
+                                $insert_arr['area3'] = $dat['sales']['area3'];
+                            }
+                        }
+                        if(isset($dat['sales']['area4'])){
+                            if(!empty($dat['sales']['area4'])){
+                                $insert_arr['area4'] = $dat['sales']['area4'];
+                            }
+                        }
+                        if(isset($dat['sales']['area5'])){
+                            if(!empty($dat['sales']['area5'])){
+                                $insert_arr['area5'] = $dat['sales']['area5'];
+                            }
+                        }
+                        if(isset($dat['sales']['area6'])){
+                            if(!empty($dat['sales']['area6'])){
+                                $insert_arr['area6'] = $dat['sales']['area6'];
+                            }
+                        }
+                        if(isset($dat['sales']['connect_info'])){
+                            if(!empty($dat['sales']['connect_info'])){
+                                $insert_arr['connect_type'] = $dat['sales']['connect_type'];
+                                $insert_arr['connect_info'] = trim($dat['sales']['connect_info']);
+                            }
+                        }
+                        if(isset($dat['sales']['product_license'])){
+                            if(!empty($dat['sales']['product_license'])){
+                                $insert_arr['product_license'] = trim($dat['sales']['product_license']);
+                            }
+                        }
+    
+                        if(!empty($insert_arr)){
+                            $sales = json_encode($insert_arr,true);
+                        }
                     }
-
-
-                    if(!empty($insert_arr)){
-                        $packing = json_encode($insert_arr,true);
+    
+                    #外贸企业
+                    $foreign = '';
+                    if(isset($dat['foreign'])){
+                        $insert_arr = [];
+                        if(isset($dat['foreign']['company_name'])){
+                            if(!empty($dat['foreign']['company_name'])){
+                                $insert_arr['company_name'] = trim($dat['foreign']['company_name']);
+                            }
+                        }
+                        if(isset($dat['foreign']['country'])){
+                            if(!empty($dat['foreign']['country'])){
+                                $insert_arr['country'] = $dat['foreign']['country'];
+                                $insert_arr['address'] = trim($dat['foreign']['address']);
+                            }
+                        }
+                        if(isset($dat['foreign']['area1'])){
+                            if(!empty($dat['foreign']['area1'])){
+                                $insert_arr['area1'] = $dat['foreign']['area1'];
+                            }
+                        }
+                        if(isset($dat['foreign']['area2'])){
+                            if(!empty($dat['foreign']['area2'])){
+                                $insert_arr['area2'] = $dat['foreign']['area2'];
+                            }
+                        }
+                        if(isset($dat['foreign']['area3'])){
+                            if(!empty($dat['foreign']['area3'])){
+                                $insert_arr['area3'] = $dat['foreign']['area3'];
+                            }
+                        }
+                        if(isset($dat['foreign']['area4'])){
+                            if(!empty($dat['foreign']['area4'])){
+                                $insert_arr['area4'] = $dat['foreign']['area4'];
+                            }
+                        }
+                        if(isset($dat['foreign']['area5'])){
+                            if(!empty($dat['foreign']['area5'])){
+                                $insert_arr['area5'] = $dat['foreign']['area5'];
+                            }
+                        }
+                        if(isset($dat['foreign']['area6'])){
+                            if(!empty($dat['foreign']['area6'])){
+                                $insert_arr['area6'] = $dat['foreign']['area6'];
+                            }
+                        }
+                        if(isset($dat['foreign']['connect_info'])){
+                            if(!empty($dat['foreign']['connect_info'])){
+                                $insert_arr['connect_type'] = $dat['foreign']['connect_type'];
+                                $insert_arr['connect_info'] = trim($dat['foreign']['connect_info']);
+                            }
+                        }
+                        if(isset($dat['foreign']['product_license'])){
+                            if(!empty($dat['foreign']['product_license'])){
+                                $insert_arr['product_type'] = trim($dat['foreign']['product_type']);
+                                $insert_arr['product_license'] = trim($dat['foreign']['product_license']);
+                            }
+                        }
+    
+                        if(!empty($insert_arr)){
+                            $foreign = json_encode($insert_arr,true);
+                        }
                     }
-                }
-
-                #自定义参数
-                $spec_info = [];
-                if(!empty($dat['spec_name'][0])){
-                    foreach($dat['spec_name'] as $k=>$v){
-
-                        array_push($spec_info,['spec_name'=>trim($v),'spec_desc'=>trim($dat['spec_desc'][$k])]);
+    
+                    #有效期限
+                    $effective = '';
+                    if(isset($dat['effective'])){
+                        $insert_arr = [];
+                        if(isset($dat['effective']['type'])){
+                            $insert_arr['type'] = $dat['effective']['type'];
+                            $insert_arr['type2'] = $dat['effective']['type2'];
+                            $insert_arr['fixed_day'] = trim($dat['effective']['fixed_day']);
+                            $insert_arr['interval_day'] = trim($dat['effective']['interval_day']);
+                        }
+    
+                        if(isset($dat['effective']['valid_period'])){
+                            if(!empty($dat['effective']['valid_period'])){
+                                $insert_arr['valid_period'] = trim($dat['effective']['valid_period']);
+                                $insert_arr['valid_unit'] = $dat['effective']['valid_unit'];
+                            }
+                        }
+    
+                        if(!empty($insert_arr)){
+                            $effective = json_encode($insert_arr,true);
+                        }
                     }
-                    $spec_info = json_encode($spec_info,true);
-                }else{
-                    $spec_info = '';
-                }
-
-                if(empty($manufacture) && empty($sales) && empty($foreign) && empty($effective) && empty($store) && empty($packing) && empty($spec_info) && !isset($dat['pc_desc'])){
-                    return json(['code'=>0,'msg'=>'暂无修改','data'=>['goods_id'=>$dat['goods_id']]]);
-                }
-
-                Db::connect($this->config)->name('goods_merchant')->where(['id'=>$dat['goods_id']])->update([
-                    'manufacture'=>$manufacture,
-                    'sales'=>$sales,
-                    'foreign'=>$foreign,
-                    'effective'=>$effective,
-                    'store'=>$store,
-                    'packing'=>$packing,
-                    'spec_info'=>$spec_info,
-                    'pc_desc'=>isset($dat['pc_desc'])?json_encode($dat['pc_desc'],true):'',
-                ]);
-
-                #同步平台商品表
-                if($goods['shelf_id']>0) {
-                    Db::connect($this->config)->name('goods')->where(['goods_id' => $goods['shelf_id']])->update([
+    
+                    #贮存条件
+                    $store = '';
+                    if(isset($dat['store'])){
+                        $insert_arr = [];
+                        if(isset($dat['store']['temperature_condition'])){
+                            if(!empty($dat['store']['temperature_condition'])){
+                                $insert_arr['temperature_condition'] = $dat['store']['temperature_condition'];
+                            }
+                        }
+                        if(isset($dat['store']['humidity_condition'])){
+                            if(!empty($dat['store']['humidity_condition'])){
+                                $insert_arr['humidity_condition'] = $dat['store']['humidity_condition'];
+                                $insert_arr['humidity_x'] = trim($dat['store']['humidity_x']);
+                                $insert_arr['humidity_y'] = trim($dat['store']['humidity_y']);
+                            }
+                        }
+                        if(isset($dat['store']['light_condition'])){
+                            if(!empty($dat['store']['light_condition'])){
+                                $insert_arr['light_condition'] = $dat['store']['light_condition'];
+                            }
+                        }
+                        if(isset($dat['store']['packing_condition'])){
+                            if(!empty($dat['store']['packing_condition'])){
+                                $insert_arr['packing_condition'] = $dat['store']['packing_condition'];
+                            }
+                        }
+                        if(isset($dat['store']['store_condition'])){
+                            if(!empty($dat['store']['store_condition'])){
+                                $insert_arr['store_condition'] = $dat['store']['store_condition'];
+                            }
+                        }
+                        if(isset($dat['store']['special_condition'])){
+                            if(!empty($dat['store']['special_condition'])){
+                                $insert_arr['special_condition'] = $dat['store']['special_condition'];
+                            }
+                        }
+    
+                        if(!empty($insert_arr)){
+                            $store = json_encode($insert_arr,true);
+                        }
+                    }
+    
+                    #产品包装
+                    $packing = '';
+                    if(isset($dat['packing'])){
+                        $insert_arr = [];
+                        if($dat['packing']['type']=='有包装'){
+                            if(isset($dat['packing']['method'])){
+                                if(!empty($dat['packing']['method'])){
+                                    $insert_arr['type'] = $dat['packing']['type'];
+                                    $insert_arr['no_pack'] = $dat['packing']['no_pack'];
+                                    $insert_arr['method'] = $dat['packing']['method'];
+                                    $insert_arr['packing_container'] = $dat['packing']['packing_container'];
+                                    $insert_arr['packing_material'] = $dat['packing']['packing_material'];
+                                }
+                            }
+                        }
+                        elseif($dat['packing']['type']=='无包装'){
+                            $insert_arr['type'] = $dat['packing']['type'];
+                            $insert_arr['no_pack'] = $dat['packing']['no_pack'];
+                            $insert_arr['method'] = $dat['packing']['method'];
+                        }
+    
+    
+                        if(!empty($insert_arr)){
+                            $packing = json_encode($insert_arr,true);
+                        }
+                    }
+    
+                    #自定义参数
+                    $spec_info = [];
+                    if(!empty($dat['spec_name'][0])){
+                        foreach($dat['spec_name'] as $k=>$v){
+    
+                            array_push($spec_info,['spec_name'=>trim($v),'spec_desc'=>trim($dat['spec_desc'][$k])]);
+                        }
+                        $spec_info = json_encode($spec_info,true);
+                    }else{
+                        $spec_info = '';
+                    }
+    
+                    if(empty($manufacture) && empty($sales) && empty($foreign) && empty($effective) && empty($store) && empty($packing) && empty($spec_info) && !isset($dat['pc_desc'])){
+                        return json(['code'=>0,'msg'=>'暂无修改','data'=>['goods_id'=>$dat['goods_id']]]);
+                    }
+    
+                    Db::connect($this->config)->name('goods_merchant')->where(['id'=>$dat['goods_id']])->update([
                         'manufacture'=>$manufacture,
                         'sales'=>$sales,
                         'foreign'=>$foreign,
@@ -4339,23 +4311,42 @@ class Index extends Controller
                         'spec_info'=>$spec_info,
                         'pc_desc'=>isset($dat['pc_desc'])?json_encode($dat['pc_desc'],true):'',
                     ]);
+    
+                    #同步平台商品表
+                    if($goods['shelf_id']>0) {
+                        Db::connect($this->config)->name('goods')->where(['goods_id' => $goods['shelf_id']])->update([
+                            'manufacture'=>$manufacture,
+                            'sales'=>$sales,
+                            'foreign'=>$foreign,
+                            'effective'=>$effective,
+                            'store'=>$store,
+                            'packing'=>$packing,
+                            'spec_info'=>$spec_info,
+                            'pc_desc'=>isset($dat['pc_desc'])?json_encode($dat['pc_desc'],true):'',
+                        ]);
+                    }
                 }
-            }
-            elseif($page_type==7){
-                #卖家说明
-                Db::connect($this->config)->name('goods_merchant')->where(['id'=>$dat['goods_id']])->update([
-                    'rule_id'=>$dat['rule_id'],
-                ]);
-
-                #同步平台商品表
-                if($goods['shelf_id']>0) {
-                    Db::connect($this->config)->name('goods')->where(['goods_id' => $goods['shelf_id']])->update([
+                elseif($page_type==7){
+                    #卖家说明
+                    Db::connect($this->config)->name('goods_merchant')->where(['id'=>$dat['goods_id']])->update([
                         'rule_id'=>$dat['rule_id'],
                     ]);
+    
+                    #同步平台商品表
+                    if($goods['shelf_id']>0) {
+                        Db::connect($this->config)->name('goods')->where(['goods_id' => $goods['shelf_id']])->update([
+                            'rule_id'=>$dat['rule_id'],
+                        ]);
+                    }
                 }
+                
+                Db::commit();
+                return json(['code'=>0,'msg'=>'保存成功','data'=>['goods_id'=>$dat['goods_id']]]);
+            } catch (\Exception $e) {
+                Db::rollback();
+                Log::error('保存失败: ' . $e->getMessage());
+                return json(['code' => 0, 'msg' => '保存失败']);
             }
-
-            return json(['code'=>0,'msg'=>'保存成功','data'=>['goods_id'=>$dat['goods_id']]]);
         }
         else{
             $data = ['mode'=>1];
