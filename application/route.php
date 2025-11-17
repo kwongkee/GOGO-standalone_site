@@ -263,113 +263,13 @@ Route::any('index/knowledge_list', 'index/Index/knowledge_list');#智能服务�
 Route::any('index/save_knowledge', 'index/Index/save_knowledge');#智能服务体验-多语文档编辑-2025-08-21
 //账户管理end
 
-
-//新的会员中心start2024-09-12
-Route::any('members/member_center', 'index/Members/member_center');
-Route::any('members/system_manage', 'index/Members/system_manage');
-Route::any('members/system_manage2', 'index/Members/system_manage2');
-Route::any('members/person_basic', 'index/members/person_basic');#账户信息
-Route::any('members/connect_account_list', 'index/Members/connect_account_list');#关联账户列表
-Route::any('members/connect_enterprise_list', 'index/Members/connect_enterprise_list');#关联企业列表
-Route::any('members/auth_info', 'index/Members/auth_info');#国内人认证
-Route::any('members/connect_enterprise', 'index/Members/connect_enterprise');#关联企业
-Route::any('members/contact_info', 'index/Members/contact_info');#联系信息
-Route::any('members/receive_list', 'index/Members/receive_list');#收货信息
-Route::any('members/save_receive', 'index/Members/save_receive');#收货信息-save
-Route::any('members/del_receive', 'index/Members/del_receive');#收货信息-del
-Route::any('members/getphonenum', 'index/Members/getphonenum');#获取手机号码
-Route::any('members/send_list', 'index/Members/send_list');#发货信息
-Route::any('members/save_send', 'index/Members/save_send');#发货信息-save
-Route::any('members/processing', 'index/Members/processing');#开发中
-Route::any('members/transfer_website', 'index/Members/transfer_website');#跳转其他页面
-Route::any('members/coupon_list', 'index/Members/coupon_list');#优惠卡券列表
-Route::any('members/prepaid_list', 'index/Members/prepaid_list');#预付账单列表
-Route::any('members/sure_list', 'index/Members/sure_list');#我确认的列表
-Route::any('members/get_website_qrcode', 'index/Members/get_website_qrcode');#获取网站二维码
-//新的会员中心end
-
-//决策应用start2024-09-12
-Route::any('member/get_name', 'index/Member/get_name');#发货信息
-Route::any('member/member_center','index/Member/member_center');#普通会员主界面
-Route::any('member/system_manage','index/Member/system_manage');#系统管理页面1
-Route::any('member/system_manage2','index/Member/system_manage2');#系统管理页面2
-Route::any('member/join_group','index/Member/join_group');#查看群组
-Route::any('member/business_list','index/Member/business_list');#决策管理列表
-Route::any('member/group_list','index/Member/group_list');#群组列表
-Route::any('member/save_group','index/Member/save_group');#组建群组
-Route::any('member/topics_manage','index/Member/topics_manage');#管理决策
-Route::any('member/topics_manage2','index/Member/topics_manage2');#管理决策2
-Route::any('member/save_topics','index/Member/save_topics');#发起/修改议题
-Route::any('member/del_options','index/Member/del_options');#删除选项
-Route::any('member/topics_detail','index/Member/topics_detail');#决策详情
-Route::any('member/topics_list','index/Member/topics_list');#我参与的议题
-Route::any('member/send_topics_list','index/Member/send_topics_list');#我发起的议题
-Route::any('member/chat_list','index/Member/chat_list');#我的聊天列表
-Route::any('member/save_basic','index/Member/save_basic');#我的基本信息页
-Route::any('member/check_follow','index/Member/check_follow');#查看用户有无关注公众号
-Route::any('member/share_topics','index/Member/share_topics');#分享议题
-Route::any('member/advice_list','index/Member/advice_list');#建议咨询列表
-Route::any('member/save_advice','index/Member/save_advice');#保存建议咨询
-Route::any('member/social_list','index/Member/social_list');#社媒账户列表
-//决策应用end
-
-//在线客服start
-Route::any('customer/customer_online', 'index/Customer/customer_online');
-Route::any('customer/discuss_online', 'index/Customer/discuss_online');
-Route::any('customer/upload_files', 'index/Customer/upload_files');
-//在线客服end
-
 //物流官网start
-Route::any('gather', 'index/Gather/index');
-Route::any('gather/freight_estimation', 'index/Gather/freight_estimation');
-Route::any('gather/service_center', 'index/Gather/service_center');
-Route::any('gather/tracking', 'index/Gather/tracking');
-Route::any('gather/appraise', 'index/Gather/appraise');
 Route::any('gather/article', 'index/Gather/article');
-Route::any('gather/about', 'index/Gather/about');
 Route::any('gather/notice_detail', 'index/Gather/notice_detail');
 Route::any('gather/suggest', 'index/Gather/suggest');
-Route::any('gather/login', 'index/Gather/login');
 Route::any('gather/send_code', 'index/Gather/send_code');
-Route::any('gather/member_center', 'index/Gather/member_center');
-Route::any('gather/package_forecast', 'index/Gather/package_forecast');#提交预报任务
-Route::any('gather/package_list', 'index/Gather/package_list');
-Route::any('gather/order_management', 'index/Gather/order_management');
-Route::any('gather/order_info', 'index/Gather/order_info');
-Route::any('gather/parcel_claim', 'index/Gather/parcel_claim');
-Route::any('gather/member', 'index/Gather/member');
-Route::any('gather/coupon', 'index/Gather/coupon');
-Route::any('gather/point', 'index/Gather/point');
-Route::any('gather/balance', 'index/Gather/balance');
-Route::any('gather/become_partner', 'index/Gather/become_partner');
-Route::any('gather/warehouse_address', 'index/Gather/warehouse_address');
-Route::any('gather/address_receive', 'index/Gather/address_receive');
-Route::any('gather/update_personal', 'index/Gather/update_personal');
-Route::any('gather/update_password', 'index/Gather/update_password');
-Route::any('gather/get_warehouse', 'index/Gather/get_warehouse');#获取仓库
-Route::any('gather/sendcode', 'index/Gather/sendcode');#阅读须知-发送验证码
-Route::any('gather/check_verifyCode_for_rules', 'index/Gather/check_verifyCode_for_rules');#阅读须知-发送验证码-提交验证
-Route::any('gather/get_desc', 'index/Gather/get_desc');#获取万邦商品描述
-Route::any('gather/get_guide', 'index/Gather/get_guide');#获取阅读须知
-Route::any('gather/warehouse_info', 'index/Gather/warehouse_info');#获取仓库信息
-Route::any('gather/get_warehouse_info', 'index/Gather/get_warehouse_info');#获取仓库信息
-Route::any('gather/get_express', 'index/Gather/get_express');#获取快递企业
-Route::any('gather/get_lines', 'index/Gather/get_lines');#获取线路
-Route::any('gather/get_country', 'index/Gather/get_country');#获取各大州下的国地
-Route::any('gather/get_currency', 'index/Gather/get_currency');#获取币种
-Route::any('gather/get_line_detail', 'index/Gather/get_line_detail');#获取线路详情
-Route::any('gather/get_line_info', 'index/Gather/get_line_info');#获取线路信息
-Route::any('gather/get_tips', 'index/Gather/get_tips');#获取提示
-Route::any('gather/search_info', 'index/Gather/search_info');#查询属性内物品名称
-Route::any('gather/value_introduce', 'index/Gather/value_introduce');#查询属性内物品名称
-Route::any('gather/tax_relate', 'index/Gather/tax_relate');#涉税
-Route::any('gather/gettableinfo', 'index/Gather/gettableinfo');#获取账单数据表信息
-Route::any('gather/calclinecost', 'index/Gather/calclinecost');#计算线路的计费重和计费额
 Route::any('gather/getminiprogramcode', 'index/Gather/getminiprogramcode');#计算线路的计费重和计费额
 Route::any('gather/getweixin', 'index/Gather/getweixin');#获取微信账号信息
-Route::any('gather/get_volumn', 'index/Gather/get_volumn');#获取线路下的货物类别体积比
-Route::any('gather/getphonenum', 'index/Gather/getphonenum');#获取国地的手机号前缀
-Route::any('gather/get_rate', 'index/Gather/get_rate');#获取当前币种汇率
 //物流官网end
 
 Route::any('index/upload_file', 'index/Index/upload_file');
@@ -379,15 +279,6 @@ Route::any('index/upload_diy_file', 'index/Index/upload_diy_file');
 Route::any('log', 'index/Loggin/index');
 Route::any('log_detail', 'index/Loggin/log_detail');
 Route::any('notice_boss', 'index/Loggin/notice_boss');
-
-//商城信息
-Route::any('shop/audit','index/Shop/audit');
-Route::any('shop/audit_detail','index/Shop/audit_detail');
-Route::any('shop/shunt','index/Shop/shunt');
-Route::any('shop/shunt_detail','index/Shop/shunt_detail');
-Route::any('shop/shunt_edit','index/Shop/shunt_edit');
-Route::any('shop/shunt_addr','index/Shop/shunt_addr');#修改地址
-Route::any('shop/become_buyer','index/Shop/become_buyer');
 
 //SEO优化
 // Route::get('sitemap.xml', 'index/Index/sitemap');
