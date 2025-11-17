@@ -135,16 +135,9 @@ ThinkPHP® 商标和著作权所有者为上海顶想信息科技有限公司。
 
 # GOGO 独立站 - 企业级代码管理
 
-## 部署流程
-1. 本地修改 → `git push`
-2. 执行 `deploy.bat`
-3. 服务器自动更新
-
-## 回滚
-```bash
-./rollback.sh v1.0.0-safe
-```
-
-## 备份
-```bash
-0 2 * * * /path/to/backup.sh
+## 部署步骤
+- git push → deploy.bat
+- 
+## 脚本优化
+- deploy.bat: 添加日志deploy.log
+- rollback.sh: 添加日志rollback.log

@@ -1,13 +1,11 @@
-```bash
+# 原代码（假设git reset --hard HEAD~1）
+git reset --hard HEAD~1
+
+# 优化后
 #!/bin/bash
-TAG=$1
-if [ -z "$TAG" ]; then
-    echo "用法: ./rollback.sh v1.0.0-safe"
+git reset --hard HEAD~1
+if [ $? -ne 0 ]; then
+    echo "Rollback failed!" >> rollback.log
     exit 1
 fi
-
-git fetch --tags
-git checkout $TAG
-systemctl restart php-fpm
-echo "已回滚到 $TAG"
-```
+echo "Rollback success $(date)" >> rollback.log
