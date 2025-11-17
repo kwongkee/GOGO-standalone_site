@@ -10,6 +10,12 @@
 // +----------------------------------------------------------------------
 use think\Db;
 
+if (!function_exists('safe_param')) {
+    function safe_param($key, $default = '', $filter = 'trim,htmlspecialchars') {
+        return request()->param($key, $default, $filter);
+    }
+}
+
 // 应用公共文件
 function dd($res){
     print_r($res);die;
