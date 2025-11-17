@@ -6,6 +6,7 @@ use think\Db;
 use think\Controller;
 use app\index\model\Parceltask;
 use think\Log;
+use think\Cache;
 
 class Index extends Controller
 {
@@ -242,8 +243,18 @@ class Index extends Controller
         // session('account',[]);
 //        dd(base64_encode('https://rte.gogo198.cn/uploads/knowledge_files/20250521/huasa.jpg'));
         $data = input();
-
         $company_id = $this->company_id;
+        
+        $cacheKey = 'website_basic_' . $company_id;
+        $ishave_website = Cache::get($cacheKey);
+        if ($ishave_website === false) {
+            $ishave_website = Db::name('website_basic')->where(['company_id' => $company_id])->count();
+            Cache::set($cacheKey, $ishave_website, 3600); // Cache for 1 hour
+        }
+        if (!$ishave_website) {
+            return $this->error('Website not configured');
+        }
+        
         #授权登录跳转
         if(isset($data['authid'])){
             $ip = $_SERVER['REMOTE_ADDR'];
@@ -400,10 +411,21 @@ class Index extends Controller
         $discovery_rotate = Db::name('website_discovery_list')->where(['system_id'=>9,'company_id'=>0])->select();
 
         #新闻列表
-        $timestamp = strtotime("yesterday");
-        $news = Db::name('website_crossborder_news')->where(['time'=>date('Y-m-d',$timestamp),'status'=>1])->order('id','desc')->limit(50)->select();
-        if(empty($news)){
-            $news = Db::name('website_crossborder_news')->where(['status'=>1])->order('id','desc')->limit(50)->select();
+        // $timestamp = strtotime("yesterday");
+        // $news = Db::name('website_crossborder_news')->where(['time'=>date('Y-m-d',$timestamp),'status'=>1])->order('id','desc')->limit(50)->select();
+        // if(empty($news)){
+        //     $news = Db::name('website_crossborder_news')->where(['status'=>1])->order('id','desc')->limit(50)->select();
+        // }
+        
+        $newsCacheKey = 'crossborder_news_latest';
+        $news = Cache::get($newsCacheKey);
+        if ($news === false) {
+            $yesterday = date('Y-m-d', strtotime('-1 day'));
+            $news = Db::name('website_crossborder_news')->whereRaw("time = '".$yesterday."' and status=1")->order('id desc')->limit(50)->select();
+            if (empty($news)) {
+                $news = Db::name('website_crossborder_news')->whereRaw("status = 1")->order('id desc')->limit(50)->select();
+            }
+            Cache::set($newsCacheKey, $news, 86400); // Cache for 1 day
         }
 
         #分享
