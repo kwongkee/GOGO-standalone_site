@@ -505,6 +505,9 @@ class Index extends Controller
             echo '<h1>请先配置资讯网站信息后再访问</h1>';exit;
         }
 
+        #查询有无商城
+        $ishave_website = Db::name('website_basic')->where(['company_id'=>$this->company_id,'company_type'=>0])->find();
+
         #授权登录跳转
         if(isset($data['authid'])){
             $ip = $_SERVER['REMOTE_ADDR'];
@@ -659,7 +662,7 @@ class Index extends Controller
         $data['thumb'] = 'https://shop.gogo198.cn/collect_website/public/uploads/centralize/website_index/64a5282e9bdbf.png';
         $signPackage = weixin_share($data);
         
-        return view('/index/merch_index',compact('menu','rotate','website','services','services2','link','news','signPackage','discovery_rotate','company_id','company_type'));
+        return view('/index/merch_index',compact('menu','rotate','website','services','services2','link','news','signPackage','discovery_rotate','company_id','company_type','ishave_website'));
     }
 
     #企业网站管理

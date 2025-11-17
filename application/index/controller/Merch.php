@@ -132,6 +132,9 @@ class Merch
         $company_id = intval($dat['company_id']);
         $company_type = intval($dat['company_type']);
 
+        #查询有无网站
+        $ishave_website = Db::name('website_basic')->where(['company_id'=>$company_id,'company_type'=>1])->find();
+
         #获取滚动信息
         $this->websites['rotate_info'] = Db::name('merchsite_rotate')->where(['company_id'=>$company_id,'company_type'=>$company_type])->find();
         if(!empty($this->websites['rotate_info']['content_id'])){
@@ -297,7 +300,7 @@ class Merch
         $data['source_link'] = '//dtc.gogo198.net';
         $data['page_type'] = 1;
 
-        return view('index/shop_frontend/merch_shop_index',compact('data','company_id','company_type'));
+        return view('index/shop_frontend/merch_shop_index',compact('data','company_id','company_type','ishave_website'));
     }
 
     #税率页

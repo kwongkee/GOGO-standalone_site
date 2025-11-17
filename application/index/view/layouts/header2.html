@@ -185,6 +185,9 @@
                         <a href="#" data-toggle="dropdown" class="dropdown-toggle f20" style="text-transform:unset;">GoFriend <b class="caret"></b></a>
                         <ul class="dropdown-menu" style="min-width: 200px;">
                             <li><a href="//dtc.gogo198.net/admin?cid=<?php echo base64_encode($company_id);?>" class="f15 common_inner_background" target="_blank">&gt;商家后台</a></li>
+                            {if !empty($ishave_website)}
+                                <li><a href="//dtc.gogo198.net/web?company_id={$company_id}&company_type=1" class="f15 common_inner_background" target="_blank">&gt;资讯网站</a></li>
+                            {/if}
                             <li><a href="//boss.gogo198.cn/?s=index/member_login&uid=<?php echo base64_encode(session('account.id'));?>" class="f15 common_inner_background" target="_blank">&gt;个人中心</a></li>
                             <li><a href="/?s=index/change_account&company_id={$company_id}&company_type={$company_type}" class="f15 common_inner_background">&gt;切换账号</a></li>
                         </ul>
