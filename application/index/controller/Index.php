@@ -440,7 +440,6 @@ class Index extends Controller
         return view('/index/index',compact('menu','rotate','website','services','services2','link','news','signPackage','discovery_rotate','company_id'));
     }
 
-
     #站点管理
     public function website_manage(Request $request){
         $data = input();
