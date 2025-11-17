@@ -13,13 +13,14 @@ use think\Route;
 
 Route::get('/', 'index/index/index'); // 定义GET请求路由规则
 
-//独立网站界面===========start
+//==========独立网站界面===========start
 //Route::get('index/website_manage', 'index/Index/website_manage');#企业管理
 Route::rule('admin', 'index/index/website_manage');
 //    ->pattern(['company_id' => '\d+']);
+
 Route::any('index/get_enterprise_info', 'index/Index/get_enterprise_info');#获取企业信息
 Route::any('index/save_domainname', 'index/Index/save_domainname');#保存企业二级域名
-#企业网站
+#企业网站-后台
 Route::any('index/website_official', 'index/Index/website_official');#企业网站
 Route::any('index/menu_manage', 'index/Index/menu_manage');#企业菜单
 Route::any('index/save_website_basic', 'index/Index/save_website_basic');#企业网站-保存网站配置
@@ -33,7 +34,7 @@ Route::any('index/del_website_index', 'index/Index/del_website_index');#企业�
 Route::any('index/get_nextNavbar', 'index/Index/get_nextNavbar');#企业网站-获取下级菜单
 Route::any('index/save_website_discovery', 'index/Index/save_website_discovery');#企业网站-保存发现轮播图
 Route::any('index/del_website_discovery', 'index/Index/del_website_discovery');#企业网站-删除发现轮播图
-#企业网店
+#企业网店-后台
 Route::any('index/website_shop', 'index/Index/website_shop');#企业网店
 Route::any('index/website_basic', 'index/Index/website_basic');#企业网店-店铺信息
 Route::any('index/warehouse_manage', 'index/Index/warehouse_manage');#企业网店-仓库管理
@@ -173,7 +174,7 @@ Route::any('index/payment_manage', 'index/Index/payment_manage');#企业网店-�
 Route::any('index/save_payment', 'index/Index/save_payment');#企业网店-支付管理-添加支付
 Route::any('index/del_payment', 'index/Index/del_payment');#企业网店-支付管理-删除支付
 
-#企业群组
+#企业群组-后台
 Route::any('index/website_group', 'index/Index/website_group');#企业服务-客服群组管理
 Route::any('index/save_customer_direction', 'index/Index/save_customer_direction');#企业服务-保存显示位置
 Route::any('index/save_customer_group', 'index/Index/save_customer_group');#企业服务-保存群组
@@ -189,7 +190,8 @@ Route::any('index/del_group_member_role', 'index/Index/del_group_member_role');#
 Route::any('index/group_member', 'index/Index/group_member');#企业服务-组员管理
 Route::any('index/save_group_member', 'index/Index/save_group_member');#企业服务-保存组员
 Route::any('index/del_group_member', 'index/Index/del_group_member');#企业服务-删除组员
-#企业服务
+
+#企业服务-后台
 Route::any('index/website_ai', 'index/Index/website_ai');#企业服务-服务管理
 Route::any('index/knowledge_list', 'index/Index/knowledge_list');#企业服务-知识管理
 Route::any('index/save_knowledge', 'index/Index/save_knowledge');#企业网店-保存知识
@@ -200,7 +202,7 @@ Route::any('index/chat_history', 'index/Index/chat_history');#企业网店-商�
 Route::any('index/chat_histories', 'index/Index/chat_histories');#企业网店-商家与客户聊天历史
 Route::any('index/chat_association_info', 'index/Index/chat_association_info');#企业网店-当前对话的关联信息
 
-//**商家商城界面**====START
+//**商家商城前端界面**====START
 //Route::get('merch/merch_shop_index', 'index/Merch/merch_shop_index'); // 定义GET请求路由规则
 Route::rule('shops', 'index/Merch/merch_shop_index');
 //    ->pattern(['company_id' => '\d+']);
@@ -215,11 +217,9 @@ Route::any('merch/rule_list', 'index/Merch/rule_list'); // 规则列表
 Route::any('merch/version_list', 'index/Merch/version_list'); // 版本列表
 Route::any('merch/rule_detail', 'index/Merch/rule_detail'); // 规则详情
 Route::any('merch/getFrame', 'index/Merch/getFrame'); // 规则详情
-
 //**商家商城界面**====END
 
-//独立网站界面===========end
-
+//**商家网站前端界面（部分）**====START
 Route::get('index/detail', 'index/Index/detail');
 Route::get('web', 'index/index/merch_website_index');
 //    ->pattern(['company_id' => '\d+']);
@@ -242,20 +242,20 @@ Route::any('index/rule', 'index/Index/rule');#平台规则-内容
 Route::any('index/more_imgtxt', 'index/Index/more_imgtxt');#瀑布流图文
 Route::any('index/txt_detail', 'index/Index/txt_detail');#图文详情
 Route::any('index/msg_detail', 'index/Index/msg_detail');#图文详情
+//**商家网站前端界面（部分）**====end
+
+Route::any('index/customer_login', 'index/Index/customer_login');#登录
+Route::any('index/send_code', 'index/Index/send_code');
+Route::any('index/change_account', 'index/Index/change_account');#切换账号
+//==========独立网站界面===========end
 
 #账户管理
 Route::any('index/save_contact', 'index/Index/save_contact');#授权登录时，补充联系方式（邮箱+手机号）
 Route::any('index/merchant_reg', 'index/Index/merchant_reg');
-Route::any('index/customer_login', 'index/Index/customer_login');
 Route::any('index/login_log', 'index/Index/login_log');#记录授权登录信息
 Route::any('index/authlogin_result', 'index/Index/authlogin_result');#授权登录结果页
-
-
 Route::any('index/merchant_reg', 'index/Index/merchant_reg');//商户认证
-Route::any('index/send_code', 'index/Index/send_code');
 Route::any('index/send_code2', 'index/Index/send_code2');#实名认证
-
-Route::any('index/change_account', 'index/Index/change_account');#切换账号
 Route::any('index/auth_info', 'index/Index/auth_info');#认证信息
 Route::any('index/connect_info', 'index/Index/connect_info');#关联管理
 Route::any('index/intelligent', 'index/Index/intelligent');#智能服务体验-2025-08-21
@@ -272,8 +272,10 @@ Route::any('gather/getminiprogramcode', 'index/Gather/getminiprogramcode');#计�
 Route::any('gather/getweixin', 'index/Gather/getweixin');#获取微信账号信息
 //物流官网end
 
+//上传方法start
 Route::any('index/upload_file', 'index/Index/upload_file');
 Route::any('index/upload_diy_file', 'index/Index/upload_diy_file');
+//上传方法end
 
 //每日列出日志清单给老板
 Route::any('log', 'index/Loggin/index');
@@ -288,6 +290,7 @@ Route::get('sitemap.xml', 'index/sitemap/index');
 //api
 Route::any('api/chatgpt', 'api/Chatgpt/index');
 Route::any('api/logout', 'api/Account/index');
+
 #auth0
 Route::any('api/goto_login', 'api/Authlogin/goto_login');
 Route::any('api/authorization_callback', 'api/Authlogin/authorization_callback');
