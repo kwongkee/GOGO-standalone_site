@@ -50,13 +50,6 @@ class Merch
         $this->websites['rand'] = rand(11111,99999);
         $this->websites['info'] = Db::name('website_basic')->where(['company_id'=>$cid,'company_type'=>$company_type])->find();
 
-        if(empty($this->websites['info'])){
-            $title = '电商网店';
-            $msg = '请先配置电商网店信息后再访问';
-            $setting_url = '/?s=index/website_shop&company_id='.$cid.'&company_type='.$company_type;
-            return view('/index/setting',compact('setting_url','msg','title'));
-        }
-
         #获取公示信息
         $this->websites['info']['publicity_info'] = json_decode($this->websites['info']['publicity_info'],true);
 
@@ -107,6 +100,15 @@ class Merch
             <meta property="og:url" content="'.$current_url.'">
             <meta property="og:type" content="website">
         ';
+
+        if(empty($this->websites['info'])){
+            $title = '电商网店';
+            $msg = '请先配置电商网店信息后再访问';
+            $setting_url = '/?s=index/website_shop&company_id='.$cid.'&company_type='.$company_type;
+            $website = $this->websites;
+
+            return view('/index/setting',compact('setting_url','msg','title','website'));
+        }
     }
 
     public function list() {
