@@ -146,7 +146,7 @@ class Merch
             $setting_url = '/?s=index/website_shop&company_id='.$company_id.'&company_type='.$company_type;
             $website = $this->websites;
 
-            return view('/index/setting',compact('setting_url','msg','title','website'));
+            return view('/index/setting',compact('setting_url','msg','title','website','company_id'));
         }
         #获取滚动信息
         $this->websites['rotate_info'] = Db::name('merchsite_rotate')->where(['company_id'=>$company_id,'company_type'=>$company_type])->find();
