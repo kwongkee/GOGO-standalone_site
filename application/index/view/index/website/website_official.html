@@ -718,6 +718,10 @@
                     layer.msg(res.msg,{time:2000}, function () {
                         if(res.code == 0)
                         {
+                            let currentUrl = new URL(window.location.href);
+                            currentUrl.searchParams.set('tab', 'website-config');
+                            window.history.pushState({}, '', currentUrl.toString());
+
                             window.location.reload();
                         }
                     });
