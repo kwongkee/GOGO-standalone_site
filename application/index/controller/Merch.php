@@ -91,15 +91,26 @@ class Merch
         // 清理参数，保留主要路径
         $canonical = preg_replace('/(\?.*)$/', '', $current_url);
         if (substr($canonical, -1) !== '/') $canonical .= '/';
-        
+
         $this->websites['website_canonical'] = '<link rel="canonical" href="' . $canonical . '">';
-        $this->websites['website_og'] = '
-            <meta property="og:title" content="'.$this->websites['info']['name'].'">
-            <meta property="og:description" content="'.$this->websites['info']['desc'].'">
-            <meta property="og:image" content="https://dtc.gogo198.net'.$this->websites['info']['logo'].'">
-            <meta property="og:url" content="'.$current_url.'">
-            <meta property="og:type" content="website">
-        ';
+        if(isset($this->websites['info']['name'])){
+            $this->websites['website_og'] = '
+                <meta property="og:title" content="'.$this->websites['info']['name'] .'">
+                <meta property="og:description" content="'.$this->websites['info']['desc'].'">
+                <meta property="og:image" content="https://dtc.gogo198.net'.$this->websites['info']['logo'].'">
+                <meta property="og:url" content="'.$current_url.'">
+                <meta property="og:type" content="website">
+            ';
+        }else{
+            $this->websites['website_og'] = '
+                <meta property="og:title" content="Gogo">
+                <meta property="og:description" content="Gogo">
+                <meta property="og:image" content="https://shop.gogo198.cn/collect_website/public/uploads/centralize/website_index/64a5282e9bdbf.png">
+                <meta property="og:url" content="'.$current_url.'">
+                <meta property="og:type" content="website">
+            ';
+        }
+
 
         if(empty($this->websites['info'])){
             $title = '电商网店';
