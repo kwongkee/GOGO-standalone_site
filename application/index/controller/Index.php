@@ -10584,7 +10584,7 @@ class Index extends Controller
         $website['website_contact'] = $this->website_contact;
         $website['website_canonical'] = $this->website_canonical;
         $website['website_og'] = $this->website_og;
-
+        dd($website);
         return view('index/ai/website_ai',compact('company','company_id','tab','website'));
     }
     
