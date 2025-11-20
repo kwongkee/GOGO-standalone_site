@@ -522,12 +522,28 @@ class Index extends Controller
         $company_id = intval($data['company_id']);
         $company_type = intval($data['company_type']); #企业类型，0商家商店，1商家网站
 
+        $website['title'] = $this->website_name;
+        $website['keywords'] = $this->website_keywords;
+        $website['description'] = $this->website_description;
+        $website['ico'] = $this->website_ico;
+        $website['sico'] = $this->website_sico;
+        $website['tel'] = $this->website_tel;
+        $website['email'] = $this->website_email;
+        $website['copyright'] = $this->website_copyright;
+        $website['color'] = $this->website_color;
+        $website['color_word'] = $this->website_colorword;
+        $website['color_head'] = $this->website_colorhead;
+        $website['website_contact'] = $this->website_contact;
+        $website['website_canonical'] = $this->website_canonical;
+        $website['website_og'] = $this->website_og;
+
         $ishave = Db::name('website_basic')->where(['company_id'=>$company_id,'company_type'=>$company_type])->find();
         if(empty($ishave)){
             $title = '资讯网站';
             $msg = '请先配置资讯网站信息后再访问';
             $setting_url = '/?s=index/website_official&company_id='.$company_id.'&company_type='.$company_type;
-            return view('/index/setting',compact('setting_url','msg','title'));
+
+            return view('/index/setting',compact('setting_url','msg','title','website','company_id'));
         }
 
         #查询有无商城
@@ -554,21 +570,6 @@ class Index extends Controller
         foreach($rotate as $k=>$v){
             $rotate[$k]['link'] = $this->getAppLink($v['go_other'],$v,'lunbo');
         }
-
-        $website['title'] = $this->website_name;
-        $website['keywords'] = $this->website_keywords;
-        $website['description'] = $this->website_description;
-        $website['ico'] = $this->website_ico;
-        $website['sico'] = $this->website_sico;
-        $website['tel'] = $this->website_tel;
-        $website['email'] = $this->website_email;
-        $website['copyright'] = $this->website_copyright;
-        $website['color'] = $this->website_color;
-        $website['color_word'] = $this->website_colorword;
-        $website['color_head'] = $this->website_colorhead;
-        $website['website_contact'] = $this->website_contact;
-        $website['website_canonical'] = $this->website_canonical;
-        $website['website_og'] = $this->website_og;
 
         #首页板块
         $services = Db::name('website_index')->where(['company_id'=>$company_id,'company_type'=>$company_type])->order('displayorder asc')->select();
