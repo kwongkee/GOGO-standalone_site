@@ -2658,7 +2658,8 @@
                             layer.confirm('请选择你的下一步操作', {
                                 btn: ['配置库存信息', '继续编辑信息']
                             }, function () {
-                                $(window.top.document).find('#content-area').find('.iframe_info').attr('src','/?s=index/save_inventory&company_id={$company_id}&company_type={$company_type}&type={$type2}&is_shelf_link=1&id='+res.data.goods_id);
+                                //'/?s=index/save_inventory&company_id={$company_id}&company_type={$company_type}&type={$type2}&is_shelf_link=1&id='+res.data.goods_id
+                                $(window.top.document).find('#content-area').find('.iframe_info').attr('src','/?s=index/save_procurement&company_id={$company_id}&company_type={$company_type}&type={$type2}');
                             }, function () {
                                 window.location.href="/?s=index/save_shelf&id="+res.data.goods_id+"&page_type="+data.field['page_type']+'&company_id={$company_id}&company_type={$company_type}&type={$type2}'
                             });
