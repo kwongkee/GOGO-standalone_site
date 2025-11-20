@@ -230,7 +230,7 @@
             </div>
         </div>
         <div class="layui-form-item goods_info">
-            <label class="layui-form-label">商品视频(<=3M)</label>
+            <label class="layui-form-label">商品视频(<=5M)</label>
             <div class="layui-input-block">
                 <div class="layui-upload" style="margin-top: 10px;">
                     <button type="button" class="layui-btn" id="video_file-upload">上传视频(1个)</button>
@@ -447,6 +447,7 @@
             ,url: '/?s=index/upload_file'
             ,accept: 'video'
             ,data: { folder:'merch_file', type:'goods_video_files'}
+            ,size: 5 * 1024
             ,multiple: false
             ,before: function(obj){
                 layer.load(); //上传loading
@@ -475,19 +476,19 @@
                         {
                             if("{$type}"==0){
                                 layer.confirm('请选择你的下一步操作', {
-                                    btn: ['添加商品', '修改商品']
+                                    btn: ['继续添加商品', '配置基础信息']
                                 }, function () {
                                     window.location.href='/?s=index/save_product&company_id={$company_id}&company_type={$company_type}';
                                 }, function(){
-                                    window.location.href='/?s=index/save_product&company_id={$company_id}&company_type={$company_type}&id='+res.id;
+                                    window.location.href='/?s=index/save_inventory&company_id={$company_id}&company_type={$company_type}&id='+res.id;
                                 });
                             }else{
                                 layer.confirm('请选择你的下一步操作', {
-                                    btn: ['添加赠品', '修改赠品']
+                                    btn: ['继续添加赠品', '配置基础信息']
                                 }, function () {
                                     window.location.href='/?s=index/save_product&company_id={$company_id}&company_type={$company_type}&type={$type}';
                                 }, function(){
-                                    window.location.href='/?s=index/save_product&company_id={$company_id}&company_type={$company_type}&id='+res.id;
+                                    window.location.href='/?s=index/save_inventory&company_id={$company_id}&company_type={$company_type}&type=1&id='+res.id;
                                 });
                             }
 
