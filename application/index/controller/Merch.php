@@ -112,7 +112,7 @@ class Merch
         }
 
 
-        if(empty($this->websites['info'])){
+        if(!isset($this->websites['info']['name'])){
             $title = '电商网店';
             $msg = '请先配置电商网店信息后再访问';
             $setting_url = '/?s=index/website_shop&company_id='.$cid.'&company_type='.$company_type;
