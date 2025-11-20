@@ -139,7 +139,7 @@ class Merch
         $company_type = intval($dat['company_type']);
 
         #查询有无网站
-        $ishave_website = Db::name('website_basic')->where(['company_id'=>$company_id,'company_type'=>1])->find();
+        $ishave_website = Db::name('website_basic')->where(['company_id'=>$company_id,'company_type'=>$company_type])->find();
         if(empty($ishave_website)){
             $title = '电商网店';
             $msg = '请先配置电商网店信息后再访问';
