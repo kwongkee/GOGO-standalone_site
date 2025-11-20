@@ -3376,7 +3376,8 @@ class Index extends Controller
         $id = isset($dat['id'])?intval($dat['id']):0;
         $company_id = intval($dat['company_id']);
         $company_type = intval($dat['company_type']);#0商城，1官网
-        $type2 = isset($dat['type'])?intval($dat['type']):0;
+        $type2 = isset($dat['type'])?intval($dat['type']):0;#0商品，1赠品
+        $is_shelf_link = isset($dat['is_shelf_link'])?intval($dat['is_shelf_link']):0;#0未到上架环节，1已到上架环节
 
         if($request->isAjax()){
             $goods = Db::connect($this->config)->name('goods_merchant')->where(['id' => $dat['goods_id']])->find();
@@ -3490,7 +3491,7 @@ class Index extends Controller
             #仓库
             $type['warehouse'] = Db::name('centralize_warehouse_list')->where(['uid'=>$company_id])->select();
 
-            return view('index/shop_backend/save_inventory',compact('id','company_id','company_type','data','type','type2'));
+            return view('index/shop_backend/save_inventory',compact('id','company_id','company_type','data','type','type2','is_shelf_link'));
         }
     }
 

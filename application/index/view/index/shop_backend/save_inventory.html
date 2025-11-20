@@ -460,17 +460,29 @@
                     layer.msg(res.msg,{time:2000}, function () {
                         if(res.code == 0)
                         {
-                            layer.confirm('请选择你的下一步操作', {
-                                btn: ['配置上架信息', '继续编辑信息']
-                            }, function () {
-                                if("{$id}">0){
-                                    $(window.top.document).find('#content-area').find('.iframe_info').attr('src','/?s=index/save_shelf&company_id={$company_id}&company_type={$company_type}&type={$type2}&id='+res.id);
-                                }else{
-                                    window.location.href='/?s=index/save_shelf&company_id={$company_id}&company_type={$company_type}&type={$type2}&id='+res.id;
-                                }
-                            }, function () {
-                                window.location.href='/?s=index/save_inventory&company_id={$company_id}&company_type={$company_type}&type={$type2}';
-                            });
+                            if("{$is_shelf_link}"==1){
+                                //已到平台审核上架信息
+                                layer.confirm('请选择你的下一步操作', {
+                                    btn: ['前往管理上架', '继续编辑信息']
+                                }, function () {
+                                    $(window.top.document).find('#content-area').find('.iframe_info').attr('src','/?s=index/shelf_manage&company_id={$company_id}&company_type={$company_type}&type={$type2}');
+                                }, function () {
+                                    window.location.href='/?s=index/save_inventory&company_id={$company_id}&company_type={$company_type}&type={$type2}';
+                                });
+                            }else{
+                                //未到平台审核上架信息
+                                layer.confirm('请选择你的下一步操作', {
+                                    btn: ['配置上架信息', '继续编辑信息']
+                                }, function () {
+                                    if("{$id}">0){
+                                        $(window.top.document).find('#content-area').find('.iframe_info').attr('src','/?s=index/save_shelf&company_id={$company_id}&company_type={$company_type}&type={$type2}&id='+res.id);
+                                    }else{
+                                        window.location.href='/?s=index/save_shelf&company_id={$company_id}&company_type={$company_type}&type={$type2}&id='+res.id;
+                                    }
+                                }, function () {
+                                    window.location.href='/?s=index/save_inventory&company_id={$company_id}&company_type={$company_type}&type={$type2}';
+                                });
+                            }
                         }
                     });
                 },
