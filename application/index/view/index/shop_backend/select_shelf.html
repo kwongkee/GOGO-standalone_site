@@ -227,7 +227,7 @@
                 dataType:'JSON',
                 success:function(res){
                     layer.closeAll('loading');
-                    layer.msg(res.msg,{time:2000}, function () {
+                    layer.msg(res.msg,{time:3000}, function () {
                         if(res.code == 0)
                         {
                             window.location.reload();

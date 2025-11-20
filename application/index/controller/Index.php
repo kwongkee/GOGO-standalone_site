@@ -5289,7 +5289,7 @@ class Index extends Controller
                     }
                 }
 
-                return json(['code'=>0,'msg'=>'保存成功']);
+                return json(['code'=>0,'msg'=>'提交成功']);
             }
         }
         else{
