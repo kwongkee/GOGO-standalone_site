@@ -5436,7 +5436,7 @@ class Index extends Controller
                     $origin_sku_number = $sku_infos['sku_prices']['goods_number'];#原规格库存
 
                     $goods_number = $origin_goods_number + $v['goods_quantity'];#最新商品库存
-                    $sku_infos['sku_prices']['goods_number'] = $origin_sku_number + $v['goods_quantity'];#最新商品规格库存
+                    $sku_infos['sku_prices']['goods_number'] = intval($origin_sku_number) + intval($v['goods_quantity']);#最新商品规格库存
                     if($goods_infos['have_specs']==1){
                         #有规格
                         Db::connect($this->config)->name('goods_merchant')->where(['id'=>$v['goods_id']])->update(['goods_number'=>$goods_number]);
