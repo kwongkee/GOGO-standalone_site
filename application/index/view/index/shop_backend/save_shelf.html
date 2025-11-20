@@ -662,11 +662,11 @@
                 <div class="layui-tab-item {if $page_type==4}layui-show{/if}">
                     <!--价格说明start-->
                     <div class="layui-form-item">
-                        <div class="layui-input-block" style="margin-left:0px !important;overflow-y:auto;">
+                        <div class="layui-input-block" style="margin-left:0px !important;overflow-y:auto;overflow-x:hidden;">
 
                             <fieldset class="layui-elem-field">
                                 <legend>销售优惠-减免</legend>
-                                <div class="layui-field-box">
+                                <div class="layui-field-box" style="width: 100%;max-width:750px;overflow-x:auto;">
                                     <table class="layui-table reduction_div" style="width: 100%;">
                                         <thead>
                                         <th>优惠权属</th>
@@ -736,7 +736,7 @@
                                                     <option value="3">他方优惠</option>
                                                 </select>
                                             </td>
-                                            <td>
+                                            <td style="white-space: nowrap;">
                                                 <select id="goodsmodel-gift_type" class="form-control chosen-select" name="gift[type][]" lay-filter="gift_type">
                                                     <option value="">请选择项目</option>
                                                     <option value="1">积分</option>
@@ -842,7 +842,7 @@
 
                             <fieldset class="layui-elem-field">
                                 <legend>潜在收费</legend>
-                                <div class="layui-field-box">
+                                <div class="layui-field-box" style="width: 100%;max-width:750px;overflow-x:auto;">
                                     <table class="layui-table potential_table" style="width: 100%;">
                                         <thead>
                                         <th>收款单位</th>
