@@ -463,9 +463,9 @@
                             layer.confirm('请选择你的下一步操作', {
                                 btn: ['配置上架信息', '继续编辑信息']
                             }, function () {
-                                window.location.href='/?s=index/save_shelf&company_id={$company_id}&company_type={$company_type}&type={$type}&id='+res.id;
+                                window.location.href='/?s=index/save_shelf&company_id={$company_id}&company_type={$company_type}&type={$type2}&id='+res.id;
                             }, function () {
-                                window.location.href='/?s=index/save_inventory&company_id={$company_id}&company_type={$company_type}&type={$type}';
+                                window.location.href='/?s=index/save_inventory&company_id={$company_id}&company_type={$company_type}&type={$type2}';
                             });
                         }
                     });
