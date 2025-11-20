@@ -22,6 +22,7 @@ class Index extends Controller
     public $website_color='';
     public $website_color_inner='';
     public $website_colorword='';
+    public $website_coloradorn='';
     public $website_colorhead='';
     public $website_inpic='';
     public $website_contact=[];
@@ -94,6 +95,7 @@ class Index extends Controller
         $this->website_color = $website['color'];
         $this->website_color_inner = $website['color_inner'];
         $this->website_colorword = $website['color_word'];
+        $this->website_coloradorn = $website['color_adorn'];
         $this->website_colorhead = $website['color_head'];
         $this->website_inpic = $website['inpic'];
 
@@ -288,6 +290,7 @@ class Index extends Controller
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
+        $website['color_adorn'] = $this->website_coloradorn;
         $website['color_head'] = $this->website_colorhead;
         $website['website_contact'] = $this->website_contact;
         $website['website_canonical'] = $this->website_canonical;
@@ -532,6 +535,7 @@ class Index extends Controller
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
+        $website['color_adorn'] = $this->website_coloradorn;
         $website['color_head'] = $this->website_colorhead;
         $website['website_contact'] = $this->website_contact;
         $website['website_canonical'] = $this->website_canonical;
@@ -10028,6 +10032,7 @@ class Index extends Controller
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
+        $website['color_adorn'] = $this->website_coloradorn;
         $website['color_head'] = $this->website_colorhead;
         $website['website_contact'] = $this->website_contact;
         $website['website_canonical'] = $this->website_canonical;
@@ -10599,6 +10604,7 @@ class Index extends Controller
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
+        $website['color_adorn'] = $this->website_coloradorn;
         $website['color_head'] = $this->website_colorhead;
         $website['website_contact'] = $this->website_contact;
         $website['website_canonical'] = $this->website_canonical;
@@ -11235,6 +11241,7 @@ class Index extends Controller
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
+        $website['color_adorn'] = $this->website_coloradorn;
         $website['color_head'] = $this->website_colorhead;
         $website['inpic'] = $this->website_inpic;
         $website['color_inner'] = $this->website_color_inner;
@@ -11348,6 +11355,7 @@ class Index extends Controller
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
+        $website['color_adorn'] = $this->website_coloradorn;
         $website['color_head'] = $this->website_colorhead;
         $website['inpic'] = $this->website_inpic;
         $website['color_inner'] = $this->website_color_inner;
@@ -11404,6 +11412,7 @@ class Index extends Controller
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
+        $website['color_adorn'] = $this->website_coloradorn;
         $website['color_head'] = $this->website_colorhead;
         $website['inpic'] = $this->website_inpic;
         $website['color_inner'] = $this->website_color_inner;
@@ -11453,6 +11462,7 @@ class Index extends Controller
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
+        $website['color_adorn'] = $this->website_coloradorn;
         $website['color_head'] = $this->website_colorhead;
         $website['inpic'] = $this->website_inpic;
         $website['color_inner'] = $this->website_color_inner;
@@ -11521,6 +11531,7 @@ class Index extends Controller
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
+        $website['color_adorn'] = $this->website_coloradorn;
         $website['color_head'] = $this->website_colorhead;
         $website['inpic'] = $this->website_inpic;
         $website['color_inner'] = $this->website_color_inner;
@@ -11570,6 +11581,7 @@ class Index extends Controller
         $website['color'] = $this->website_color;
         $website['color_inner'] = $this->website_color_inner;
         $website['color_word'] = $this->website_colorword;
+        $website['color_adorn'] = $this->website_coloradorn;
         $website['color_head'] = $this->website_colorhead;
         $website['inpic'] = $this->website_inpic;
         $website['website_contact'] = $this->website_contact;
@@ -11601,6 +11613,7 @@ class Index extends Controller
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
+        $website['color_adorn'] = $this->website_coloradorn;
         $website['color_head'] = $this->website_colorhead;
         $website['inpic'] = $this->website_inpic;
         $website['color_inner'] = $this->website_color_inner;
@@ -11669,6 +11682,7 @@ class Index extends Controller
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
+        $website['color_adorn'] = $this->website_coloradorn;
         $website['color_head'] = $this->website_colorhead;
         $website['inpic'] = $this->website_inpic;
         $website['color_inner'] = $this->website_color_inner;
@@ -11758,6 +11772,7 @@ class Index extends Controller
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
+        $website['color_adorn'] = $this->website_coloradorn;
         $website['color_head'] = $this->website_colorhead;
         $website['inpic'] = $this->website_inpic;
         $website['color_inner'] = $this->website_color_inner;
@@ -11820,6 +11835,7 @@ class Index extends Controller
             $website['color'] = $this->website_color;
             $website['color_inner'] = $this->website_color_inner;
             $website['color_word'] = $this->website_colorword;
+            $website['color_adorn'] = $this->website_coloradorn;
             $website['color_head'] = $this->website_colorhead;
             $website['website_contact'] = $this->website_contact;
             #底部社交链接
@@ -11878,6 +11894,7 @@ class Index extends Controller
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
+        $website['color_adorn'] = $this->website_coloradorn;
         $website['color_head'] = $this->website_colorhead;
         $website['color_inner'] = $this->website_color_inner;
         $website['website_contact'] = $this->website_contact;
@@ -11926,6 +11943,7 @@ class Index extends Controller
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
+        $website['color_adorn'] = $this->website_coloradorn;
         $website['color_head'] = $this->website_colorhead;
         $website['inpic'] = $this->website_inpic;
         $website['color_inner'] = $this->website_color_inner;
@@ -12140,6 +12158,7 @@ class Index extends Controller
             $website['copyright'] = $this->website_copyright;
             $website['color'] = $this->website_color;
             $website['color_word'] = $this->website_colorword;
+            $website['color_adorn'] = $this->website_coloradorn;
             $website['color_head'] = $this->website_colorhead;
             $website['inpic'] = $this->website_inpic;
             $website['color_inner'] = $this->website_color_inner;
@@ -12183,6 +12202,7 @@ class Index extends Controller
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
+        $website['color_adorn'] = $this->website_coloradorn;
         $website['color_head'] = $this->website_colorhead;
         $website['website_contact'] = $this->website_contact;
         #底部社交链接
@@ -12340,6 +12360,7 @@ class Index extends Controller
             $website['copyright'] = $this->website_copyright;
             $website['color'] = $this->website_color;
             $website['color_word'] = $this->website_colorword;
+            $website['color_adorn'] = $this->website_coloradorn;
             $website['color_head'] = $this->website_colorhead;
             $website['website_contact'] = $this->website_contact;
             $website['color_inner'] = $this->website_color_inner;
@@ -12446,6 +12467,7 @@ class Index extends Controller
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
+        $website['color_adorn'] = $this->website_coloradorn;
         $website['color_head'] = $this->website_colorhead;
         $website['website_contact'] = $this->website_contact;
         $website['color_inner'] = $this->website_color_inner;
@@ -12743,6 +12765,7 @@ Hello, Your one-time code is:</p><br/><p>'.$code.'</p><br/><p>或直接点击：
             $website['copyright'] = $this->website_copyright;
             $website['color'] = $this->website_color;
             $website['color_word'] = $this->website_colorword;
+            $website['color_adorn'] = $this->website_coloradorn;
             $website['color_head'] = $this->website_colorhead;
             $website['website_contact'] = $this->website_contact;
             #底部社交链接
@@ -12838,6 +12861,7 @@ Hello, Your one-time code is:</p><br/><p>'.$code.'</p><br/><p>或直接点击：
             $website['copyright'] = $this->website_copyright;
             $website['color'] = $this->website_color;
             $website['color_word'] = $this->website_colorword;
+            $website['color_adorn'] = $this->website_coloradorn;
             $website['color_head'] = $this->website_colorhead;
             $website['website_contact'] = $this->website_contact;
             #底部社交链接
@@ -12873,6 +12897,7 @@ Hello, Your one-time code is:</p><br/><p>'.$code.'</p><br/><p>或直接点击：
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
+        $website['color_adorn'] = $this->website_coloradorn;
         $website['color_head'] = $this->website_colorhead;
         $website['website_contact'] = $this->website_contact;
         #底部社交链接
@@ -13079,6 +13104,7 @@ Hello, Your one-time code is:</p><br/><p>'.$code.'</p><br/><p>或直接点击：
             $website['copyright'] = $this->website_copyright;
             $website['color'] = $this->website_color;
             $website['color_word'] = $this->website_colorword;
+            $website['color_adorn'] = $this->website_coloradorn;
             $website['color_head'] = $this->website_colorhead;
             $website['website_contact'] = $this->website_contact;
             #底部社交链接
@@ -13158,7 +13184,9 @@ Hello, Your one-time code is:</p><br/><p>'.$code.'</p><br/><p>或直接点击：
             $website['copyright'] = $this->website_copyright;
             $website['color'] = $this->website_color;
             $website['color_inner'] = $this->website_color_inner;
-            $website['color_word'] = $this->website_colorword;$website['color_head'] = $this->website_colorhead;
+            $website['color_word'] = $this->website_colorword;
+            $website['color_adorn'] = $this->website_coloradorn;
+            $website['color_head'] = $this->website_colorhead;
             $website['website_contact'] = $this->website_contact;
             #底部社交链接
             $link = $this->get_footer_link();
@@ -13217,7 +13245,9 @@ Hello, Your one-time code is:</p><br/><p>'.$code.'</p><br/><p>或直接点击：
             $website['copyright'] = $this->website_copyright;
             $website['color'] = $this->website_color;
             $website['color_inner'] = $this->website_color_inner;
-            $website['color_word'] = $this->website_colorword;$website['color_head'] = $this->website_colorhead;
+            $website['color_word'] = $this->website_colorword;
+            $website['color_adorn'] = $this->website_coloradorn;
+            $website['color_head'] = $this->website_colorhead;
             $website['website_contact'] = $this->website_contact;
             #底部社交链接
             $link = $this->get_footer_link();
@@ -13308,7 +13338,9 @@ Hello, Your one-time code is:</p><br/><p>'.$code.'</p><br/><p>或直接点击：
             $website['copyright'] = $this->website_copyright;
             $website['color'] = $this->website_color;
             $website['color_inner'] = $this->website_color_inner;
-            $website['color_word'] = $this->website_colorword;$website['color_head'] = $this->website_colorhead;
+            $website['color_word'] = $this->website_colorword;
+            $website['color_adorn'] = $this->website_coloradorn;
+            $website['color_head'] = $this->website_colorhead;
             $website['website_contact'] = $this->website_contact;
             #底部社交链接
             $link = $this->get_footer_link();
@@ -13422,7 +13454,9 @@ Hello, Your one-time code is:</p><br/><p>'.$code.'</p><br/><p>或直接点击：
         $website['email'] = $this->website_email;
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
-        $website['color_word'] = $this->website_colorword;$website['color_head'] = $this->website_colorhead;
+        $website['color_word'] = $this->website_colorword;
+        $website['color_adorn'] = $this->website_coloradorn;
+        $website['color_head'] = $this->website_colorhead;
         $website['website_contact'] = $this->website_contact;
         #底部社交链接
         $link = $this->get_footer_link();
@@ -13497,7 +13531,9 @@ Hello, Your one-time code is:</p><br/><p>'.$code.'</p><br/><p>或直接点击：
             $website['email'] = $this->website_email;
             $website['copyright'] = $this->website_copyright;
             $website['color'] = $this->website_color;
-            $website['color_word'] = $this->website_colorword;$website['color_head'] = $this->website_colorhead;
+            $website['color_word'] = $this->website_colorword;
+            $website['color_adorn'] = $this->website_coloradorn;
+            $website['color_head'] = $this->website_colorhead;
             $website['website_contact'] = $this->website_contact;
 
             return view('',compact('website'));
@@ -13588,7 +13624,9 @@ Hello, Your one-time code is:</p><br/><p>'.$code.'</p><br/><p>或直接点击：
             $website['email'] = $this->website_email;
             $website['copyright'] = $this->website_copyright;
             $website['color'] = $this->website_color;
-            $website['color_word'] = $this->website_colorword;$website['color_head'] = $this->website_colorhead;
+            $website['color_word'] = $this->website_colorword;
+            $website['color_adorn'] = $this->website_coloradorn;
+            $website['color_head'] = $this->website_colorhead;
             $website['website_contact'] = $this->website_contact;
 
             return view('',compact('info','website','id'));
