@@ -110,16 +110,6 @@ class Merch
                 <meta property="og:type" content="website">
             ';
         }
-
-
-        if(!isset($this->websites['info']['name'])){
-            $title = '电商网店';
-            $msg = '请先配置电商网店信息后再访问';
-            $setting_url = '/?s=index/website_shop&company_id='.$cid.'&company_type='.$company_type;
-            $website = $this->websites;
-
-            return view('/index/setting',compact('setting_url','msg','title','website'));
-        }
     }
 
     public function list() {
@@ -150,7 +140,14 @@ class Merch
 
         #查询有无网站
         $ishave_website = Db::name('website_basic')->where(['company_id'=>$company_id,'company_type'=>1])->find();
+        if(empty($ishave_website)){
+            $title = '电商网店';
+            $msg = '请先配置电商网店信息后再访问';
+            $setting_url = '/?s=index/website_shop&company_id='.$company_id.'&company_type='.$company_type;
+            $website = $this->websites;
 
+            return view('/index/setting',compact('setting_url','msg','title','website'));
+        }
         #获取滚动信息
         $this->websites['rotate_info'] = Db::name('merchsite_rotate')->where(['company_id'=>$company_id,'company_type'=>$company_type])->find();
         if(!empty($this->websites['rotate_info']['content_id'])){
