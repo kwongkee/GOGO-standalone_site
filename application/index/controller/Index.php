@@ -5435,7 +5435,7 @@ class Index extends Controller
                     $sku_infos['sku_prices'] = json_decode($sku_infos['sku_prices'],true);
                     $origin_sku_number = $sku_infos['sku_prices']['goods_number'];#原规格库存
 
-                    $goods_number = $origin_goods_number + $v['goods_quantity'];#最新商品库存
+                    $goods_number = intval($origin_goods_number) + intval($v['goods_quantity']);#最新商品库存
                     $sku_infos['sku_prices']['goods_number'] = intval($origin_sku_number) + intval($v['goods_quantity']);#最新商品规格库存
                     if($goods_infos['have_specs']==1){
                         #有规格
@@ -5446,7 +5446,7 @@ class Index extends Controller
                         $goods_infos['nospecs']['goods_number'] = $goods_number;
                         Db::connect($this->config)->name('goods_merchant')->where(['id'=>$v['goods_id']])->update(['goods_number'=>$goods_number,'nospecs'=>json_encode($goods_infos['nospecs'],true)]);
                     }
-                    Db::connect($this->config)->name('goods_sku_merchant')->where(['goods_id'=>$v['goods_id'],'sku_id'=>$v['sku_id']])->update(['sku_prices'=>json_encode($sku_infos['sku_prices'],true)]);
+                    Db::connect($this->config)->name('goods_sku_merchant')->where(['goods_id'=>$v['goods_id'],'sku_id'=>$v['sku_id']])->update(['sku_prices'=>json_encode($sku_infos['sku_prices'],true),'goods_number'=>$sku_infos['sku_prices']['goods_number']]);
 
                     #记录在X企业Y仓库的A商品下的B规格库存数量
                     $warehouse_infos = Db::name('website_warehouse_goodsnum')->where(['company_id'=>$company_id,'goods_id'=>$v['goods_id'],'sku_id'=>$v['sku_id']])->find();
