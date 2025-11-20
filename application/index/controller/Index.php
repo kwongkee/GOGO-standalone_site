@@ -10570,7 +10570,22 @@ class Index extends Controller
         $company_id = intval($dat['company_id']);
         $tab = isset($dat['tab'])?trim($dat['tab']):'knowledge';
 
-        return view('index/ai/website_ai',compact('company','company_id','tab'));
+        $website['title'] = $this->website_name;
+        $website['keywords'] = $this->website_keywords;
+        $website['description'] = $this->website_description;
+        $website['ico'] = $this->website_ico;
+        $website['sico'] = $this->website_sico;
+        $website['tel'] = $this->website_tel;
+        $website['email'] = $this->website_email;
+        $website['copyright'] = $this->website_copyright;
+        $website['color'] = $this->website_color;
+        $website['color_word'] = $this->website_colorword;
+        $website['color_head'] = $this->website_colorhead;
+        $website['website_contact'] = $this->website_contact;
+        $website['website_canonical'] = $this->website_canonical;
+        $website['website_og'] = $this->website_og;
+
+        return view('index/ai/website_ai',compact('company','company_id','tab','website'));
     }
     
     #知识库
