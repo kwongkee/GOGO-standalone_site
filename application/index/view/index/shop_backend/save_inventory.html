@@ -460,7 +460,13 @@
                     layer.msg(res.msg,{time:2000}, function () {
                         if(res.code == 0)
                         {
-                            window.location.href='/?s=index/save_inventory&company_id={$company_id}&company_type={$company_type}&id='+res.id;
+                            layer.confirm('请选择你的下一步操作', {
+                                btn: ['配置上架信息', '继续编辑信息']
+                            }, function () {
+                                window.location.href='/?s=index/save_shelf&company_id={$company_id}&company_type={$company_type}&type={$type}&id='+res.id;
+                            }, function () {
+                                window.location.href='/?s=index/save_inventory&company_id={$company_id}&company_type={$company_type}&type={$type}';
+                            });
                         }
                     });
                 },

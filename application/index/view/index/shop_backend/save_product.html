@@ -476,16 +476,16 @@
                         {
                             if("{$type}"==0){
                                 layer.confirm('请选择你的下一步操作', {
-                                    btn: ['继续添加商品', '配置基础信息']
+                                    btn: ['配置基础信息', '继续添加商品']
                                 }, function () {
-                                    var url = '/?s=index/save_product&company_id={$company_id}&company_type={$company_type}';
+                                    var url = '/?s=index/save_inventory&company_id={$company_id}&company_type={$company_type}&id='+res.id;
                                     {if $id>0}
                                         parent.location.href = url;
                                     {else}
                                         window.location.href = url;
                                     {/if}
                                 }, function(){
-                                    var url = '/?s=index/save_inventory&company_id={$company_id}&company_type={$company_type}&id='+res.id;
+                                    var url = '/?s=index/save_product&company_id={$company_id}&company_type={$company_type}';
                                     {if $id>0}
                                         parent.location.href = url;
                                     {else}
@@ -494,16 +494,16 @@
                                 });
                             }else{
                                 layer.confirm('请选择你的下一步操作', {
-                                    btn: ['继续添加赠品', '配置基础信息']
+                                    btn: ['配置基础信息', '继续添加赠品']
                                 }, function () {
-                                    var url = '/?s=index/save_product&company_id={$company_id}&company_type={$company_type}&type={$type}';
+                                    var url = '/?s=index/save_inventory&company_id={$company_id}&company_type={$company_type}&type={$type}&id='+res.id;
                                     {if $id>0}
                                         parent.location.href = url;
                                     {else}
                                         window.location.href = url;
                                     {/if}
                                 }, function(){
-                                    var url = '/?s=index/save_inventory&company_id={$company_id}&company_type={$company_type}&type={$type}&id='+res.id;
+                                    var url = '/?s=index/save_product&company_id={$company_id}&company_type={$company_type}&type={$type}';
                                     {if $id>0}
                                         parent.location.href = url;
                                     {else}
