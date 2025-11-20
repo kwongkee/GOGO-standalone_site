@@ -5207,22 +5207,24 @@ class Index extends Controller
                 }
 
                 #==自主导流
-                foreach($dat['guide']['my_guide'] as $k=>$v){
-                    $ishave = Db::connect($this->config)->name('goods_shelf')->where(['gid_merch'=>$gid,'type'=>1,'guide_id'=>$v])->find();
-                    if(empty($ishave)){
-                        $res=Db::connect($this->config)->name('goods_shelf')->insert([
-                            'cid'=>$company_id,
-                            'gid_merch'=>$gid,
-                            'gid'=>$shelf_id,
-                            'type'=>1,
-                            'guide_id'=>$v,
-                            'keywords'=>trim($dat['keywords']['my_guide'][$k])
-                        ]);
-                    }
-                    else{
-                        $res=Db::connect($this->config)->name('goods_shelf')->where(['cid'=>$company_id,'gid_merch'=>$gid,'type'=>1,'guide_id'=>$v])->update([
-                            'keywords'=>trim($dat['keywords']['my_guide'][$k])
-                        ]);
+                if(isset($dat['guide']['my_guide'])){
+                    foreach($dat['guide']['my_guide'] as $k=>$v){
+                        $ishave = Db::connect($this->config)->name('goods_shelf')->where(['gid_merch'=>$gid,'type'=>1,'guide_id'=>$v])->find();
+                        if(empty($ishave)){
+                            $res=Db::connect($this->config)->name('goods_shelf')->insert([
+                                'cid'=>$company_id,
+                                'gid_merch'=>$gid,
+                                'gid'=>$shelf_id,
+                                'type'=>1,
+                                'guide_id'=>$v,
+                                'keywords'=>trim($dat['keywords']['my_guide'][$k])
+                            ]);
+                        }
+                        else{
+                            $res=Db::connect($this->config)->name('goods_shelf')->where(['cid'=>$company_id,'gid_merch'=>$gid,'type'=>1,'guide_id'=>$v])->update([
+                                'keywords'=>trim($dat['keywords']['my_guide'][$k])
+                            ]);
+                        }
                     }
                 }
 
@@ -5247,22 +5249,23 @@ class Index extends Controller
                 }
 
                 #==自主商城
-                foreach($dat['guide']['my_shop'] as $k=>$v){
-                    $ishave = Db::connect($this->config)->name('goods_shelf')->where(['gid_merch'=>$gid,'type'=>3,'guide_id'=>$v])->find();
-                    if(empty($ishave)){
-                        $res=Db::connect($this->config)->name('goods_shelf')->insert([
-                            'cid'=>$company_id,
-                            'gid_merch'=>$gid,
-                            'gid'=>$shelf_id,
-                            'type'=>3,
-                            'guide_id'=>$v,
-                            'keywords'=>trim($dat['keywords']['my_shop'][$k])
-                        ]);
-                    }
-                    else{
-                        $res=Db::connect($this->config)->name('goods_shelf')->where(['cid'=>$company_id,'gid_merch'=>$gid,'type'=>3,'guide_id'=>$v])->update([
-                            'keywords'=>trim($dat['keywords']['my_shop'][$k])
-                        ]);
+                if(isset($dat['guide']['my_shop'])) {
+                    foreach ($dat['guide']['my_shop'] as $k => $v) {
+                        $ishave = Db::connect($this->config)->name('goods_shelf')->where(['gid_merch' => $gid, 'type' => 3, 'guide_id' => $v])->find();
+                        if (empty($ishave)) {
+                            $res = Db::connect($this->config)->name('goods_shelf')->insert([
+                                'cid' => $company_id,
+                                'gid_merch' => $gid,
+                                'gid' => $shelf_id,
+                                'type' => 3,
+                                'guide_id' => $v,
+                                'keywords' => trim($dat['keywords']['my_shop'][$k])
+                            ]);
+                        } else {
+                            $res = Db::connect($this->config)->name('goods_shelf')->where(['cid' => $company_id, 'gid_merch' => $gid, 'type' => 3, 'guide_id' => $v])->update([
+                                'keywords' => trim($dat['keywords']['my_shop'][$k])
+                            ]);
+                        }
                     }
                 }
 

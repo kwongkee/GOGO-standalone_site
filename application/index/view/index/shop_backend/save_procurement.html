@@ -429,7 +429,7 @@
                                 window.location.href="/?s=index/shelf_manage&company_id={$company_id}&company_type={$company_type}";
                             }else{
                                 layer.confirm('请选择你的下一步操作', {
-                                    btn: ['配置基础信息', '继续添加采购']
+                                    btn: ['前往管理上架', '继续添加采购']
                                 }, function () {
                                     $(window.top.document).find('#content-area').find('.iframe_info').attr('src','/?s=index/shelf_manage&company_id={$company_id}&company_type={$company_type}');
                                 }, function () {
