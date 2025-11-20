@@ -50,7 +50,7 @@
 
         <div class="form-container">
             <div class="layui-form-item">
-                <label class="layui-form-label">网站图标(像素：200*200)</label>
+                <label class="layui-form-label">网站Logo(像素：200*200)</label>
                 <div class="layui-input-block">
                     <div class="layui-upload" style="margin-top: 10px;">
                         <button type="button" class="layui-btn" id="slogo_file-upload">上传图片(1张)</button>
@@ -59,7 +59,7 @@
                             <div class="layui-upload-list" id="slogo_file-upload-list">
                                 {if !empty($data['slogo'])}
                                 <div style="display: inline-block;">
-                                    <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$data['slogo']}" class="layui-upload-img" style="width:80px;height:80px;" alt="网站图标图片">
+                                    <img loading="lazy" onclick="seePic(this);" src="{$data['slogo']}" class="layui-upload-img" style="width:80px;height:80px;" alt="网站Logo">
                                     <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
                                     <input type="hidden" name="slogo_file[]" value="{$data['slogo']}">
                                 </div>
@@ -70,7 +70,7 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">网站标志(像素：155*65)</label>
+                <label class="layui-form-label">浏览器标志(像素：155*65)</label>
                 <div class="layui-input-block">
                     <div class="layui-upload" style="margin-top: 10px;">
                         <button type="button" class="layui-btn" id="logo_file-upload">上传图片(1张)</button>
@@ -79,7 +79,7 @@
                             <div class="layui-upload-list" id="logo_file-upload-list">
                                 {if !empty($data['logo'])}
                                 <div style="display: inline-block;">
-                                    <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$data['logo']}" class="layui-upload-img" style="width:80px;height:80px;" alt="网站logo图片">
+                                    <img loading="lazy" onclick="seePic(this);" src="{$data['logo']}" class="layui-upload-img" style="width:80px;height:80px;" alt="浏览器标志">
                                     <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
                                     <input type="hidden" name="logo_file[]" value="{$data['logo']}">
                                 </div>
@@ -108,24 +108,31 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <div class="layui-form-label">网站主题色</div>
+                <div class="layui-form-label">主题色</div>
                 <div class="layui-input-block">
                     <div id="color"></div>
                     <input type="hidden" name="color" value="{$data['color']}" lay-verify="required">
                 </div>
             </div>
             <div class="layui-form-item">
-                <div class="layui-form-label">网站页底色</div>
+                <div class="layui-form-label">背景色</div>
                 <div class="layui-input-block">
                     <div id="color_inner"></div>
                     <input type="hidden" name="color_inner" value="{$data['color_inner']}" lay-verify="required">
                 </div>
             </div>
             <div class="layui-form-item">
-                <div class="layui-form-label">网站文字色</div>
+                <div class="layui-form-label">文字色</div>
                 <div class="layui-input-block">
                     <div id="color_word"></div>
                     <input type="hidden" name="color_word" value="{$data['color_word']}" lay-verify="required">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label">点缀色</div>
+                <div class="layui-input-block">
+                    <div id="color_adorn"></div>
+                    <input type="hidden" name="color_adorn" value="{$data['color_adorn']}" lay-verify="required">
                 </div>
             </div>
             <div class="layui-form-item">
@@ -223,6 +230,28 @@
                 size:'lg',
                 done:function(color){
                     $('input[name="color_word"]').val(color);
+                }
+            });
+        {/if}
+
+        {if !empty($data['color_adorn'])}
+            colorpicker.render({
+                elem:'#color_adorn',
+                alpha:true,
+                size:'lg',
+                predefine:true,
+                color:'{$data["color_adorn"]}',
+                done:function(color){
+                    $('input[name="color_adorn"]').val(color);
+                }
+            });
+        {else}
+            colorpicker.render({
+                elem:'#color_adorn',
+                alpha:true,
+                size:'lg',
+                done:function(color){
+                    $('input[name="color_adorn"]').val(color);
                 }
             });
         {/if}

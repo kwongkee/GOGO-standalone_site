@@ -825,6 +825,7 @@ class Index extends Controller
                     'color_inner'=>$dat['color_inner'],
                     'color_word'=>$dat['color_word'],
                     'color_head'=>$dat['color_head'],
+                    'color_adorn'=>$dat['color_adorn'],
                     'copyright'=>isset($dat['copyright_zh'])?json_encode(['zh'=>$dat['copyright_zh']],true):'',
                 ]);
             }else{
@@ -836,6 +837,7 @@ class Index extends Controller
                     'color_inner'=>$dat['color_inner'],
                     'color_word'=>$dat['color_word'],
                     'color_head'=>$dat['color_head'],
+                    'color_adorn'=>$dat['color_adorn'],
                     'copyright'=>isset($dat['copyright_zh'])?json_encode(['zh'=>$dat['copyright_zh']],true):'',
                 ]);
             }
@@ -1368,10 +1370,10 @@ class Index extends Controller
 
         if($request->isAjax()){
             if(!isset($dat['slogo_file'])){
-                return json(['code'=>-1,'msg'=>'请上传网站图标']);
+                return json(['code'=>-1,'msg'=>'请上传网站Logo']);
             }
             if(!isset($dat['logo_file'])){
-                return json(['code'=>-1,'msg'=>'请上传网站标志']);
+                return json(['code'=>-1,'msg'=>'请上传浏览器标志']);
             }
 
             $data = Db::name('website_basic')->where(['company_id'=>$company_id,'company_type'=>$company_type])->find();
@@ -1397,6 +1399,7 @@ class Index extends Controller
                     'color'=>$dat['color'],
                     'color_inner'=>$dat['color_inner'],
                     'color_word'=>$dat['color_word'],
+                    'color_adorn'=>$dat['color_adorn'],
                     'font_family'=>$dat['font_family'],
 //                    'is_website'=>$dat['is_website'],
 //                    'pay_method'=>$dat['pay_method'],
@@ -1421,6 +1424,7 @@ class Index extends Controller
                     'color'=>$dat['color'],
                     'color_inner'=>$dat['color_inner'],
                     'color_word'=>$dat['color_word'],
+                    'color_adorn'=>$dat['color_adorn'],
                     'font_family'=>$dat['font_family'],
 //                    'is_website'=>$dat['is_website'],
 //                    'pay_method'=>$dat['pay_method'],
@@ -1444,7 +1448,7 @@ class Index extends Controller
             $data = Db::name('website_basic')->where(['company_id'=>$company_id,'company_type'=>$company_type])->find();
 
             if(empty($data)){
-                $data = ['slogo'=>'','logo'=>'','name'=>'','desc'=>'','keywords'=>'','color'=>'','color_inner'=>'#ffffff','color_word'=>'#ffffff','is_website'=>0,'font_family'=>"Microsoft JhengHei, 微軟正黑體, Arial, sans-serif",'pay_method'=>0,'cash_on_delivery'=>1,'down_payment'=>1,'prepaid_method'=>1,'prepaid_percent'=>'','prepaid_currency'=>'','prepaid_amount'=>'','paypal'=>['client_id'=>'','client_secret'=>'','is_through'=>0]];
+                $data = ['slogo'=>'','logo'=>'','name'=>'','desc'=>'','keywords'=>'','color'=>'','color_inner'=>'#ffffff','color_word'=>'#ffffff','color_adorn'=>'','is_website'=>0,'font_family'=>"Microsoft JhengHei, 微軟正黑體, Arial, sans-serif",'pay_method'=>0,'cash_on_delivery'=>1,'down_payment'=>1,'prepaid_method'=>1,'prepaid_percent'=>'','prepaid_currency'=>'','prepaid_amount'=>'','paypal'=>['client_id'=>'','client_secret'=>'','is_through'=>0]];
             }
             else{
                 if(empty($data['paypal'])){

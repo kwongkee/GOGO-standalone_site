@@ -213,7 +213,7 @@
                                 <input type="text" id="siteKeywords" name="keywords[zh]" placeholder="请输入网站关键词" value="{$website_basic['keywords']['zh']}">
                             </div>
                             <div class="form-group">
-                                <label for="logo_file-upload">网站Logo(像素：155*65)</label>
+                                <label for="logo_file-upload">浏览器标志(像素：155*65)</label>
                                 <!--                                <input type="file" id="siteLogo" name="logo_file" value="">-->
                                 <div class="layui-upload" style="margin-top: 0px;">
                                     <button type="button" class="layui-btn" id="logo_file-upload">上传(一张)</button>
@@ -222,7 +222,7 @@
                                         <div class="layui-upload-list" id="logo_file-upload-list">
                                             {if !empty($website_basic['logo'])}
                                             <div style="display: inline-block;">
-                                                <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$website_basic['logo']}" class="layui-upload-img" style="width:80px;height:80px;">
+                                                <img loading="lazy" alt="GOGO198 浏览器标志" onclick="seePic(this);" src="{$website_basic['logo']}" class="layui-upload-img" style="width:80px;height:80px;">
                                                 <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
                                                 <input type="hidden" name="logo_file[]" value="{$website_basic['logo']}">
                                             </div>
@@ -233,7 +233,7 @@
 
                             </div>
                             <div class="form-group">
-                                <label for="slogo_file-upload">网站图标(像素：200*200)</label>
+                                <label for="slogo_file-upload">网站Logo(像素：200*200)</label>
                                 <!--                                <input type="file" id="siteFavicon" name="slogo_file" value="">-->
                                 <div class="layui-upload" style="margin-top: 0px;">
                                     <button type="button" class="layui-btn" id="slogo_file-upload">上传(一张)</button>
@@ -242,7 +242,7 @@
                                         <div class="layui-upload-list" id="slogo_file-upload-list">
                                             {if !empty($website_basic['slogo'])}
                                             <div style="display: inline-block;">
-                                                <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$website_basic['slogo']}" class="layui-upload-img" style="width:80px;height:80px;">
+                                                <img loading="lazy" alt="GOGO198 网站Logo" onclick="seePic(this);" src="{$website_basic['slogo']}" class="layui-upload-img" style="width:80px;height:80px;">
                                                 <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
                                                 <input type="hidden" name="slogo_file[]" value="{$website_basic['slogo']}">
                                             </div>
@@ -289,19 +289,24 @@
                                 <input type="hidden" name="color_head" value="{$website_basic['color_head']}">
                             </div>
                             <div class="form-group">
-                                <label for="color">网站主题色</label>
+                                <label for="color">主题色</label>
                                 <div id="color"></div>
                                 <input type="hidden" name="color" value="{$website_basic['color']}">
                             </div>
                             <div class="form-group">
-                                <label for="color_inner">内页背景色</label>
+                                <label for="color_inner">背景色</label>
                                 <div id="color_inner"></div>
                                 <input type="hidden" name="color_inner" value="{$website_basic['color_inner']}">
                             </div>
                             <div class="form-group">
-                                <label for="color_word">网站字体色</label>
+                                <label for="color_word">文字色</label>
                                 <div id="color_word"></div>
                                 <input type="hidden" name="color_word" value="{$website_basic['color_word']}">
+                            </div>
+                            <div class="form-group">
+                                <label for="color_adorn">点缀色</label>
+                                <div id="color_adorn"></div>
+                                <input type="hidden" name="color_adorn" value="{$website_basic['color_adorn']}">
                             </div>
                         </div>
                     </div>
@@ -814,6 +819,29 @@
                 size:'lg',
                 done:function(color){
                     $('input[name="color_word"]').val(color);
+                }
+            });
+        {/if}
+
+        //点缀色
+        {if !empty($website_basic['color_adorn'])}
+            colorpicker.render({
+                elem:'#color_adorn',
+                alpha:true,
+                size:'lg',
+                predefine:true,
+                color:'{$website_basic["color_adorn"]}',
+                done:function(color){
+                    $('input[name="color_adorn"]').val(color);
+                }
+            });
+        {else}
+            colorpicker.render({
+                elem:'#color_adorn',
+                alpha:true,
+                size:'lg',
+                done:function(color){
+                    $('input[name="color_adorn"]').val(color);
                 }
             });
         {/if}
