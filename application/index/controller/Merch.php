@@ -51,7 +51,10 @@ class Merch
         $this->websites['info'] = Db::name('website_basic')->where(['company_id'=>$cid,'company_type'=>$company_type])->find();
 
         if(empty($this->websites['info'])){
-            echo '<h1>请先配置电商网店信息后再访问</h1>';exit;
+            $title = '电商网店';
+            $msg = '请先配置电商网店信息后再访问';
+            $setting_url = '/?s=index/website_shop&company_id='.$cid.'&company_type='.$company_type;
+            return view('/index/setting',compact('setting_url','msg','title'));
         }
 
         #获取公示信息
