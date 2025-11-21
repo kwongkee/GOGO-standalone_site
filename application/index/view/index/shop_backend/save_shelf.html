@@ -2102,70 +2102,95 @@
             }
         });
 
-        //型号分类（大类）
-        const inputElement = document.getElementById('option1');
-        inputElement.addEventListener('input', function(event) {
+        // 防抖函数
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // 实际的请求函数
+        function makeRequest(value,type2,num) {
             layer.load();
-            $.post('/?s=index/get_name',{'type':3,'val':event.target.value},function(data){
+            $.post('/?s=index/get_name', {'type':type2,'val':value}, function(data){
                 layer.closeAll('loading');
                 if(data.code==0){
                     let html = '<div onclick="close_resultDiv(this)" class="close_resultDiv">×</div>'+
                         '     <ul class="result_ul">';
                     for(let i=0;i<data.list.length;i++){
-                        html += '<li onclick="select_name(this,1)" data-name="'+data.list[i].attr_name+'">'+data.list[i].attr_name+'</li>';
+                        html += '<li onclick="select_name(this,'+num+')" data-name="'+data.list[i].attr_name+'">'+data.list[i].attr_name+'</li>';
                     }
                     html += '</ul>';
-                    $('#grade1_result').html(html);
-                    $('#grade1_result').show();
+                    $('#grade'+num+'_result').html(html);
+                    $('#grade'+num+'_result').show();
                 }else{
                     // $('#grade1_result').html('');
                     // $('#grade1_result').hide();
                 }
             });
+        }
+
+        // 创建防抖版本的处理函数（延迟500毫秒）
+        const debouncedRequest = debounce(makeRequest, 500);
+
+        //型号分类（大类）
+        const inputElement = document.getElementById('option1');
+        inputElement.addEventListener('input', function(event) {
+            debouncedRequest(event.target.value,3,1);
         });
 
         //型号属性（二级）
         const inputElement2 = document.getElementById('option2');
         inputElement2.addEventListener('input', function(event) {
-            layer.load();
-            $.post('/?s=index/get_name',{'type':4,'val':event.target.value},function(data){
-                layer.closeAll('loading');
-                if(data.code==0){
-                    let html = '<div onclick="close_resultDiv(this)" class="close_resultDiv">×</div>'+
-                        '     <ul class="result_ul">';
-                    for(let i=0;i<data.list.length;i++){
-                        html += '<li onclick="select_name(this,2)" data-name="'+data.list[i].attr_vname+'">'+data.list[i].attr_vname+'</li>';
-                    }
-                    html += '</ul>';
-                    $('#grade2_result').html(html);
-                    $('#grade2_result').show();
-                }else{
-                    // $('#grade2_result').html('');
-                    // $('#grade2_result').hide();
-                }
-            });
+            debouncedRequest(event.target.value,4,2);
+
+            // layer.load();
+            // $.post('/?s=index/get_name',{'type':4,'val':event.target.value},function(data){
+            //     layer.closeAll('loading');
+            //     if(data.code==0){
+            //         let html = '<div onclick="close_resultDiv(this)" class="close_resultDiv">×</div>'+
+            //             '     <ul class="result_ul">';
+            //         for(let i=0;i<data.list.length;i++){
+            //             html += '<li onclick="select_name(this,2)" data-name="'+data.list[i].attr_vname+'">'+data.list[i].attr_vname+'</li>';
+            //         }
+            //         html += '</ul>';
+            //         $('#grade2_result').html(html);
+            //         $('#grade2_result').show();
+            //     }else{
+            //         // $('#grade2_result').html('');
+            //         // $('#grade2_result').hide();
+            //     }
+            // });
         });
 
         //型号属性（三级）
         const inputElement3 = document.getElementById('option3');
         inputElement3.addEventListener('input', function(event) {
-            layer.load();
-            $.post('/?s=index/get_name',{'type':4,'val':event.target.value},function(data){
-                layer.closeAll('loading');
-                if(data.code==0){
-                    let html = '<div onclick="close_resultDiv(this)" class="close_resultDiv">×</div>'+
-                        '     <ul class="result_ul">';
-                    for(let i=0;i<data.list.length;i++){
-                        html += '<li onclick="select_name(this,3)" data-name="'+data.list[i].attr_vname+'">'+data.list[i].attr_vname+'</li>';
-                    }
-                    html += '</ul>';
-                    $('#grade3_result').html(html);
-                    $('#grade3_result').show();
-                }else{
-                    // $('#grade3_result').html('');
-                    // $('#grade3_result').hide();
-                }
-            });
+            debouncedRequest(event.target.value,4,3);
+
+            // layer.load();
+            // $.post('/?s=index/get_name',{'type':4,'val':event.target.value},function(data){
+            //     layer.closeAll('loading');
+            //     if(data.code==0){
+            //         let html = '<div onclick="close_resultDiv(this)" class="close_resultDiv">×</div>'+
+            //             '     <ul class="result_ul">';
+            //         for(let i=0;i<data.list.length;i++){
+            //             html += '<li onclick="select_name(this,3)" data-name="'+data.list[i].attr_vname+'">'+data.list[i].attr_vname+'</li>';
+            //         }
+            //         html += '</ul>';
+            //         $('#grade3_result').html(html);
+            //         $('#grade3_result').show();
+            //     }else{
+            //         // $('#grade3_result').html('');
+            //         // $('#grade3_result').hide();
+            //     }
+            // });
         });
 
         $('.layui-form-label').click(function(){
@@ -2643,6 +2668,7 @@
 
         /* 监听提交 */
         form.on('submit(component-form-demo1)', function (data) {
+            layer.load();
             data.field['page_type'] = $(this).attr('data-i');
             $.ajax({
                 url: "/?s=index/save_shelf",
@@ -2650,6 +2676,7 @@
                 data: data.field,
                 dataType: 'JSON',
                 success: function (res) {
+                    layer.closeAll('loading');
                     layer.msg(res.msg, {time: 2000}, function () {
                         if (res.code == 0) {
                             // var index = parent.layer.getFrameIndex(window.name);
