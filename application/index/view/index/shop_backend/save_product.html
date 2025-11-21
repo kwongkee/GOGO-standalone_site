@@ -306,8 +306,9 @@
                 //选择分类
                 $(t).parents(":eq(2)").find('.diyname').hide();
                 cate_id = val;
-
+                layer.load();
                 $.post('/?s=index/get_nextcate',{'parent_id':val},function(res){
+                    layer.closeAll('loading');
                     if(res.data.length>0){
                         let html = '<select name="cat_id2" id="cat_id2" lay-search lay-verify="required" lay-filter="cat_id2">\n' +
                             '               <option value="">请选择</option>\n';
@@ -341,8 +342,9 @@
                 //选择分类
                 $(t).parents(":eq(2)").find('.diyname').hide();
                 cate_id = val;
-
+                layer.load();
                 $.post('/?s=index/get_nextcate',{'parent_id':val},function(res){
+                    layer.closeAll('loading');
                     if(res.data.length>0){
                         let html = '<select name="cat_id3" id="cat_id3" lay-search lay-verify="required" lay-filter="cat_id3">\n' +
                             '               <option value="">请选择</option>\n';
