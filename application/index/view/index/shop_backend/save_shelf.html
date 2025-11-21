@@ -2715,7 +2715,7 @@
             layer.closeAll('loading');
             layer.msg(res.msg, {time: 2000}, function () {
                 if(res.code == 0){
-                    let spec_html = '<tbody class="spec_info">\n';
+                    let spec_html = '<tbody class="spec_info diyparam_tbody">\n';
                     for(let i=0;i<res.datas.length;i++){
                         spec_html+='<tr>\n';
                         if(i==0){
@@ -2741,6 +2741,7 @@
                     $('.spec_table').find('.diyparam_tbody').remove();
                     $('.spec_table').find('.spec_info').remove();
                     $('.spec_table').append(spec_html);
+                    form.render(null, 'component-form-group');
                 }
             });
         });
