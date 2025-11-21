@@ -1404,6 +1404,8 @@
                                     <tr class="diyparam_tr">
                                         <td rowspan="999">
                                             自定参数
+                                            <br>
+                                            <div class="btn" onclick="get_lastinfo()">获取最近参数信息</div>
                                         </td>
                                         <td>
                                             <input type="text" class="layui-input" name="spec_name[]" placeholder="参数名称">
@@ -2702,6 +2704,17 @@
             return false;
         });
     });
+
+    //获取上一个商品的参数信息
+    function get_lastinfo(){
+        let layer = layui.layer,
+            $ = layui.$,
+            form = layui.form;
+
+        $.post('/?s=index/get_goods_param',{'company_id':"{$company_id}",'company_type':"{$company_type}"},function(res){
+
+        });
+    }
 
     function close_resultDiv(t){
         let layer = layui.layer,

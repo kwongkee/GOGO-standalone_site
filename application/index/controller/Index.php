@@ -5105,6 +5105,13 @@ class Index extends Controller
         return json(['code'=>0,'data'=>$list]);
     }
 
+    #获取最近的商品参数信息
+    public function get_goods_param(Request $request){
+        $dat = input();
+
+        dd($dat);
+    }
+
     #整理规格
     public function spec_arrange(Request $request){
         $dat = input();

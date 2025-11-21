@@ -110,6 +110,7 @@ Route::any('index/save_rule', 'index/Index/save_rule');#企业网店-上架管�
 Route::any('index/del_rule', 'index/Index/del_rule');#企业网店-上架管理-删除规则
 Route::any('index/get_keywords', 'index/Index/get_keywords');#企业网店-上架管理-获取关键词
 Route::any('index/get_goods_info', 'index/Index/get_goods_info');#企业网店-上架管理-获取商品信息
+Route::any('index/get_goods_param', 'index/Index/get_goods_param');#企业网店-上架管理-获取最近商品参数信息
 Route::any('index/spec_arrange', 'index/Index/spec_arrange');#企业网店-上架管理-整理规格
 Route::any('index/shelf_manage', 'index/Index/shelf_manage');#企业网店-上架管理-管理上架
 Route::any('index/del_shelf', 'index/Index/del_shelf');#企业网店-上架管理-下架商品
