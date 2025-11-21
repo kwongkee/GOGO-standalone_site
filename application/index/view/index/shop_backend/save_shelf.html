@@ -4770,7 +4770,7 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
             }
             //==自定义参数
             if(res.data['goods']['spec_info']!==null && res.data['goods']['spec_info']!=''){
-                let spec_html = '<tbody class="spec_info">\n';
+                let spec_html = '<tbody class="spec_info diyparam_tbody">\n';
                 for(let i=0;i<res.data['goods']['spec_info'].length;i++){
                     spec_html+='<tr>\n';
                     if(i==0){
