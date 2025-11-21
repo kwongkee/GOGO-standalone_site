@@ -5108,8 +5108,11 @@ class Index extends Controller
     #获取最近的商品参数信息
     public function get_goods_param(Request $request){
         $dat = input();
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);
 
-        dd($dat);
+        $info = Db::connect($this->config)->name('goods_merchant')->where(['cid'=>$company_id])->field('spec_info')->order('id desc')->find()['spec_info'];
+        dd($info);
     }
 
     #整理规格
