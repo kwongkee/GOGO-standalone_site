@@ -3776,86 +3776,131 @@ class Index extends Controller
                             array_push($insert_specs,rtrim($spec_vids,'|'));
                         }
     
-                        if(!isset($dat['havespecs']['sku_id'])) {
-                            #规格已重新刷新，删除之前的商品规格
-                            Db::connect($this->config)->name('goods_sku_merchant')->where(['goods_id' => $dat['id']])->delete();
+                        // if(!isset($dat['havespecs']['sku_id'])) {
+                        //     #规格已重新刷新，删除之前的商品规格
+                        //     Db::connect($this->config)->name('goods_sku_merchant')->where(['goods_id' => $dat['id']])->delete();
     
-                            #同步平台商品表
-                            if($goods['shelf_id']>0){
-                                Db::connect($this->config)->name('goods_sku')->where(['goods_id' => $goods['shelf_id']])->delete();
-                            }
-                        }
+                        //     #同步平台商品表
+                        //     if($goods['shelf_id']>0){
+                        //         Db::connect($this->config)->name('goods_sku')->where(['goods_id' => $goods['shelf_id']])->delete();
+                        //     }
+                        // }
     
                         #最低价
                         $min_goods_price = end($dat['havespecs']['price'][0]);
-    
+                        
+                        // dd($dat);
+                        
                         #插入数据表
                         foreach($dat['havespecs']['option_name'] as $k=>$v){
-                            $goodsSkuInsert = [
-                                'goods_id'=>$dat['goods_id'],
-                                'spec_ids'=>$spec_ids,
-                                'spec_vids'=>$insert_specs[$k],
-                                'sku_specs'=>str_replace("|","*",$insert_specs[$k]),
-                                'spec_names'=>str_replace('<br/>',' ',$v),
-                                'goods_sn'=>$dat['havespecs']['goods_sn'][$k],
-                                'goods_barcode'=>$dat['havespecs']['goods_barcode'][$k],
-                                'goods_stockcode'=>$dat['havespecs']['goods_stockcode'][$k],
-                                'market_price'=>$dat['havespecs']['market_price'][$k],
-                                'cost_price'=>$dat['havespecs']['cost_price'][$k],
-                                'shelf_number'=>$dat['havespecs']['shelf_number'][$k],
-                                'warn_type'=>$dat['havespecs']['warn_type'][$k],
-                                'warn_number'=>$dat['havespecs']['warn_number'][$k],
-                                'goods_price' => end($dat['havespecs']['price'][$k]),
-                                'goods_number' => 0,
-                                'is_spu' => 1, // 无规格商品 是SPU商品
-                                'sku_prices' => json_encode([
-                                    'goods_number'=>0,
-                                    'start_num'=>$dat['havespecs']['start_num'][$k],
-                                    'unit'=>[$dat['havespecs']['unit'][$k][0]],
-                                    'select_end'=>$dat['havespecs']['select_end'][$k],
-                                    'end_num'=>$dat['havespecs']['end_num'][$k],
-                                    'currency'=>[$goods['goods_currency']],
-                                    'price'=>$dat['havespecs']['price'][$k],
-                                ],true)#该规格的区间价格
-                            ];
-    
-                            #整理规格
-                            $sku_id2 = 0;
-                            if(isset($dat['is_edit'])){
-                                #修改
-                                if(!isset($dat['havespecs']['sku_id'])){
-                                    #插入
-                                    $sku_id2 = Db::connect($this->config)->name('goods_sku_merchant')->insertGetId($goodsSkuInsert);
-    
+                            if(isset($dat['havespecs']['sku_id'][$k])){
+                                #以往规格调整
+                                if($dat['havespecs']['sku_id'][$k] > 0){
+                                    #修改当前规格
+                                    $sku_id2 = $dat['havespecs']['sku_id'][$k];
+                                    $old_sku = Db::connect($this->config)->name('goods_sku_merchant')->where(['sku_id'=>$dat['havespecs']['sku_id'][$k],'goods_id'=>$dat['goods_id']])->find();
+                                    $old_sku['sku_prices'] = json_decode($old_sku['sku_prices'],true);
+                                    
+                                    $goodsSkuUpdate = [
+                                        'goods_sn'=>$dat['havespecs']['goods_sn'][$k],
+                                        'goods_barcode'=>$dat['havespecs']['goods_barcode'][$k],
+                                        'goods_stockcode'=>$dat['havespecs']['goods_stockcode'][$k],
+                                        'market_price'=>$dat['havespecs']['market_price'][$k],
+                                        'cost_price'=>$dat['havespecs']['cost_price'][$k],
+                                        'shelf_number'=>$dat['havespecs']['shelf_number'][$k],
+                                        'warn_type'=>$dat['havespecs']['warn_type'][$k],
+                                        'warn_number'=>$dat['havespecs']['warn_number'][$k],
+                                        'goods_price' => end($dat['havespecs']['price'][$k]),
+                                        'sku_prices' => json_encode([
+                                            'goods_number'=>$old_sku['sku_prices']['goods_number'],
+                                            'start_num'=>$dat['havespecs']['start_num'][$k],
+                                            'unit'=>[$dat['havespecs']['unit'][$k][0]],
+                                            'select_end'=>$dat['havespecs']['select_end'][$k],
+                                            'end_num'=>$dat['havespecs']['end_num'][$k],
+                                            'currency'=>[$goods['goods_currency']],
+                                            'price'=>$dat['havespecs']['price'][$k],
+                                        ],true)#该规格的区间价格
+                                    ];
+                                    
+                                    Db::connect($this->config)->name('goods_sku_merchant')->where(['sku_id'=>$dat['havespecs']['sku_id'][$k],'goods_id'=>$dat['goods_id']])->update($goodsSkuUpdate);
+                                    
                                     #同步平台商品表
-                                    if($goods['shelf_id']>0){
-                                        $goodsSkuInsert['goods_id'] = $goods['shelf_id'];
-                                        Db::connect($this->config)->name('goods_sku')->insertGetId($goodsSkuInsert);
-                                    }
-                                }else{
-                                    if(isset($dat['havespecs']['sku_id'][$k])){
-                                        #修改
-                                        $sku_id2 = Db::connect($this->config)->name('goods_sku_merchant')->where(['sku_id'=>$dat['havespecs']['sku_id'][$k]])->update($goodsSkuInsert);
-    
-                                        #同步平台商品表
-                                        if($goods['shelf_id']>0) {
-                                            $goodsSkuInsert['goods_id'] = $goods['shelf_id'];
-                                            $origin_sku = Db::connect($this->config)->name('goods_sku_merchant')->where(['sku_id'=>$dat['havespecs']['sku_id'][$k]])->find();
-                                            Db::connect($this->config)->name('goods_sku')->where(['goods_id'=>$goods['shelf_id'],'spec_vids'=>$origin_sku['spec_vids']])->update($goodsSkuInsert);
-                                        }
-                                    }else{
-                                        $sku_id2 = Db::connect($this->config)->name('goods_sku_merchant')->insertGetId($goodsSkuInsert);
-                                        #同步平台商品表
-                                        if($goods['shelf_id']>0) {
-                                            $goodsSkuInsert['goods_id'] = $goods['shelf_id'];
-                                            Db::connect($this->config)->name('goods_sku')->insertGetId($goodsSkuInsert);
-                                        }
+                                    if($goods['shelf_id']>0) {
+                                        Db::connect($this->config)->name('goods_sku')->where(['goods_id'=>$goods['shelf_id'],'spec_vids'=>$old_sku['spec_vids']])->update($goodsSkuUpdate);
                                     }
                                 }
                             }
                             else{
-                                #插入
-                                $sku_id2 = Db::connect($this->config)->name('goods_sku_merchant')->insertGetId($goodsSkuInsert);
+                                #新增规格调整
+                                $goodsSkuInsert = [
+                                    'goods_id'=>$dat['goods_id'],
+                                    'spec_ids'=>$spec_ids,
+                                    'spec_vids'=>$insert_specs[$k],
+                                    'sku_specs'=>str_replace("|","*",$insert_specs[$k]),
+                                    'spec_names'=>str_replace('<br/>',' ',$v),
+                                    'goods_sn'=>$dat['havespecs']['goods_sn'][$k],
+                                    'goods_barcode'=>$dat['havespecs']['goods_barcode'][$k],
+                                    'goods_stockcode'=>$dat['havespecs']['goods_stockcode'][$k],
+                                    'market_price'=>$dat['havespecs']['market_price'][$k],
+                                    'cost_price'=>$dat['havespecs']['cost_price'][$k],
+                                    'shelf_number'=>$dat['havespecs']['shelf_number'][$k],
+                                    'warn_type'=>$dat['havespecs']['warn_type'][$k],
+                                    'warn_number'=>$dat['havespecs']['warn_number'][$k],
+                                    'goods_price' => end($dat['havespecs']['price'][$k]),
+                                    'goods_number' => 0,
+                                    'is_spu' => 1, // 无规格商品 是SPU商品
+                                    'sku_prices' => json_encode([
+                                        'goods_number'=>0,
+                                        'start_num'=>$dat['havespecs']['start_num'][$k],
+                                        'unit'=>[$dat['havespecs']['unit'][$k][0]],
+                                        'select_end'=>$dat['havespecs']['select_end'][$k],
+                                        'end_num'=>$dat['havespecs']['end_num'][$k],
+                                        'currency'=>[$goods['goods_currency']],
+                                        'price'=>$dat['havespecs']['price'][$k],
+                                    ],true)#该规格的区间价格
+                                ];
+        
+                                #整理规格
+                                $sku_id2 = 0;
+                                if(isset($dat['is_edit'])){
+                                    #修改
+                                    if(!isset($dat['havespecs']['sku_id'])){
+                                        #插入
+                                        $sku_id2 = Db::connect($this->config)->name('goods_sku_merchant')->insertGetId($goodsSkuInsert);
+        
+                                        #同步平台商品表
+                                        if($goods['shelf_id']>0){
+                                            $goodsSkuInsert['goods_id'] = $goods['shelf_id'];
+                                            Db::connect($this->config)->name('goods_sku')->insertGetId($goodsSkuInsert);
+                                        }
+                                    }
+                                    else{
+                                        if(isset($dat['havespecs']['sku_id'][$k])){
+                                            #修改
+                                            $sku_id2 = Db::connect($this->config)->name('goods_sku_merchant')->where(['sku_id'=>$dat['havespecs']['sku_id'][$k]])->update($goodsSkuInsert);
+        
+                                            #同步平台商品表
+                                            if($goods['shelf_id']>0) {
+                                                $goodsSkuInsert['goods_id'] = $goods['shelf_id'];
+                                                $origin_sku = Db::connect($this->config)->name('goods_sku_merchant')->where(['sku_id'=>$dat['havespecs']['sku_id'][$k]])->find();
+                                                Db::connect($this->config)->name('goods_sku')->where(['goods_id'=>$goods['shelf_id'],'spec_vids'=>$origin_sku['spec_vids']])->update($goodsSkuInsert);
+                                            }
+                                        }
+                                        else{
+                                            #新的规格插入表
+                                            $sku_id2 = Db::connect($this->config)->name('goods_sku_merchant')->insertGetId($goodsSkuInsert);
+                                            #同步平台商品表
+                                            if($goods['shelf_id']>0) {
+                                                $goodsSkuInsert['goods_id'] = $goods['shelf_id'];
+                                                Db::connect($this->config)->name('goods_sku')->insertGetId($goodsSkuInsert);
+                                            }
+                                        }
+                                    }
+                                }
+                                else{
+                                    #插入
+                                    $sku_id2 = Db::connect($this->config)->name('goods_sku_merchant')->insertGetId($goodsSkuInsert);
+                                }
                             }
     
                             if($sku_id==0){
@@ -3864,22 +3909,22 @@ class Index extends Controller
                         }
                     }
     
+                    
                     #修改商品商户表
                     Db::connect($this->config)->name('goods_merchant')->where(['id'=>$dat['goods_id']])->update([
                         'sku_id'=>$sku_id,
                         'goods_price'=>$min_goods_price,
-                        'nospecs'=>$dat['have_specs']==2?json_encode(['goods_number'=>0, 'start_num'=>$dat['nospecs']['start_num'], 'unit'=>[$dat['nospecs']['unit'][0]], 'select_end'=>$dat['nospecs']['select_end'], 'end_num'=>$dat['nospecs']['end_num'], 'currency'=>[$goods['goods_currency']], 'price'=>$dat['nospecs']['price']],true):''
+                        'nospecs'=>$dat['have_specs']==2?json_encode(['goods_number'=>$goods['goods_number'], 'start_num'=>$dat['nospecs']['start_num'], 'unit'=>[$dat['nospecs']['unit'][0]], 'select_end'=>$dat['nospecs']['select_end'], 'end_num'=>$dat['nospecs']['end_num'], 'currency'=>[$goods['goods_currency']], 'price'=>$dat['nospecs']['price']],true):''
                     ]);
     
                     #同步平台商品表
                     if($goods['shelf_id']>0){
-                        Db::connect($this->config)->name('goods')->where(['goods_id'=>$dat['shelf_id']])->update([
-                            'currency_type'=>$dat['currency_type'],
-                            'goods_currency'=>$dat['currency_type']==1?$dat['other_currency']:$goods['goods_currency'],
+                        Db::connect($this->config)->name('goods')->where(['goods_id'=>$goods['shelf_id']])->update([
+                            'goods_currency'=>intval($dat['currency_type'])==1?$dat['other_currency']:$goods['goods_currency'],
                             'goods_price'=>$min_goods_price,
                             'have_specs'=>$dat['have_specs'],
                             'sku_id'=>$sku_id,
-                            'nospecs'=>$dat['have_specs']==2?json_encode(['goods_number'=>0, 'start_num'=>$dat['nospecs']['start_num'], 'unit'=>[$dat['nospecs']['unit'][0]], 'select_end'=>$dat['nospecs']['select_end'], 'end_num'=>$dat['nospecs']['end_num'], 'currency'=>[$goods['goods_currency']], 'price'=>$dat['nospecs']['price']],true):''
+                            'nospecs'=>$dat['have_specs']==2?json_encode(['goods_number'=>$goods['goods_number'], 'start_num'=>$dat['nospecs']['start_num'], 'unit'=>[$dat['nospecs']['unit'][0]], 'select_end'=>$dat['nospecs']['select_end'], 'end_num'=>$dat['nospecs']['end_num'], 'currency'=>[$goods['goods_currency']], 'price'=>$dat['nospecs']['price']],true):''
                         ]);
                     }
                 }
@@ -4357,7 +4402,7 @@ class Index extends Controller
             } catch (\Exception $e) {
                 Db::rollback();
                 Log::error('保存失败: ' . $e->getMessage());
-                return json(['code' => 0, 'msg' => '保存失败']);
+                return json(['code' => 0, 'msg' => '保存失败', 'error'=>$e->getMessage()]);
             }
         }
         else{
