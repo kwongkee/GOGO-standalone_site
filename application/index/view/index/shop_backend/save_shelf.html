@@ -2715,9 +2715,9 @@
             layer.closeAll('loading');
             layer.msg(res.msg, {time: 2000}, function () {
                 if(res.code == 0){
-                    let spec_html = '<tbody class="spec_info diyparam_tbody">\n';
+                    let spec_html = '<tbody class="spec_info">\n';
                     for(let i=0;i<res.datas.length;i++){
-                        spec_html+='<tr>\n';
+                        spec_html+='<tr class="diyparam_tr">\n';
                         if(i==0){
                             spec_html+='<td rowspan="999">自定参数</td>\n';
                         }
@@ -4770,9 +4770,9 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
             }
             //==自定义参数
             if(res.data['goods']['spec_info']!==null && res.data['goods']['spec_info']!=''){
-                let spec_html = '<tbody class="spec_info diyparam_tbody">\n';
+                let spec_html = '<tbody class="spec_info">\n';
                 for(let i=0;i<res.data['goods']['spec_info'].length;i++){
-                    spec_html+='<tr>\n';
+                    spec_html+='<tr class="diyparam_tr">\n';
                     if(i==0){
                         spec_html+='<td rowspan="999">自定参数</td>\n';
                     }
