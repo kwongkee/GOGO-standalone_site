@@ -5111,8 +5111,14 @@ class Index extends Controller
         $company_id = intval($dat['company_id']);
         $company_type = intval($dat['company_type']);
 
-        $info = Db::connect($this->config)->name('goods_merchant')->where(['cid'=>$company_id])->field('spec_info')->order('id desc')->find()['spec_info'];
-        dd($info);
+        //获取上一条参数数据
+        $info = Db::connect($this->config)->name('goods_merchant')->where(['cid'=>$company_id])->order('id desc')->field('id,spec_info')->limit(1,1)->select();
+        if(empty($info)){
+            return json(['code'=>-1,'msg'=>'最新无新增商品参数']);
+        }else{
+            $infos = json_decode($info[0]['spec_info'],true);
+            return json(['code'=>0,'msg'=>'获取成功','datas'=>$infos]);
+        }
     }
 
     #整理规格

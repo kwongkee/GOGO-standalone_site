@@ -2710,9 +2710,39 @@
         let layer = layui.layer,
             $ = layui.$,
             form = layui.form;
-
+        layer.load();
         $.post('/?s=index/get_goods_param',{'company_id':"{$company_id}",'company_type':"{$company_type}"},function(res){
+            layer.closeAll('loading');
+            layer.msg(res.msg, {time: 2000}, function () {
+                if(res.code == 0){
+                    let spec_html = '<tbody class="spec_info">\n';
+                    for(let i=0;i<res.datas.length;i++){
+                        spec_html+='<tr>\n';
+                        if(i==0){
+                            spec_html+='<td rowspan="999">自定参数</td>\n';
+                        }
+                        spec_html+='<td><input type="text" class="layui-input" name="spec_name[]" placeholder="参数名称" value="'+res.datas[i]['spec_name']+'"></td>\n'+
+                            '       <td><input type="text" class="layui-input" name="spec_desc[]" placeholder="参数描述" value="'+res.datas[i]['spec_desc']+'"></td></td>\n'+
+                            '       <td>' +
+                            '               <div class="disf">\n';
+                        if(i==0) {
+                            spec_html += '       <div class="layui-btn layui-btn-md layui-btn-normal" onclick="spec_add(this)">+</div>\n';
+                        }
+                        else{
+                            spec_html += '       <div class="layui-btn layui-btn-md layui-btn-danger" onclick="spec_del(this)">-</div>\n'+
+                                '       <div class="layui-btn layui-btn-md layui-btn-normal" onclick="spec_add(this)">+</div>\n';
+                        }
+                        spec_html += '  </div>\n' +
+                            '           </td>\n'+
+                            '</tr>\n';
+                    }
+                    spec_html+='</tbody>';
 
+                    $('.spec_table').find('.diyparam_tbody').remove();
+                    $('.spec_table').find('.spec_info').remove();
+                    $('.spec_table').append(spec_html);
+                }
+            });
         });
     }
 
