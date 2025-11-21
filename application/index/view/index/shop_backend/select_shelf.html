@@ -152,7 +152,7 @@
                         <table class="layui-table" style="width: 100%;">
                             <thead>
                             <th>导流名称</th>
-                            <th>操作</th>
+                            <th>导流关键词</th>
                             </thead>
                             <tbody>
                             {volist name="list['my_shop']" id="vo"}
@@ -177,7 +177,7 @@
                         <table class="layui-table" style="width: 100%;">
                             <thead>
                             <th>导流名称</th>
-                            <th>操作</th>
+                            <th>导流关键词</th>
                             </thead>
                             <tbody>
                             {volist name="list['platform_shop']" id="vo"}
@@ -230,7 +230,7 @@
                     layer.msg(res.msg,{time:3000}, function () {
                         if(res.code == 0)
                         {
-                            window.location.reload();
+                            parent.location.reload();
                         }
                     });
                 },
