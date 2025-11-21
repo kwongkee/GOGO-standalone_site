@@ -1405,7 +1405,7 @@
                                         <td rowspan="999">
                                             自定参数
                                             <br>
-                                            <div class="btn" onclick="get_lastinfo()">获取最近参数信息</div>
+                                            <div class="btn btn-primary" onclick="get_lastinfo()">获取最近参数信息</div>
                                         </td>
                                         <td>
                                             <input type="text" class="layui-input" name="spec_name[]" placeholder="参数名称">
@@ -4743,7 +4743,7 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
                 for(let i=0;i<res.data['goods']['spec_info'].length;i++){
                     spec_html+='<tr>\n';
                     if(i==0){
-                        spec_html+='<td rowspan="999">自定参数</td>\n';
+                        spec_html+='<td rowspan="999">自定参数<br><div class="btn btn-primary" onclick="get_lastinfo()">获取最近参数信息</div></td>\n';
                     }
                     spec_html+='<td><input type="text" class="layui-input" name="spec_name[]" placeholder="参数名称" value="'+res.data['goods']['spec_info'][i]['spec_name']+'"></td>\n'+
                         '       <td><input type="text" class="layui-input" name="spec_desc[]" placeholder="参数描述" value="'+res.data['goods']['spec_info'][i]['spec_desc']+'"></td></td>\n'+
