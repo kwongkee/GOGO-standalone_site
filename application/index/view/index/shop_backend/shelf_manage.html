@@ -143,7 +143,7 @@
                 ,{field:'status_name', width:200, title: '状态'}
                 ,{field:'created_at', title: '创建时间'}
                 ,{ align:'center', fixed: 'right', title: '操作', templet: function(d){
-                        var strr = ['<a onclick="save(1,' + "'/?s=index/save_shelf&company_type={$company_type}&company_id={$company_id}&type={$type}&id="+ d.id +"'" + ');" class="layui-btn layui-btn-xs btn-edit"><i class="fas fa-edit"></i> 编辑</a>'];
+                        var strr = ['<a onclick="openWindow2(1,' + "'/?s=index/save_shelf&company_type={$company_type}&company_id={$company_id}&type={$type}&id="+ d.id +"'" + ');" class="layui-btn layui-btn-xs btn-edit"><i class="fas fa-edit"></i> 编辑</a>'];
                         // if(d.goods_status==1){
                         //     strr = strr.concat(['<a onclick="del('+ "'"+d.id+"'" +');" class="layui-btn layui-btn-xs layui-btn-danger">下架商品</a>']);
                         // }else if(d.goods_status==0){
@@ -226,6 +226,10 @@
                 }
             });
         }
+    }
+
+    function openWindow2(type,url){
+        $(window.top.document).find('#content-area').find('.iframe_info').attr('src',url);
     }
 
     function del(id){
