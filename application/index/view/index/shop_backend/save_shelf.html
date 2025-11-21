@@ -121,6 +121,8 @@
         .potential_table select{width:150px;}
         .potential_table input{width:150px;}
 
+        .warn_select{width:130px;}
+
         /* 动画 */
         @keyframes fadeIn {
             from {opacity: 0;transform: translateY(10px);}
@@ -313,7 +315,7 @@
                                             </td>
                                             <td>
                                                 <div class="disf">
-                                                    <div class="w100">
+                                                    <div class="w100 warn_select">
                                                         <select name="nospecs[warn_type]">
                                                             <option value="1">少于</option>
                                                             <option value="2">少于或等于</option>
@@ -2825,7 +2827,7 @@
                             '                                                        </td>\n' +
                             '                                                        <td>\n' +
                             '                                                            <div class="disf">\n' +
-                            '                                                                <div class="w100">\n' +
+                            '                                                                <div class="w100 warn_select">\n' +
                             '                                                                    <select name="havespecs[warn_type][]">\n';
                         if(res.data['goods']['havespecs'][i]['warn_type']==1){
                             spec_table_html+='                                                   <option value="1" selected>少于</option>\n'+
@@ -5113,7 +5115,7 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
             '                                                        </td>\n' +
             '                                                        <td>\n' +
             '                                                            <div class="disf">\n' +
-            '                                                                <div class="w100">\n' +
+            '                                                                <div class="w100 warn_select">\n' +
             '                                                                    <select name="havespecs[warn_type]['+tr_num+']">\n' +
             '                                                                        <option value="1">少于</option>\n' +
             '                                                                        <option value="2">少于或等于</option>\n' +
