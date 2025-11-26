@@ -50,7 +50,7 @@
 
         <div class="form-container">
             <div class="layui-form-item">
-                <label class="layui-form-label">网站Logo<br/>(像素：200*200)</label>
+                <label class="layui-form-label">浏览器标志<br/>(像素：200*200)</label>
                 <div class="layui-input-block">
                     <div class="layui-upload" style="margin-top: 10px;">
                         <button type="button" class="layui-btn" id="slogo_file-upload">上传图片(1张)</button>
@@ -59,7 +59,7 @@
                             <div class="layui-upload-list" id="slogo_file-upload-list">
                                 {if !empty($data['slogo'])}
                                 <div style="display: inline-block;">
-                                    <img loading="lazy" onclick="seePic(this);" src="{$data['slogo']}" class="layui-upload-img" style="width:80px;height:80px;" alt="网站Logo">
+                                    <img loading="lazy" onclick="seePic(this);" src="{$data['slogo']}" class="layui-upload-img" style="width:80px;height:80px;" alt="浏览器标志">
                                     <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
                                     <input type="hidden" name="slogo_file[]" value="{$data['slogo']}">
                                 </div>
@@ -70,7 +70,7 @@
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">浏览器标志<br/>(像素：155*65)</label>
+                <label class="layui-form-label">网站Logo<br/>(像素：155*65)</label>
                 <div class="layui-input-block">
                     <div class="layui-upload" style="margin-top: 10px;">
                         <button type="button" class="layui-btn" id="logo_file-upload">上传图片(1张)</button>
@@ -79,7 +79,7 @@
                             <div class="layui-upload-list" id="logo_file-upload-list">
                                 {if !empty($data['logo'])}
                                 <div style="display: inline-block;">
-                                    <img loading="lazy" onclick="seePic(this);" src="{$data['logo']}" class="layui-upload-img" style="width:80px;height:80px;" alt="浏览器标志">
+                                    <img loading="lazy" onclick="seePic(this);" src="{$data['logo']}" class="layui-upload-img" style="width:80px;height:80px;" alt="网站Logo">
                                     <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
                                     <input type="hidden" name="logo_file[]" value="{$data['logo']}">
                                 </div>

@@ -181,6 +181,13 @@ class Merch
 
         #获取轮播图
         $this->websites['rotate'] = Db::name('website_rotate')->where(['company_id'=>$company_id,'company_type'=>$company_type])->select();
+        foreach($this->websites['rotate'] as $k=>$v){
+            if(isMobile()){
+                $this->websites['rotate'][$k]['true_thumb'] = $v['mob_thumb'];
+            }else{
+                $this->websites['rotate'][$k]['true_thumb'] = $v['thumb'];
+            }
+        }
 
         #获取首页推荐A
         $this->websites['recommendA'] = Db::name('website_discovery_list')->where(['company_id'=>$company_id,'company_type'=>$company_type])->select();
@@ -205,10 +212,11 @@ class Merch
 
         #获取导流区
         $this->websites['guide'] = Db::connect($this->config)->name('merchsite_guide_body')->where(['company_id'=>$company_id,'company_type'=>$company_type])->select();
-
+        
         foreach($this->websites['guide'] as $k=>$v){
             #导流样式
             $this->websites['guide'][$k]['format_info'] = Db::connect($this->config)->name('merchsite_guide_format')->where(['id'=>$v['content_id']])->find();
+            
             #获取导流内容
             if($this->websites['guide'][$k]['format_info']['type']==1 || $this->websites['guide'][$k]['format_info']['type']==3 || $this->websites['guide'][$k]['format_info']['type']==5){
                 #店铺展示/触发搜索/图文展示版式
@@ -307,8 +315,9 @@ class Merch
                 }
             }
         }
-
+        
         $data['websites'] = $this->websites;
+        // dd($data['websites']);
 //        dd($data['websites']['rotate_info']['content'][1]);
         $data['source_link'] = '//dtc.gogo198.net';
         $data['page_type'] = 1;

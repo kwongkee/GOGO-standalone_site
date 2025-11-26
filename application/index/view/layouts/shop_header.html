@@ -27,6 +27,14 @@
         .disf{display: flex;align-items: center;}
         body{background:{$data['websites']['info']['color_inner']} !important;}
         a:hover{text-decoration: none;}
+        
+        /*翻译插件*/
+        #gt_float_wrapper{top: 60px !important;}
+        #gt_float_wrapper .gt-current-lang img{display:none;}
+        .gt_float_switcher .gt-selected .gt-current-lang{color:#fff;padding:5px 10px !important;}
+        .gt_float_switcher .gt-selected .gt-current-lang span.gt_float_switcher-arrow{transform:rotate(0deg) !important;}
+        
+        
         /*滚动指向样式*/
         .swiper-button-prev, .swiper-button-next {color: #fff;background: rgba(94, 95, 94, 0.5);box-shadow: 0px 0px 10px 0 #fff;border: 1px solid #fff;border-radius: 50%;width: 30px;height: 30px;}
         .swiper-button-prev:after, .swiper-button-next:after {font-size: 14px;}
@@ -40,6 +48,11 @@
         .f15{font-size:15px !important;}
         .f13{font-size:13px !important;}
         .fweight{font-weight: 800;}
+        
+        @media (max-width: 992px){
+            #gt_float_wrapper{top: 8px !important;right:15px !important;}
+            .gt_float_switcher .gt-selected .gt-current-lang{padding:0px 0px !important;}
+        }
     </style>
 </head>
 <script src="shop/js/jquery.js"></script>

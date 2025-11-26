@@ -134,6 +134,14 @@ Route::any('index/member_tag_manage', 'index/Index/member_tag_manage');#企业�
 Route::any('index/save_member_tag', 'index/Index/save_member_tag');#企业网店-买家管理-保存标识
 Route::any('index/del_member_tag', 'index/Index/del_member_tag');#企业网店-买家管理-删除标识
 Route::any('index/online_merge_member', 'index/Index/online_merge_member');#企业网店-买家管理-买家在线同意
+
+Route::any('index/marketing_campaign', 'index/Index/marketing_campaign');#企业网店-营销管理-管理活动
+Route::any('index/save_campaign', 'index/Index/save_campaign');#企业网店-营销管理-新增活动
+Route::any('index/del_campaign', 'index/Index/del_campaign');#企业网店-营销管理-删除活动
+
+Route::any('index/physical_order', 'index/Index/physical_order');#企业网店-实体订单-活动订单列表
+Route::any('index/transaction_order', 'index/Index/transaction_order');#企业网店-实体订单-交易订单列表
+
 Route::any('index/sale_panel_manage', 'index/Index/sale_panel_manage');#企业网店-营销管理-营销面板
 Route::any('index/adv_manage', 'index/Index/adv_manage');#企业网店-营销管理-宣传活动
 Route::any('index/save_adv', 'index/Index/save_adv');#企业网店-营销管理-保存宣传活动

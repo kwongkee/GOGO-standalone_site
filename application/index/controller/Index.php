@@ -2165,13 +2165,17 @@ class Index extends Controller
 
         if($request->isAjax()){
             if(!isset($dat['thumb'])){
-                return json(['code'=>-1,'msg'=>'请上传轮播图']);
+                return json(['code'=>-1,'msg'=>'请上传PC图']);
+            }
+            if(!isset($dat['mob_thumb'])){
+                return json(['code'=>-1,'msg'=>'请上传Mob图']);
             }
 
             if($id>0){
                 $res = Db::name('website_rotate')->where('id',$dat['id'])->update([
                     'title'=>trim($dat['title']),
                     'thumb'=>isset($dat['thumb'][0])?$dat['thumb'][0]:'',
+                    'mob_thumb'=>isset($dat['mob_thumb'][0])?$dat['mob_thumb'][0]:'',
                     'go_other'=>intval($dat['go_other']),
                     'other_goods'=>$dat['go_other']==2?intval($dat['other_goods']):0,
                     'other_link'=>$dat['go_other']==4?trim($dat['other_link']):'',
@@ -2185,6 +2189,7 @@ class Index extends Controller
                     'company_type'=>$company_type,
                     'title'=>trim($dat['title']),
                     'thumb'=>isset($dat['thumb'][0])?$dat['thumb'][0]:'',
+                    'mob_thumb'=>isset($dat['mob_thumb'][0])?$dat['mob_thumb'][0]:'',
                     'go_other'=>intval($dat['go_other']),
                     'other_goods'=>$dat['go_other']==2?intval($dat['other_goods']):0,
                     'other_link'=>$dat['go_other']==4?trim($dat['other_link']):'',
@@ -2210,7 +2215,7 @@ class Index extends Controller
             }
 
         }else{
-            $data = ['title'=>'','thumb'=>'','go_other'=>'','other_goods'=>0,'other_link'=>'','other_navbar'=>'','other_pic'=>'','other_msg'=>'','other_keywords'=>''];
+            $data = ['title'=>'','thumb'=>'','mob_thumb'=>'','go_other'=>'','other_goods'=>0,'other_link'=>'','other_navbar'=>'','other_pic'=>'','other_msg'=>'','other_keywords'=>''];
             if($id>0){
                 $data = Db::name('website_rotate')->where('id',$id)->find();
             }
@@ -4876,7 +4881,7 @@ class Index extends Controller
     public function get_goods_info(Request $request){
         $dat = input();
         $id = intval($dat['id']);
-
+        
         $list['goods'] = Db::connect($this->config)->name('goods_merchant')->where(['id'=>$id])->find();
         $list['goods']['currency_info'] = Db::name('centralize_currency')->where(['id'=>$list['goods']['goods_currency']])->field(['currency_symbol_standard'])->find()['currency_symbol_standard'];
         $list['country_name'] = Db::name('centralize_diycountry_content')->where(['id'=>$list['goods']['shipping_country']])->field(['param2'])->find()['param2'];
@@ -5577,19 +5582,31 @@ class Index extends Controller
     public function get_goods(Request $request){
         $dat = input();
         $company_id = intval($dat['company_id']);
-        $goods = Db::connect($this->config)->name('goods_merchant')->where(['cid'=>$company_id])->field(['id as goods_id','goods_name','cid','goods_number','goods_image'])->order('id desc')->select();
-        foreach($goods as $k=>$v){
-            $goods[$k]['variants'] = Db::connect($this->config)->name('goods_sku_merchant')->where(['goods_id'=>$v['goods_id']])->field(['sku_id','spec_names','sku_prices'])->select();
-            foreach($goods[$k]['variants'] as $k2=>$v2){
-                if(empty($v2['spec_names'])){
-                    $goods[$k]['variants'][$k2]['spec_names'] = $v['goods_name'];
-                }
-                $goods[$k]['variants'][$k2]['sku_prices'] = json_decode($v2['sku_prices'],true);
-                $goods[$k]['variants'][$k2]['goods_number'] = $goods[$k]['variants'][$k2]['sku_prices']['goods_number'];
-            }
-        }
+        $type = isset($dat['type'])?intval($dat['type']):0;
 
-        return json(['code'=>0,'data'=>$goods]);
+        if($type==0){
+            # 获取商家商品
+            $goods = Db::connect($this->config)->name('goods_merchant')->where(['cid'=>$company_id])->field(['id as goods_id','goods_name','cid','goods_number','goods_image'])->order('id desc')->select();
+            foreach($goods as $k=>$v){
+                $goods[$k]['variants'] = Db::connect($this->config)->name('goods_sku_merchant')->where(['goods_id'=>$v['goods_id']])->field(['sku_id','spec_names','sku_prices'])->select();
+                foreach($goods[$k]['variants'] as $k2=>$v2){
+                    if(empty($v2['spec_names'])){
+                        $goods[$k]['variants'][$k2]['spec_names'] = $v['goods_name'];
+                    }
+                    $goods[$k]['variants'][$k2]['sku_prices'] = json_decode($v2['sku_prices'],true);
+                    $goods[$k]['variants'][$k2]['goods_number'] = $goods[$k]['variants'][$k2]['sku_prices']['goods_number'];
+                }
+            }
+    
+            return json(['code'=>0,'data'=>$goods]);
+        }
+        elseif($type==1){
+            # 获取商家已上架商品
+            $goods = Db::connect($this->config)->name('goods')->where(['shop_id'=>$company_id,'goods_status'=>1])->field(['goods_id','goods_name','shop_id','goods_number','goods_image'])->order('goods_id desc')->select();
+    
+            return json(['code'=>0,'data'=>$goods]);
+        }
+        
     }
 
     #删除采购订单
@@ -6546,6 +6563,56 @@ class Index extends Controller
         return json(['code'=>0,'msg'=>'删除成功']);
     }
 
+    #新增活动
+    public function save_campaign(Request $request){
+        $dat = input();
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);#0商城，1官网
+        $id = isset($dat['id'])?intval($dat['id']):0;
+
+        if($request->isAjax()){
+            if($id>0){
+                Db::name('website_campaign_list')->where(['id'=>$id])->update([
+                    'shop_name'=>trim($dat['shop_name']),
+                    'shop_address'=>trim($dat['shop_address']),
+                    'shop_tel'=>trim($dat['shop_tel']),
+                    'shop_hours'=>trim($dat['shop_hours']),
+                    'campaign_time'=>trim($dat['campaign_time']),
+                    'shop_goods'=>trim($dat['shop_goods']),
+                    'shop_quota'=>intval($dat['shop_quota']),
+                    'campaign_task_operation'=>trim($dat['campaign_task_operation']),
+                    'campaign_task_subject'=>trim($dat['campaign_task_subject']),
+                    'campaign_task_condition'=>trim($dat['campaign_task_condition']),
+                ]);
+            }else{
+                Db::name('website_campaign_list')->insert([
+                    'company_id'=>$dat['company_id'],
+                    'company_type'=>$dat['company_type'],
+                    'type'=>intval($dat['type']),
+                    'shop_name'=>trim($dat['shop_name']),
+                    'shop_address'=>trim($dat['shop_address']),
+                    'shop_tel'=>trim($dat['shop_tel']),
+                    'shop_hours'=>trim($dat['shop_hours']),
+                    'campaign_time'=>trim($dat['campaign_time']),
+                    'shop_goods'=>trim($dat['shop_goods']),
+                    'shop_quota'=>intval($dat['shop_quota']),
+                    'campaign_task_operation'=>trim($dat['campaign_task_operation']),
+                    'campaign_task_subject'=>trim($dat['campaign_task_subject']),
+                    'campaign_task_condition'=>trim($dat['campaign_task_condition']),
+                    'createtime'=>time()
+                ]);
+            }
+            return json(['code'=>0,'msg'=>'保存成功']);
+        }else{
+            $data = ['type'=>0,'shop_name'=>'','shop_address'=>'','shop_tel'=>'','shop_hours'=>'','campaign_time'=>'','shop_goods'=>'','shop_quota'=>'','campaign_task_operation'=>'','campaign_task_subject'=>'','campaign_task_condition'=>'','goods_info'=>''];
+            if($id>0){
+                $data = Db::name('website_campaign_list')->where(['id'=>$id])->find();
+            }
+            
+            return view('index/shop_backend/save_campaign',compact('company_id','company_type','data','id'));
+        }
+    }
+    
     #营销面板
     public function sale_panel_manage(Request $request){
         $dat = input();

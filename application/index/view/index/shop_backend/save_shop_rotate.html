@@ -88,7 +88,7 @@
         </div>
 
         <div class="layui-form-item">
-            <div class="layui-form-label">轮播图<br/>(像素：1920*565)</div>
+            <div class="layui-form-label">PC图<br/>(像素：1920*565)</div>
             <div class="layui-input-block">
                 <div class="layui-upload" style="margin-top: 10px;">
                     <button type="button" class="layui-btn" id="img_file-upload">上传图片(一张)</button>
@@ -100,6 +100,27 @@
                                 <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$data['thumb']}" class="layui-upload-img" style="width:80px;height:80px;">
                                 <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
                                 <input type="hidden" name="thumb[]" value="{$data['thumb']}">
+                            </div>
+                            {/if}
+                        </div>
+                    </blockquote>
+                </div>
+            </div>
+        </div>
+        
+        <div class="layui-form-item">
+            <div class="layui-form-label">Mob图<br/>(像素：430*550)</div>
+            <div class="layui-input-block">
+                <div class="layui-upload" style="margin-top: 10px;">
+                    <button type="button" class="layui-btn" id="img_file2-upload">上传图片(一张)</button>
+                    <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                        预览图：
+                        <div class="layui-upload-list" id="img_file2-upload-list">
+                            {if !empty($data['mob_thumb'])}
+                            <div style="display: inline-block;">
+                                <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$data['mob_thumb']}" class="layui-upload-img" style="width:80px;height:80px;">
+                                <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
+                                <input type="hidden" name="mob_thumb[]" value="{$data['mob_thumb']}">
                             </div>
                             {/if}
                         </div>
@@ -231,7 +252,7 @@
             }
         });
 
-        // 轮播图
+        // PC轮播图
         upload.render({
             elem: '#img_file-upload'
             ,url: '/?s=index/upload_file'
@@ -247,6 +268,27 @@
                 layer.msg(res.message, {time: 2000}, function () {
                     if (res.error == 1) {
                         $('#img_file-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="' + res.file_path + '" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="thumb[]" value="' + res.file_path + '"></div>')
+                    }
+                });
+            }
+        });
+        
+        // Mob轮播图
+        upload.render({
+            elem: '#img_file2-upload'
+            ,url: '/?s=index/upload_file'
+            ,accept: 'image'
+            ,data: { folder:'merch_file', type: 'shop_rotate'}
+            ,multiple: false
+            ,number:1
+            ,before: function(obj){
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                layer.msg(res.message, {time: 2000}, function () {
+                    if (res.error == 1) {
+                        $('#img_file2-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="' + res.file_path + '" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="mob_thumb[]" value="' + res.file_path + '"></div>')
                     }
                 });
             }

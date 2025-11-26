@@ -2,8 +2,8 @@
 <style>
     header{background:{$data['websites']['info']['color']};border:1px solid {$data['websites']['info']['color']};}
     header .navbar-default {width: 100%;box-shadow: 1px 1px 1px rgba(156, 156, 156, 0.36);background:unset;}
-    header .navbar {min-height: 82px;background:unset;}
-    header .container {width: 1210px;margin-right: auto;margin-left: auto;padding-left: 15px;padding-right: 15px;}
+    header .navbar {min-height: 92px;background:unset;border: 2px solid #fff;border-left: 0;border-right: 0;}
+    header .container {width: 1400px;margin-right: auto;margin-left: auto;padding-left: 15px;padding-right: 15px;}
     header .navbar-header {float: left;margin-right: 0;margin-left: 0;}
     header .navbar>.container .navbar-brand,header .navbar>.container-fluid .navbar-brand {margin-left: -15px;}
     header .navbar-brand img {width: 150px;height:66px;}
@@ -35,6 +35,9 @@
 
     .mobile_navbar{display:none;}
     @media (max-width: 992px){
+        header .navbar{min-height:120px;}
+        header .navbar-brand img{width:170px;height:86px;}
+        header .navbar>.container .navbar-brand,header .navbar>.container-fluid .navbar-brand {margin-left: 105px;}
         header{position:relative;top: unset;left: 0;width: 100%;z-index: 9;}
         header .navbar-header{width: 100%;}
         /*#banner{margin-top:85px;}*/
@@ -46,36 +49,36 @@
         .cross-border .section-title p{margin-bottom:0 !important;}
         .cross-gather .section-title p{margin-bottom:24px !important;}
         /*手机版三扛start*/
-        .navbar-default .navbar-toggle{margin-top:30px;display:block;margin-right: -15px;}
+        .navbar-default .navbar-toggle{margin-top:40px;display:block;margin-right: -15px;}
         .navbar-toggle{padding:5px;}
         .navbar-toggle .icon-bar{width:20px;}
         /*手机版三扛end*/
 
         /**头部样式**/
         .home-page header .navbar-default{background:{$data['websites']['info']['color']} !important;border-bottom:1px solid #fff;}
-    .navbar-default .navbar-toggle{border-color: {$data['websites']['info']['color_word']};}
-    .navbar-default .navbar-toggle .icon-bar{background-color:{$data['websites']['info']['color_word']};}
-    .navbar-default .navbar-collapse2{background:{$data['websites']['info']['color']};margin-top:20px;border-color:{$data['websites']['info']['color_word']};box-shadow: 0px 0px 10px 1px #000;}
-    .navbar-static-top .container{width:100%;}
-    header .nav .caret{border-bottom-color: {$data['websites']['info']['color_word']};border-top-color: {$data['websites']['info']['color_word']};}
-    .navbar-default .navbar-nav .open .dropdown-menu>li>a{color:{$data['websites']['info']['color_word']};}
-    .appsDiv{left:15px;}
-    header .container .containerDiv{width: 100%;}
-    header .container .containerDiv .navbar-header{width: 100%;}
-
-
-    /*手机版菜单*/
-    header .navbar-collapse.pc_navbar {display: none !important;}
-    .pc_menu,.pc_navbar{display:none;}
-    .navbar-collapse2{width: 100%;position: absolute;top: 77%;padding: 20px;left:0;}
-    .navbar-collapse2 .searchBox{width: 100%;margin:15px 0;}
-    header ul.nav li{border-bottom:1px solid #dbdada;}
-    header .navbar-nav>li{float:unset;}
-    .navbar-default .navbar-nav .open .dropdown-menu>li>a{padding:10px 15px 10px 25px;}
-    .navbar-collapse{max-height: 600px;}
+        .navbar-default .navbar-toggle{border-color: {$data['websites']['info']['color_word']};}
+        .navbar-default .navbar-toggle .icon-bar{background-color:{$data['websites']['info']['color_word']};}
+        .navbar-default .navbar-collapse2{background:{$data['websites']['info']['color']};margin-top:20px;border-color:{$data['websites']['info']['color_word']};box-shadow: 0px 0px 10px 1px #000;}
+        .navbar-static-top .container{width:100%;}
+        header .nav .caret{border-bottom-color: {$data['websites']['info']['color_word']};border-top-color: {$data['websites']['info']['color_word']};}
+        .navbar-default .navbar-nav .open .dropdown-menu>li>a{color:{$data['websites']['info']['color_word']};}
+        .appsDiv{left:15px;}
+        header .container .containerDiv{width: 100%;}
+        header .container .containerDiv .navbar-header{width: 100%;}
+    
+    
+        /*手机版菜单*/
+        header .navbar-collapse.pc_navbar {display: none !important;}
+        .pc_menu,.pc_navbar{display:none;}
+        .navbar-collapse2{width: 100%;position: absolute;top: 77%;padding: 20px;left:0;}
+        .navbar-collapse2 .searchBox{width: 100%;margin:15px 0;}
+        header ul.nav li{border-bottom:1px solid #dbdada;}
+        header .navbar-nav>li{float:unset;}
+        .navbar-default .navbar-nav .open .dropdown-menu>li>a{padding:10px 15px 10px 25px;}
+        .navbar-collapse{max-height: 600px;}
     }
 </style>
-<header style="z-index:9;">
+<header style="z-index:10;">
     <div class="navbar navbar-default navbar-static-top">
         <div class="container" style="font-size:16px;">
             <div class="navbar-header">
