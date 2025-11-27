@@ -109,7 +109,15 @@
             <div class="layui-form-item">
                 <div class="layui-form-label">适用时间</div>
                 <div class="layui-input-block">
-                    <input type="text" name="campaign_time" class="layui-input" id="campaign_time" value="{$data['campaign_time']}" lay-verify="required" placeholder="请选择开始时间"/>
+                    <div class="layui-inline">
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" name="startTime" id="startTime" value="{$data['startTime']}" placeholder="开始时间">
+                        </div>
+                        <div class="layui-form-mid">-</div>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" name="endTime" id="endTime" value="{$data['endTime']}" placeholder="结束时间">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -121,29 +129,18 @@
         <legend>适用实体</legend>
         <div class="layui-field-box">
             <div class="layui-form-item">
-                <div class="layui-form-label">店名</div>
+                <div class="layui-form-label">选择店铺</div>
                 <div class="layui-input-block">
-                    <input type="text" class="layui-input" name="shop_name" value="{$data['shop_name']}" lay-verify="required" />
+                    <select name="shop_id" id="shop_id" lay-filter="shop_id" lay-verify="required">
+                        <option value="">请选择活动店铺</option>
+                        <option value="-1">--新增店铺--</option>
+                        {volist name="shops" id="vo"}
+                            <option value="{$vo['id']}" {if $data['shop_id']==$vo['id']}selected{/if}>{$vo['shop_name']}</option>
+                        {/volist}
+                    </select>
                 </div>
             </div>
-            <div class="layui-form-item">
-                <div class="layui-form-label">地址</div>
-                <div class="layui-input-block">
-                    <input type="text" class="layui-input" name="shop_address" value="{$data['shop_address']}" lay-verify="required" />
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-form-label">电话</div>
-                <div class="layui-input-block">
-                    <input type="text" name="shop_tel" class="layui-input" value="{$data['shop_tel']}" lay-verify="required" />
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-form-label">营业时间</div>
-                <div class="layui-input-block">
-                    <input type="text" name="shop_hours" class="layui-input" value="{$data['shop_hours']}" lay-verify="required" />
-                </div>
-            </div>
+           
         </div>
     </fieldset>
 
@@ -160,13 +157,10 @@
                     </button>
                 </div>
             </div>
-            <table class="layui-table goods_table" style="display: none;">
+            <table class="layui-table goods_table" style="display: {if $id>0}block{else}none{/if};">
                 <thead>
-                <th>商品名称</th>
-                <th>活动操作</th>
-                <th>活动标的</th>
-                <th>活动条件</th>
-                <th>操作</th>
+                    <th>商品名称</th>
+                    <th>操作</th>
                 </thead>
                 <tbody>
                 {if isset($data.goods_info) && !empty($data.goods_info)}
@@ -175,15 +169,41 @@
                             <td>
                                 <span style="font-weight: 600;">{$goods.goods_name}</span>
                             </td>
-                            <td>
-                                <div id="connect_menus" class="xm-select-demo"></div>
-                            </td>
-                            <td><input type="hidden" name="goods_id[]" value="{$goods.goods_id}"><div class="trush" onclick="del_goods(this)"><i class="fas fa-trash"></i></div></td>
+                            <td><input type="hidden" name="shop_goods[]" value="{$goods.goods_id}"><div class="trush" onclick="del_goods(this)"><i class="fas fa-trash"></i></div></td>
                         </tr>
                     {/volist}
                 {/if}
                 </tbody>
             </table>
+            <div class="layui-form-item">
+                <div class="layui-form-label">活动操作</div>
+                <div class="layui-input-block">
+                    <div id="campaign_opera" class="xm-select-demo"></div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label">活动标的</div>
+                <div class="layui-input-block">
+                    <div class="disf">
+                        <div class="campaign_task_subject_select">
+                            <select name="campaign_task_subject" id="campaign_task_subject" lay-filter="campaign_task_subject">
+                                <option value="1" {if $data['campaign_task_subject']==1}selected{/if}>产品主题图</option>
+                                <option value="2" {if $data['campaign_task_subject']==2}selected{/if}>产品详情页</option>
+                                <option value="3" {if $data['campaign_task_subject']==3}selected{/if}>图文音视频</option>
+                            </select>    
+                        </div>
+                        <div class="multiple_info_div" style="display: {if $data['campaign_task_subject']==3}block{else}none{/if};">
+                            <input type="text" class="layui-input" name="multiple_info_link" value="{$data['multiple_info_link']}" placeholder="请输入链接"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label">活动条件</div>
+                <div class="layui-input-block">
+                    <div id="condition_opera" class="xm-select-demo"></div>
+                </div>
+            </div>
         </div>
     </fieldset>
 
@@ -214,11 +234,33 @@
             ,upload = layui.upload
             ,colorpicker = layui.colorpicker;
 
-        laydate.render({
-            elem: '#campaign_time',
-            format: 'yyyy-MM-dd HH:mm:ss',
-            min: '-0',
-            type:'datetime'//指定元素
+        // laydate.render({
+        //     elem: '#campaign_time',
+        //     format: 'yyyy-MM-dd HH:mm:ss',
+        //     min: '-0',
+        //     type:'datetime'//指定元素
+        // });
+        
+        var startDate = laydate.render({
+            elem: '#startTime',
+            type: 'datetime',
+            done: function(value, date){
+                // 当开始时间被选择后，更新结束时间的最小可选值
+                endDate.config.min = {
+                    year: date.year,
+                    month: date.month - 1, // 注意：月份是从0开始的
+                    date: date.date,
+                    hours: date.hours,
+                    minutes: date.minutes,
+                    seconds: date.seconds
+                };
+            }
+        });
+        
+        var endDate = laydate.render({
+            elem: '#endTime',
+            type: 'datetime',
+            min: '1900-1-1' // 初始最小时间
         });
 
         //菜单弹窗关闭事件===start
@@ -239,6 +281,126 @@
             }
         });
         //菜单弹窗关闭事件===end
+        
+        //选择店铺
+        form.on('select(shop_id)',function(data){
+            let val = data.value;
+            if(val==-1){
+                //新增店铺
+                var modal = document.getElementById('saveMenuModal');
+                modal.style.display = 'flex';
+    
+                $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_campaign_shop&company_id={$company_id}&company_type={$company_type}');
+            }
+        });
+        
+        //活动类别
+        form.on('select(type)',function(data){
+            let val = data.value;
+            
+        });
+        
+        //活动标的
+        form.on('select(campaign_task_subject)',function(data){
+            let val = data.value;
+            
+            if(val==1 || val==2){
+                $('.multiple_info_div').hide();
+            }else if(val==3){
+                $('.multiple_info_div').show();
+            }
+        });
+        
+        // 活动操作
+        var campaign_opera = xmSelect.render({
+            el: '#campaign_opera',
+            autoRow: true, //自动换行
+            filterable: true, //可搜索
+            searchTips: '请选择',
+            radio:false,
+            name: "campaign_task_operation",
+            model: {
+                icon: 'hidden',//是否展示复选框或者单选框图标 show, hidden:变换背景色  ！！这句话是重点，不然会变成父节点也有单选框！！
+                label: {
+                    type: 'block',
+                    block: {
+                        //最大显示数量, 0:不限制
+                        showCount: 1,
+                        //是否显示删除图标
+                        showIcon: true,
+                    }
+                },
+            },
+            prop:{
+                name: 'name',
+                value: 'id',
+            },
+            tree: {
+                show: true, //用树显示
+                showFolderIcon: true, //是否显示节点前的三角图标
+                expandedKeys: true, //默认全部展开
+                showLine: true, //显示渐近线
+                indent: 20, //间距
+                strict: false, //重点！！设置成非严格父子模式，这样父节点被禁用，子节点依然可以点击
+                clickCheck:true,
+                vaguaSearch:0,//关闭模糊搜索
+            },
+            toolbar: {
+                show: true, //显示工具条
+                list: ['ALL', 'REVERSE', 'CLEAR']
+            },
+            height: '300px', //最大下拉框高度
+            data: <?php echo $operation; ?>,
+            initValue:[{$data['campaign_task_operation']}],
+            on: function(data) {
+                
+            },
+        });
+
+        // 活动条件
+        var condition_opera = xmSelect.render({
+            el: '#condition_opera',
+            autoRow: true, //自动换行
+            filterable: true, //可搜索
+            searchTips: '请选择',
+            radio:false,
+            name: "campaign_task_condition",
+            model: {
+                icon: 'hidden',//是否展示复选框或者单选框图标 show, hidden:变换背景色  ！！这句话是重点，不然会变成父节点也有单选框！！
+                label: {
+                    type: 'block',
+                    block: {
+                        //最大显示数量, 0:不限制
+                        showCount: 1,
+                        //是否显示删除图标
+                        showIcon: true,
+                    }
+                },
+            },
+            prop:{
+                name: 'name',
+                value: 'id',
+            },
+            tree: {
+                show: true, //用树显示
+                showFolderIcon: true, //是否显示节点前的三角图标
+                expandedKeys: true, //默认全部展开
+                showLine: true, //显示渐近线
+                indent: 20, //间距
+                strict: false, //重点！！设置成非严格父子模式，这样父节点被禁用，子节点依然可以点击
+                clickCheck:true,
+            },
+            toolbar: {
+                show: true, //显示工具条
+                list: ['ALL', 'REVERSE', 'CLEAR']
+            },
+            height: '300px', //最大下拉框高度
+            data: <?php echo $condition; ?>,
+            initValue:[{$data['campaign_task_condition']}],
+            on: function(data) {
+                
+            },
+        });
 
         form.on('submit(component-form-menu2)', function(data){
             layer.load();
@@ -550,8 +712,7 @@
             var skuId = variant.sku_id || 0;
             var html = '<tr id="' + rowId + '" data-goods-id="' + goodsId + '">';
             html += '<td><span style="font-size:12px;">' + variant.name + '</span></td>';
-            html += '<td>' + variant.goods_number + '</td>';
-            html += '<td><input type="hidden" name="goods_id[]" value="' + goodsId + '"><input type="hidden" name="sku_id[]" value="' + skuId + '"><div class="trush" onclick="del_goods(this)"><i class="fas fa-trash"></i></div></td>';
+            html += '<td><input type="hidden" name="shop_goods[]" value="' + goodsId + '"><div class="trush" onclick="del_goods(this)"><i class="fas fa-trash"></i></div></td>';
             html += '</tr>';
 
             tbody.append(html);

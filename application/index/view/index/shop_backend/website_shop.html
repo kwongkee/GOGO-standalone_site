@@ -642,16 +642,37 @@
                 <div class="menu-section">
                     <h3 class="menu-title"><i class="fas fa-shopping-cart"></i> 营销管理</h3>
                     <ul class="menu-items">
-                        <li class="menu-item" data-target="order-management" onclick="openWindow('save_campaign')">
+                        <li class="menu-item has-submenu" data-target="shipping" data-submenu="campaign-management">
                             <div class="menu-item-content">
-                                <i class="fas fa-clipboard-list"></i> 新增活动
+                                <i class="fas fa-tag"></i> 营销活动
                             </div>
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                            <ul class="submenu" id="campaign-management">
+                                <li class="submenu-item" data-target="save_campaign" onclick="openWindow('save_campaign')">
+                                    <i class="fas fa-plus-square"></i> 新增活动
+                                </li>
+                                <li class="submenu-item" data-target="marketing_campaign" onclick="openWindow('marketing_campaign')">
+                                    <i class="fas fa-list-alt"></i> 管理活动
+                                </li>
+                               
+                            </ul>
                         </li>
-                        <li class="menu-item" data-target="order-management" onclick="openWindow('marketing_campaign')">
+                        <li class="menu-item has-submenu" data-target="shipping" data-submenu="physical-management">
                             <div class="menu-item-content">
-                                <i class="fas fa-clipboard-list"></i> 管理活动
+                                <i class="fas fa-tag"></i> 实体订单
                             </div>
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                            <ul class="submenu" id="physical-management">
+                                <li class="submenu-item" data-target="campaign_order" onclick="openWindow('campaign_order')">
+                                    <i class="fas fa-plus-square"></i> 活动订单列表
+                                </li>
+                                <li class="submenu-item" data-target="campaign_transaction_order" onclick="openWindow('campaign_transaction_order')">
+                                    <i class="fas fa-list-alt"></i> 交易订单列表
+                                </li>
+                               
+                            </ul>
                         </li>
+                        
                         <!--<li class="menu-item" data-target="order-management" onclick="openWindow('sale_panel_manage')">-->
                         <!--    <div class="menu-item-content">-->
                         <!--        <i class="fas fa-clipboard-list"></i> 营销面板-->

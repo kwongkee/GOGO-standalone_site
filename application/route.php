@@ -138,6 +138,10 @@ Route::any('index/online_merge_member', 'index/Index/online_merge_member');#企�
 Route::any('index/marketing_campaign', 'index/Index/marketing_campaign');#企业网店-营销管理-管理活动
 Route::any('index/save_campaign', 'index/Index/save_campaign');#企业网店-营销管理-新增活动
 Route::any('index/del_campaign', 'index/Index/del_campaign');#企业网店-营销管理-删除活动
+Route::any('index/save_campaign_shop', 'index/Index/save_campaign_shop');#企业网店-营销管理-新增实体店铺
+Route::any('index/campaign_order', 'index/Index/campaign_order');#企业网店-营销管理-活动订单选项
+Route::any('index/campaign_order_list', 'index/Index/campaign_order_list');#企业网店-营销管理-活动订单列表
+Route::any('index/campaign_transaction_order', 'index/Index/campaign_transaction_order');#企业网店-营销管理-交易订单列表
 
 Route::any('index/physical_order', 'index/Index/physical_order');#企业网店-实体订单-活动订单列表
 Route::any('index/transaction_order', 'index/Index/transaction_order');#企业网店-实体订单-交易订单列表

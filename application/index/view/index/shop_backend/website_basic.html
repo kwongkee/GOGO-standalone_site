@@ -90,6 +90,46 @@
                 </div>
             </div>
             <div class="layui-form-item">
+                <label class="layui-form-label">头部PC<br/>(像素：1920*90)</label>
+                <div class="layui-input-block">
+                    <div class="layui-upload" style="margin-top: 10px;">
+                        <button type="button" class="layui-btn" id="head_file-upload">上传图片(1张)</button>
+                        <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                            预览图：
+                            <div class="layui-upload-list" id="head_file-upload-list">
+                                {if !empty($data['head_file'])}
+                                <div style="display: inline-block;">
+                                    <img loading="lazy" onclick="seePic(this);" src="{$data['head_file']}" class="layui-upload-img" style="width:80px;height:80px;" alt="网站Logo">
+                                    <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
+                                    <input type="hidden" name="head_file[]" value="{$data['head_file']}">
+                                </div>
+                                {/if}
+                            </div>
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">头部Mob<br/>(像素：430*120)</label>
+                <div class="layui-input-block">
+                    <div class="layui-upload" style="margin-top: 10px;">
+                        <button type="button" class="layui-btn" id="mob_head_file-upload">上传图片(1张)</button>
+                        <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                            预览图：
+                            <div class="layui-upload-list" id="mob_head_file-upload-list">
+                                {if !empty($data['mob_head_file'])}
+                                <div style="display: inline-block;">
+                                    <img loading="lazy" onclick="seePic(this);" src="{$data['mob_head_file']}" class="layui-upload-img" style="width:80px;height:80px;" alt="网站Logo">
+                                    <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
+                                    <input type="hidden" name="mob_head_file[]" value="{$data['mob_head_file']}">
+                                </div>
+                                {/if}
+                            </div>
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
                 <label class="layui-form-label">网站名称</label>
                 <div class="layui-input-block">
                     <input type="text" name="name" value="{$data['name']}"  lay-verify="required" placeholder="请输入网站名称" autocomplete="off" class="layui-input">
@@ -296,6 +336,52 @@
                     {
 
                         $('#logo_file-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;" alt="网站logo图片"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="logo_file[]" value="'+res.file_path+'"></div>')
+                    }
+                });
+            }
+        });
+        
+        // PC头部图片
+        upload.render({
+            elem: '#head_file-upload'
+            ,url: '/?s=index/upload_file'
+            ,accept: 'image'
+            ,data: { folder: 'merch_file', type: 'shop_index'}
+            ,multiple: false
+            ,number:1
+            ,before: function(obj){
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                layer.msg(res.message, {time: 2000}, function () {
+                    if (res.error == 1)
+                    {
+
+                        $('#head_file-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;" alt="网站logo图片"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="head_file[]" value="'+res.file_path+'"></div>')
+                    }
+                });
+            }
+        });
+        
+        // MOB头部图片
+        upload.render({
+            elem: '#mob_head_file-upload'
+            ,url: '/?s=index/upload_file'
+            ,accept: 'image'
+            ,data: { folder: 'merch_file', type: 'shop_index'}
+            ,multiple: false
+            ,number:1
+            ,before: function(obj){
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                layer.msg(res.message, {time: 2000}, function () {
+                    if (res.error == 1)
+                    {
+
+                        $('#mob_head_file-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;" alt="网站logo图片"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="mob_head_file[]" value="'+res.file_path+'"></div>')
                     }
                 });
             }

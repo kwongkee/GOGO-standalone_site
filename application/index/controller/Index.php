@@ -1400,6 +1400,8 @@ class Index extends Controller
                     'keywords'=>trim($dat['keywords']),
                     'slogo'=>$dat['slogo_file'][0],
                     'logo'=>$dat['logo_file'][0],
+                    'head_file'=>isset($dat['head_file'])?$dat['head_file'][0]:'',
+                    'mob_head_file'=>isset($dat['mob_head_file'])?$dat['mob_head_file'][0]:'',
                     'color'=>$dat['color'],
                     'color_inner'=>$dat['color_inner'],
                     'color_word'=>$dat['color_word'],
@@ -1425,6 +1427,8 @@ class Index extends Controller
                     'keywords'=>trim($dat['keywords']),
                     'slogo'=>$dat['slogo_file'][0],
                     'logo'=>$dat['logo_file'][0],
+                    'head_file'=>isset($dat['head_file'])?$dat['head_file'][0]:'',
+                    'mob_head_file'=>isset($dat['mob_head_file'])?$dat['mob_head_file'][0]:'',
                     'color'=>$dat['color'],
                     'color_inner'=>$dat['color_inner'],
                     'color_word'=>$dat['color_word'],
@@ -1452,7 +1456,7 @@ class Index extends Controller
             $data = Db::name('website_basic')->where(['company_id'=>$company_id,'company_type'=>$company_type])->find();
 
             if(empty($data)){
-                $data = ['slogo'=>'','logo'=>'','name'=>'','desc'=>'','keywords'=>'','color'=>'','color_inner'=>'#ffffff','color_word'=>'#ffffff','color_adorn'=>'','is_website'=>0,'font_family'=>"Microsoft JhengHei, 微軟正黑體, Arial, sans-serif",'pay_method'=>0,'cash_on_delivery'=>1,'down_payment'=>1,'prepaid_method'=>1,'prepaid_percent'=>'','prepaid_currency'=>'','prepaid_amount'=>'','paypal'=>['client_id'=>'','client_secret'=>'','is_through'=>0]];
+                $data = ['slogo'=>'','logo'=>'','head_file'=>'','mob_head_file'=>'','name'=>'','desc'=>'','keywords'=>'','color'=>'','color_inner'=>'#ffffff','color_word'=>'#ffffff','color_adorn'=>'','is_website'=>0,'font_family'=>"Microsoft JhengHei, 微軟正黑體, Arial, sans-serif",'pay_method'=>0,'cash_on_delivery'=>1,'down_payment'=>1,'prepaid_method'=>1,'prepaid_percent'=>'','prepaid_currency'=>'','prepaid_amount'=>'','paypal'=>['client_id'=>'','client_secret'=>'','is_through'=>0]];
             }
             else{
                 if(empty($data['paypal'])){
@@ -6563,6 +6567,48 @@ class Index extends Controller
         return json(['code'=>0,'msg'=>'删除成功']);
     }
 
+    #活动管理
+    public function marketing_campaign(Request $request){
+        $dat = input();
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);#0商城，1官网
+        
+        if(isset($dat['pa'])){
+            $limit = $request->get('limit');
+            $page = $request->get('page') - 1;
+            if ($page != 0) {
+                $page = $limit * $page;
+            }
+            $keyword = isset($dat['keywords']) ? trim($dat['keywords']) : '';
+
+            $count = Db::name('website_campaign_list')->where(['company_id'=>$company_id,'company_type'=>$company_type])->count();
+            $rows = DB::name('website_campaign_list')
+                ->where(['company_id'=>$company_id,'company_type'=>$company_type])
+//                ->where('ordersn', 'like', '%'.$keyword.'%')
+                ->limit($page . ',' . $limit)
+                ->order('id desc')
+                ->select();
+
+            foreach ($rows as &$item) {
+                if($item['type']==1){
+                    $item['campaign_name'] = '预约免费食';
+                }
+                elseif($item['type']==2){
+                    $item['campaign_name'] = '好食才付款';
+                }
+                elseif($item['type']==3){
+                    $item['campaign_name'] = '买一送一';
+                }
+                $item['campaign_time'] = $item['startTime'].' - '.$item['endTime'];
+                // $item['createtime'] = date('Y-m-d H:i:s', $item['createtime']);
+            }
+
+            return json(['code'=>0,'count'=>$count,'data'=>$rows]);
+        }else{
+            return view('index/shop_backend/marketing_campaign',compact('company_id','company_type'));
+        }
+    }
+    
     #新增活动
     public function save_campaign(Request $request){
         $dat = input();
@@ -6571,17 +6617,25 @@ class Index extends Controller
         $id = isset($dat['id'])?intval($dat['id']):0;
 
         if($request->isAjax()){
+            
+            if(intval($dat['shop_id'])<0){
+                return json(['code'=>-1,'msg'=>'请选择店铺']);
+            }
+            
+            if(empty($dat['shop_goods'])){
+                return json(['code'=>-1,'msg'=>'请选择商品']);
+            }
+            
             if($id>0){
                 Db::name('website_campaign_list')->where(['id'=>$id])->update([
-                    'shop_name'=>trim($dat['shop_name']),
-                    'shop_address'=>trim($dat['shop_address']),
-                    'shop_tel'=>trim($dat['shop_tel']),
-                    'shop_hours'=>trim($dat['shop_hours']),
-                    'campaign_time'=>trim($dat['campaign_time']),
-                    'shop_goods'=>trim($dat['shop_goods']),
+                    'shop_id'=>intval($dat['shop_id']),
+                    'startTime'=>trim($dat['startTime']),
+                    'endTime'=>trim($dat['endTime']),
+                    'shop_goods'=>json_encode($dat['shop_goods'],true),
                     'shop_quota'=>intval($dat['shop_quota']),
                     'campaign_task_operation'=>trim($dat['campaign_task_operation']),
                     'campaign_task_subject'=>trim($dat['campaign_task_subject']),
+                    'multiple_info_link'=>intval($dat['campaign_task_subject'])==2?trim($dat['multiple_info_link']):'',
                     'campaign_task_condition'=>trim($dat['campaign_task_condition']),
                 ]);
             }else{
@@ -6589,27 +6643,136 @@ class Index extends Controller
                     'company_id'=>$dat['company_id'],
                     'company_type'=>$dat['company_type'],
                     'type'=>intval($dat['type']),
-                    'shop_name'=>trim($dat['shop_name']),
-                    'shop_address'=>trim($dat['shop_address']),
-                    'shop_tel'=>trim($dat['shop_tel']),
-                    'shop_hours'=>trim($dat['shop_hours']),
-                    'campaign_time'=>trim($dat['campaign_time']),
-                    'shop_goods'=>trim($dat['shop_goods']),
+                    'shop_id'=>intval($dat['shop_id']),
+                    'startTime'=>trim($dat['startTime']),
+                    'endTime'=>trim($dat['endTime']),
+                    'shop_goods'=>json_encode($dat['shop_goods'],true),
                     'shop_quota'=>intval($dat['shop_quota']),
                     'campaign_task_operation'=>trim($dat['campaign_task_operation']),
                     'campaign_task_subject'=>trim($dat['campaign_task_subject']),
+                    'multiple_info_link'=>intval($dat['campaign_task_subject'])==2?trim($dat['multiple_info_link']):'',
                     'campaign_task_condition'=>trim($dat['campaign_task_condition']),
                     'createtime'=>time()
                 ]);
             }
             return json(['code'=>0,'msg'=>'保存成功']);
         }else{
-            $data = ['type'=>0,'shop_name'=>'','shop_address'=>'','shop_tel'=>'','shop_hours'=>'','campaign_time'=>'','shop_goods'=>'','shop_quota'=>'','campaign_task_operation'=>'','campaign_task_subject'=>'','campaign_task_condition'=>'','goods_info'=>''];
+            $data = ['type'=>0,'startTime'=>'','endTime'=>'','shop_id'=>'','shop_goods'=>'','shop_quota'=>'','campaign_task_operation'=>'','campaign_task_subject'=>'','multiple_info_link'=>'','campaign_task_condition'=>'','goods_info'=>''];
             if($id>0){
                 $data = Db::name('website_campaign_list')->where(['id'=>$id])->find();
+                $data['shop_goods'] = json_decode($data['shop_goods'],true);
+                $data['goods_info'] = [];
+                foreach($data['shop_goods'] as $k=>$v){
+                    $goods_info = Db::connect($this->config)->name('goods')->where(['goods_id'=>$v])->field('goods_id,goods_image,goods_name')->find();
+                    array_push($data['goods_info'],$goods_info);
+                }
             }
             
-            return view('index/shop_backend/save_campaign',compact('company_id','company_type','data','id'));
+            $condition = json_encode([['id'=>1,'name'=>'分享被查看'],['id'=>2,'name'=>'分享被加购'],['id'=>3,'name'=>'分享被转发'],['id'=>4,'name'=>'分享被评论'],['id'=>5,'name'=>'分享被点赞']],true);
+            $operation = json_encode([['id'=>1,'name'=>'详情'],['id'=>2,'name'=>'加购'],['id'=>3,'name'=>'转发'],['id'=>4,'name'=>'评论'],['id'=>5,'name'=>'点赞']],true);
+            
+            $shops = Db::name('website_campaign_shop')->where(['company_id'=>$company_id,'company_type'=>$company_type])->select();
+            
+            return view('index/shop_backend/save_campaign',compact('company_id','company_type','data','id','condition','operation','shops'));
+        }
+    }
+    
+    #删除活动
+    public function del_campaign(Request $request){
+        $dat = input();
+        $id = intval($dat['id']);
+        
+        $res = Db::name('website_campaign_list')->where(['id'=>$id])->delete();
+        if($res){
+            return json(['code'=>0,'msg'=>'删除成功']);
+        }
+        return json(['code'=>-1,'msg'=>'删除失败']);
+    }
+    
+    #新增活动店铺
+    public function save_campaign_shop(Request $request){
+        $dat = input();
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);#0商城，1官网
+        $id = isset($dat['id'])?intval($dat['id']):0;
+
+        if($request->isAjax()){
+            if($id>0){
+                Db::name('website_campaign_shop')->where(['id'=>$id])->update([
+                    'shop_name'=>trim($dat['shop_name']),
+                    'shop_address'=>trim($dat['shop_address']),
+                    'shop_tel'=>trim($dat['shop_tel']),
+                    'shop_hours'=>trim($dat['shop_hours'])
+                ]);
+            }else{
+                Db::name('website_campaign_shop')->insert([
+                    'company_id'=>$dat['company_id'],
+                    'company_type'=>$dat['company_type'],
+                    'shop_name'=>trim($dat['shop_name']),
+                    'shop_address'=>trim($dat['shop_address']),
+                    'shop_tel'=>trim($dat['shop_tel']),
+                    'shop_hours'=>trim($dat['shop_hours'])
+                ]);
+            }
+            return json(['code'=>0,'msg'=>'保存成功']);
+        }
+        else{
+            $data = ['shop_name'=>'','shop_address'=>'','shop_tel'=>'','shop_hours'=>''];
+            
+            if($id>0){
+                $data = Db::name('website_campaign_shop')->where(['id'=>$id])->find();
+            }
+            
+            return view('index/shop_backend/save_campaign_shop',compact('company_id','company_type','data','id'));
+        }
+    }
+    
+    #活动订单选项
+    public function campaign_order(Request $request){
+        $dat = input();
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);#0商城，1官网
+        
+        return view('index/shop_backend/campaign_order',compact('company_id','company_type'));
+    }
+    
+    #活动订单列表
+    public function campaign_order_list(Request $request){
+        $dat = input();
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);#0商城，1官网
+        $type = intval($dat['type']);
+        
+        if(isset($dat['pa'])){
+            $limit = $request->get('limit');
+            $page = $request->get('page') - 1;
+            if ($page != 0) {
+                $page = $limit * $page;
+            }
+            $keyword = isset($dat['keywords']) ? trim($dat['keywords']) : '';
+
+            $count = Db::name('website_campaign_order_list')->where(['company_id'=>$company_id,'company_type'=>$company_type,'type'=>$type])->where('ordersn', 'like', '%'.$keyword.'%')->count();
+            $rows = DB::name('website_campaign_order_list')
+                ->where(['company_id'=>$company_id,'company_type'=>$company_type,'type'=>$type])
+                ->where('ordersn', 'like', '%'.$keyword.'%')
+                ->limit($page . ',' . $limit)
+                ->order('id desc')
+                ->select();
+
+            foreach ($rows as &$item) {
+                if($item['status']==0){
+                    $item['status_name'] = '待审核';
+                }elseif($item['status']==1){
+                    $item['status_name'] = '已接受';
+                }elseif($item['status']==-1){
+                    $item['status_name'] = '已拒绝';
+                }
+                $item['createtime'] = date('Y-m-d H:i:s', $item['createtime']);
+            }
+
+            return json(['code'=>0,'count'=>$count,'data'=>$rows]);
+        }else{
+            return view('index/shop_backend/campaign_order_list',compact('company_id','company_type','type'));
         }
     }
     

@@ -49,7 +49,16 @@ class Merch
         $this->websites['domain'] = 'https://'.$domain;
         $this->websites['rand'] = rand(11111,99999);
         $this->websites['info'] = Db::name('website_basic')->where(['company_id'=>$cid,'company_type'=>$company_type])->find();
-
+        
+        #判断头部图片
+        if(isMobile()){
+            if(!empty($this->websites['info']['mob_head_file'])){
+                $this->websites['info']['head_file'] = $this->websites['info']['mob_head_file'];
+            }else{
+                $this->websites['info']['head_file'] = '';
+            }
+        }
+        
         #获取公示信息
         $this->websites['info']['publicity_info'] = json_decode($this->websites['info']['publicity_info'],true);
 
