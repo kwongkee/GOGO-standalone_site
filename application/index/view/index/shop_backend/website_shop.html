@@ -1,4 +1,4 @@
-{include file="common/header2"}
+{include file="common/backend_header"}
 <link rel="stylesheet" href="layui/css/layui.css">
 <style>
     /*.container{max-width: 1500px;}*/
@@ -83,7 +83,7 @@
         transform: rotate(180deg);
     }
 
-    .submenu {
+    .menu-section .submenu {
         list-style: none;
         padding-left: 30px;
         margin-top: 5px;
@@ -92,11 +92,11 @@
         transition: all 0.3s ease;
     }
 
-    .submenu.show {
+    .menu-section .submenu.show {
         display: block;
     }
 
-    .submenu-item {
+    .menu-section .submenu-item {
         padding: 10px 15px;
         border-radius: 6px;
         margin-bottom: 5px;
@@ -108,12 +108,12 @@
         gap: 10px;
     }
 
-    .submenu-item:hover {
+    .menu-section .submenu-item:hover {
         background: var(--accent);
         color: var(--primary);
     }
 
-    .submenu-item.active {
+    .menu-section .submenu-item.active {
         background: var(--primary-light);
         color: white;
     }
@@ -360,7 +360,7 @@
         background: none;
         border: none;
         font-size: 1.5rem;
-        color: white;
+        color: var(--primary);
         cursor: pointer;
     }
 
@@ -862,7 +862,7 @@
         });
 
         // 初始化：默认收起所有子菜单
-        $('.submenu').hide();
+        $('.menu-section .submenu').hide();
     });
 
     function openWindow(siteurl,param=''){
@@ -881,4 +881,5 @@
         }, 800);
     }
 </script>
+
 {include file="common/footer2"}

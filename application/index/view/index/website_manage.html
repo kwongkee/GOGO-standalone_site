@@ -1,4 +1,4 @@
-{include file="common/header2"}
+{include file="common/backend_header"}
 <link rel="stylesheet" href="layui/css/layui.css">
 <style>
     /* 主内容区域 */
@@ -308,6 +308,14 @@
                 layer.closeAll('loading'); //关闭loading
                 layer.msg(res.msg, {time: 2000}, function () {
                     if (res.code == 0) {
+                        //修改网站logo、浏览器图标
+                        if(res.website_basic != ''){
+                            $('link[rel="icon"]').attr('href', res.website_basic.slogo);
+                            $('.logo img').attr('src', res.website_basic.logo);
+                            $('.logo span').html(res.list.company);
+                            $('.already_login .nav-item .nav-link .default_name').html(res.list.company);
+                        }
+                        
                         var html2 = '';
                         if(res.list2.length>0){
                             for(let i=0;i<res.list2.length;i++){

@@ -443,12 +443,28 @@ class Index extends Controller
         return view('/index/index',compact('menu','rotate','website','services','services2','link','news','signPackage','discovery_rotate','company_id'));
     }
 
+    private function buildTree(array $elements, $parentId = 0) {
+        $branch = array();
+        
+        foreach ($elements as $element) {
+            if ($element['pid'] == $parentId) {
+                $children = $this->buildTree($elements, $element['id']);
+                if ($children) {
+                    $element['children'] = $children;
+                }
+                $branch[] = $element;
+            }
+        }
+        
+        return $branch;
+    }
+    
     #站点管理
     public function website_manage(Request $request){
         $data = input();
         $cid = isset($data['cid'])?base64_decode($data['cid']):0;
         $mid = isset($data['mid'])?base64_decode($data['mid']):0;
-
+        
         if($mid>0){
             $account = Db::name('website_user')->where(['id'=>$mid])->find();
             session('account',$account);
@@ -461,10 +477,33 @@ class Index extends Controller
         $menuList = Db::name('centralize_manage_menu')->where(['auth_type'=>5])->select();
 
         $company_id = $this->company_id;
+        if(!empty($company) && $cid == 0){
+            header('Location: /admin?cid='.base64_encode($company[0]['id']));exit;
+        }
+        
+        $website_basic = ['slogo'=>'','logo'=>'','company_info'=>['id'=>0,'company'=>'','webList'=>'']];
+        if($cid>0){
+            #获取已配置的logo和浏览器标志
+            $website_basic = Db::name('website_basic')->where(['company_id'=>$cid,'company_type'=>1])->find();
+            $web_company = Db::name('website_user_company')->where(['id'=>$cid])->find();
+            $website_basic['company_info'] = $web_company;
+            
+            $list = [];
+            #获取权限
+            if(!empty($web_company['webList'])){
+                $web_company['webList'] = explode(',',$web_company['webList']);
+                $list = Db::name('centralize_manage_menu')
+                    ->whereIn('id', $web_company['webList'])
+                    ->select();
+                $list = $this->buildTree($list, 0);
+            }
+            $website_basic['company_info']['webList'] = $list;
+        }
+        
         $website['website_canonical'] = $this->website_canonical;
         $website['website_og'] = $this->website_og;
 
-        return view('/index/website_manage',compact('company','mid','cid','menuList','website','company_id'));
+        return view('/index/website_manage',compact('company','mid','cid','menuList','website','company_id','website_basic'));
     }
 
     #获取企业信息
@@ -481,7 +520,10 @@ class Index extends Controller
                 ->whereIn('id', $company['webList'])
                 ->select();
         }
-
+        
+        #获取已配置的logo和浏览器标志
+        $website_basic = Db::name('website_basic')->where(['company_id'=>$company['id'],'company_type'=>1])->find();
+        
         if(empty($company['domain_name'])){
             $company['domain_name'] = 0;
         }
@@ -489,7 +531,7 @@ class Index extends Controller
             $company['domain_name2'] = explode('.',$company['domain_name'])[1];
         }
 
-        return json(['code'=>0,'list'=>$company,'list2'=>$list,'msg'=>'正在刷新...']);
+        return json(['code'=>0,'list'=>$company,'list2'=>$list,'website_basic'=>$website_basic,'msg'=>'正在刷新...']);
     }
 
     #保存企业二级域名
@@ -715,11 +757,6 @@ class Index extends Controller
         else{
             $company_info['domain_name2'] = explode('.',$company_info['domain_name'])[1];
         }
-
-        #企业网站-基本&页头页脚配置
-        $model = new WebsiteBasic();
-        $website_basic = $model->getByCompanyId($company_id, $typ);
-        // $website_basic = Db::name('website_basic')->where(['company_id'=>$company_id,'company_type'=>$typ])->find();
         
 
         #企业网站-轮播图
@@ -752,6 +789,28 @@ class Index extends Controller
         
         $website['website_canonical'] = $this->website_canonical;
         $website['website_og'] = $this->website_og;
+        
+        $website_basic = ['slogo'=>'','logo'=>'','company_info'=>['id'=>0,'company'=>'','webList'=>'']];
+        if($company_id>0){
+            #企业网站-基本&页头页脚配置
+            $model = new WebsiteBasic();
+            $website_basic = $model->getByCompanyId($company_id, $typ);
+            $website_basic = json_decode($website_basic,true);
+            
+            $web_company = Db::name('website_user_company')->where(['id'=>$company_id])->find();
+            $website_basic['company_info'] = $web_company;
+            
+            $list = [];
+            #获取权限
+            if(!empty($web_company['webList'])){
+                $web_company['webList'] = explode(',',$web_company['webList']);
+                $list = Db::name('centralize_manage_menu')
+                    ->whereIn('id', $web_company['webList'])
+                    ->select();
+                $list = $this->buildTree($list, 0);
+            }
+            $website_basic['company_info']['webList'] = $list;
+        }
 
         return view('index/website/website_official',compact('company','company_info','user','company_id','rotate','website_basic','tab','website_index','website_discovery','website'));
     }
@@ -1344,9 +1403,9 @@ class Index extends Controller
             $company_info['domain_name2'] = explode('.',$company_info['domain_name'])[1];
         }
 
-        #企业网站-基本&页头页脚配置
-        $model = new WebsiteBasic();
-        $website_basic = $model->getByCompanyId($company_id, $typ);
+        // #企业网站-基本&页头页脚配置
+        // $model = new WebsiteBasic();
+        // $website_basic = $model->getByCompanyId($company_id, $typ);
 
         #企业网站-轮播图
         $rotate = Db::name('website_rotate')->where(['company_id'=>$company_id,'company_type'=>$typ])->select();
@@ -1358,6 +1417,28 @@ class Index extends Controller
         $website_discovery = Db::name('website_discovery_list')->where(['company_id'=>$company_id,'company_type'=>$typ])->select();
         foreach($website_discovery as $k=>$v){
             $website_discovery[$k]['createtime'] = date('Y-m-d H:i',$v['createtime']);
+        }
+        
+        $website_basic = ['slogo'=>'','logo'=>'','company_info'=>['id'=>0,'company'=>'','webList'=>'']];
+        if($company_id>0){
+            #企业网站-基本&页头页脚配置
+            $model = new WebsiteBasic();
+            $website_basic = $model->getByCompanyId($company_id, $typ);
+            $website_basic = json_decode($website_basic,true);
+            
+            $web_company = Db::name('website_user_company')->where(['id'=>$company_id])->find();
+            $website_basic['company_info'] = $web_company;
+            
+            $list = [];
+            #获取权限
+            if(!empty($web_company['webList'])){
+                $web_company['webList'] = explode(',',$web_company['webList']);
+                $list = Db::name('centralize_manage_menu')
+                    ->whereIn('id', $web_company['webList'])
+                    ->select();
+                $list = $this->buildTree($list, 0);
+            }
+            $website_basic['company_info']['webList'] = $list;
         }
         
         $website['website_canonical'] = $this->website_canonical;
