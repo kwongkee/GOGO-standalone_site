@@ -95,7 +95,12 @@
 
 <div class="layui-tab-content">
     <div class="layui-tab-item layui-show">
+        <div class="miniprogram_code" style="text-align:center;margin-bottom:10px;">
+            <!--二维码检测码-->
+            <img src="./img/miniprogram_campaign.png" alt="" style="width:150px;height:150px;"/>
+        </div>
         <div style="height:40px;">
+            <button class="layui-btn layui-btn-normal" onclick="location.reload()">刷新</button>
             <div class="main-table-reload-btn" style="margin-bottom: 10px;float: right;">
                 搜索订单号：
                 <div class="layui-inline">
@@ -157,13 +162,13 @@
                 ,{ align:'center', fixed: 'right', title: '操作', templet: function(d){
                     var strr = [];
                     if(d.status==0){
-                        strr.concat([
-                            '<a onclick="sure('+ d.id + ');" class="layui-btn layui-btn-xs btn-edit"><i class="fas fa-edit"></i> 接受</a>',
-                            '<a onclick="del(' + d.id + ');" class="layui-btn layui-btn-xs btn-delete"><i class="fas fa-trash"></i> 拒绝</a>',
-                        ]);
+                        strr[0] = '<a onclick="sure('+ d.id + ');" class="layui-btn layui-btn-xs btn-edit"><i class="fas fa-edit"></i> 接受</a>';
+                        strr[1] =  '<a onclick="del(' + d.id + ');" class="layui-btn layui-btn-xs btn-delete"><i class="fas fa-trash"></i> 拒绝</a>';
+                        
                     }
                     else if(d.status==1){
-                        strr.concat(['叫餐号：'+d.rand_num]);
+                        strr[0] = '叫餐号：'+d.rand_num;
+                        // strr.concat(['叫餐号：'+d.rand_num]);
                     }
                     else if(d.status==1){
                         
@@ -207,7 +212,7 @@
             $.ajax({
                 url:"/?s=index/campaign_order_status",
                 method:'post',
-                data:{id:id,'type':2},
+                data:{id:id,'type':2,company_id:"{$company_id}",company_type:"{$company_type}"},
                 dataType:'JSON',
                 success:function(res){
                     layer.confirm('叫餐号：'+res.rand_num,{
@@ -234,7 +239,7 @@
             $.ajax({
                 url:"/?s=index/campaign_order_status",
                 method:'post',
-                data:{id:id,'type':1},
+                data:{id:id,'type':1,company_id:"{$company_id}",company_type:"{$company_type}"},
                 dataType:'JSON',
                 success:function(res){
                     layer.msg(res.msg,{time:2000}, function () {

@@ -6857,6 +6857,32 @@ class Index extends Controller
         }
     }
     
+    public function campaign_order_status(Request $request){
+        $dat = input();
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);#0商城，1官网
+        $type = intval($dat['type']);
+        $id = intval($dat['id']);
+        
+        
+        if($type==1){
+            #拒绝订单
+            Db::name('website_campaign_order_list')->where(['id'=>$id,'company_id'=>$company_id,'company_type'=>$company_type])->update([
+                'status'=>-1
+            ]);
+            return json(['code'=>0,'msg'=>'拒绝成功']);
+        }
+        elseif($type==2){
+            #接受订单
+            $rand_num = mt_rand(10000,99999);
+            Db::name('website_campaign_order_list')->where(['id'=>$id,'company_id'=>$company_id,'company_type'=>$company_type])->update([
+                'status'=>1,
+                'rand_num'=>$rand_num
+            ]);
+            return json(['code'=>0,'msg'=>'接受成功','rand_num'=>$rand_num]);
+        }
+    }
+    
     #营销面板
     public function sale_panel_manage(Request $request){
         $dat = input();
