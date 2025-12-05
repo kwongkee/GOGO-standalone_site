@@ -6709,6 +6709,8 @@ class Index extends Controller
             
             if($id>0){
                 Db::name('website_campaign_list')->where(['id'=>$id])->update([
+                    'campaign_desc'=>trim($dat['campaign_desc']),
+                    'campaign_pic'=>isset($dat['campaign_pic'])?$dat['campaign_pic']:'',
                     'shop_id'=>intval($dat['shop_id']),
                     'startTime'=>trim($dat['startTime']),
                     'endTime'=>trim($dat['endTime']),
@@ -6724,6 +6726,8 @@ class Index extends Controller
                     'company_id'=>$dat['company_id'],
                     'company_type'=>$dat['company_type'],
                     'type'=>intval($dat['type']),
+                    'campaign_desc'=>trim($dat['campaign_desc']),
+                    'campaign_pic'=>isset($dat['campaign_pic'])?$dat['campaign_pic']:'',
                     'shop_id'=>intval($dat['shop_id']),
                     'startTime'=>trim($dat['startTime']),
                     'endTime'=>trim($dat['endTime']),
@@ -6738,7 +6742,7 @@ class Index extends Controller
             }
             return json(['code'=>0,'msg'=>'保存成功']);
         }else{
-            $data = ['type'=>0,'startTime'=>'','endTime'=>'','shop_id'=>'','shop_goods'=>'','shop_quota'=>'','campaign_task_operation'=>'','campaign_task_subject'=>'','multiple_info_link'=>'','campaign_task_condition'=>'','goods_info'=>''];
+            $data = ['type'=>0,'startTime'=>'','endTime'=>'','shop_id'=>'','shop_goods'=>'','shop_quota'=>'','campaign_task_operation'=>'','campaign_task_subject'=>'','multiple_info_link'=>'','campaign_task_condition'=>'','goods_info'=>'','campaign_desc'=>'','campaign_pic'=>''];
             if($id>0){
                 $data = Db::name('website_campaign_list')->where(['id'=>$id])->find();
                 $data['shop_goods'] = json_decode($data['shop_goods'],true);
@@ -6770,6 +6774,38 @@ class Index extends Controller
         return json(['code'=>-1,'msg'=>'删除失败']);
     }
     
+    #管理活动店铺
+    public function campaign_shop(Request $request){
+        $dat = input();
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);#0商城，1官网
+        
+        if(isset($dat['pa'])){
+            $limit = $request->get('limit');
+            $page = $request->get('page') - 1;
+            if ($page != 0) {
+                $page = $limit * $page;
+            }
+            $keyword = isset($dat['keywords']) ? trim($dat['keywords']) : '';
+
+            $count = Db::name('website_campaign_shop')->where(['company_id'=>$company_id,'company_type'=>$company_type])->count();
+            $rows = DB::name('website_campaign_shop')
+                ->where(['company_id'=>$company_id,'company_type'=>$company_type])
+//                ->where('ordersn', 'like', '%'.$keyword.'%')
+                ->limit($page . ',' . $limit)
+                ->order('id desc')
+                ->select();
+
+            foreach ($rows as &$item) {
+                // $item['createtime'] = date('Y-m-d H:i:s', $item['createtime']);
+            }
+
+            return json(['code'=>0,'count'=>$count,'data'=>$rows]);
+        }else{
+            return view('index/shop_backend/campaign_shop',compact('company_id','company_type'));
+        }
+    }
+    
     #新增活动店铺
     public function save_campaign_shop(Request $request){
         $dat = input();
@@ -6783,7 +6819,8 @@ class Index extends Controller
                     'shop_name'=>trim($dat['shop_name']),
                     'shop_address'=>trim($dat['shop_address']),
                     'shop_tel'=>trim($dat['shop_tel']),
-                    'shop_hours'=>trim($dat['shop_hours'])
+                    'shop_hours'=>trim($dat['shop_hours']),
+                    'addr_image'=>$dat['addr_image']
                 ]);
             }else{
                 Db::name('website_campaign_shop')->insert([
@@ -6792,13 +6829,14 @@ class Index extends Controller
                     'shop_name'=>trim($dat['shop_name']),
                     'shop_address'=>trim($dat['shop_address']),
                     'shop_tel'=>trim($dat['shop_tel']),
-                    'shop_hours'=>trim($dat['shop_hours'])
+                    'shop_hours'=>trim($dat['shop_hours']),
+                    'addr_image'=>$dat['addr_image']
                 ]);
             }
             return json(['code'=>0,'msg'=>'保存成功']);
         }
         else{
-            $data = ['shop_name'=>'','shop_address'=>'','shop_tel'=>'','shop_hours'=>''];
+            $data = ['shop_name'=>'','shop_address'=>'','shop_tel'=>'','shop_hours'=>'','shop_longitude'=>'','shop_latitude'=>'','addr_image'=>''];
             
             if($id>0){
                 $data = Db::name('website_campaign_shop')->where(['id'=>$id])->find();
@@ -6806,6 +6844,18 @@ class Index extends Controller
             
             return view('index/shop_backend/save_campaign_shop',compact('company_id','company_type','data','id'));
         }
+    }
+    
+    #删除活动店铺
+    public function del_campaign_shop(Request $request){
+        $dat = input();
+        $id = intval($dat['id']);
+        
+        $res = Db::name('website_campaign_shop')->where(['id'=>$id])->delete();
+        if($res){
+            return json(['code'=>0,'msg'=>'删除成功']);
+        }
+        return json(['code'=>-1,'msg'=>'删除失败']);
     }
     
     #活动订单选项

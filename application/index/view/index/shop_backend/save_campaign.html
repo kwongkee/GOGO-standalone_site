@@ -83,7 +83,7 @@
         <div class="layui-field-box">
             <div class="layui-form-item">
                 <div class="layui-form-label">活动类别</div>
-                <div class="layui-input-block">
+                <div class="layui-input-block" style="{if $id>0}line-height:36px;{/if}">
                     {if $id==0}
                         <select name="type" id="type" lay-filter="type">
                             <option value="1" {if $data['type']==1}selected{/if}>预约免费食</option>
@@ -103,6 +103,34 @@
                 <div class="layui-input-block">
                     <input type="number" name="shop_quota" class="layui-input" value="{$data['shop_quota']}" lay-verify="required" />
                     <div class="layui-form-mid layui-word-aux">若需设置无限个，数值调至99999</div>
+                </div>
+            </div>
+            
+            <div class="layui-form-item">
+                <div class="layui-form-label">活动描述</div>
+                <div class="layui-input-block">
+                    <textarea name="campaign_desc" id="campaign_desc" class="layui-textarea" lay-verify="required">{$data['campaign_desc']}</textarea>
+                </div>
+            </div>
+            
+            <div class="layui-form-item goods_info">
+                <label class="layui-form-label">活动图片<br/>(像素：800*800)</label>
+                <div class="layui-input-block">
+                    <div class="layui-upload" style="margin-top: 10px;">
+                        <button type="button" class="layui-btn" id="img_file-upload">上传图片(1张)</button>
+                        <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                            预览图：
+                            <div class="layui-upload-list" id="img_file-upload-list">
+                                {if !empty($data['campaign_pic'])}
+                                <div style="display: inline-block;">
+                                    <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$data['campaign_pic']}" data-src2="{$data['campaign_pic']}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png" style="width:80px;height:80px;">
+                                    <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
+                                    <input type="hidden" name="campaign_pic" value="{$data['campaign_pic']}">
+                                </div>
+                                {/if}
+                            </div>
+                        </blockquote>
+                    </div>
                 </div>
             </div>
             
@@ -157,7 +185,7 @@
                     </button>
                 </div>
             </div>
-            <table class="layui-table goods_table" style="display: {if $id>0}block{else}none{/if};">
+            <table class="layui-table goods_table" style="display: {if $id>0}table{else}none{/if};">
                 <thead>
                     <th>商品名称</th>
                     <th>操作</th>
@@ -261,6 +289,28 @@
             elem: '#endTime',
             type: 'datetime',
             min: '1900-1-1' // 初始最小时间
+        });
+        
+        //活动图片
+        upload.render({
+            elem: '#img_file-upload'
+            ,url: '/?s=index/upload_file'
+            ,accept: 'image'
+            ,data: { folder:'merch_file', type: 'campaign_files'}
+            ,multiple: false
+            ,number:1
+            ,before: function(obj){
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                layer.msg(res.message, {time: 2000}, function () {
+                    if (res.error == 1) {
+
+                        $('#img_file-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="' + res.file_path + '" data-src2="' + res.file_path + '" class="layui-upload-img" style="width:80px;height:80px;" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="campaign_pic" value="' + res.file_path + '"></div>')
+                    }
+                });
+            }
         });
 
         //菜单弹窗关闭事件===start

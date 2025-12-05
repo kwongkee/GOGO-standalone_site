@@ -91,6 +91,26 @@
         </div>
     </div>
     <div class="layui-form-item">
+        <div class="layui-form-label">地址图片（像素：1200*750）</div>
+        <div class="layui-input-block">
+            <div class="layui-upload" style="margin-top: 10px;">
+                <button type="button" class="layui-btn" id="img_file-upload">上传图片(1张)</button>
+                <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                    预览图：
+                    <div class="layui-upload-list" id="img_file-upload-list">
+                        {if !empty($data['addr_image'])}
+                        <div style="display: inline-block;">
+                            <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$data['addr_image']}" data-src2="{$data['addr_image']}" class="layui-upload-img" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png" style="width:80px;height:80px;">
+                            <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
+                            <input type="hidden" name="addr_image" value="{$data['addr_image']}">
+                        </div>
+                        {/if}
+                    </div>
+                </blockquote>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
         <div class="layui-form-label">电话</div>
         <div class="layui-input-block">
             <input type="text" name="shop_tel" class="layui-input" value="{$data['shop_tel']}" lay-verify="required" />
@@ -121,6 +141,28 @@
             ,upload = layui.upload
             ,colorpicker = layui.colorpicker;
 
+        //主图
+        upload.render({
+            elem: '#img_file-upload'
+            ,url: '/?s=index/upload_file'
+            ,accept: 'image'
+            ,data: { folder:'merch_file', type: 'address_files'}
+            ,multiple: false
+            ,number:1
+            ,before: function(obj){
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                layer.msg(res.message, {time: 2000}, function () {
+                    if (res.error == 1) {
+
+                        $('#img_file-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="' + res.file_path + '" data-src2="' + res.file_path + '" class="layui-upload-img" style="width:80px;height:80px;" onerror=src="https://shop.gogo198.cn/attachment/images/default_file.png"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="addr_image" value="' + res.file_path + '"></div>')
+                    }
+                });
+            }
+        });
+
         form.on('submit(component-form-menu2)', function(data){
             layer.load();
             $.ajax({
@@ -148,5 +190,18 @@
             return false;
         });
     });
+    
+    function delPic(obj)
+    {
+        var layer = layui.layer,$ = layui.$;
+        layer.confirm('确认要删除该附件？', {
+            btn: ['删除','取消']
+        }, function(){
+            $(obj).parent().remove();
+            layer.closeAll();
+        }, function(){
+
+        });
+    }
 </script>
 </html>
