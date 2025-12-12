@@ -98,7 +98,7 @@
                 <div class="layui-input-block">
                     <select name="warehouse_id" id="warehouse_id" lay-filter="warehouse_id" lay-search lay-verify="required">
                         <option value="">请选择目的地仓库</option>
-                        <option value="-1">+创建我的仓库</option>
+                        <!--<option value="-1">+创建我的仓库</option>-->
                         {volist name="list.warehouse" id="vo"}
                         <option value="{$vo['id']}" {if $data['warehouse_id']==$vo['id']}selected{/if}>{$vo['warehouse_name']}</option>
                         {/volist}

@@ -69,8 +69,6 @@
         .layui-form-item .layui-form-label{width:100px;}
 
         .edui-editor{z-index: 1 !important;}
-        .warehouse_info .layui-table tr td:nth-of-type(1){white-space:nowrap;background:#b5b5b5;color:#fff;}
-        .warehouse_info .layui-table tr td:nth-of-type(3){white-space:nowrap;background:#b5b5b5;color:#fff;}
         
         /*返回按钮*/
         .backDiv{padding: 5px 5px 5px 20px;border-bottom: 1px solid #d9d9d9;}
@@ -93,76 +91,60 @@
     <input type="hidden" name="id" value="{$id}">
 
     <div class="layui-form-item">
-        <div class="layui-form-label">选择仓库</div>
+        <div class="layui-form-label">仓库名称</div>
         <div class="layui-input-block">
-            <select name="warehouse_id" id="warehouse_id" lay-filter="warehouse_id" lay-search lay-verify="required">
-                <option value="">请选择仓库</option>
-                {volist name="warehouse" id="vo"}
-                <option value="{$vo['id']}" {if $data['warehouse_id']==$vo['id']}selected{/if}>{$vo['warehouse_name']}</option>
+            <input type="text" class="layui-input" lay-verify="required" name="warehouse_name" value="{$data['warehouse_name']}" placeholder="请输入仓库名称">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-form-label">国家地区</div>
+        <div class="layui-input-block">
+            <select name="country_code" id="country_id" lay-filter="country_id" lay-search lay-verify="required">
+                <option value="">请选择国家地区</option>
+                {volist name="list.country" id="vo"}
+                <option value="{$vo['id']}" {if $data['country_code']==$vo['id']}selected{/if} data-pre_tel="{$vo['param8']}">{$vo['param2']}</option>
                 {/volist}
             </select>
         </div>
     </div>
-    
-    <div class="warehouse_info">
-        
-    </div>
-    
-    <div class="layui-form-item">
-        <div class="layui-form-label">选择发货</div>
-        <div class="layui-input-block">
-            <select name="type" id="type" lay-filter="type" lay-search lay-verify="required">
-                <option value="0">使用仓库寄件信息</option>
-                <option value="1">自定义寄件人信息</option>
-            </select>
-        </div>
-    </div>
 
-    <div class="type1" style="display:{if $data['type']==1}block{else}none{/if};">
-        <div class="layui-form-item">
-            <div class="layui-form-label">国家地区</div>
-            <div class="layui-input-block">
-                <select name="country_code" id="country_id" lay-filter="country_id" lay-search>
-                    <option value="">请选择国家地区</option>
-                    {volist name="country" id="vo"}
-                    <option value="{$vo['id']}" {if $data['country_code']==$vo['id']}selected{/if} data-pre_tel="{$vo['param8']}">{$vo['param2']}</option>
-                    {/volist}
-                </select>
-            </div>
+    <div class="layui-form-item">
+        <div class="layui-form-label">邮政编码</div>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" name="postal_code" id="postal_code" value="{$data['postal_code']}" placeholder="请输入邮政编码" lay-verify="required">
         </div>
-        <div class="layui-form-item">
-            <div class="layui-form-label">邮政编码</div>
-            <div class="layui-input-block">
-                <input type="text" class="layui-input" name="postal_code" id="postal_code" value="{$data['postal_code']}" placeholder="请输入邮政编码">
-            </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-form-label">详细地址</div>
+        <div class="layui-input-block">
+            <span class="address_pcq pre_box" style="font-size:15px;margin-right:0px;">{$data['pre_address']}</span>
+            <input type="text" class="layui-input" name="address1" value="{$data['address1']}" placeholder="请输入详细地址" lay-verify="required">
         </div>
-        <div class="layui-form-item">
-            <div class="layui-form-label">详细地址</div>
-            <div class="layui-input-block">
-                <input type="text" name="pre_address" id="address_pcq" class="layui-input" value="{$data['pre_address']}" style="display:none;"/>
-                <span class="address_pcq pre_box" style="font-size:15px;margin-right:0px;">{$data['pre_address']}</span>
-                <input type="text" class="layui-input" name="address1" value="{$data['address1']}" placeholder="请输入详细地址">
-            </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-form-label">联系人员</div>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" name="name" value="{$data['name']}" placeholder="请输入联系人员名称" lay-verify="required">
         </div>
-         <div class="layui-form-item">
-            <div class="layui-form-label">联系人员</div>
-            <div class="layui-input-block">
-                <input type="text" class="layui-input" name="name" value="{$data['name']}" placeholder="请输入联系人员名称">
-            </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-form-label">邮箱地址</div>
+        <div class="layui-input-block">
+            <input type="text" class="layui-input" name="email" value="{$data['email']}" placeholder="请输入邮箱地址" lay-verify="required">
         </div>
-        <div class="layui-form-item">
-            <div class="layui-form-label">联系电话</div>
-            <div class="layui-input-block">
-                <div class="disf">
-                    <input type="text" name="area_code" id="area_code" class="layui-input" value="{$data['area_code']}" placeholder="电话区号"/>
-                    <input type="text" class="layui-input" name="mobile" value="{$data['mobile']}" id="tel" placeholder="请输入联系电话">
-                </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-form-label">联系电话</div>
+        <div class="layui-input-block">
+            <div class="disf">
+                <input type="text" class="layui-input" name="mobile" value="{$data['mobile']}" id="tel" placeholder="请输入联系电话" lay-verify="required">
             </div>
         </div>
     </div>
 
     <div class="form-actions">
-        <button type="button" class="btn btn-outline" id="cancelBtnMenu" style="background:transparent;border: 2px solid var(--primary);color: var(--primary);display:none;">取消</button>
+        <button type="button" class="btn btn-outline" id="cancelBtnMenu" style="background:transparent;border: 2px solid var(--primary);color: var(--primary);">取消</button>
         <button type="submit" class="btn btn-primary" lay-submit lay-filter="component-form-menu2">立即保存</button>
     </div>
 </form>
@@ -186,79 +168,15 @@
             modal.style.display = 'none';
         }
         cancelBtn.addEventListener('click', closeModal);
-        
-        //选择仓库显示其信息
-        form.on('select(warehouse_id)',function(data){
-            let val = data.value;
-            $.ajax({
-                url: "https://shop.gogo198.cn/collect_website/public/?s=api/func/get_warehouse_info",
-                method: 'post',
-                data: {'id': val},
-                dataType: 'JSON',
-                timeout: 10000,
-                success: function (res) {
-                    if(res.code==0){
-                        let html = '<table class="layui-table">\n'+
-                        '<tr>\n'+
-                        '    <td>仓库名称：</td>\n'+
-                        '    <td>'+res.data.warehouse_name+'</td>\n'+
-                        '    <td>仓库简称：</td>\n'+
-                        '    <td>'+res.data.warehouse_code+'</td>\n'+
-                        '</tr>\n'+
-                        '<tr>\n'+
-                        '    <td>仓库描述：</td>\n'+
-                        '    <td>'+res.data.desc+'</td>\n'+
-                        '    <td>仓库图片：</td>\n'+
-                        '    <td>\n';
-                        for(let i=0;i<res.data.pic.length;i++){
-                        html += '    <img src="'+res.data.pic[i]+'" onclick="javascript:window.open(\''+res.data.pic[i]+'\');" style="width:50px;height:50px;display:inline-block;margin-right:5px;margin-bottom:5px;cursor:pointer;"/>\n';
-                        }
-                        html+='    </td>\n'+
-                        '</tr>\n'+
-                        '<tr>\n'+
-                        '    <td>仓储类别：</td>\n'+
-                        '    <td>'+res.data.warehouse_type+'</td>\n'+
-                        '    <td>仓储结构：</td>\n'+
-                        '    <td>'+res.data.warehouse_structure+'</td>\n'+
-                        '</tr>\n'+
-                        '<tr>\n'+
-                        '    <td>运营模式：</td>\n'+
-                        '    <td>'+res.data.warehouse_mode+'</td>\n'+
-                        '    <td>仓储温度：</td>\n'+
-                        '    <td>'+res.data.warehouse_temperature+'</td>\n'+
-                        '</tr>\n'+
-                        '<tr>\n'+
-                        '    <td>仓库设备：</td>\n'+
-                        '    <td>'+res.data.warehouse_equipment+'</td>\n'+
-                        '    <td>邮政编码：</td>\n'+
-                        '    <td>'+res.data.postal_code+'</td>\n'+
-                        '</tr>\n'+
-                        '<tr>\n'+
-                        '    <td>详细地址：</td>\n'+
-                        '    <td>'+res.data.country_name+res.data.pre_address+res.data.address1+'</td>\n'+
-                        '    <td>收件人名称：</td>\n'+
-                        '    <td>'+res.data.name+'</td>\n'+
-                        '</tr>\n'+
-                        '<tr>\n'+
-                        '    <td>联系电话：</td>\n'+
-                        '    <td>'+res.data.area_code+res.data.mobile+'</td>\n'+
-                        '    <td></td>\n'+
-                        '    <td></td>\n'+
-                        '</tr>\n'+
-                        '</table>';
-                        
-                        $('.warehouse_info').html(html);
-                    }
-                }
-            });
-        });
+
 
         //选择国地
         form.on('select(country_id)',function(data){
             let val = data.value;
             let pretel = $(data.elem).find('option:selected').data('pre_tel');
 
-            $("#area_code").val(pretel);
+            let tel = pretel+" "+$('#tel').val();
+            $("#tel").val(pretel+" ");
         });
 
         //监听邮政编码输入+防抖事件
@@ -292,7 +210,6 @@
 
                         if (res.code == 0) {
                             $('.address_pcq').text(res.msg);
-                            $('#address_pcq').val(res.msg);
                         } else {
                             $('.address_pcq').text('');
                         }
@@ -304,15 +221,6 @@
             },300);
         });
 
-        form.on('select(type)',function(data){
-            let val = data.value;
-            console.log(val);
-            if(val==0){
-                $('.type1').hide();
-            }else if(val==1){
-                $('.type1').show();
-            }
-        });
 
         form.on('submit(component-form-menu2)', function(data){
             layer.load();
@@ -330,7 +238,7 @@
                             // let currentUrl = new URL(parent.location.href);
                             // currentUrl.searchParams.set('tab', 'shop_head_menu');
                             // parent.history.pushState({}, '', currentUrl.toString());
-                            window.history.back(-1);
+                            parent.location.reload();
                         }
                     });
                 },

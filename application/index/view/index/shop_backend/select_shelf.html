@@ -45,7 +45,7 @@
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {border-color: var(--primary);outline: none;}
-        .form-group textarea {min-height: 120px;resize: vertical;}
+        .form-group textarea {min-height: 60px;resize: vertical;}
         .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
 
 
@@ -57,10 +57,18 @@
         .form-group select:focus {border-color: var(--primary);outline: none;}
         .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
 
+        .layui-form-label{width:90px !important;}
         .disf{display: flex;align-items: center;}
         xm-select:hover{border-color:var(--primary) !important;}
         .xm-option.selected,.xm-label-block{background:var(--primary) !important;}
 
+        /*返回按钮*/
+        .backDiv{padding: 5px 5px 5px 20px;border-bottom: 1px solid #d9d9d9;}
+        .backDiv .backBox{display: flex;align-items: center;cursor: pointer;}
+        .backDiv .back_icon{font-size: 18px;color: #333;margin-right: 10px;position: relative;}
+        .backDiv .back_icon:before{content:'';position:absolute;width:9px;height:9px;border-left:2px solid #000;border-top:2px solid #000;transform:rotate(-45deg);margin-right:5px;top:-7px;}
+        .backDiv .back_text{font-size: 16px;color: #333;font-weight: 500;margin-left: 5px;}
+        
         /* 动画 */
         @keyframes fadeIn {
             from {opacity: 0;transform: translateY(10px);}
@@ -75,6 +83,12 @@
     <link rel="stylesheet" href="layui/css/layui.css">
 </head>
 <body>
+<div class="backDiv">
+    <div class="backBox" onclick="javascript:window.history.back(-1);">
+        <div class="back_icon"></div>
+        <div class="back_text">返回</div>
+    </div>
+</div>
 <form class="layui-form" id="siteForm" action="" method="post" lay-filter="component-form-rotate" style="padding:0px;">
     <input type="hidden" name="company_id" value="{$company_id}">
     <input type="hidden" name="company_type" value="{$company_type}">
@@ -197,6 +211,64 @@
                 </div>
             </div>
         </div>
+        
+        <div class="layui-form-item">
+            <div class="layui-form-label">选择终端</div>
+            <div class="layui-input-block">
+                <select name="printer_id" id="printer_id" lay-filter="printer_id" lay-search lay-verify="required">
+                    <option value="">请选择终端</option>
+                    {volist name="list.terminal" id="vo"}
+                    <option value="{$vo['id']}" {if $list['goods']['express_info']['printer_id']==$vo['id']}selected{/if}>{$vo['printer_name']}</option>
+                    {/volist}
+                </select>
+            </div>
+        </div>
+        
+        <!--显示终端下的快递面单信息（快递企业和快递产品类型）-->
+        <table class="layui-table express_table">
+            <thead>
+                <th>快递名称</th>
+                <th>快递产品</th>
+                <th style="width:160px;">支付方式</th>
+                <th>卖家备注</th>
+                <th>操作</th>
+            </thead>
+            <tbody>
+                {if !empty($list['goods']['express_info'])}
+                    {volist name="list['express']" key="key" id="vo1"}
+                        <tr>
+                            <td>{$vo1['name']}</td>
+                            <td>{$vo1['express_type']}</td>
+                            <td>
+                                <select name="express_paytype[]" lay-verify="required">
+                                    {if isset($list['goods']['express_info']['express_info'][$key-1]['express_paytype'])}
+                                        <option value="1" {if $list['goods']['express_info']['express_info'][$key-1]['express_paytype']==1}selected{/if}>寄方月结</option>
+                                        <option value="2" {if $list['goods']['express_info']['express_info'][$key-1]['express_paytype']==2}selected{/if}>寄方付款</option>
+                                        <option value="3" {if $list['goods']['express_info']['express_info'][$key-1]['express_paytype']==3}selected{/if}>收方到付</option>
+                                    {else}
+                                        <option value="1">寄方月结</option>
+                                        <option value="2">寄方付款</option>
+                                        <option value="3">收方到付</option>
+                                    {/if}
+                                </select>
+                            </td>
+                            <td>
+                                <textarea class="layui-textarea" name="express_remark[]" placeholder="卖家发货备注信息">{if isset($list['goods']['express_info']['express_info'][$key-1]['express_paytype'])}{if $vo1['id']==$list['goods']['express_info']['express_info'][$key-1]['express_id']}{$list['goods']['express_info']['express_info'][$key-1]['express_remark']}{/if}{/if}</textarea>
+                            </td>
+                            <td>
+                                {if isset($list['goods']['express_info']['express_info'][$key-1]['express_paytype'])}
+                                    <input type="checkbox" name="express_id[]" lay-skin="primary" value="{$list['goods']['express_info']['express_info'][$key-1]['express_id']}" title="选择" {if $vo1['id']==$list['goods']['express_info']['express_info'][$key-1]['express_id']}checked{/if}>
+                                {else}
+                                    <input type="checkbox" name="express_id[]" lay-skin="primary" value="{$vo1['id']}" title="选择">
+                                {/if}
+                            </td>
+                        </tr>
+                    {/volist}
+                {/if}
+            </tbody>
+        </table>
+        
+        
     </div>
 
     <div class="form-actions">
@@ -218,6 +290,43 @@
             ,element = layui.element
             ,colorpicker = layui.colorpicker;
 
+        //选择终端
+        form.on('select(printer_id)',function(data){
+            let val = data.value;
+            
+            $.ajax({
+                url:"/?s=index/get_terminal_express",
+                method:'post',
+                data:{terminal_id:val,'is_merchant':1},
+                dataType:'JSON',
+                success:function(res){
+                    let html = '';
+                    if(res.code==0 && res.data.length>0){
+                        
+                        //快递信息
+                        for(let i=0;i<res.data.length;i++){
+                            html += '<tr>\n'+
+                                    '<td>'+res.data[i].express_name+'</td>\n'+
+                                    '<td>'+res.data[i].express_type+'</td>\n'+
+                                    '<td>\n'+
+                                    '    <select name="express_paytype[]" lay-verify="required">\n'+
+                                    '           <option value="1">寄方月结</option>\n'+
+                                    '           <option value="2">寄方付款</option>\n'+
+                                    '           <option value="3">收方到付</option>\n'+
+                                    '    </select>\n'+
+                                    '</td>\n'+
+                                    '<td><textarea class="layui-textarea" name="express_remark[]" placeholder="卖家发货备注信息"></textarea></td>\n'+
+                                    '<td><input type="checkbox" name="express_id[]" lay-skin="primary" data-express_type_id="'+res.data[i].id+'" value="'+res.data[i].id+'" title="选择"></td>\n'+
+                                '</tr>';
+                        }
+                        
+                        $('.express_table').find('tbody').append(html);
+                        form.render(null,'component-form-rotate');
+                    }
+                }
+            });
+        });
+
         form.on('submit(component-form-rotate)', function(data){
             layer.load();
             $.ajax({
@@ -230,7 +339,7 @@
                     layer.msg(res.msg,{time:3000}, function () {
                         if(res.code == 0)
                         {
-                            parent.location.reload();
+                            window.history.back(-1);
                         }
                     });
                 },

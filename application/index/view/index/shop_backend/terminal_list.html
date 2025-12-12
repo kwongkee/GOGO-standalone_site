@@ -28,7 +28,6 @@
         .content-header {display: flex;justify-content: space-between;align-items: center;margin-bottom: 25px;padding-bottom: 15px;border-bottom: 1px solid #eee;}
         .content-title {font-size: 1.5rem;color: var(--primary-dark);}
         .btn{background:var(--primary-light);color: white;border: none;white-space:nowrap;}
-        .btn-warning {background: #f8ac59;color: white;border: none;}
         .btn-print {background: #009688;color: white;border: none;}
         .btn-print:hover {background: #009688;}
         .btn-edit {background: var(--primary-light);color: white;border: none;}
@@ -57,9 +56,22 @@
         .layui-btn-container{display: flex;}
         .btnHide-1{display:none;}
         .channel-actions {display: flex;gap: 10px;}
+        
+        /*返回按钮*/
+        .backDiv{padding: 5px 5px 5px 20px;border-bottom: 1px solid #d9d9d9;}
+        .backDiv .backBox{display: flex;align-items: center;cursor: pointer;}
+        .backDiv .back_icon{font-size: 18px;color: #333;margin-right: 10px;position: relative;}
+        .backDiv .back_icon:before{content:'';position:absolute;width:9px;height:9px;border-left:2px solid #000;border-top:2px solid #000;transform:rotate(-45deg);margin-right:5px;top:-7px;}
+        .backDiv .back_text{font-size: 16px;color: #333;font-weight: 500;margin-left: 5px;}
     </style>
 </head>
 <body>
+<div class="backDiv">
+    <div class="backBox" onclick="javascript:window.history.back(-1);">
+        <div class="back_icon"></div>
+        <div class="back_text">返回</div>
+    </div>
+</div>
 <div class="row">
     <div class="col-sm-12">
         <div class="ibox float-e-margins">
@@ -67,34 +79,29 @@
                 <div id="toolbar" class="btn-group" style="margin-top: 10px;margin-bottom: 10px;line-height: 34px;">
                     <button type="button" onclick="save(1);" class="btn btn-default">
                         <i class="fas fa-add"></i>
-                        添加仓库
+                        添加终端
                     </button>
                 </div>
                 <table id="table" class="layui-table">
                     <thead>
                     <tr>
-                        <th>仓库名称</th>
-                        <th>寄件人名称</th>
-                        <th>寄件人电话</th>
-                        <th>寄件人地址</th>
+                        <th>终端名称</th>
+                        <th>终端类别</th>
                         <th>操作</th>
                     </tr>
                     </thead>
                     <tbody>
                     {if empty($list)}
                         <tr>
-                            <td colspan="5" style="text-align:center;">--暂无信息--</td>
+                            <td colspan="3" style="text-align:center;">--暂无信息--</td>
                         </tr>
                     {else}
                         {volist name="list" id="vo"}
                             <tr>
-                                <td>{$vo['warehouse_name']}</td>
-                                <td>{$vo['name']}</td>
-                                <td>{$vo['tel']}</td>
-                                <td>{$vo['address']}</td>
+                                <td>{$vo['terminal_name']}</td>
+                                <td>{$vo['terminal_type']}</td>
                                 <td>
                                     <div class="channel-actions">
-                                        <button class="channel-btn btn-warning btn" onclick="terminal({$vo['id']})"><i class="fas fa-eye"></i> 终端列表</button>
                                         <button class="channel-btn btn-edit btn" onclick="edit({$vo['id']})"><i class="fas fa-edit"></i> 编辑</button>
                                         <button class="channel-btn btn-delete btn" onclick="del_component({$vo['id']})"><i class="fas fa-trash"></i> 删除</button>
                                     </div>
@@ -149,7 +156,7 @@
 
     function save(type) {
         if(type==1){
-            window.location.href="/?s=index/save_warehouse&company_id={$company_id}&company_type={$company_type}";
+            window.location.href="/?s=index/save_terminal&company_id={$company_id}&company_type={$company_type}&warehouse_id={$warehouse_id}";
             
             // var modal = document.getElementById('saveMenuModal');
             // modal.style.display = 'flex';
@@ -157,34 +164,23 @@
         }
     }
 
-    //仓库编辑
+    //终端编辑
     function edit(id,name=''){
-        window.location.href="/?s=index/save_warehouse&company_id={$company_id}&company_type={$company_type}&id="+id;
+        window.location.href="/?s=index/save_terminal&company_id={$company_id}&company_type={$company_type}&id="+id;
         
         // var modal = document.getElementById('saveMenuModal');
         // modal.style.display = 'flex';
         // $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_warehouse&company_id={$company_id}&company_type={$company_type}&id='+id);
     }
-    
-    //终端列表
-    function terminal(id){
-        var layer = layui.layer,$ = layui.$;
-        
-        window.location.href="/?s=index/terminal_list&company_id={$company_id}&company_type={$company_type}&warehouse_id="+id;
-        
-        // var modal = document.getElementById('saveMenuModal');
-        // modal.style.display = 'flex';
-        // $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_printer&company_id={$company_id}&company_type={$company_type}&id='+id);
-    }
 
     //仓库删除
     function del_component(id,name=''){
         var layer = layui.layer,$ = layui.$;
-        layer.confirm('确认要删除该仓库？', {
+        layer.confirm('确认要删除该终端？', {
             btn: ['删除','取消']
         }, function(){
             $.ajax({
-                url:"/?s=index/del_warehouse",
+                url:"/?s=index/del_terminal",
                 type:"GET",
                 dataType:"json",
                 data:{id:id},

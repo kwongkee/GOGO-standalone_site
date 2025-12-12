@@ -72,6 +72,55 @@
             "install-path": "../graham-campbell/result-type"
         },
         {
+            "name": "hejunjie/china-division",
+            "version": "v1.0.5",
+            "version_normalized": "1.0.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zxc7563598/php-china-division.git",
+                "reference": "d1c91ca5c2cc4927c2840b993d768b1c8935d0a6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zxc7563598/php-china-division/zipball/d1c91ca5c2cc4927c2840b993d768b1c8935d0a6",
+                "reference": "d1c91ca5c2cc4927c2840b993d768b1c8935d0a6",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "time": "2025-10-30T01:11:25+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Hejunjie\\ChinaDivision\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "何俊杰",
+                    "email": "junjie.he.925@gmail.com"
+                }
+            ],
+            "description": "定期更新，全国最新省市区划分数据，身份证号码解析地址，支持 Composer 安装与版本控制，适用于表单选项、数据校验、地址解析等场景 | Regularly updated dataset of China's administrative divisions with ID-card address parsing. Distributed via Composer and versioned for use in forms, validation, and address-related features",
+            "support": {
+                "issues": "https://github.com/zxc7563598/php-china-division/issues",
+                "source": "https://github.com/zxc7563598/php-china-division/tree/v1.0.5"
+            },
+            "install-path": "../hejunjie/china-division"
+        },
+        {
             "name": "phpoption/phpoption",
             "version": "1.9.3",
             "version_normalized": "1.9.3.0",

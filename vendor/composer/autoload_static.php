@@ -32,6 +32,10 @@ class ComposerStaticInitb5112a5369dc90dc910b671c90147030
         array (
             'PhpOption\\' => 10,
         ),
+        'H' => 
+        array (
+            'Hejunjie\\ChinaDivision\\' => 23,
+        ),
         'G' => 
         array (
             'GrahamCampbell\\ResultType\\' => 26,
@@ -70,6 +74,10 @@ class ComposerStaticInitb5112a5369dc90dc910b671c90147030
         'PhpOption\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpoption/phpoption/src/PhpOption',
+        ),
+        'Hejunjie\\ChinaDivision\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/hejunjie/china-division/src',
         ),
         'GrahamCampbell\\ResultType\\' => 
         array (

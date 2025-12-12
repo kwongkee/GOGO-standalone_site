@@ -194,17 +194,12 @@
                 success:function(res){
                     if(res.code == 0)
                     {
-                        // var index = layer.open({
-                        //     type: 2,
-                        //     title: '管理上架【'+name+'】',
-                        //     content: '/?s=merchant/select_shelf&id='+id,
-                        //     area:['100%','100%']
-                        // });
+                        window.location.href="/?s=index/select_shelf&company_id={$company_id}&company_type={$company_type}&type={$type}&id="+url;
 
-                        var modal = document.getElementById('saveMenuModal');
-                        modal.style.display = 'flex';
+                        // var modal = document.getElementById('saveMenuModal');
+                        // modal.style.display = 'flex';
 
-                        $('#saveMenuModal .menu_iframe').attr('src','/?s=index/select_shelf&company_id={$company_id}&company_type={$company_type}&type={$type}&id='+url);
+                        // $('#saveMenuModal .menu_iframe').attr('src','/?s=index/select_shelf&company_id={$company_id}&company_type={$company_type}&type={$type}&id='+url);
                     }
                     else{
                         layer.msg(res.msg,{time:2000}, function () {

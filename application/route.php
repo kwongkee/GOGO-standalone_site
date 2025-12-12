@@ -40,6 +40,10 @@ Route::any('index/website_basic', 'index/Index/website_basic');#企业网店-店
 Route::any('index/warehouse_manage', 'index/Index/warehouse_manage');#企业网店-仓库管理
 Route::any('index/save_warehouse', 'index/Index/save_warehouse');#企业网店-保存仓库
 Route::any('index/del_warehouse', 'index/Index/del_warehouse');#企业网店-删除仓库
+Route::any('index/terminal_list', 'index/Index/terminal_list');#企业网店-终端列表
+Route::any('index/save_terminal', 'index/Index/save_terminal');#企业网店-保存选择终端
+Route::any('index/get_terminal_express', 'index/Index/get_terminal_express');#企业网店-获取终端支持的快递
+Route::any('index/del_terminal', 'index/Index/del_terminal');#企业网店-删除终端
 Route::any('index/shop_head_menu', 'index/Index/shop_head_menu');#企业网店-页头菜单管理
 Route::any('index/save_shop_menu', 'index/Index/save_shop_menu');#企业网店-保存页头菜单
 Route::any('index/del_shop_menu', 'index/Index/del_shop_menu');#企业网店-删除页头菜单
