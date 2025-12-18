@@ -136,7 +136,7 @@
                     <tr>
                         <td>{$vo.express_name}</td>
                         <td>{$vo.express_type}</td>
-                        <td><input type="checkbox" name="express_id[]" lay-skin="primary" value="{$vo.id}" {if in_array($vo.id,$data.express_id)}checked{/if}></td>
+                        <td><input type="checkbox" name="express_id[]" lay-skin="primary" value="{$vo.id}" {if in_array($vo.id,$data.express_id)}checked{/if} title="选择"></td>
                     </tr>
                 {/volist}
             {/if}
@@ -182,6 +182,9 @@
                 success:function(res){
                     let html = '';
                     if(res.code==0 && res.data.length>0){
+                         $('.terminal_info').html("");
+                        $('.express_table').find('tbody').html("");
+                        
                         //终端信息
                         let info_html = '<div class="layui-form-item">'+
                             '<div class="layui-form-label">终端类别</div>'+
@@ -194,7 +197,7 @@
                             html += '<tr>'+
                                     '<td>'+res.data[i].express_name+'</td>'+
                                     '<td>'+res.data[i].express_type+'</td>'+
-                                    '<td><input type="checkbox" name="express_id[]" lay-skin="primary" data-express_type_id="'+res.data[i].id+'" value="'+res.data[i].id+'"></td>'+
+                                    '<td><input type="checkbox" name="express_id[]" lay-skin="primary" data-express_type_id="'+res.data[i].id+'" value="'+res.data[i].id+'" title="选择"></td>'+
                                 '</tr>';
                         }
                         

@@ -362,87 +362,106 @@
                 </div>
                 <div class="layui-tab-item {if $page_type==2}layui-show{/if}">
                     <!--物流支撑start-->
-                    <div class="layui-form-item domestic_logistics_div">
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">国内配送</label>
-                            <div class="layui-input-block" style="margin-left:30px !important;">
-                                <table class="layui-table domestic_table">
-                                    <thead>
-                                    <th class="w150">区域名称</th>
-                                    <th>区域行政</th>
-                                    <th class="w120">操作</th>
-                                    </thead>
-                                    <tbody>
-                                    <tr>
-                                        <td>
-                                            <input type="text" class="layui-input" name="domestic_logistics[name][]" placeholder="区域名称">
-                                        </td>
-                                        <td>
-                                            <div class="domestic_area disf">
-                                                <div class="area1"></div>
-                                                <div class="area2"></div>
-                                                <div class="area3"></div>
-                                                <div class="area4"></div>
-                                                <div class="area5"></div>
-                                                <div class="area6"></div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="disf">
-                                                <div class="layui-btn layui-btn-md layui-btn-normal addbtn" onclick="add_domestic_area(this)">+</div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
                     <div class="info_div">
-                        <div class="layui-form-item cross_delivery">
-                            <label class="layui-form-label">跨境配送</label>
+                        <div class="layui-form-item support_logistics">
+                            <label class="layui-form-label">物流支撑</label>
                             <div class="layui-input-block">
 
                             </div>
                         </div>
                     </div>
-                    
+                    <div class="layui-form-item domestic_logistics_div">
+                        <div class="layui-input-block" style="margin-left:70px !important;">
+                            <table class="layui-table domestic_table">
+                                <thead>
+                                <th class="w150">区域名称</th>
+                                <th>区域行政</th>
+                                <th class="w120">操作</th>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>
+                                        <input type="text" class="layui-input" name="domestic_logistics[name][]" placeholder="区域名称">
+                                    </td>
+                                    <td>
+                                        <div class="domestic_area disf">
+                                            <div class="area1"></div>
+                                            <div class="area2"></div>
+                                            <div class="area3"></div>
+                                            <div class="area4"></div>
+                                            <div class="area5"></div>
+                                            <div class="area6"></div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="disf">
+                                            <div class="layui-btn layui-btn-md layui-btn-normal addbtn" onclick="add_domestic_area(this)">+</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                     <div class="foreign_logistics_div" style="display: none;">
                         <div class="layui-form-item">
                             <label class="layui-form-label">集运方式</label>
                             <div class="layui-input-block">
                                 <div class="disf">
-                                    <div class="gather_method" style="display: flex; gap: 20px; align-items: center;">
-                                        <input type="checkbox" name="gather_method[]" value="1" title="平台集运" lay-filter="gather_method">
-                                        <input type="checkbox" name="gather_method[]" value="2" title="自主集运" lay-filter="gather_method" checked>
+                                    <div class="gather_method">
+                                        <select name="gather_method" id="gather_method" lay-filter="gather_method">
+                                            <option value="1">平台集运</option>
+                                            <option value="2">自主集运</option>
+                                        </select>
+                                    </div>
+                                    <div class="support_export" style="display: none;">
+                                        <select name="support_export" id="support_export" lay-filter="support_export">
+                                            <option value="">请选择</option>
+                                            <option value="1">支持</option>
+                                            <option value="2">不支持</option>
+                                        </select>
+                                    </div>
+                                    <div class="nosupport_export" style="display: none;">
+                                        <select name="nosupport_export" id="nosupport_export" lay-filter="nosupport_export">
+                                            <option value="">请选择</option>
+                                            <option value="1">由平台集运</option>
+                                            <option value="2">不提供集运</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <!--平台集运可选平台线路-->
-                        <div class="platform_gather_lines" style="display: none; margin-top: 15px;">
-                            <div class="layui-form-item">
-                                <label class="layui-form-label">平台集运线路</label>
-                                <div class="layui-input-block">
-                                    <div class="lines_table_div" style="max-height: 300px; overflow-y: auto; border: 1px solid #e6e6e6; border-radius: 5px; padding: 10px;">
-                                        <table class="layui-table" style="margin: 0;">
-                                            <thead>
-                                                <tr>
-                                                    <th style="width: 40px;">选择</th>
-                                                    <th>线路名称</th>
-                                                    <th>线路代码</th>
-                                                    <th>线路渠道</th>
-                                                    <th>操作</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="platform_lines_tbody">
-                                                <!-- 线路数据将通过JS动态加载 -->
-                                                <tr><td colspan="4" style="text-align: center; color: #999;">暂无可用线路</td></tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="layui-form-mid layui-word-aux" style="margin-top: 5px;">请选择平台提供的集运线路</div>
-                                </div>
+
+                        <div class="layui-form-item support_gather_div" style="display: none;">
+                            <label class="layui-form-label">支持集运国家</label>
+                            <div class="layui-input-block">
+                                <table class="layui-table gather_table">
+                                    <thead>
+                                    <th class="w150">选择洲</th>
+                                    <th class="w150">选择国家</th>
+                                    <th>选择邮编</th>
+                                    <th class="w120">操作</th>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>
+                                            <select name="gather_zhou[]" lay-filter="gather_zhou">
+                                                <option value="">请选择</option>
+                                                {volist name="type['zhou']" id="vo"}
+                                                <option value="{$vo['id']}">{$vo['param1']}</option>
+                                                {/volist}
+                                            </select>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td>
+                                            <div class="disf">
+                                                <div class="layui-btn layui-btn-md layui-btn-normal addbtn" onclick="add_gather_country(this)">+</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -2199,12 +2218,14 @@
             let val = data.value;
 
             if(val==1){
-                //支持跨境配送
-                $('.foreign_logistics_div').show();
+                //国内配送
+                $('.domestic_logistics_div').show();
+                $('.foreign_logistics_div').hide();
             }
             else if(val==2){
-                //不支持跨境配送
-                $('.foreign_logistics_div').hide();
+                //跨境配送
+                $('.domestic_logistics_div').hide();
+                $('.foreign_logistics_div').show();
             }
         });
 
@@ -2213,92 +2234,69 @@
             let val = data.value;
             let t = this;
 
-            if(val!='' && val!='all'){
+            if(val!=''){
                 layer.load();
                 $.post('/?s=index/getarea',{'val':val,'type':2},function(res) {
                     layer.closeAll('loading');
 
                     get_area(res,2,t);
-                    
-                    $(t).parents(":eq(4)").find('.area3').html('');
-                    $(t).parents(":eq(4)").find('.area4').html('');
-                    $(t).parents(":eq(4)").find('.area5').html('');
-                    $(t).parents(":eq(4)").find('.area6').html('');
+                    $(t).parents(":eq(3)").find('.area3').html('');
+                    $(t).parents(":eq(3)").find('.area4').html('');
+                    $(t).parents(":eq(3)").find('.area5').html('');
+                    $(t).parents(":eq(3)").find('.area6').html('');
                 });
-            }
-            else if(val=='all'){
-                $(t).parents(":eq(4)").find('.area2').html('');
-                $(t).parents(":eq(4)").find('.area3').html('');
-                $(t).parents(":eq(4)").find('.area4').html('');
-                $(t).parents(":eq(4)").find('.area5').html('');
-                $(t).parents(":eq(4)").find('.area6').html('');
             }
         });
         form.on('select(area2)',function(data){
             let val = data.value;
             let t = this;
 
-            if(val!='' && val!='all'){
+            if(val!=''){
                 layer.load();
                 $.post('/?s=index/getarea',{'val':val,'type':2},function(res) {
                     layer.closeAll('loading');
 
                     get_area(res,3,t);
-                    $(t).parents(":eq(4)").find('.area4').html('');
-                    $(t).parents(":eq(4)").find('.area5').html('');
-                    $(t).parents(":eq(4)").find('.area6').html('');
+                    $(t).parents(":eq(3)").find('.area4').html('');
+                    $(t).parents(":eq(3)").find('.area5').html('');
+                    $(t).parents(":eq(3)").find('.area6').html('');
                 });
-            }
-            else if(val=='all'){
-                $(t).parents(":eq(4)").find('.area3').html('');
-                $(t).parents(":eq(4)").find('.area4').html('');
-                $(t).parents(":eq(4)").find('.area5').html('');
-                $(t).parents(":eq(4)").find('.area6').html('');
             }
         });
         form.on('select(area3)',function(data){
             let val = data.value;
             let t = this;
 
-            if(val!='' && val!='all'){
+            if(val!=''){
                 layer.load();
                 $.post('/?s=index/getarea',{'val':val,'type':2},function(res) {
                     layer.closeAll('loading');
 
                     get_area(res,4,t);
-                    $(t).parents(":eq(4)").find('.area5').html('');
-                    $(t).parents(":eq(4)").find('.area6').html('');
+                    $(t).parents(":eq(3)").find('.area5').html('');
+                    $(t).parents(":eq(3)").find('.area6').html('');
                 });
-            }
-            else if(val=='all'){
-                $(t).parents(":eq(4)").find('.area4').html('');
-                $(t).parents(":eq(4)").find('.area5').html('');
-                $(t).parents(":eq(4)").find('.area6').html('');
             }
         });
         form.on('select(area4)',function(data){
             let val = data.value;
             let t = this;
 
-            if(val!='' && val!='all'){
+            if(val!=''){
                 layer.load();
                 $.post('/?s=index/getarea',{'val':val,'type':2},function(res) {
                     layer.closeAll('loading');
 
                     get_area(res,5,t);
-                    $(t).parents(":eq(4)").find('.area6').html('');
+                    $(t).parents(":eq(3)").find('.area6').html('');
                 });
-            }
-            else if(val=='all'){
-                $(t).parents(":eq(4)").find('.area5').html('');
-                $(t).parents(":eq(4)").find('.area6').html('');
             }
         });
         form.on('select(area5)',function(data){
             let val = data.value;
             let t = this;
 
-            if(val!='' && val!='all'){
+            if(val!=''){
                 layer.load();
                 $.post('/?s=index/getarea',{'val':val,'type':2},function(res) {
                     layer.closeAll('loading');
@@ -2306,36 +2304,144 @@
                     get_area(res,6,t);
                 });
             }
-            else if(val=='all'){
-                $(t).parents(":eq(4)").find('.area6').html('');
-            }
         });
         //国内配送========================================end
-        
+
         //跨境配送========================================start
-        // 监听集运方式复选框变化
-        form.on('checkbox(gather_method)', function(data){
+        form.on('select(gather_method)',function(data){
             let val = data.value;
-            let checked = data.elem.checked;
-            
-            if(val == 1 && checked){
-                // 平台集运被选中
-                $('.platform_gather_lines').show();
-                
-                // 加载平台线路信息
-                loadPlatformLines();
-            } else if(val == 1 && !checked){
-                // 平台集运取消选中
-                $('.platform_gather_lines').hide();
+
+            if(val==1){
+                //由平台集运
+                $('.support_export').hide();
+                $('.nosupport_export').hide();
+                $('.support_gather_div').hide();
             }
-            
-            if(val == 2 && checked){
-                // 自主集运被选中
-                $('.platform_gather_lines').show();
-            } else if((val == 2 && !checked) || $('input[name="gather_method[]"][value="1"]').prop('checked') == false){
-                // 如果没有选中任何集运方式，默认选中自主集运
-                $('input[name="gather_method[]"][value="2"]').prop('checked', true);
-                form.render('checkbox');
+            else if(val==2){
+                //不提供集运
+                $('.support_export').show();
+                $('.nosupport_export').hide();
+                $('.support_gather_div').hide();
+            }
+        });
+
+        form.on('select(support_export)',function(data){
+            let val = data.value;
+
+            if(val==1){
+                $('.support_gather_div').show();
+                $('.nosupport_export').hide();
+            }
+            else if(val==2){
+                $('.nosupport_export').show();
+                $('.support_gather_div').hide();
+            }
+        });
+
+        form.on('select(nosupport_export)',function(data){
+            let val = data.value;
+
+            if(val==1){
+                //由平台集运
+                document.getElementById('gather_method').value = 1;
+                $('.support_export').hide();
+                $('.nosupport_export').hide();
+                $('.support_gather_div').hide();
+            }
+            else if(val==2){
+                //不提供集运
+                document.getElementById('service_type').value = 1;
+                $('.domestic_logistics_div').show();
+                $('.foreign_logistics_div').hide();
+
+            }
+            form.render('select');
+        });
+
+        //选洲
+        form.on('select(gather_zhou)',function(data){
+            let val = data.value;
+            let t = this;
+
+            if(val!=''){
+                layer.load();
+                $.post('/?s=index/getarea',{'val':val,'type':3},function(res) {
+                    layer.closeAll('loading');
+
+                    let html = '<select name="gather_country[]" lay-search lay-filter="gather_country">\n'+
+                        '           <option value="">请选择</option>\n';
+                    for(let i=0;i<res.data.length;i++){
+                        html += '<option value="'+res.data[i].id+'">'+res.data[i].param2+'</option>\n';
+                    }
+                    html += '</select>';
+
+                    $(t).parents(":eq(3)").find('td').eq(1).html(html);
+                    $(t).parents(":eq(3)").find('td').eq(2).html('');
+                    form.render(null,'component-form-group');
+                });
+            }
+        });
+
+        //选国家
+        form.on('select(gather_country)',function(data){
+            let val = data.value;
+            let t = this;
+            let idx = $(t).parents(":eq(3)").index();
+
+            if(val!=''){
+                layer.load();
+                $.post('/?s=index/getarea',{'val':val,'type':4},function(res) {
+                    layer.closeAll('loading');
+
+                    let html = '<div id="gather_postal'+idx+'" class="xm-select-demo w200" style="display: inline-block;"></div>';
+                    $(t).parents(":eq(3)").find('td').eq(2).html(html);
+                    form.render(null,'component-form-group');
+
+                    setTimeout(function(){
+                        xmSelect.render({
+                            el: '#gather_postal'+idx,
+                            autoRow: true, //自动换行
+                            filterable: true, //可搜索
+                            searchTips: '请搜索',
+                            radio: false,
+                            name: "gather_postal["+idx+"]",
+                            model: {
+                                icon: 'hidden',//是否展示复选框或者单选框图标 show, hidden:变换背景色  ！！这句话是重点，不然会变成父节点也有单选框！！
+                                label: {
+                                    type: 'block',
+                                    block: {
+                                        //最大显示数量, 0:不限制
+                                        showCount: 1,
+                                        //是否显示删除图标
+                                        showIcon: true,
+                                    }
+                                },
+                            },
+                            prop:{
+                                name: 'code_name',
+                                value: 'id',
+                            },
+                            tree: {
+                                show: true, //用树显示
+                                showFolderIcon: true, //是否显示节点前的三角图标
+                                expandedKeys: false, //默认全部展开
+                                showLine: true, //显示渐近线
+                                indent: 20, //间距
+                                strict: false, //重点！！设置成非严格父子模式，这样父节点被禁用，子节点依然可以点击
+                                clickCheck: true,
+                                vaguaSearch:0,//关闭模糊搜索
+                            },
+                            toolbar: {
+                                show: true, //显示工具条
+                                list: ['ALL', 'REVERSE', 'CLEAR']
+                            },
+                            height: '300px', //最大下拉框高度
+                            data: res.data,
+                            // data: res.data,
+                            initValue:[],
+                        });
+                    },1000);
+                });
             }
         });
         //跨境配送=========================================end
@@ -2598,68 +2704,6 @@
             return false;
         });
     });
-    
-    //查看线路信息
-    function view_line(line_id){
-        let layer = layui.layer,
-            $ = layui.$,
-            form = layui.form;
-            
-        var index = layer.open({
-            type: 2,
-            title: '线路详情',
-            area:['90%','90%'],
-            content: '/?s=index/view_line&id='+line_id
-        });
-    }
-    
-    // 加载平台线路信息
-    function loadPlatformLines(gather_lines='') {
-        let layer = layui.layer,
-            $ = layui.$,
-            form = layui.form;
-        
-        layer.load();
-        $.post('/?s=index/get_platform_lines',{'company_id':"{$company_id}",'company_type':"{$company_type}"}, function(res){
-            layer.closeAll('loading');
-            
-            if(res.code == 0 && res.data && res.data.length > 0){
-                let html = '';
-                res.data.forEach(function(line, index){
-                    html += '<tr>';
-                    html += '<td><input type="checkbox" name="platform_lines[]" value="' + line.id + '" lay-skin="primary"></td>';
-                    html += '<td>' + (line.name || '') + '</td>';
-                    html += '<td>' + (line.code || '') + '</td>';
-                    html += '<td>' + (line.channel_name || '') + '</td>';
-                    html += '<td> <div class="layui-btn layui-btn-primary layui-btn-xs" onclick="view_line('+line.id+')">查看</div> </td>';
-                    html += '</tr>';
-                });
-                $('#platform_lines_tbody').html(html);
-                
-                // ✅ 关键：解析 gather_lines 并选中对应项
-                const selectedIds = gather_lines.split(',').map(id => id.trim());
-                selectedIds.forEach(id => {
-                    $(`input[name="platform_lines[]"][value="${id}"]`).prop('checked', true);
-                });
-                
-                // 如果没有线路，禁用平台集运复选框
-                if(res.data.length === 0){
-                    $('input[name="gather_method[]"][value="1"]').prop('disabled', true);
-                    layer.msg('暂无平台集运线路，无法选择平台集运');
-                    $('.platform_gather_lines').hide();
-                } else {
-                    $('input[name="gather_method[]"][value="1"]').prop('disabled', false);
-                }
-            } else {
-                // 没有线路数据
-                $('#platform_lines_tbody').html('<tr><td colspan="4" style="text-align: center; color: #999;">暂无可用线路</td></tr>');
-                $('input[name="gather_method[]"][value="1"]').prop('disabled', true);
-                layer.msg('暂无平台集运线路，无法选择平台集运');
-                $('.platform_gather_lines').hide();
-            }
-            form.render('checkbox');
-        });
-    }
 
     //获取上一个商品的参数信息
     function get_lastinfo(){
@@ -2993,25 +3037,23 @@
                         }
                         $('.no_specs_div').find('.havespec_table').html(spec_table_html);
                     }
-    //商品型号=============================================================end
+                    //商品型号=============================================================end
 
     //物流支撑=============================================================start
-    //（'+res.data.country_name+'）
     let support_logistics_html = '<select name="service_type" id="service_type" lay-filter="service_type">\n' +
-        '                                <option value="1">支持跨境配送</option>\n' +
-        '                                <option value="2">不支持跨境配送</option>\n' +
+        '                                <option value="1">支持（'+res.data.country_name+'）国内配送</option>\n' +
+        '                                <option value="2">支持（'+res.data.country_name+'）跨境配送</option>\n' +
         '                        </select>';
-    $('.cross_delivery').find('.layui-input-block').html(support_logistics_html);
+    $('.support_logistics').find('.layui-input-block').html(support_logistics_html);
     if(res.data['goods']['service_type']==0){
-        $('.cross_delivery').find('#service_type').val(1);//默认选择第一个
+        $('.support_logistics').find('#service_type').val(1);//默认选择第一个
     }else{
-        $('.cross_delivery').find('#service_type').val(res.data['goods']['service_type']);
+        $('.support_logistics').find('#service_type').val(res.data['goods']['service_type']);
     }
 
     //国内行政区域
     domestic_area_html = '<select name="domestic_logistics[area1][]" lay-search lay-filter="area1">\n' +
-        '                             <option value="">请选择</option>\n'+
-        '                             <option value="all">全选</option>';
+        '                             <option value="">请选择</option>\n';
     for(let i=0;i<res.data.addr.length;i++) {
         domestic_area_html += '       <option value="'+res.data.addr[i].id+'">'+res.data.addr[i].code_name+'</option>\n';
     }
@@ -3026,14 +3068,14 @@
     }
     otherFeesArea_html += '   </select>';
 
-    
-    //国内配送
-    $('.domestic_logistics_div').show();
+    if(res.data['goods']['service_type']==1){
+        //国内配送
+        $('.domestic_logistics_div').show();
+        $('.foreign_logistics_div').hide();
 
-    if(res.data['goods']['domestic_logistics']!='' && res.data['goods']['domestic_logistics']!=null){
         //其他费用的区域触发
         domestic_areas_name = res.data['goods']['domestic_logistics']['name'];
-    
+
         let domestic_html = '<thead>\n' +
             '                                        <th class="w150">区域名称</th>\n' +
             '                                        <th>区域行政</th>\n' +
@@ -3047,7 +3089,7 @@
                 '                                            <td>\n' +
                 '                                                <div class="domestic_area disf">\n' +
                 '                                                    <div class="area1">\n';
-    
+
             if(res.data['goods']['domestic_logistics']['areas'][i]['area1'] != ''){
                 domestic_html+='<input name="domestic_logistics[area1][]" type="hidden" value="'+res.data['goods']['domestic_logistics']['areas'][i]['area1']['id']+'">\n'+
                     res.data['goods']['domestic_logistics']['areas'][i]['area1']['code_name'];
@@ -3055,54 +3097,53 @@
             else{
                 domestic_html+=domestic_area_html;
             }
-    
+
             domestic_html+='                                     </div>\n' +
                 '                                                    <div class="area2">\n';
-    
+
             if(res.data['goods']['domestic_logistics']['areas'][i]['area2'] != ''){
                 domestic_html+='<input name="domestic_logistics[area2][]" type="hidden" value="'+res.data['goods']['domestic_logistics']['areas'][i]['area2']['id']+'">\n'+
                     res.data['goods']['domestic_logistics']['areas'][i]['area2']['code_name'];
             }
-    
+
             domestic_html+='                                                    </div>\n' +
                 '                                                    <div class="area3">\n';
-    
+
             if(res.data['goods']['domestic_logistics']['areas'][i]['area3'] != ''){
                 domestic_html+='<input name="domestic_logistics[area3][]" type="hidden" value="'+res.data['goods']['domestic_logistics']['areas'][i]['area3']['id']+'">\n'+
                     res.data['goods']['domestic_logistics']['areas'][i]['area3']['code_name'];
             }
-    
+
             domestic_html+='                                                    </div>\n' +
                 '                                                    <div class="area4">\n';
-    
+
             if(res.data['goods']['domestic_logistics']['areas'][i]['area4'] != ''){
                 domestic_html+='<input name="domestic_logistics[area4][]" type="hidden" value="'+res.data['goods']['domestic_logistics']['areas'][i]['area4']['id']+'">\n'+
                     res.data['goods']['domestic_logistics']['areas'][i]['area4']['code_name'];
             }
-    
+
             domestic_html+='                                                        </div>\n' +
                 '                                                    <div class="area5">\n';
-    
+
             if(res.data['goods']['domestic_logistics']['areas'][i]['area5'] != ''){
                 domestic_html+='<input name="domestic_logistics[area5][]" type="hidden" value="'+res.data['goods']['domestic_logistics']['areas'][i]['area5']['id']+'">\n'+
                     res.data['goods']['domestic_logistics']['areas'][i]['area5']['code_name'];
             }
-    
+
             domestic_html+='                                                    </div>\n' +
                 '                                                    <div class="area6">\n';
-    
+
             if(res.data['goods']['domestic_logistics']['areas'][i]['area6'] != ''){
                 domestic_html+='<input name="domestic_logistics[area6][]" type="hidden" value="'+res.data['goods']['domestic_logistics']['areas'][i]['area6']['id']+'">\n'+
                     res.data['goods']['domestic_logistics']['areas'][i]['area6']['code_name'];
             }
-    
+
             domestic_html+='                                         </div>\n' +
                 '                                                </div>\n' +
                 '                                            </td>\n' +
                 '                                            <td>\n' +
                 '                                                <div class="disf">\n';
             if(i==0){
-                domestic_html+='                                          <div class="layui-btn layui-btn-md layui-btn-danger delbtn" onclick="del_domestic_area(this,0)">-</div>\n';
                 domestic_html+='                                          <div class="layui-btn layui-btn-md layui-btn-normal addbtn" onclick="add_domestic_area(this)">+</div>\n';
             }
             else {
@@ -3115,30 +3156,80 @@
         }
         $('.domestic_logistics_div').find('.domestic_table').html(domestic_html);
     }
-    
-    if(res.data['goods']['service_type']==1){
-        //支持跨境配送
-        let foreign_html = '';
-        $('.foreign_logistics_div').show();
-        for(let i=0;i<res.data['goods']['gather_method'].length;i++){
-            if(res.data['goods']['gather_method'][i]==2){
-                //自主集运
-                $('input[name="gather_method[]"][value="2"]').prop('checked', true);
-            }
-            else if(res.data['goods']['gather_method'][i]==1){
-                //平台集运
-                $('input[name="gather_method[]"][value="1"]').prop('checked', true);
-                //获取线路，并默认勾选上
-                loadPlatformLines(res.data['goods']['gather_lines']);
-                $('.platform_gather_lines').show();
-            }    
-        }
-    }
     else if(res.data['goods']['service_type']==2){
-        //不支持跨境配送
-        $('.foreign_logistics_div').hide();
-    }
-    //物流支撑=============================================================end
+        //跨境配送
+        let foreign_html = '';
+        $('.domestic_logistics_div').hide();
+        $('.foreign_logistics_div,.support_gather_div').show();
+        $('#gather_method').val(res.data['goods']['gather_method']);
+        $('#support_export').val(res.data['goods']['support_export']);
+        if(res.data['goods']['gather_method']==2){
+            $('.support_export').show();
+            $('.support_gather_div').hide();
+            if(res.data['goods']['support_export']==1){
+                $('.support_gather_div').show();
+            }
+        }
+        else if(res.data['goods']['gather_method']==1){
+            $('.support_export').hide();
+            $('.support_gather_div').hide();
+        }
+        if(res.data['goods']['support_export']==1){
+            if(res.data['goods']['gather_countrys']!=null){
+                for(let i=0;i<res.data['goods']['gather_countrys']['areas'].length;i++){
+                    foreign_html += '<tr>\n' +
+                        '                                                <td>\n' +
+                        '                                                    <input name="gather_zhou[]" type="hidden" value="'+res.data['goods']['gather_countrys']['areas'][i]['area1']['id']+'">'+res.data['goods']['gather_countrys']['areas'][i]['area1']['param1']+
+                        '                                                </td>\n' +
+                        '                                                <td>\n' +
+                        '                                                    <input name="gather_country[]" type="hidden" value="'+res.data['goods']['gather_countrys']['areas'][i]['area2']['id']+'">'+res.data['goods']['gather_countrys']['areas'][i]['area2']['param2']+
+                        '                                                </td>\n' +
+                        '                                                <td style="text-align:center;">\n' +
+                        '                                                    <input name="gather_postal[]" type="hidden" value="'+res.data['goods']['gather_countrys']['gather_postal'][i]+'">\n';
+                    foreign_html+='<div style="max-width:800px;white-space: nowrap;text-overflow: ellipsis;overflow:hidden;margin:0 auto;">\n';
+                    for(let i2=0;i2<res.data['goods']['gather_countrys']['areas'][i]['area3'].length;i2++){
+                        foreign_html+=res.data['goods']['gather_countrys']['areas'][i]['area3'][i2]['code_name']+'、';
+                    }
+                    foreign_html+='</div>';
+                    foreign_html+='                                                </td>\n' +
+                        '                                                <td>\n' +
+                        '                                                    <div class="disf">\n';
+                    if(i==0){
+                        foreign_html+='                                                        <div class="layui-btn layui-btn-md layui-btn-normal addbtn" onclick="add_gather_country(this)">+</div>\n';
+                    }
+                    else{
+                        foreign_html+='                                                        <div class="layui-btn layui-btn-md layui-btn-danger delbtn" onclick="del_gather_country(this)">-</div>\n'+
+                            '                                                        <div class="layui-btn layui-btn-md layui-btn-normal addbtn" onclick="add_gather_country(this)">+</div>\n';
+                    }
+                    foreign_html+='                                      </div>\n' +
+                        '                                                </td>\n' +
+                        '                                            </tr>';
+                }
+            }
+            else{
+                foreign_html+='<tr>\n' +
+                    '                                                <td>\n' +
+                    '                                                    <select name="gather_zhou[]" lay-filter="gather_zhou">\n' +
+                    '                                                        <option value="">请选择</option>\n';
+                {volist name="type['zhou']" id="vo"}
+                foreign_html+='                                                     <option value="{$vo['id']}">{$vo['param1']}</option>\n';
+                {/volist}
+                    foreign_html+='                                          </select>\n' +
+                        '                                                </td>\n' +
+                        '                                                <td></td>\n' +
+                        '                                                <td></td>\n' +
+                        '                                                <td>\n' +
+                        '                                                    <div class="disf">\n' +
+                        '                                                        <div class="layui-btn layui-btn-md layui-btn-normal addbtn" onclick="add_gather_country(this)">+</div>\n' +
+                        '                                                    </div>\n' +
+                        '                                                </td>\n' +
+                        '                                            </tr>';
+                }
+                $('.support_gather_div').find('.gather_table').find('tbody').html(foreign_html);
+
+            }
+        }
+        //物流支撑=============================================================end
 
     //其它费用=============================================================start
     if(res.data['goods']['otherfees_content']!==null && res.data['goods']['otherfees_content']!==''){
@@ -5148,8 +5239,7 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
             }else if(typ==1){
                 area_html = '<select name="other_fees_area[area'+area_id+'][]" lay-search lay-verify="" lay-filter="otherfees_area'+area_id+'">\n';
             }
-            area_html+='                     <option value="">请选择</option>\n'+
-                    '                        <option value="all">全选</option>\n';
+            area_html+='                     <option value="">请选择</option>\n';
             for(let i=0;i<res.data.length;i++){
                 area_html += '<option value="'+res.data[i].id+'">'+res.data[i].code_name+'</option>\n';
             }
@@ -5189,38 +5279,59 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
         $('.domestic_logistics_div').find('.domestic_table').find('tbody').append(html);
         form.render(null,'component-form-group');
     }
-    function del_domestic_area(t,num){
+    function del_domestic_area(t){
         var $ = layui.$
             , layer = layui.layer
             , form = layui.form;
-    
+
         let close_idx = layer.confirm('确认要删除？', {
             btn: ['删除','取消']
         }, function(){
-            if(num==0){
-                //国内行政区域
-                domestic_area_html = '<select name="domestic_logistics[area1][]" lay-search lay-filter="area1">\n' +
-                    '                             <option value="">请选择</option>\n'+
-                    '                             <option value="all">全选</option>';
-                
-                {volist name="type['addr']" id="vo"}
-                    domestic_area_html += '       <option value="{$vo['id']}">{$vo['code_name']}</option>\n';
-                {/volist}
-                
-                domestic_area_html += '   </select>';
-                // $(t).parents(":eq(1)").find('td:eq(1)').find('.domestic_area').find('.area1').html('');
-                $(t).parents(":eq(2)").find('td:eq(1)').find('.domestic_area').find('.area1').html(domestic_area_html);
-                $(t).parents(":eq(2)").find('td:eq(1)').find('.domestic_area').find('.area2').html('');
-                $(t).parents(":eq(2)").find('td:eq(1)').find('.domestic_area').find('.area3').html('');
-                $(t).parents(":eq(2)").find('td:eq(1)').find('.domestic_area').find('.area4').html('');
-                $(t).parents(":eq(2)").find('td:eq(1)').find('.domestic_area').find('.area5').html('');
-                $(t).parents(":eq(2)").find('td:eq(1)').find('.domestic_area').find('.area6').html('');
-                layer.close(close_idx);
-                form.render(null,'component-form-group');
-            }else{
-                $(t).parents(":eq(2)").remove();
-                layer.close(close_idx);
-            }
+            $(t).parents(":eq(2)").remove();
+            layer.close(close_idx);
+        }, function(){
+
+        });
+    }
+
+    function add_gather_country(t){
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form;
+
+        let html = '<tr>\n' +
+            '           <td>\n' +
+            '               <select name="gather_zhou[]" lay-filter="gather_zhou">\n' +
+            '                       <option value="">请选择</option>\n';
+        {volist name="type['zhou']" id="vo"}
+        html += '               <option value="{$vo[\'id\']}">{$vo[\'param1\']}</option>\n';
+        {/volist}
+            html += '       </select>\n' +
+                '           </td>\n' +
+                '           <td></td>\n' +
+                '           <td></td>\n' +
+                '           <td>\n' +
+                '               <div class="disf">\n' +
+                '                    <div class="layui-btn layui-btn-md layui-btn-danger delbtn" onclick="del_gather_country(this)">-</div>\n'+
+                '                    <div class="layui-btn layui-btn-md layui-btn-normal addbtn" onclick="add_gather_country(this)">+</div>\n' +
+                '               </div>\n' +
+                '           </td>\n' +
+                '      </tr>';
+            $(t).parents(":eq(3)").append(html);
+
+            form.render(null,'component-form-group');
+        }
+
+    function del_gather_country(t){
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form;
+
+        let close_idx = layer.confirm('确认要删除？', {
+            btn: ['删除','取消']
+        }, function(){
+            $(t).parents(":eq(2)").remove();
+            layer.close(close_idx);
         }, function(){
 
         });

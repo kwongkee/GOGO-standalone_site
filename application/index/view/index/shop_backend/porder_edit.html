@@ -12,7 +12,7 @@
         html{height:100%;}
         :root {--primary: #8a2be2;--primary-dark: #6a1cb9;--primary-light: #9b4de3;--secondary: #bb86fc;--accent: #e6d7f5;--text: #333333;--text-light: #f8f8f8;--background: #f9f5fd;--card-bg: #ffffff;--gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));--gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary));--shadow: 0 10px 30px rgba(138, 43, 226, 0.15);--shadow-hover: 0 15px 35px rgba(138, 43, 226, 0.25);}
         * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
-        body {background-color: var(--background);color: var(--text);line-height: 1.6;overflow-x: hidden;background-image: radial-gradient(circle at 5% 10%, rgba(187, 134, 252, 0.1) 0%, transparent 20%), radial-gradient(circle at 95% 5%, rgba(187, 134, 252, 0.1) 0%, transparent 20%), radial-gradient(circle at 50% 90%, rgba(187, 134, 252, 0.1) 0%, transparent 20%);}
+        body {background-color: #fff;color: var(--text);line-height: 1.6;overflow-x: hidden;}
         h1, h2, h3, h4, h5, h6 {font-family: 'Montserrat', sans-serif;font-weight: 700;}
 
         /* 导航栏样式 */
@@ -62,8 +62,8 @@
         .layui-form-label{width: 100px;}
 
         /*自定义多选框样式======START*/
-        .xm-label-block,xm-select > .xm-body .xm-option.selected{background-color:{$website['color']} !important;color:{$website['color_word']} !important;}
-        xm-select .diy_search.active{border-color:{$website['color']} !important;color: {$website['color_word']} !important;background:{$website['color']} !important;}
+        .xm-label-block,xm-select > .xm-body .xm-option.selected{background-color:var(--primary) !important;color:#fff !important;}
+        xm-select .diy_search.active{border-color:var(--primary) !important;color: #fff !important;background:var(--primary) !important;}
         /*自定义多选框样式======END*/
         xm-select > .xm-body .xm-search > i{right:15px;}
 
@@ -100,7 +100,7 @@
 
     <div class="form-group" style="padding:10px;">
         <div class="layui-form-item">
-            <div class="layui-form-label">请选择</div>
+            <div class="layui-form-label">修改信息</div>
             <div class="layui-input-block">
                 <select name="edit_type" lay-filter="edit_type" lay-verify="required">
                     <option value="">请选择</option>
@@ -111,8 +111,8 @@
             </div>
         </div>
 
-        <div class="edit_sku">
-            <div class="layui-form-item">
+        <div class="edit_sku" style="display:none;">
+            <div class="layui-form-item" >
                 <div class="layui-form-label">商品规格</div>
                 <div class="layui-input-block">
                     <div class="origin_data disf">
@@ -131,7 +131,7 @@
             </div>
         </div>
 
-        <div class="edit_services">
+        <div class="edit_services"  style="display:none;">
             {if $origin_services['reduction_money']>0}
             <div class="layui-form-item">
                 <div class="layui-form-label">减免金额</div>
@@ -190,7 +190,7 @@
             {/if}
         </div>
 
-        <div class="edit_num">
+        <div class="edit_num"  style="display:none;">
             <div class="layui-form-item">
                 <div class="layui-form-label">商品数量</div>
                 <div class="layui-input-block">

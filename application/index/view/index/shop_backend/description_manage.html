@@ -89,7 +89,7 @@
     </style>
 </head>
 <body>
-<div class="form-group" style="padding:20px;">
+<div class="form-group" style="padding:0 20px 20px 20px;">
     <div id="toolbar" class="btn-group" style="margin-top: 10px;margin-bottom: 10px;line-height: 34px;">
         <button type="button" onclick="save(1,'/?s=index/save_description&company_type={$company_type}&company_id={$company_id}');" class="btn btn-default">
             <i class="fas fa-add"></i>
@@ -182,19 +182,20 @@
 
     function save(type,url) {
         var layer = layui.layer;
+        window.location.href = url;
         if(type==1){
             //轮播图
-            var modal = document.getElementById('saveMenuModal');
-            modal.style.display = 'flex';
+            // var modal = document.getElementById('saveMenuModal');
+            // modal.style.display = 'flex';
 
-            $('#saveMenuModal .menu_iframe').attr('src',url);
+            // $('#saveMenuModal .menu_iframe').attr('src',url);
         }else if(type==2){
-            var index = layer.open({
-                type: 2,
-                title: '管理分类',
-                content: url,
-                area:['100%','100%']
-            });
+            // var index = layer.open({
+            //     type: 2,
+            //     title: '管理分类',
+            //     content: url,
+            //     area:['100%','100%']
+            // });
         }
     }
 

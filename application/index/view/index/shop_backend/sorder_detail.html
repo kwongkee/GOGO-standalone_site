@@ -12,7 +12,7 @@
         html{height:100%;}
         :root {--primary: #8a2be2;--primary-dark: #6a1cb9;--primary-light: #9b4de3;--secondary: #bb86fc;--accent: #e6d7f5;--text: #333333;--text-light: #f8f8f8;--background: #f9f5fd;--card-bg: #ffffff;--gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));--gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary));--shadow: 0 10px 30px rgba(138, 43, 226, 0.15);--shadow-hover: 0 15px 35px rgba(138, 43, 226, 0.25);}
         * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
-        body {background-color: #fff;color: var(--text);line-height: 1.6;overflow-x: hidden;background-image: radial-gradient(circle at 5% 10%, rgba(187, 134, 252, 0.1) 0%, transparent 20%), radial-gradient(circle at 95% 5%, rgba(187, 134, 252, 0.1) 0%, transparent 20%), radial-gradient(circle at 50% 90%, rgba(187, 134, 252, 0.1) 0%, transparent 20%);}
+        body {background-color: #fff;color: var(--text);line-height: 1.6;overflow-x: hidden;}
         h1, h2, h3, h4, h5, h6 {font-family: 'Montserrat', sans-serif;font-weight: 700;}
 
         /* 导航栏样式 */
@@ -74,6 +74,13 @@
         .close-modal:hover {color: var(--primary);}
         .modal-title {font-size: 1.5rem;margin-bottom: 20px;color: var(--primary);}
 
+        /*返回按钮*/
+        .backDiv{padding: 5px 5px 5px 20px;border-bottom: 1px solid #d9d9d9;}
+        .backDiv .backBox{display: flex;align-items: center;cursor: pointer;}
+        .backDiv .back_icon{font-size: 18px;color: #333;margin-right: 10px;position: relative;}
+        .backDiv .back_icon:before{content:'';position:absolute;width:9px;height:9px;border-left:2px solid #000;border-top:2px solid #000;transform:rotate(-45deg);margin-right:5px;top:-7px;}
+        .backDiv .back_text{font-size: 16px;color: #333;font-weight: 500;margin-left: 5px;}
+        
         /* 动画 */
         @keyframes fadeIn {
             from {opacity: 0;transform: translateY(10px);}
@@ -87,6 +94,12 @@
     </style>
 </head>
 <body>
+<div class="backDiv">
+    <div class="backBox" onclick="javascript:window.history.back(-1);">
+        <div class="back_icon"></div>
+        <div class="back_text">返回</div>
+    </div>
+</div>
 <form class="layui-form" id="siteForm" action="" method="post" lay-filter="component-form-group" style="padding:10px;">
     <input type="hidden" name="company_id" value="{$company_id}">
     <input type="hidden" name="company_type" value="{$company_type}">
@@ -113,13 +126,12 @@
                 <table class="layui-table">
                     <thead>
                         <th>商品名称</th>
-                        <th>商品图片</th>
-                        <th></th>
+                        <th colspan="2">商品图片</th>
                     </thead>
                     <tbody>
                         <tr>
                             <td>{$cart['goods_info']['goods_name']}</td>
-                            <td colspan="2" align="center"><img loading="lazy" alt="GOGO198 網站圖片" src="{$cart['goods_info']['goods_image']}" alt="" style="width:200px;height:200px;max-width:200px;"></td>
+                            <td colspan="2" align="center"><img loading="lazy" alt="GOGO198 網站圖片" src="{$cart['goods_info']['goods_image']}" alt="" style="width:100px;height:100px;max-width:100px;"></td>
                         </tr>
                     </tbody>
                     <thead>

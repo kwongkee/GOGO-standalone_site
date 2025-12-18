@@ -104,7 +104,7 @@
         </div>
     </div>
     
-    <div class="warehouse_info">
+    <div class="warehouse_info" style="border-bottom: 1px solid #ddd;margin-bottom: 10px;">
         
     </div>
     
@@ -119,28 +119,90 @@
     </div>
 
     <div class="type1" style="display:{if $data['type']==1}block{else}none{/if};">
-        <div class="layui-form-item">
-            <div class="layui-form-label">国家地区</div>
-            <div class="layui-input-block">
-                <select name="country_code" id="country_id" lay-filter="country_id" lay-search>
-                    <option value="">请选择国家地区</option>
-                    {volist name="country" id="vo"}
-                    <option value="{$vo['id']}" {if $data['country_code']==$vo['id']}selected{/if} data-pre_tel="{$vo['param8']}">{$vo['param2']}</option>
-                    {/volist}
-                </select>
+        <div class="info_divs">
+            <div class="layui-form-item">
+                <div class="layui-form-label">邮政编码</div>
+                <div class="layui-input-block">
+                    <div class="disf">
+                        <div class="select_box">
+                            <select name="country_code" id="country_id" lay-filter="country_id" lay-search>
+                                <option value="">请选择国家地区</option>
+                                {volist name="country" id="vo"}
+                                <option value="{$vo['id']}" {if $data['country_code']==$vo['id']}selected{/if} data-pre_tel="{$vo['param8']}">{$vo['param2']}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                        <div class="select_box">
+                            <select name="have_postal_code" id="have_postal_code" lay-filter="have_postal_code" lay-search>
+                                <option value="1" {if $data['have_postal_code']==1}selected{/if}>有邮政编码</option>
+                                <option value="2" {if $data['have_postal_code']==2}selected{/if}>无邮政编码</option>
+                            </select>
+                        </div>
+                        <input type="text" class="layui-input" name="postal_code" id="postal_code" value="{$data['postal_code']}" placeholder="请输入邮政编码" style="display:{if $data['have_postal_code']==1}block{else}none{/if};">
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="layui-form-item">
-            <div class="layui-form-label">邮政编码</div>
+        
+        <div class="layui-form-item select_pcd" style="display:{if $data['have_postal_code']==1}none{else}block{/if};">
+            <div class="layui-form-label">选择区域</div>
             <div class="layui-input-block">
-                <input type="text" class="layui-input" name="postal_code" id="postal_code" value="{$data['postal_code']}" placeholder="请输入邮政编码">
+                <div class="disf">
+                    {if $data['have_postal_code']==2}
+                        {if !empty($data['province_list'])}
+                            <select name="province_code" lay-search lay-filter="province_code">
+                                <option value="">请选择</option>
+                                {volist name="data['province_list']" id="vo"}
+                                    <option value="{$vo['id']}" {if $vo['id']==$data['province_code']}selected{/if}>{$vo['name']}</option>
+                                {/volist}
+                            </select>
+                        {/if}
+
+                        {if !empty($data['city_list'])}
+                            <select name="city_code" lay-search lay-filter="city_code">
+                                <option value="">请选择</option>
+                                {volist name="data['city_list']" id="vo"}
+                                <option value="{$vo['id']}" {if $vo['id']==$data['city_code']}selected{/if}>{$vo['name']}</option>
+                                {/volist}
+                            </select>
+                        {/if}
+
+                        {if !empty($data['district_list'])}
+                            <select name="district_code" lay-search lay-filter="district_code">
+                                <option value="">请选择</option>
+                                {volist name="data['district_list']" id="vo"}
+                                <option value="{$vo['id']}" {if $vo['id']==$data['district_code']}selected{/if}>{$vo['name']}</option>
+                                {/volist}
+                            </select>
+                        {/if}
+
+                        {if !empty($data['town_list'])}
+                            <select name="town_code" lay-search lay-filter="town_code">
+                                <option value="">请选择</option>
+                                {volist name="data['town_list']" id="vo"}
+                                <option value="{$vo['id']}" {if $vo['id']==$data['town_code']}selected{/if}>{$vo['name']}</option>
+                                {/volist}
+                            </select>
+                        {/if}
+
+                        {if !empty($data['village_list'])}
+                            <select name="village_code" lay-search lay-filter="village_code">
+                                <option value="">请选择</option>
+                                {volist name="data['village_list']" id="vo"}
+                                <option value="{$vo['id']}" {if $vo['id']==$data['village_code']}selected{/if}>{$vo['name']}</option>
+                                {/volist}
+                            </select>
+                        {/if}
+                    {/if}
+                </div>
             </div>
         </div>
+        
         <div class="layui-form-item">
             <div class="layui-form-label">详细地址</div>
             <div class="layui-input-block">
                 <input type="text" name="pre_address" id="address_pcq" class="layui-input" value="{$data['pre_address']}" style="display:none;"/>
-                <span class="address_pcq pre_box" style="font-size:15px;margin-right:0px;">{$data['pre_address']}</span>
+                <span class="address_pcq pre_box" style="font-size:15px;margin-right:0px;display:{if $data['have_postal_code']==1}block{else}none{/if};">{$data['pre_address']}</span>
                 <input type="text" class="layui-input" name="address1" value="{$data['address1']}" placeholder="请输入详细地址">
             </div>
         </div>
@@ -178,6 +240,10 @@
             ,upload = layui.upload
             ,colorpicker = layui.colorpicker;
 
+        {if $id>0}
+            get_warehouse_infos({$data['warehouse_id']});
+        {/if}
+
         //菜单弹窗关闭事件
         const modal = parent.document.getElementById('saveMenuModal');
         const cancelBtn = document.getElementById('cancelBtnMenu');
@@ -190,67 +256,7 @@
         //选择仓库显示其信息
         form.on('select(warehouse_id)',function(data){
             let val = data.value;
-            $.ajax({
-                url: "https://shop.gogo198.cn/collect_website/public/?s=api/func/get_warehouse_info",
-                method: 'post',
-                data: {'id': val},
-                dataType: 'JSON',
-                timeout: 10000,
-                success: function (res) {
-                    if(res.code==0){
-                        let html = '<table class="layui-table">\n'+
-                        '<tr>\n'+
-                        '    <td>仓库名称：</td>\n'+
-                        '    <td>'+res.data.warehouse_name+'</td>\n'+
-                        '    <td>仓库简称：</td>\n'+
-                        '    <td>'+res.data.warehouse_code+'</td>\n'+
-                        '</tr>\n'+
-                        '<tr>\n'+
-                        '    <td>仓库描述：</td>\n'+
-                        '    <td>'+res.data.desc+'</td>\n'+
-                        '    <td>仓库图片：</td>\n'+
-                        '    <td>\n';
-                        for(let i=0;i<res.data.pic.length;i++){
-                        html += '    <img src="'+res.data.pic[i]+'" onclick="javascript:window.open(\''+res.data.pic[i]+'\');" style="width:50px;height:50px;display:inline-block;margin-right:5px;margin-bottom:5px;cursor:pointer;"/>\n';
-                        }
-                        html+='    </td>\n'+
-                        '</tr>\n'+
-                        '<tr>\n'+
-                        '    <td>仓储类别：</td>\n'+
-                        '    <td>'+res.data.warehouse_type+'</td>\n'+
-                        '    <td>仓储结构：</td>\n'+
-                        '    <td>'+res.data.warehouse_structure+'</td>\n'+
-                        '</tr>\n'+
-                        '<tr>\n'+
-                        '    <td>运营模式：</td>\n'+
-                        '    <td>'+res.data.warehouse_mode+'</td>\n'+
-                        '    <td>仓储温度：</td>\n'+
-                        '    <td>'+res.data.warehouse_temperature+'</td>\n'+
-                        '</tr>\n'+
-                        '<tr>\n'+
-                        '    <td>仓库设备：</td>\n'+
-                        '    <td>'+res.data.warehouse_equipment+'</td>\n'+
-                        '    <td>邮政编码：</td>\n'+
-                        '    <td>'+res.data.postal_code+'</td>\n'+
-                        '</tr>\n'+
-                        '<tr>\n'+
-                        '    <td>详细地址：</td>\n'+
-                        '    <td>'+res.data.country_name+res.data.pre_address+res.data.address1+'</td>\n'+
-                        '    <td>收件人名称：</td>\n'+
-                        '    <td>'+res.data.name+'</td>\n'+
-                        '</tr>\n'+
-                        '<tr>\n'+
-                        '    <td>联系电话：</td>\n'+
-                        '    <td>'+res.data.area_code+res.data.mobile+'</td>\n'+
-                        '    <td></td>\n'+
-                        '    <td></td>\n'+
-                        '</tr>\n'+
-                        '</table>';
-                        
-                        $('.warehouse_info').html(html);
-                    }
-                }
-            });
+            get_warehouse_infos(val);
         });
 
         //选择国地
@@ -259,6 +265,177 @@
             let pretel = $(data.elem).find('option:selected').data('pre_tel');
 
             $("#area_code").val(pretel);
+        });
+        
+        //选择“有”/“无”邮政编码
+        form.on('select(have_postal_code)',function(data){
+            let val = data.value;
+
+            if(val==1){
+                //无
+                $('#postal_code,.address_pcq').show();
+                $('.select_pcd').hide();
+            }
+            else if(val==2){
+                //有
+                $('#postal_code,.address_pcq').hide();
+                $('.select_pcd').show();
+
+                layer.load();
+                //获取省
+                let country_id = $('#country_id').val();
+                $.ajax({
+                    url: "https://shop.gogo198.cn/collect_website/public/?s=api/func/get_province",
+                    method: 'post',
+                    data: {'pid': 0, 'country_id': country_id},
+                    dataType: 'JSON',
+                    timeout: 10000,
+                    success: function (res) {
+                        layer.closeAll('loading');
+                        if(res.code==0){
+                            $('.select_pcd .disf').html("");
+                            let html = '<div class="select_box province_box">\n'+
+                                '<select name="province_code" lay-search lay-filter="province_select">\n'+
+                                '    <option value="">请选择省份</option>\n';
+                            for(let i=0;i<res.data.length;i++){
+                                html += '<option value="'+res.data[i].id+'">'+res.data[i].name+'</option>\n';
+                            }
+                            html += '</select>\n'+
+                                    '</div>';
+                            $('.select_pcd .disf').append(html);
+                            form.render(null,'component-form-menu');
+                        }
+                    }
+                });
+            }
+        });
+
+        //选择省
+        form.on('select(province_select)',function(data){
+            let val = data.value;
+
+            layer.load();
+            //获取城市
+            let country_id = $('#country_id').val();
+            $.ajax({
+                url: "https://shop.gogo198.cn/collect_website/public/?s=api/func/get_province",
+                method: 'post',
+                data: {'pid': val, 'country_id': country_id},
+                dataType: 'JSON',
+                timeout: 10000,
+                success: function (res) {
+                    layer.closeAll('loading');
+                    if(res.code==0){
+                        $('.select_pcd .disf').find('.city_box,.district_box,.town_box,.village_box').html("");
+                        let html = '<div class="select_box city_box">\n'+
+                            '<select name="city_code" lay-search lay-filter="city_select">\n'+
+                            '    <option value="">请选择城市</option>\n';
+                        for(let i=0;i<res.data.length;i++){
+                            html += '<option value="'+res.data[i].id+'">'+res.data[i].name+'</option>\n';
+                        }
+                        html += '</select>\n'+
+                            '</div>';
+                        $('.select_pcd .disf').append(html);
+                        form.render(null,'component-form-menu');
+                    }
+                }
+            });
+        });
+
+        //选择城市
+        form.on('select(city_select)',function(data){
+            let val = data.value;
+
+            layer.load();
+            //获取区县
+            let country_id = $('#country_id').val();
+            $.ajax({
+                url: "https://shop.gogo198.cn/collect_website/public/?s=api/func/get_province",
+                method: 'post',
+                data: {'pid': val, 'country_id': country_id},
+                dataType: 'JSON',
+                timeout: 10000,
+                success: function (res) {
+                    layer.closeAll('loading');
+                    if(res.code==0){
+                        $('.select_pcd .disf').find('.district_box,.town_box,.village_box').html("");
+                        let html = '<div class="select_box district_box">\n'+
+                            '<select name="district_code" lay-search lay-filter="district_select">\n'+
+                            '    <option value="">请选择区县</option>\n';
+                        for(let i=0;i<res.data.length;i++){
+                            html += '<option value="'+res.data[i].id+'">'+res.data[i].name+'</option>\n';
+                        }
+                        html += '</select>\n'+
+                            '</div>';
+                        $('.select_pcd .disf').append(html);
+                        form.render(null,'component-form-menu');
+                    }
+                }
+            });
+        });
+
+        //选择区县
+        form.on('select(district_select)',function(data){
+            let val = data.value;
+
+            layer.load();
+            //获取乡镇
+            let country_id = $('#country_id').val();
+            $.ajax({
+                url: "https://shop.gogo198.cn/collect_website/public/?s=api/func/get_province",
+                method: 'post',
+                data: {'pid': val, 'country_id': country_id},
+                dataType: 'JSON',
+                timeout: 10000,
+                success: function (res) {
+                    layer.closeAll('loading');
+                    if(res.code==0){
+                        $('.select_pcd .disf').find('.town_box,.village_box').html("");
+                        let html = '<div class="select_box town_box">\n'+
+                            '<select name="town_code" lay-search lay-filter="town_select">\n'+
+                            '    <option value="">请选择乡镇</option>\n';
+                        for(let i=0;i<res.data.length;i++){
+                            html += '<option value="'+res.data[i].id+'">'+res.data[i].name+'</option>\n';
+                        }
+                        html += '</select>\n'+
+                            '</div>';
+                        $('.select_pcd .disf').append(html);
+                        form.render(null,'component-form-menu');
+                    }
+                }
+            });
+        });
+
+        //选择乡镇
+        form.on('select(town_select)',function(data){
+            let val = data.value;
+
+            layer.load();
+            //获取居委
+            let country_id = $('#country_id').val();
+            $.ajax({
+                url: "https://shop.gogo198.cn/collect_website/public/?s=api/func/get_province",
+                method: 'post',
+                data: {'pid': val, 'country_id': country_id},
+                dataType: 'JSON',
+                timeout: 10000,
+                success: function (res) {
+                    layer.closeAll('loading');
+                    if(res.code==0){
+                        $('.select_pcd .disf').find('.village_box').html("");
+                        let html = '<div class="select_box village_box">\n'+
+                            '<select name="village_code" lay-search lay-filter="village_select">\n'+
+                            '    <option value="">请选择居委</option>\n';
+                        for(let i=0;i<res.data.length;i++){
+                            html += '<option value="'+res.data[i].id+'">'+res.data[i].name+'</option>\n';
+                        }
+                        html += '</select>\n'+
+                            '</div>';
+                        $('.select_pcd .disf').append(html);
+                        form.render(null,'component-form-menu');
+                    }
+                }
+            });
         });
 
         //监听邮政编码输入+防抖事件
@@ -341,5 +518,85 @@
             return false;
         });
     });
+    
+    function get_warehouse_infos(id){
+        var layer = layui.layer
+            ,form = layui.form
+            ,$ = layui.jquery;
+            
+        $.ajax({
+            url: "https://shop.gogo198.cn/collect_website/public/?s=api/func/get_warehouse_info",
+            method: 'post',
+            data: {'id': id},
+            dataType: 'JSON',
+            timeout: 10000,
+            success: function (res) {
+                if(res.code==0){
+                    let html = '<table class="layui-table">\n'+
+                    '<tr>\n'+
+                    '    <td>仓库名称：</td>\n'+
+                    '    <td>'+res.data.warehouse_name+'</td>\n'+
+                    '    <td>仓库简称：</td>\n'+
+                    '    <td>'+res.data.warehouse_code+'</td>\n'+
+                    '</tr>\n'+
+                    '<tr>\n'+
+                    '    <td>仓库描述：</td>\n'+
+                    '    <td>'+res.data.desc+'</td>\n'+
+                    '    <td>仓库图片：</td>\n'+
+                    '    <td>\n';
+                    for(let i=0;i<res.data.pic.length;i++){
+                    html += '    <img src="'+res.data.pic[i]+'" onclick="javascript:window.open(\''+res.data.pic[i]+'\');" style="width:50px;height:50px;display:inline-block;margin-right:5px;margin-bottom:5px;cursor:pointer;"/>\n';
+                    }
+                    html+='    </td>\n'+
+                    '</tr>\n'+
+                    '<tr>\n'+
+                    '    <td>仓储类别：</td>\n'+
+                    '    <td>'+res.data.warehouse_type+'</td>\n'+
+                    '    <td>仓储结构：</td>\n'+
+                    '    <td>'+res.data.warehouse_structure+'</td>\n'+
+                    '</tr>\n'+
+                    '<tr>\n'+
+                    '    <td>运营模式：</td>\n'+
+                    '    <td>'+res.data.warehouse_mode+'</td>\n'+
+                    '    <td>仓储温度：</td>\n'+
+                    '    <td>'+res.data.warehouse_temperature+'</td>\n'+
+                    '</tr>\n'+
+                    '<tr>\n'+
+                    '    <td>仓库设备：</td>\n'+
+                    '    <td>'+res.data.warehouse_equipment+'</td>\n';
+                    if(res.data.have_postal_code==1){
+                        html+='<td>邮政编码：</td>\n'+
+                        '    <td>'+res.data.postal_code+'</td>\n';
+                    }
+                    else if(res.data.have_postal_code==2){
+                        html+='<td>行政区域：</td>\n'+
+                        '    <td>'+res.data.country_name+res.data.province_name+res.data.city_name+res.data.district_name+res.data.town_name+res.data.village_name+'</td>\n';
+                    }
+                    html+='</tr>\n'+
+                    '<tr>\n'+
+                    '    <td>详细地址：</td>\n';
+                    if(res.data.have_postal_code==1){
+                        html+='    <td>'+res.data.country_name+res.data.pre_address+res.data.address1+'</td>\n';
+                    }
+                    else if(res.data.have_postal_code==2){
+                        html+='    <td>'+res.data.address1+'</td>\n';
+                    }
+                    
+                    html+='<td>收件人名称：</td>\n'+
+                    '    <td>'+res.data.name+'</td>\n'+
+                    '</tr>\n'+
+                    '<tr>\n'+
+                    '    <td>联系电话：</td>\n'+
+                    '    <td>'+res.data.area_code+res.data.mobile+'</td>\n'+
+                    '    <td></td>\n'+
+                    '    <td></td>\n'+
+                    '</tr>\n'+
+                    '</table>';
+                    
+                    $('.warehouse_info').html(html);
+                }
+            }
+        });
+    }
 </script>
 </html>

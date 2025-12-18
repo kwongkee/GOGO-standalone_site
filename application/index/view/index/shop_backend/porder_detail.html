@@ -12,7 +12,7 @@
         html{height:100%;}
         :root {--primary: #8a2be2;--primary-dark: #6a1cb9;--primary-light: #9b4de3;--secondary: #bb86fc;--accent: #e6d7f5;--text: #333333;--text-light: #f8f8f8;--background: #f9f5fd;--card-bg: #ffffff;--gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));--gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary));--shadow: 0 10px 30px rgba(138, 43, 226, 0.15);--shadow-hover: 0 15px 35px rgba(138, 43, 226, 0.25);}
         * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
-        body {background-color: #fff;color: var(--text);line-height: 1.6;overflow-x: hidden;background-image: radial-gradient(circle at 5% 10%, rgba(187, 134, 252, 0.1) 0%, transparent 20%), radial-gradient(circle at 95% 5%, rgba(187, 134, 252, 0.1) 0%, transparent 20%), radial-gradient(circle at 50% 90%, rgba(187, 134, 252, 0.1) 0%, transparent 20%);}
+        body {background-color: #fff;color: var(--text);line-height: 1.6;overflow-x: hidden;}
         h1, h2, h3, h4, h5, h6 {font-family: 'Montserrat', sans-serif;font-weight: 700;}
 
         /* 导航栏样式 */
@@ -74,6 +74,13 @@
         .close-modal:hover {color: var(--primary);}
         .modal-title {font-size: 1.5rem;margin-bottom: 20px;color: var(--primary);}
 
+        /*返回按钮*/
+        .backDiv{padding: 5px 5px 5px 20px;border-bottom: 1px solid #d9d9d9;}
+        .backDiv .backBox{display: flex;align-items: center;cursor: pointer;}
+        .backDiv .back_icon{font-size: 18px;color: #333;margin-right: 10px;position: relative;}
+        .backDiv .back_icon:before{content:'';position:absolute;width:9px;height:9px;border-left:2px solid #000;border-top:2px solid #000;transform:rotate(-45deg);margin-right:5px;top:-7px;}
+        .backDiv .back_text{font-size: 16px;color: #333;font-weight: 500;margin-left: 5px;}
+        
         /* 动画 */
         @keyframes fadeIn {
             from {opacity: 0;transform: translateY(10px);}
@@ -87,6 +94,12 @@
     </style>
 </head>
 <body>
+<div class="backDiv">
+    <div class="backBox" onclick="javascript:window.history.back(-1);">
+        <div class="back_icon"></div>
+        <div class="back_text">返回</div>
+    </div>
+</div>
 <form class="layui-form" id="siteForm" action="" method="post" lay-filter="component-form-group" style="padding:10px;">
     <input type="hidden" name="company_id" value="{$company_id}">
     <input type="hidden" name="company_type" value="{$company_type}">
@@ -104,8 +117,8 @@
                     <th class="ltd" width="25%">规格</th>
                     <th class="ltd" width="20%">数量</th>
                     <th class="ltd" width="20%">总价</th>
-                    {if($order['status']==-2 || $order['accept_type']==1)}
-                    <th class="ltd" width="10%">操作</th>
+                    {if $order['status']==-2 || $order['accept_type']==1}
+                        <th class="ltd" width="10%">操作</th>
                     {/if}
                     </thead>
                     <tbody id="tbody">
@@ -120,10 +133,10 @@
                                 <td class="ltd" width="25%">{$vo2['sku_info']['spec_names']}</td>
                                 <td class="ltd" width="20%">{$vo2['goods_num']}</td>
                                 <td class="ltd" width="20%">{$vo2['price']}</td>
-                                {if($order['status']==-2 || $order['accept_type']==1)}
-                                <td class="ltd" width="10%">
-                                    <div class="layui-btn layui-btn-warm layui-btn-xs" onclick="edit_sku({$vo['good_id']},{$goods_key},{$k},{$vo2['sku_id']},{$vo2['cart_id']})">修改</div>
-                                </td>
+                                {if $order['status']==-2 || $order['accept_type']==1}
+                                    <td class="ltd" width="10%">
+                                        <div class="layui-btn layui-btn-warm layui-btn-xs" onclick="edit_sku({$vo['good_id']},{$goods_key},{$k},{$vo2['sku_id']},{$vo2['cart_id']})">修改</div>
+                                    </td>
                                 {/if}
                             </tr>
                             <?php $num+=1;?>
@@ -136,322 +149,322 @@
 
                 <div class="layui-form-item">
                     <div class="layui-form-label">合计</div>
-                    <div class="layui-input-block disf">
+                    <div class="layui-input-block disf" style="line-height:36px;">
                         <div style="margin-right:10px;">{$goods_num}件</div>
                         <div>CNY {$order['true_money']}（含服务费用）</div>
                     </div>
                 </div>
 
-                <div class="layui-form-item">
-                    <div class="layui-form-label">收货信息</div>
-                    <div class="layui-input-block">
-                        {if !empty($address['address'])}
+                {if !empty($address['address'])}
+                    <div class="layui-form-item">
+                        <div class="layui-form-label">收货信息</div>
+                        <div class="layui-input-block">
                             <div>收货地址: {$address['address']}</div>
                             <div>邮编: {$address['postal']}</div>
                             <div>收件人: {$address['user_name']}</div>
                             <div>电话: {$address['area_mobile']} {$address['mobile']} {$address['mobile2']}</div>
                             <div>电邮: {$address['email']}</div>
                             {if $order['status']==-2}
-                            <div>
-                                <div class="layui-btn layui-btn-warm layui-btn-xs" onclick="edit_addr()">修改</div>
-                            </div>
+                                <div>
+                                    <div class="layui-btn layui-btn-warm layui-btn-xs" onclick="edit_addr()">修改</div>
+                                </div>
                             {/if}
+                        </div>
+                    </div>
+                {/if}
+            </div>
+        </fieldset>
+
+        {if ($order['status']==-2 && $order['type']==0 && $order['issend']==0) || $order['accept_type']==1}
+            <!--待确认-->
+            <div class="layui-form-item">
+                <div class="layui-form-label">{if $order['accept_type']==1}采购状态{else}订购状态{/if}</div>
+                <div class="layui-input-block inline">
+                    <select name="status" id="status" lay-verify="required">
+                        {if empty($order['odd_money']) && empty($order['edit_address'])}
+                            {if $order['accept_type']==0}
+                                <option value="1">{if $order['accept_type']==1}库存有货，立即发货{else}确认有货（无修改）{/if}</option>
+                            {/if}
+                        {else}
+                            <!--采购管理时，由于买家已支付了，到时候看看如何退款-->
+                            <option value="-9">{if $order['accept_type']==1}有货变更，更改订单{else}确认有货（有修改）{/if}</option>
                         {/if}
+                        {if $order['accept_type']==1}
+                            <option value="2">库存有货，立即发货</option>
+                        {/if}
+                        <option value="-4">{if $order['accept_type']==1}采购无货，取消退订{else}确认无货{/if}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item" style="margin-top: 25px;text-align: center;">
+                <div>
+                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="component-form-element2">保存信息</button>
+                </div>
+            </div>
+        {/if}
+
+        {if $order['status']==1 && $order['accept_type']==0}
+            <!--已付款，待采购-->
+            <div class="info_div">
+                <div class="layui-form-item">
+                    <div class="layui-form-label">接受采购</div>
+                    <div class="layui-input-block">
+                        <select name="accept_type" id="accept_type" lay-verify="required" lay-filter="accept_type">
+                            <option value="1">接受</option>
+                            <option value="2">退订</option>
+                        </select>
+                    </div>
+                </div>
+                {if $list['have_under']>0}
+                    <input type="hidden" name="have_under" value="{$list['have_under']}">
+                    <div class="layui-form-item data_origin_belong">
+                        <div class="layui-form-label">数据源归属</div>
+                        <div class="layui-input-block inline">
+                            <select name="company_id" id="company_id" lay-verify="" lay-filter="company_id" lay-search>
+                                <option value="">请选择要归属的下游</option>
+                                {volist name="list['under_merchant']" id="vo"}
+                                    <option value="{$vo['id']}">{$vo['company']}</option>
+                                {/volist}
+        <!--                        <option value="-1">暂无下游，配置下游</option>-->
+                            </select>
+                        </div>
+                    </div>
+                {/if}
+            </div>
+    
+            <div class="layui-form-item" style="margin-top: 25px;text-align: center;">
+                <div>
+                    <button class="layui-btn layui-btn-normal" lay-submit lay-filter="component-form-element2">保存信息</button>
+                </div>
+            </div>
+        {/if}
+
+        {if $order['accept_type']==2 && $order['status']==1}
+            <div class="info_div">
+                <div class="layui-form-item">
+                    <div class="layui-form-label">发货类型</div>
+                    <div class="layui-input-block inline">
+                        <select name="delivery_type" id="delivery_type" lay-verify="required" lay-filter="delivery_type">
+                            <option value="">请选择</option>
+                            <option value="1">直邮发货</option>
+                            <option value="2">集运发货</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item direct_ship">
+                    <div class="layui-form-label">发货方式</div>
+                    <div class="layui-input-block inline">
+                        <select name="direct_ship[delivery_method]" id="delivery_method">
+                            <option value="1">自主发货</option>
+                            <option value="2">上游代发</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item direct_ship">
+                    <div class="layui-form-label">物流公司</div>
+                    <div class="layui-input-block inline">
+                        <select name="direct_ship[express_id]" lay-search>
+                            <option value="">请选择</option>
+                            {volist name="list['express_company']" id="v"}
+                            <option value="{$v['id']}">{$v['param3']}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item direct_ship">
+                    <div class="layui-form-label">物流单号</div>
+                    <div class="layui-input-block inline">
+                        <input type="text" class="layui-input" name="direct_ship[express_no]" placeholder="请输入物流单号" value="">
+                    </div>
+                </div>
+                <div class="layui-form-item direct_ship">
+                    <div class="layui-form-label">收货地址</div>
+                    <div class="layui-input-block inline">
+                        <input type="text" class="layui-input" name="direct_ship[address]" placeholder="请输入收货地址" value="{$address['address']}">
+                    </div>
+                </div>
+                <div class="layui-form-item direct_ship">
+                    <div class="layui-form-label">收件人邮编</div>
+                    <div class="layui-input-block inline">
+                        <input type="text" class="layui-input" name="direct_ship[postal]" placeholder="请输入收件人邮编" value="{$address['postal']}">
+                    </div>
+                </div>
+                <div class="layui-form-item direct_ship">
+                    <div class="layui-form-label">收件人名称</div>
+                    <div class="layui-input-block inline">
+                        <input type="text" class="layui-input" name="direct_ship[user_name]" placeholder="请输入收件人名称" value="{$address['user_name']}">
+                    </div>
+                </div>
+                <div class="layui-form-item direct_ship">
+                    <div class="layui-form-label">收件人电话</div>
+                    <div class="layui-input-block inline">
+                        <div class="disf">
+                            <input type="text" class="layui-input" name="direct_ship[area_mobile]" placeholder="电话区号" value="{$address['area_mobile']}" style="width: 60px;">
+                            <input type="text" class="layui-input" name="direct_ship[mobile]" placeholder="请输入收件人电话1" value="{$address['mobile']}">
+                            <input type="text" class="layui-input" name="direct_ship[mobile2]" placeholder="请输入收件人电话2" value="{$address['mobile2']}">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item direct_ship">
+                    <div class="layui-form-label">收件人电邮</div>
+                    <div class="layui-input-block inline">
+                        <input type="text" class="layui-input" name="direct_ship[email]" placeholder="请输入收件人电邮" value="{$address['email']}">
                     </div>
                 </div>
             </div>
-        </fieldset>
-
-        {if(($order['status']==-2 && $order['type']==0 && $order['issend']==0) || $order['accept_type']==1)}
-        <!--待确认-->
-        <div class="layui-form-item">
-            <div class="layui-form-label">{if $order['accept_type']==1}采购状态{else}订购状态{/if}</div>
-            <div class="layui-input-block inline">
-                <select name="status" id="status" lay-verify="required">
-                    {if(empty($order['odd_money']) && empty($order['edit_address']))}
-                    {if($order['accept_type']==0)}
-                    <option value="1">{if $order['accept_type']==1}库存有货，立即发货{else}确认有货（无修改）{/if}</option>
-                    {/if}
-                    {else}
-                    <!--采购管理时，由于买家已支付了，到时候看看如何退款-->
-                    <option value="-9">{if $order['accept_type']==1}有货变更，更改订单{else}确认有货（有修改）{/if}</option>
-                    {/if}
-                    {if $order['accept_type']==1}
-                    <option value="2">库存有货，立即发货</option>
-                    {/if}
-                    <option value="-4">{if $order['accept_type']==1}采购无货，取消退订{else}确认无货{/if}</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="layui-form-item" style="margin-top: 25px;text-align: center;">
-            <div>
-                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="component-form-element2">保存信息</button>
-            </div>
-        </div>
-        {/if}
-
-        {if($order['status']==1 && $order['accept_type']==0)}
-        <!--已付款，待采购-->
-        <div class="info_div">
-            <div class="layui-form-item">
-                <div class="layui-form-label">接受采购</div>
-                <div class="layui-input-block inline">
-                    <select name="accept_type" id="accept_type" lay-verify="required" lay-filter="accept_type">
-                        <option value="1">接受</option>
-                        <option value="2">退订</option>
-                    </select>
-                </div>
-            </div>
-            {if($list['have_under']==0)}
-            <input type="hidden" name="have_under" value="{$list['have_under']}">
-            <div class="layui-form-item data_origin_belong">
-                <div class="layui-form-label">数据源归属</div>
-                <div class="layui-input-block inline">
-                    <select name="company_id" id="company_id" lay-verify="" lay-filter="company_id" lay-search>
-                        <option value="">请选择要归属的下游</option>
-                        {volist name="list['under_merchant']" id="vo"}
-                        <option value="{$vo['id']}">{$vo['company']}</option>
-                        {/volist}
-<!--                        <option value="-1">暂无下游，配置下游</option>-->
-                    </select>
-                </div>
-            </div>
-            {/if}
-        </div>
-
-        <div class="layui-form-item" style="margin-top: 25px;text-align: center;">
-            <div>
-                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="component-form-element2">保存信息</button>
-            </div>
-        </div>
-        {/if}
-
-        {if($order['accept_type']==2 && $order['status']==1)}
-        <div class="info_div">
-            <div class="layui-form-item">
-                <div class="layui-form-label">发货类型</div>
-                <div class="layui-input-block inline">
-                    <select name="delivery_type" id="delivery_type" lay-verify="required" lay-filter="delivery_type">
-                        <option value="">请选择</option>
-                        <option value="1">直邮发货</option>
-                        <option value="2">集运发货</option>
-                    </select>
-                </div>
-            </div>
-            <div class="layui-form-item direct_ship">
-                <div class="layui-form-label">发货方式</div>
-                <div class="layui-input-block inline">
-                    <select name="direct_ship[delivery_method]" id="delivery_method">
-                        <option value="1">自主发货</option>
-                        <option value="2">上游代发</option>
-                    </select>
-                </div>
-            </div>
-            <div class="layui-form-item direct_ship">
-                <div class="layui-form-label">物流公司</div>
-                <div class="layui-input-block inline">
-                    <select name="direct_ship[express_id]" lay-search>
-                        <option value="">请选择</option>
-                        {volist name="list['express_company']" id="v"}
-                        <option value="{$v['id']}">{$v['param3']}</option>
-                        {/volist}
-                    </select>
-                </div>
-            </div>
-            <div class="layui-form-item direct_ship">
-                <div class="layui-form-label">物流单号</div>
-                <div class="layui-input-block inline">
-                    <input type="text" class="layui-input" name="direct_ship[express_no]" placeholder="请输入物流单号" value="">
-                </div>
-            </div>
-            <div class="layui-form-item direct_ship">
-                <div class="layui-form-label">收货地址</div>
-                <div class="layui-input-block inline">
-                    <input type="text" class="layui-input" name="direct_ship[address]" placeholder="请输入收货地址" value="{$address['address']}">
-                </div>
-            </div>
-            <div class="layui-form-item direct_ship">
-                <div class="layui-form-label">收件人邮编</div>
-                <div class="layui-input-block inline">
-                    <input type="text" class="layui-input" name="direct_ship[postal]" placeholder="请输入收件人邮编" value="{$address['postal']}">
-                </div>
-            </div>
-            <div class="layui-form-item direct_ship">
-                <div class="layui-form-label">收件人名称</div>
-                <div class="layui-input-block inline">
-                    <input type="text" class="layui-input" name="direct_ship[user_name]" placeholder="请输入收件人名称" value="{$address['user_name']}">
-                </div>
-            </div>
-            <div class="layui-form-item direct_ship">
-                <div class="layui-form-label">收件人电话</div>
-                <div class="layui-input-block inline">
-                    <div class="disf">
-                        <input type="text" class="layui-input" name="direct_ship[area_mobile]" placeholder="电话区号" value="{$address['area_mobile']}" style="width: 60px;">
-                        <input type="text" class="layui-input" name="direct_ship[mobile]" placeholder="请输入收件人电话1" value="{$address['mobile']}">
-                        <input type="text" class="layui-input" name="direct_ship[mobile2]" placeholder="请输入收件人电话2" value="{$address['mobile2']}">
-                    </div>
-                </div>
-            </div>
-            <div class="layui-form-item direct_ship">
-                <div class="layui-form-label">收件人电邮</div>
-                <div class="layui-input-block inline">
-                    <input type="text" class="layui-input" name="direct_ship[email]" placeholder="请输入收件人电邮" value="{$address['email']}">
-                </div>
-            </div>
-        </div>
-        <fieldset class="layui-elem-field gather_delivery" style="display: none;">
-            <legend>填写入仓信息</legend>
-            <div class="layui-field-box">
-                <div class="layui-tab">
-                    <ul class="layui-tab-title">
-                        <li class="layui-this">入仓信息</li>
-                        <li>物品信息</li>
-                        <li>包裹信息</li>
-                    </ul>
-                    <div class="layui-tab-content">
-                        <div class="layui-tab-item layui-show">
-                            <div class="info_div">
-                                <div class="layui-form-item">
-                                    <div class="layui-form-label">集货仓库</div>
-                                    <div class="layui-input-block inline">
-                                        <select name="warehouse_id" id="warehouse_id" lay-verify="" lay-search lay-filter="warehouse_id">
-                                            <option value="">请选择</option>
-                                            {volist name="list['warehouse']" id="vo"}
-                                            <option value="{$vo['id']}">{$vo['warehouse_name']}</option>
-                                            {/volist}
-<!--                                            <option value="-1">暂无选择，配置仓库</option>-->
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="layui-form-item">
-                                    <div class="layui-form-label">送仓方式</div>
-                                    <div class="layui-input-block inline">
-                                        <div class="delivery_logistics">
-                                            <select name="delivery_logistics" id="delivery_logistics" lay-filter="delivery_logistics" lay-verify="">
-                                                <option value="1">物流到仓</option>
-                                                <option value="2">上门提货</option>
+            <fieldset class="layui-elem-field gather_delivery" style="display: none;">
+                <legend>填写入仓信息</legend>
+                <div class="layui-field-box">
+                    <div class="layui-tab">
+                        <ul class="layui-tab-title">
+                            <li class="layui-this">入仓信息</li>
+                            <li>物品信息</li>
+                            <li>包裹信息</li>
+                        </ul>
+                        <div class="layui-tab-content">
+                            <div class="layui-tab-item layui-show">
+                                <div class="info_div">
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">集货仓库</div>
+                                        <div class="layui-input-block inline">
+                                            <select name="warehouse_id" id="warehouse_id" lay-verify="" lay-search lay-filter="warehouse_id">
+                                                <option value="">请选择</option>
+                                                {volist name="list['warehouse']" id="vo"}
+                                                <option value="{$vo['id']}">{$vo['warehouse_name']}</option>
+                                                {/volist}
+    <!--                                            <option value="-1">暂无选择，配置仓库</option>-->
                                             </select>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="layui-form-item delivery1">
-                                    <div class="layui-form-label">送仓物流</div>
-                                    <div class="layui-input-block inline">
-                                        <div class="delivery_method">
-                                            <select name="delivery_method" id="delivery_method" lay-filter="delivery_method" lay-verify="">
-                                                <option value="">请选择送仓方式</option>
-                                                <option value="1">快递寄递</option>
-                                                <option value="2">物流运抵</option>
-                                                <option value="3">自送入仓</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="layui-form-item express1_2" style="display: none;">
-                                    <div class="layui-form-label">送仓物流</div>
-                                    <div class="layui-input-block inline">
-                                        <div class="express_info" style="display:flex;">
-                                            <div class="express_id">
-                                                <select name="express_id" id="express_id" lay-filter="express_id" lay-search>
-                                                    <option value="">请选择快递企业</option>
-                                                    {volist name="list['express_company']" id="v"}
-                                                    <option value="{$v['id']}">{$v['param3']}</option>
-                                                    {/volist}
+                                    <div class="layui-form-item">
+                                        <div class="layui-form-label">送仓方式</div>
+                                        <div class="layui-input-block inline">
+                                            <div class="delivery_logistics">
+                                                <select name="delivery_logistics" id="delivery_logistics" lay-filter="delivery_logistics" lay-verify="">
+                                                    <option value="1">物流到仓</option>
+                                                    <option value="2">上门提货</option>
                                                 </select>
                                             </div>
-                                            <input type="text" class="layui-input" name="express_no" placeholder="请输入物流单号" value="" lay-verify="">
                                         </div>
                                     </div>
-                                </div>
-                                <div class="layui-form-item express3" style="display:none;">
-                                    <div class="layui-form-label">入仓信息</div>
-                                    <div class="layui-input-block inline">
-                                        <div class="inwarehouse_info" style="display:flex;">
-                                            <input type="text" class="layui-input" name="inwarehouse_date" id="inwarehouse_date" value="" placeholder="请选择入仓日期">
-                                            <input type="text" class="layui-input" name="contact_name" placeholder="请输入入仓联系人" value="">
-                                            <input type="text" class="layui-input" name="contact_mobile" placeholder="请输入入仓联系电话" value="">
+                                    <div class="layui-form-item delivery1">
+                                        <div class="layui-form-label">送仓物流</div>
+                                        <div class="layui-input-block inline">
+                                            <div class="delivery_method">
+                                                <select name="delivery_method" id="delivery_method" lay-filter="delivery_method" lay-verify="">
+                                                    <option value="">请选择送仓方式</option>
+                                                    <option value="1">快递寄递</option>
+                                                    <option value="2">物流运抵</option>
+                                                    <option value="3">自送入仓</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item express1_2" style="display: none;">
+                                        <div class="layui-form-label">送仓物流</div>
+                                        <div class="layui-input-block inline">
+                                            <div class="express_info" style="display:flex;">
+                                                <div class="express_id">
+                                                    <select name="express_id" id="express_id" lay-filter="express_id" lay-search>
+                                                        <option value="">请选择快递企业</option>
+                                                        {volist name="list['express_company']" id="v"}
+                                                        <option value="{$v['id']}">{$v['param3']}</option>
+                                                        {/volist}
+                                                    </select>
+                                                </div>
+                                                <input type="text" class="layui-input" name="express_no" placeholder="请输入物流单号" value="" lay-verify="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-form-item express3" style="display:none;">
+                                        <div class="layui-form-label">入仓信息</div>
+                                        <div class="layui-input-block inline">
+                                            <div class="inwarehouse_info" style="display:flex;">
+                                                <input type="text" class="layui-input" name="inwarehouse_date" id="inwarehouse_date" value="" placeholder="请选择入仓日期">
+                                                <input type="text" class="layui-input" name="contact_name" placeholder="请输入入仓联系人" value="">
+                                                <input type="text" class="layui-input" name="contact_mobile" placeholder="请输入入仓联系电话" value="">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="layui-tab-item">
-                            <table class="layui-table fix-table">
-                                <thead align="center">
-                                <th class="ltd" width="25%">品名_规格</th>
-                                <th class="ltd" width="25%">商品属性</th>
-                                <th class="ltd" width="20%">商品数量</th>
-                                </thead>
-                                <tbody class="tbody">
-                                {volist name="goods" key="key" id="vo"}
-                                <?php $name = $vo['goods_info']['goods_name'];?>
-                                {volist name="vo.sku_info" key="k" id="vo2"}
-                                <tr>
-                                    <td>
-                                        <input type="hidden" class="layui-input" name="goods_sku[]" value="{$vo2['sku_id']}">
-                                        <input type="text" class="layui-input" name="goods_desc[]" value="{$name}_{$vo2['sku_info']['spec_names']}">
-                                    </td>
-                                    <td style="overflow:visible;">
-                                        <div class="xmvalue goods_item" style="width: 70%">
-                                            <div id="valueid{$k}" class="xm-select-demo"></div>
-                                        </div>
-                                    </td>
-                                    <td style="overflow:visible;">
-                                        <div class="disf">
-                                            <input type="number" name="goods_num[]" placeholder="物品数量" class="layui-input goods_item" value="{$vo2['goods_num']}">
-                                            <div class="goods_unit goods_item">
-                                                <select name="goods_unit[]" lay-search>
-                                                    <option value="">请选择单位</option>
-                                                    {volist name="list['unit']" id="vo"}
-                                                    <option value="{$vo['code_value']}">{$vo['code_name']}</option>
-                                                    {/volist}
-                                                </select>
+                            <div class="layui-tab-item">
+                                <table class="layui-table fix-table">
+                                    <thead align="center">
+                                    <th class="ltd" width="25%">品名_规格</th>
+                                    <th class="ltd" width="25%">商品属性</th>
+                                    <th class="ltd" width="20%">商品数量</th>
+                                    </thead>
+                                    <tbody class="tbody">
+                                    {volist name="goods" key="key" id="vo"}
+                                    <?php $name = $vo['goods_info']['goods_name'];?>
+                                    {volist name="vo.sku_info" key="k" id="vo2"}
+                                    <tr>
+                                        <td>
+                                            <input type="hidden" class="layui-input" name="goods_sku[]" value="{$vo2['sku_id']}">
+                                            <input type="text" class="layui-input" name="goods_desc[]" value="{$name}_{$vo2['sku_info']['spec_names']}">
+                                        </td>
+                                        <td style="overflow:visible;">
+                                            <div class="xmvalue goods_item" style="width: 70%">
+                                                <div id="valueid{$k}" class="xm-select-demo"></div>
                                             </div>
+                                        </td>
+                                        <td style="overflow:visible;">
+                                            <div class="disf">
+                                                <input type="number" name="goods_num[]" placeholder="物品数量" class="layui-input goods_item" value="{$vo2['goods_num']}">
+                                                <div class="goods_unit goods_item">
+                                                    <select name="goods_unit[]" lay-search>
+                                                        <option value="">请选择单位</option>
+                                                        {volist name="list['unit']" id="vo"}
+                                                        <option value="{$vo['code_value']}">{$vo['code_name']}</option>
+                                                        {/volist}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {/volist}
+                                    {/volist}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="layui-tab-item">
+                                <div class="info_div">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">包装材质</label>
+                                        <div class="layui-input-block inline disf">
+                                            <select name="package" id="package" lay-filter="package" lay-search>
+                                                <option value="">请选择包装材质</option>
+                                                <option value="裸装">裸装</option>
+                                                <option value="包装">包装</option>
+                                            </select>
+                                            <input type="text" class="layui-input package_name" name="package_name" placeholder="包装材质" value="" style="display:none;">
                                         </div>
-                                    </td>
-                                </tr>
-                                {/volist}
-                                {/volist}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="layui-tab-item">
-                            <div class="info_div">
-                                <div class="layui-form-item">
-                                    <label class="layui-form-label">包装材质</label>
-                                    <div class="layui-input-block inline disf">
-                                        <select name="package" id="package" lay-filter="package" lay-search>
-                                            <option value="">请选择包装材质</option>
-                                            <option value="裸装">裸装</option>
-                                            <option value="包装">包装</option>
-                                        </select>
-                                        <input type="text" class="layui-input package_name" name="package_name" placeholder="包装材质" value="" style="display:none;">
                                     </div>
-                                </div>
-                                <div class="layui-form-item">
-                                    <label class="layui-form-label">包裹毛重KG</label>
-                                    <div class="layui-input-block inline disf">
-                                        <input type="number" class="layui-input" name="grosswt" placeholder="请输入包裹毛重KG" value="">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">包裹毛重KG</label>
+                                        <div class="layui-input-block inline disf">
+                                            <input type="number" class="layui-input" name="grosswt" placeholder="请输入包裹毛重KG" value="">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="layui-form-item">
-                                    <label class="layui-form-label">包裹体积CM<br/>（长*宽*高）</label>
-                                    <div class="layui-input-block inline disf">
-                                        <input type="number" class="layui-input" name="long" value="" placeholder="长">X<input type="number" class="layui-input" name="width" value="" placeholder="宽">X<input type="number" class="layui-input" name="height" value="" placeholder="高">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">包裹体积CM<br/>（长*宽*高）</label>
+                                        <div class="layui-input-block inline disf">
+                                            <input type="number" class="layui-input" name="long" value="" placeholder="长">X<input type="number" class="layui-input" name="width" value="" placeholder="宽">X<input type="number" class="layui-input" name="height" value="" placeholder="高">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </fieldset>
+    
+            <div class="form-actions">
+                <!--        <button type="button" class="btn btn-outline" id="cancelBtn" style="background:transparent;border: 2px solid var(&#45;&#45;primary);color: var(&#45;&#45;primary);">取消</button>-->
+                <button type="submit" class="btn btn-primary" lay-submit lay-filter="component-form-element2">立即保存</button>
             </div>
-        </fieldset>
-
-        <div class="form-actions">
-            <!--        <button type="button" class="btn btn-outline" id="cancelBtn" style="background:transparent;border: 2px solid var(&#45;&#45;primary);color: var(&#45;&#45;primary);">取消</button>-->
-            <button type="submit" class="btn btn-primary" lay-submit lay-filter="component-form-element2">立即保存</button>
-        </div>
         {/if}
 </form>
 <!-- 添加轮播图·模态框 -->
@@ -467,6 +480,12 @@
 <script src="layui/layui.js"></script>
 <script src="./layui/xm-select.js"></script>
 <script>
+    function IsPhone() {
+        var info = navigator.userAgent;
+        var isPhone = /mobile/i.test(info);
+        return isPhone;
+    }
+    
     var area = ['50%', '80%'];
     if(IsPhone()){
         area = ['100%','100%'];
@@ -480,6 +499,8 @@
         var upload = layui.upload;
         var colorpicker = layui.colorpicker;
 
+        form.render(null,'component-form-element');
+        
         //菜单弹窗关闭事件===start
         const menu_modal = document.getElementById('saveMenuModal');
         const menu_closeBtn = document.querySelector('.close-modal-menu');
@@ -621,7 +642,7 @@
                     layer.msg(res.msg,{time:2000}, function () {
                         if(res.code == 0)
                         {
-                            parent.location.reload();
+                            window.history.back(-1);
                         }
                     });
                 },

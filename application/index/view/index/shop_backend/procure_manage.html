@@ -142,7 +142,7 @@
                 ,{field:'status_name', width:200, title: '状态'}
                 ,{field:'createtime', title: '创建时间'}
                 ,{ align:'center', fixed: 'right', title: '操作', templet: function(d){
-                        var strr = ['<a onclick="save(1,' + "'/?s=index/porder_detail&id="+ d.id +"'" + ');" class="layui-btn layui-btn-xs layui-btn-normal">查看订单</a>'];
+                        var strr = ['<a onclick="save(1,' + "'/?s=index/porder_detail&company_type={$company_type}&company_id={$company_id}&id="+ d.id +"'" + ');" class="layui-btn layui-btn-xs btn-edit btn"><i class="fas fa-edit"></i> 查看订单</a>'];
                         return strr.join('');
                     }}
             ]]
@@ -171,11 +171,11 @@
 
     function save(type,url) {
         if(type==1){
-            //轮播图
-            var modal = document.getElementById('saveMenuModal');
-            modal.style.display = 'flex';
+            window.location.href=url;
+        //     var modal = document.getElementById('saveMenuModal');
+        //     modal.style.display = 'flex';
 
-            $('#saveMenuModal .menu_iframe').attr('src',url);
+        //     $('#saveMenuModal .menu_iframe').attr('src',url);
         }
     }
 </script>
