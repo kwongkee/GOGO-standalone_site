@@ -89,7 +89,7 @@
 
 </head>
 <body>
-    <div class="form-group" style="padding:20px;">
+    <div class="form-group" style="padding:0px;">
         <table class="layui-hide" id="mainTable"></table>
     </div>
 
@@ -188,10 +188,11 @@
     function save(type,url) {
         if(type==1 || type==3){
             //轮播图
-            var modal = document.getElementById('saveMenuModal');
-            modal.style.display = 'flex';
+            window.location.href=url;
+            // var modal = document.getElementById('saveMenuModal');
+            // modal.style.display = 'flex';
 
-            $('#saveMenuModal .menu_iframe').attr('src',url);
+            // $('#saveMenuModal .menu_iframe').attr('src',url);
         }
     }
 

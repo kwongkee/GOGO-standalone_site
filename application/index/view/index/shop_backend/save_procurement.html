@@ -49,7 +49,9 @@
         .trush_box .trush{padding: 6px 6px;border: 1px solid #efefef;color: #6d6d6d;cursor: pointer;}
         .currency_symbol{font-size: 15px;}
         .amount{margin-left:5px;font-size: 15px;}
-
+        
+        .zdmx .layui-input-block{line-height:36px;}
+        
         /* 动画 */
         @keyframes fadeIn {
             from {opacity: 0;transform: translateY(10px);}
@@ -69,9 +71,22 @@
         .layui-form-item .layui-form-label{width:100px;}
 
         .edui-editor{z-index: 1 !important;}
+        
+        /*返回按钮*/
+        .backDiv{padding: 5px 5px 5px 20px;border-bottom: 1px solid #d9d9d9;}
+        .backDiv .backBox{display: flex;align-items: center;cursor: pointer;}
+        .backDiv .back_icon{font-size: 18px;color: #333;margin-right: 10px;position: relative;}
+        .backDiv .back_icon:before{content:'';position:absolute;width:9px;height:9px;border-left:2px solid #000;border-top:2px solid #000;transform:rotate(-45deg);margin-right:5px;top:-7px;}
+        .backDiv .back_text{font-size: 16px;color: #333;font-weight: 500;margin-left: 5px;}
     </style>
 </head>
 <body>
+<div class="backDiv">
+    <div class="backBox" onclick="javascript:window.history.back(-1);">
+        <div class="back_icon"></div>
+        <div class="back_text">返回</div>
+    </div>
+</div>
 <form id="siteForm" class="layui-form" action="" method="post" lay-filter="component-form-menu" style="padding:10px;margin-bottom:0px;">
     <input type="hidden" name="company_id" value="{$company_id}">
     <input type="hidden" name="company_type" value="{$company_type}">
@@ -81,26 +96,29 @@
         <legend>供应&收货信息</legend>
         <div class="layui-field-box">
             <div class="layui-form-item">
-                <div class="layui-form-label">供应商</div>
-                <div class="layui-input-block">
-                    <select name="supplier_id" id="supplier_id" lay-filter="supplier_id" lay-search lay-verify="required">
-                        <option value="">请选择供应商</option>
-                        <option value="-1">+创建供应商信息</option>
-                        {volist name="list.supplier" id="vo"}
-                        <option value="{$vo['id']}" {if $data['supplier_id']==$vo['id']}selected{/if}>{$vo['company_name']}</option>
-                        {/volist}
-                    </select>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
                 <div class="layui-form-label">我的仓库</div>
                 <div class="layui-input-block">
                     <select name="warehouse_id" id="warehouse_id" lay-filter="warehouse_id" lay-search lay-verify="required">
                         <option value="">请选择目的地仓库</option>
                         <!--<option value="-1">+创建我的仓库</option>-->
                         {volist name="list.warehouse" id="vo"}
-                        <option value="{$vo['id']}" {if $data['warehouse_id']==$vo['id']}selected{/if}>{$vo['warehouse_name']}</option>
+                        <option value="{$vo['id']}" {if $data['warehouse_id']==$vo['id']}selected{/if} data-wid="{$vo['warehouse_id']}" data-warehouse_form="{$vo['warehouse_form']}">{$vo['warehouse_name']}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            <div class="warehouse_info" style="border-bottom: 1px solid #ddd;margin-bottom: 10px;">
+                
+            </div>
+            
+            <div class="layui-form-item gys" style="display:{if $data['warehouse_form']==1}block{else}none{/if};">
+                <div class="layui-form-label">供应商</div>
+                <div class="layui-input-block">
+                    <select name="supplier_id" id="supplier_id" lay-filter="supplier_id" lay-search lay-verify="">
+                        <option value="">请选择供应商</option>
+                        <option value="-1">+创建供应商信息</option>
+                        {volist name="list.supplier" id="vo"}
+                        <option value="{$vo['id']}" {if $data['supplier_id']==$vo['id']}selected{/if}>{$vo['company_name']}</option>
                         {/volist}
                     </select>
                 </div>
@@ -158,7 +176,7 @@
         </div>
     </fieldset>
 
-    <fieldset class="layui-elem-field">
+    <fieldset class="layui-elem-field cgjs" style="display:{if $data['warehouse_form']==1}block{else}none{/if};">
         <legend>采购结算</legend>
         <div class="layui-field-box">
             <div class="layui-form-item">
@@ -241,7 +259,7 @@
         </div>
     </fieldset>
 
-    <fieldset class="layui-elem-field">
+    <fieldset class="layui-elem-field wlxx" style="display:{if $data['warehouse_form']==1}block{else}none{/if};">
         <legend>物流信息</legend>
         <div class="layui-field-box">
             <div class="layui-form-item">
@@ -288,7 +306,7 @@
         </div>
     </fieldset>
 
-    <fieldset class="layui-elem-field">
+    <fieldset class="layui-elem-field zdmx" style="display:{if $data['warehouse_form']==1}block{else}none{/if};">
         <legend>账单明细</legend>
         <div class="layui-field-box">
             <div class="layui-form-item goods_total_price">
@@ -344,7 +362,11 @@
             ,$ = layui.jquery
             ,upload = layui.upload
             ,colorpicker = layui.colorpicker;
-
+        
+        {if $id>0}
+            get_warehouse_infos({$data['true_warehouse_id']});
+        {/if}
+        
         laydate.render({
             elem: '#delivery_time',
             format: 'yyyy-MM-dd HH:mm:ss',
@@ -392,6 +414,20 @@
                 modal.style.display = 'flex';
 
                 $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_warehouse&company_id={$company_id}&company_type={$company_type}');
+            }else{
+                var selectedOption = $('#warehouse_id option:selected');
+                var wid = selectedOption.data('wid');
+                var warehouse_form = selectedOption.data('warehouse_form');
+                
+                if(warehouse_form==1){
+                    //发货仓库
+                    $('.cgjs,.wlxx,.zdmx,.gys').show();
+                }
+                else if(warehouse_form==2){
+                    //代发仓库
+                    $('.cgjs,.wlxx,.zdmx,.gys').hide();
+                }
+                get_warehouse_infos(wid);
             }
         });
 
@@ -458,12 +494,98 @@
         }
     });
 
+    function get_warehouse_infos(id){
+        var layer = layui.layer
+            ,form = layui.form
+            ,$ = layui.jquery;
+            
+        $.ajax({
+            url: "https://shop.gogo198.cn/collect_website/public/?s=api/func/get_warehouse_info",
+            method: 'post',
+            data: {'id': id},
+            dataType: 'JSON',
+            timeout: 10000,
+            success: function (res) {
+                if(res.code==0){
+                    let html = '<table class="layui-table">\n'+
+                    '<tr>\n'+
+                    '    <td>仓库名称：</td>\n'+
+                    '    <td>'+res.data.warehouse_name+'</td>\n'+
+                    '    <td>仓库简称：</td>\n'+
+                    '    <td>'+res.data.warehouse_code+'</td>\n'+
+                    '</tr>\n'+
+                    '<tr>\n'+
+                    '    <td>仓库描述：</td>\n'+
+                    '    <td>'+res.data.desc+'</td>\n'+
+                    '    <td>仓库图片：</td>\n'+
+                    '    <td>\n';
+                    for(let i=0;i<res.data.pic.length;i++){
+                    html += '    <img src="'+res.data.pic[i]+'" onclick="javascript:window.open(\''+res.data.pic[i]+'\');" style="width:50px;height:50px;display:inline-block;margin-right:5px;margin-bottom:5px;cursor:pointer;"/>\n';
+                    }
+                    html+='    </td>\n'+
+                    '</tr>\n'+
+                    '<tr>\n'+
+                    '   <td>仓库类型</td>\n'+
+                    '   <td>'+res.data.warehouse_form+'</td>\n'+
+                    '    <td>仓储类别：</td>\n'+
+                    '    <td>'+res.data.warehouse_type+'</td>\n'+
+                    '</tr>\n'+
+                    '<tr>\n'+
+                    '    <td>仓储结构：</td>\n'+
+                    '    <td>'+res.data.warehouse_structure+'</td>\n'+
+                    '    <td>运营模式：</td>\n'+
+                    '    <td>'+res.data.warehouse_mode+'</td>\n'+
+                    '</tr>\n'+
+                    '<tr>\n'+
+                    '    <td>仓储温度：</td>\n'+
+                    '    <td>'+res.data.warehouse_temperature+'</td>\n'+
+                    '    <td>仓库设备：</td>\n'+
+                    '    <td>'+res.data.warehouse_equipment+'</td>\n'+
+                    '</tr>\n'+
+                    '<tr>\n';
+                    if(res.data.have_postal_code==1){
+                        html+='<td>邮政编码：</td>\n'+
+                        '    <td colspan="3">'+res.data.postal_code+'</td>\n';
+                    }
+                    else if(res.data.have_postal_code==2){
+                        html+='<td>行政区域：</td>\n'+
+                        '    <td colspan="3">'+res.data.country_name+res.data.province_name+res.data.city_name+res.data.district_name+res.data.town_name+res.data.village_name+'</td>\n';
+                    }
+                    html+='</tr>\n'+
+                    '<tr>\n'+
+                    '    <td>详细地址：</td>\n';
+                    if(res.data.have_postal_code==1){
+                        html+='    <td colspan="3">'+res.data.country_name+res.data.pre_address+res.data.address1+'</td>\n';
+                    }
+                    else if(res.data.have_postal_code==2){
+                        html+='    <td colspan="3">'+res.data.address1+'</td>\n';
+                    }
+                    html+='</tr>\n'+
+                    '<tr>\n'+
+                    '   <td>收件人名称：</td>\n'+
+                    '   <td>'+res.data.name+'</td>\n'+
+                    '   <td>联系电话：</td>\n'+
+                    '   <td>'+res.data.area_code+res.data.mobile+'</td>\n'+
+                    '</tr>\n'+
+                    '</table>';
+                    
+                    $('.warehouse_info').html(html);
+                }
+            }
+        });
+    }
+    
     //添加商品
     function add_goods(){
         var layer = layui.layer,
             $ = layui.jquery,
             form = layui.form;
-
+        
+        let wid = $('#warehouse_id').val();
+        if(wid=='' || wid==0 || wid==null || wid==undefined){
+            layer.msg('请先选择仓库');return false;
+        }
+        
         layer.load();
 
         // 通过AJAX获取商品数据
@@ -728,6 +850,15 @@
 
         var tbody = $('.goods_table tbody');
 
+        var selectedOption = $('#warehouse_id option:selected');
+        var wid = selectedOption.data('wid');
+        var warehouse_form = selectedOption.data('warehouse_form');
+        var goods_num = 1;
+        if(warehouse_form==2){
+            //代发仓库
+            goods_num = 99999;
+        }
+        
         // 遍历选中的商品/变体
         $.each(validVariants, function(index, variant) {
             // 生成唯一ID用于后续操作
@@ -739,7 +870,7 @@
             var html = '<tr id="' + rowId + '" data-goods-id="' + goodsId + '">';
             html += '<td><span style="font-size:12px;">' + variant.name + '</span></td>';
             html += '<td><input type="text" class="layui-input" name="goods_code[]" value=""></td>';
-            html += '<td><input type="number" class="layui-input goods_quantity" name="goods_quantity[]" value="1" min="1" onchange="calcGoodsAmount(\'' + rowId + '\')"></td>';
+            html += '<td><input type="number" class="layui-input goods_quantity" name="goods_quantity[]" value="'+goods_num+'" min="1" onchange="calcGoodsAmount(\'' + rowId + '\')"></td>';
             html += '<td><input type="number" class="layui-input goods_price" name="goods_price[]" value="0" min="0" step="0.01" onchange="calcGoodsAmount(\'' + rowId + '\')"></td>';
             html += '<td><div style="position:relative;"><input type="number" class="layui-input goods_tax" name="goods_tax[]" value="0" min="0" step="0.01" onchange="calcGoodsAmount(\'' + rowId + '\')" style="padding-right:25px;"><span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);color:#666;">%</span></div></td>';
             html += '<td><span class="currency_symbol">CNY</span><span class="goods_amount">0.00</span><input type="hidden" class="goods_line_total_input" name="goods_line_total[]" value="0.00"></td>';

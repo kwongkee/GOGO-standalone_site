@@ -27,7 +27,7 @@
         .nav-links a:hover {color: var(--primary);}
         .nav-links a:hover::after {width: 80%;}
         .auth-buttons {display: flex;align-items: center;}
-        .btn {padding: 10px 20px;border-radius: 50px;text-decoration: none;font-weight: 600;transition: all 0.3s ease;cursor: pointer;display: inline-block;text-align: center;border: none;font-family: 'Montserrat', sans-serif;}
+        .btn {padding: 5px 10px;border-radius: 50px;text-decoration: none;font-weight: 600;transition: all 0.3s ease;cursor: pointer;display: inline-block;text-align: center;border: none;font-family: 'Montserrat', sans-serif;}
         .btn-outline {border: 2px solid var(--primary);color: var(--primary);background: transparent;margin-right: 15px;}
         .btn-outline:hover {background: var(--primary);color: white;transform: translateY(-3px);box-shadow: var(--shadow);}
         .btn-primary {background: var(--gradient);color: white;border: 2px solid transparent;}
@@ -75,7 +75,7 @@
         .btn-delete:hover {background: #ff4757;color: white;}
         /*.layui-btn-xs{line-height:21px;}*/
         .layui-table th{background: var(--accent);color: var(--primary-dark);font-weight: 600;}
-
+        .layui-table-cell{height:35px;}
         /* 动画 */
         @keyframes fadeIn {
             from {opacity: 0;transform: translateY(10px);}
@@ -89,11 +89,11 @@
     </style>
 </head>
 <body>
-<div class="form-group" style="padding:20px;">
-    <div id="toolbar" class="btn-group" style="margin-top: 10px;margin-bottom: 10px;line-height: 34px;">
+<div class="form-group" style="padding:0px;">
+    <div id="toolbar" class="btn-group" style="margin-top: 0px;margin-bottom: 10px;line-height: 34px;">
         <button type="button" onclick="save(1,'/?s=index/save_procurement&company_type={$company_type}&company_id={$company_id}');" class="btn btn-default">
             <i class="fas fa-add"></i>
-            创建订购订单
+            创建采购订单
         </button>
     </div>
     <table class="layui-hide" id="mainTable"></table>
@@ -151,8 +151,8 @@
                 ,{align:'center', fixed: 'right', title: '操作', templet: function(d){
                         var result = "";
 
-                        result += '<a onclick="save(1,' + "'/?s=index/save_procurement&company_type={$company_type}&company_id={$company_id}&id="+ d.id + '\');" class="layui-btn layui-btn-xs btn-edit btn"><i class="fas fa-edit"></i> 查看</a>';
-                        result += '<a onclick="del('+ "'"+d.id+"'" +',1);" class="layui-btn layui-btn-xs btn-delete btn"><i class="fas fa-trash"></i> 删除</a>';
+                        result += '<button onclick="save(1,' + "'/?s=index/save_procurement&company_type={$company_type}&company_id={$company_id}&id="+ d.id + '\');" class=" btn-edit btn" style="margin-right:7px;"><i class="fas fa-eye"></i> 查看</button>';
+                        result += '<button onclick="del('+ "'"+d.id+"'" +',1);" class="btn-delete btn"><i class="fas fa-trash"></i> 删除</button>';
 
                         return [
                             result
@@ -187,10 +187,11 @@
     function save(type,url) {
         if(type==1){
             //轮播图
-            var modal = document.getElementById('saveMenuModal');
-            modal.style.display = 'flex';
+            window.location.href=url;
+            // var modal = document.getElementById('saveMenuModal');
+            // modal.style.display = 'flex';
 
-            $('#saveMenuModal .menu_iframe').attr('src',url);
+            // $('#saveMenuModal .menu_iframe').attr('src',url);
         }
     }
 

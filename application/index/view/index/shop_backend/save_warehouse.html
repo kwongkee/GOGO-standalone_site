@@ -550,46 +550,47 @@
                     html+='    </td>\n'+
                     '</tr>\n'+
                     '<tr>\n'+
+                    '   <td>仓库类型</td>\n'+
+                    '   <td>'+res.data.warehouse_form+'</td>\n'+
                     '    <td>仓储类别：</td>\n'+
                     '    <td>'+res.data.warehouse_type+'</td>\n'+
+                    '</tr>\n'+
+                    '<tr>\n'+
                     '    <td>仓储结构：</td>\n'+
                     '    <td>'+res.data.warehouse_structure+'</td>\n'+
-                    '</tr>\n'+
-                    '<tr>\n'+
                     '    <td>运营模式：</td>\n'+
                     '    <td>'+res.data.warehouse_mode+'</td>\n'+
-                    '    <td>仓储温度：</td>\n'+
-                    '    <td>'+res.data.warehouse_temperature+'</td>\n'+
                     '</tr>\n'+
                     '<tr>\n'+
+                    '    <td>仓储温度：</td>\n'+
+                    '    <td>'+res.data.warehouse_temperature+'</td>\n'+
                     '    <td>仓库设备：</td>\n'+
-                    '    <td>'+res.data.warehouse_equipment+'</td>\n';
+                    '    <td>'+res.data.warehouse_equipment+'</td>\n'+
+                    '</tr>\n'+
+                    '<tr>\n';
                     if(res.data.have_postal_code==1){
                         html+='<td>邮政编码：</td>\n'+
-                        '    <td>'+res.data.postal_code+'</td>\n';
+                        '    <td colspan="3">'+res.data.postal_code+'</td>\n';
                     }
                     else if(res.data.have_postal_code==2){
                         html+='<td>行政区域：</td>\n'+
-                        '    <td>'+res.data.country_name+res.data.province_name+res.data.city_name+res.data.district_name+res.data.town_name+res.data.village_name+'</td>\n';
+                        '    <td colspan="3">'+res.data.country_name+res.data.province_name+res.data.city_name+res.data.district_name+res.data.town_name+res.data.village_name+'</td>\n';
                     }
                     html+='</tr>\n'+
                     '<tr>\n'+
                     '    <td>详细地址：</td>\n';
                     if(res.data.have_postal_code==1){
-                        html+='    <td>'+res.data.country_name+res.data.pre_address+res.data.address1+'</td>\n';
+                        html+='    <td colspan="3">'+res.data.country_name+res.data.pre_address+res.data.address1+'</td>\n';
                     }
                     else if(res.data.have_postal_code==2){
-                        html+='    <td>'+res.data.address1+'</td>\n';
+                        html+='    <td colspan="3">'+res.data.address1+'</td>\n';
                     }
-                    
-                    html+='<td>收件人名称：</td>\n'+
-                    '    <td>'+res.data.name+'</td>\n'+
-                    '</tr>\n'+
+                    html+='</tr>\n'+
                     '<tr>\n'+
-                    '    <td>联系电话：</td>\n'+
-                    '    <td>'+res.data.area_code+res.data.mobile+'</td>\n'+
-                    '    <td></td>\n'+
-                    '    <td></td>\n'+
+                    '   <td>收件人名称：</td>\n'+
+                    '   <td>'+res.data.name+'</td>\n'+
+                    '   <td>联系电话：</td>\n'+
+                    '   <td>'+res.data.area_code+res.data.mobile+'</td>\n'+
                     '</tr>\n'+
                     '</table>';
                     

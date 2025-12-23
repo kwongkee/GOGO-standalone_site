@@ -100,6 +100,7 @@ Route::any('index/save_inventory', 'index/Index/save_inventory');#企业网店-�
 Route::any('index/get_country_info2', 'index/Index/get_country_info2');#企业网店-获取国地信息
 Route::any('index/getarea', 'index/Index/getarea');#企业网店-获取区域信息
 Route::any('index/inventory_manage', 'index/Index/inventory_manage');#企业网店-库存管理-管理库存
+Route::any('index/inventory_info', 'index/Index/inventory_info');#企业网店-库存管理-导入库存信息更新
 Route::any('index/save_shelf', 'index/Index/save_shelf');#企业网店-上架管理-新增上架
 Route::any('index/get_platform_lines', 'index/Index/get_platform_lines');#企业网店-上架管理-物流支撑-获取线路
 Route::any('index/view_line', 'index/Index/view_line');#企业网店-上架管理-线路详情

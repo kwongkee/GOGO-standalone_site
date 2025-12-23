@@ -92,6 +92,7 @@
         .fees_table thead th:nth-of-type(2){min-width: 150px;}
         .fees_table thead th:nth-of-type(3){min-width: 500px;}
         .fees_table thead th:nth-of-type(4){min-width: 500px;}
+        .fees_table .layui-form-select{min-width:120px;}
 
         /*搜索框*/
         .result_div{display:none;width: calc(100% - 0px);height: 200px;position: absolute;background: #fff;color: #000;font-size: 13px;z-index: 9;border: 1px solid #c7c6c6;padding: 5px 10px;box-sizing: border-box;}
@@ -122,7 +123,23 @@
         .potential_table input{width:150px;}
 
         .warn_select{width:130px;}
-
+        
+        /*商品参数*/
+        .spec_table .country_sel .layui-form-select{width:120px;}
+        .spec_table .manufacture_area .layui-form-select{width:120px;}
+        
+        .effective_tbody .layui-word-aux{white-space:nowrap;}
+        .effective_tbody .layui-form-select{width:120px;}
+        
+        .packing_tbody .layui-word-aux{white-space:nowrap;}
+        
+        /*返回按钮*/
+        .backDiv{padding: 5px 5px 5px 20px;border-bottom: 1px solid #d9d9d9;}
+        .backDiv .backBox{display: flex;align-items: center;cursor: pointer;}
+        .backDiv .back_icon{font-size: 18px;color: #333;margin-right: 10px;position: relative;}
+        .backDiv .back_icon:before{content:'';position:absolute;width:9px;height:9px;border-left:2px solid #000;border-top:2px solid #000;transform:rotate(-45deg);margin-right:5px;top:-7px;}
+        .backDiv .back_text{font-size: 16px;color: #333;font-weight: 500;margin-left: 5px;}
+        
         /* 动画 */
         @keyframes fadeIn {
             from {opacity: 0;transform: translateY(10px);}
@@ -140,6 +157,12 @@
     <script type="text/javascript" src="cklein/plugins/ueditor/lang/zh-cn/zh-cn.js"></script>
 </head>
 <body>
+<div class="backDiv">
+    <div class="backBox" onclick="javascript:window.history.back(-1);">
+        <div class="back_icon"></div>
+        <div class="back_text">返回</div>
+    </div>
+</div>
 <form class="layui-form" id="siteForm" action="" method="post" lay-filter="component-form-group" style="padding:0px;">
     <input type="hidden" name="company_id" value="{$company_id}">
     <input type="hidden" name="company_type" value="{$company_type}">
@@ -407,7 +430,7 @@
                         </div>
                     </div>
                     
-                    <div class="foreign_logistics_div" style="display: none;">
+                    <div class="foreign_logistics_div" style="display: ;">
                         <div class="layui-form-item">
                             <label class="layui-form-label">集运方式</label>
                             <div class="layui-input-block">
@@ -591,7 +614,7 @@
                                                 <div class="fees_standard_box w100">
                                                     <select name="fees_standard_currency[]" lay-search>
                                                         {volist name="type['currency']" id="vo"}
-                                                        <option value="{$vo['id']}" {if isset($type['now_goods'])}{if $type['now_goods']['goods_currency']==$vo['id']}selected{/if}{/if}>{$vo['currency_symbol_standard']}</option>
+                                                        <option value="{$vo['id']}" {if isset($type['now_goods']['goods_currency'])}{if $type['now_goods']['goods_currency']==$vo['id']}selected{/if}{/if}>{$vo['currency_symbol_standard']}</option>
                                                         {/volist}
                                                     </select>
                                                 </div>
@@ -621,7 +644,7 @@
                                                 <div class="fees_standard_ratio_div2 w120" style="display: none;">
                                                     <div class="disf">
                                                         <input type="number" class="layui-input" name="fees_standard_ratio_ratio[]" placeholder="输入比率" value="">
-                                                        <div class="layui-input" style="width:35px;line-height: 38px;padding-left:0;">%</div>
+                                                        <div class="layui-input" style="width:35px;line-height: 38px;padding-left:0;text-align:center;">%</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -650,7 +673,7 @@
 
                             <fieldset class="layui-elem-field">
                                 <legend>销售优惠-减免</legend>
-                                <div class="layui-field-box" style="width: 100%;max-width:750px;overflow-x:auto;">
+                                <div class="layui-field-box" style="width: 100%;">
                                     <table class="layui-table reduction_div" style="width: 100%;">
                                         <thead>
                                         <th>优惠权属</th>
@@ -2107,7 +2130,14 @@
                     let html = '<div onclick="close_resultDiv(this)" class="close_resultDiv">×</div>'+
                         '     <ul class="result_ul">';
                     for(let i=0;i<data.list.length;i++){
-                        html += '<li onclick="select_name(this,'+num+')" data-name="'+data.list[i].attr_name+'">'+data.list[i].attr_name+'</li>';
+                        if(type2==3){
+                            //型号分类（大类）
+                            html += '<li onclick="select_name(this,'+num+')" data-name="'+data.list[i].attr_name+'">'+data.list[i].attr_name+'</li>';
+                        }
+                        else if(type2==4){
+                            //型号分类（小类）
+                            html += '<li onclick="select_name(this,'+num+')" data-name="'+data.list[i].attr_vname+'">'+data.list[i].attr_vname+'</li>';
+                        }
                     }
                     html += '</ul>';
                     $('#grade'+num+'_result').html(html);
@@ -2132,48 +2162,12 @@
         const inputElement2 = document.getElementById('option2');
         inputElement2.addEventListener('input', function(event) {
             debouncedRequest(event.target.value,4,2);
-
-            // layer.load();
-            // $.post('/?s=index/get_name',{'type':4,'val':event.target.value},function(data){
-            //     layer.closeAll('loading');
-            //     if(data.code==0){
-            //         let html = '<div onclick="close_resultDiv(this)" class="close_resultDiv">×</div>'+
-            //             '     <ul class="result_ul">';
-            //         for(let i=0;i<data.list.length;i++){
-            //             html += '<li onclick="select_name(this,2)" data-name="'+data.list[i].attr_vname+'">'+data.list[i].attr_vname+'</li>';
-            //         }
-            //         html += '</ul>';
-            //         $('#grade2_result').html(html);
-            //         $('#grade2_result').show();
-            //     }else{
-            //         // $('#grade2_result').html('');
-            //         // $('#grade2_result').hide();
-            //     }
-            // });
         });
 
         //型号属性（三级）
         const inputElement3 = document.getElementById('option3');
         inputElement3.addEventListener('input', function(event) {
             debouncedRequest(event.target.value,4,3);
-
-            // layer.load();
-            // $.post('/?s=index/get_name',{'type':4,'val':event.target.value},function(data){
-            //     layer.closeAll('loading');
-            //     if(data.code==0){
-            //         let html = '<div onclick="close_resultDiv(this)" class="close_resultDiv">×</div>'+
-            //             '     <ul class="result_ul">';
-            //         for(let i=0;i<data.list.length;i++){
-            //             html += '<li onclick="select_name(this,3)" data-name="'+data.list[i].attr_vname+'">'+data.list[i].attr_vname+'</li>';
-            //         }
-            //         html += '</ul>';
-            //         $('#grade3_result').html(html);
-            //         $('#grade3_result').show();
-            //     }else{
-            //         // $('#grade3_result').html('');
-            //         // $('#grade3_result').hide();
-            //     }
-            // });
         });
 
         $('.layui-form-label').click(function(){
@@ -2716,7 +2710,7 @@
         let layer = layui.layer,
             $ = layui.$,
             form = layui.form;
-
+        
         layer.load();
         $.post('/?s=index/get_goods_info',{'id':val},function(res){
             layer.closeAll('loading');
@@ -5285,7 +5279,7 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
             '                                                            <div class="trigger_div2_box fees_options_trigger">\n' +
             '                                                                <!--新增规格型号时触发-->\n' +
             '                                                                <select name="fees_options['+tr_num+']" lay-search>\n';
-        {if isset($type['now_goods'])}
+        {if isset($type['now_goods']['have_specs'])}
             {if $type['now_goods']['have_specs']==2}
                 html+='                                                         <option value="-1">暂无规格型号数据</option>\n';
             {else}

@@ -68,6 +68,13 @@
         .disf{display: flex;align-items: center;}
         .layui-form-label{width: 100px;}
 
+        /*返回按钮*/
+        .backDiv{padding: 5px 5px 5px 20px;border-bottom: 1px solid #d9d9d9;}
+        .backDiv .backBox{display: flex;align-items: center;cursor: pointer;}
+        .backDiv .back_icon{font-size: 18px;color: #333;margin-right: 10px;position: relative;}
+        .backDiv .back_icon:before{content:'';position:absolute;width:9px;height:9px;border-left:2px solid #000;border-top:2px solid #000;transform:rotate(-45deg);margin-right:5px;top:-7px;}
+        .backDiv .back_text{font-size: 16px;color: #333;font-weight: 500;margin-left: 5px;}
+        
         /* 动画 */
         @keyframes fadeIn {
             from {opacity: 0;transform: translateY(10px);}
@@ -81,7 +88,13 @@
     </style>
 </head>
 <body>
-<form class="layui-form" id="siteForm" action="" method="post" lay-filter="component-form-rotate" style="padding:10px;">
+<div class="backDiv">
+    <div class="backBox" onclick="javascript:window.history.back(-1);">
+        <div class="back_icon"></div>
+        <div class="back_text">返回</div>
+    </div>
+</div>
+<form class="layui-form" id="siteForm" action="" method="post" lay-filter="component-form-rotate" style="padding:0px;">
     <input type="hidden" name="company_id" value="{$company_id}">
     <input type="hidden" name="company_type" value="{$company_type}">
     <input type="hidden" name="id" value="{$id}">
@@ -249,6 +262,7 @@
                         {$vo['spec_names']}
                     </td>
                     <td>
+                        <input type="text" name="goods_sku_id[]" value="{$vo['sku_id']}" style="display:none;"/>
                         <input type="number" class="layui-input" name="goods_number[]" placeholder="库存数" value="{$vo['goods_number']}">
                     </td>
                 </tr>
