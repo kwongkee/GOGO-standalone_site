@@ -212,62 +212,63 @@
             </div>
         </div>
         
-        <div class="layui-form-item">
-            <div class="layui-form-label">选择终端</div>
-            <div class="layui-input-block">
-                <select name="printer_id" id="printer_id" lay-filter="printer_id" lay-search lay-verify="required">
-                    <option value="">请选择终端</option>
-                    {volist name="list.terminal" id="vo"}
-                    <option value="{$vo['id']}" {if $list['goods']['express_info']['printer_id']==$vo['id']}selected{/if}>{$vo['printer_name']}</option>
-                    {/volist}
-                </select>
+        {if $list['goods']['warehouse_form']==1}
+            <div class="layui-form-item">
+                <div class="layui-form-label">选择终端</div>
+                <div class="layui-input-block">
+                    <select name="printer_id" id="printer_id" lay-filter="printer_id" lay-search lay-verify="required">
+                        <option value="">请选择终端</option>
+                        {volist name="list.terminal" id="vo"}
+                        <option value="{$vo['id']}" {if $list['goods']['express_info']['printer_id']==$vo['id']}selected{/if}>{$vo['printer_name']}</option>
+                        {/volist}
+                    </select>
+                </div>
             </div>
-        </div>
         
-        <!--显示终端下的快递面单信息（快递企业和快递产品类型）-->
-        <table class="layui-table express_table">
-            <thead>
-                <th>快递名称</th>
-                <th>快递产品</th>
-                <th style="width:160px;">支付方式</th>
-                <th>卖家备注</th>
-                <th>操作</th>
-            </thead>
-            <tbody>
-                {if !empty($list['goods']['express_info'])}
-                    {volist name="list['express']" key="key" id="vo1"}
-                        <tr>
-                            <td>{$vo1['name']}</td>
-                            <td>{$vo1['express_type']}</td>
-                            <td>
-                                <select name="express_paytype[]" lay-verify="required">
+            <!--显示终端下的快递面单信息（快递企业和快递产品类型）-->
+            <table class="layui-table express_table">
+                <thead>
+                    <th>快递名称</th>
+                    <th>快递产品</th>
+                    <th style="width:160px;">支付方式</th>
+                    <th>卖家备注</th>
+                    <th>操作</th>
+                </thead>
+                <tbody>
+                    {if !empty($list['goods']['express_info'])}
+                        {volist name="list['express']" key="key" id="vo1"}
+                            <tr>
+                                <td>{$vo1['name']}</td>
+                                <td>{$vo1['express_type']}</td>
+                                <td>
+                                    <select name="express_paytype[]" lay-verify="required">
+                                        {if isset($list['goods']['express_info']['express_info'][$key-1]['express_paytype'])}
+                                            <option value="1" {if $list['goods']['express_info']['express_info'][$key-1]['express_paytype']==1}selected{/if}>寄方月结</option>
+                                            <option value="2" {if $list['goods']['express_info']['express_info'][$key-1]['express_paytype']==2}selected{/if}>寄方付款</option>
+                                            <option value="3" {if $list['goods']['express_info']['express_info'][$key-1]['express_paytype']==3}selected{/if}>收方到付</option>
+                                        {else}
+                                            <option value="1">寄方月结</option>
+                                            <option value="2">寄方付款</option>
+                                            <option value="3">收方到付</option>
+                                        {/if}
+                                    </select>
+                                </td>
+                                <td>
+                                    <textarea class="layui-textarea" name="express_remark[]" placeholder="卖家发货备注信息">{if isset($list['goods']['express_info']['express_info'][$key-1]['express_paytype'])}{if $vo1['id']==$list['goods']['express_info']['express_info'][$key-1]['express_id']}{$list['goods']['express_info']['express_info'][$key-1]['express_remark']}{/if}{/if}</textarea>
+                                </td>
+                                <td>
                                     {if isset($list['goods']['express_info']['express_info'][$key-1]['express_paytype'])}
-                                        <option value="1" {if $list['goods']['express_info']['express_info'][$key-1]['express_paytype']==1}selected{/if}>寄方月结</option>
-                                        <option value="2" {if $list['goods']['express_info']['express_info'][$key-1]['express_paytype']==2}selected{/if}>寄方付款</option>
-                                        <option value="3" {if $list['goods']['express_info']['express_info'][$key-1]['express_paytype']==3}selected{/if}>收方到付</option>
+                                        <input type="checkbox" name="express_id[]" lay-skin="primary" value="{$list['goods']['express_info']['express_info'][$key-1]['express_id']}" title="选择" {if $vo1['id']==$list['goods']['express_info']['express_info'][$key-1]['express_id']}checked{/if}>
                                     {else}
-                                        <option value="1">寄方月结</option>
-                                        <option value="2">寄方付款</option>
-                                        <option value="3">收方到付</option>
+                                        <input type="checkbox" name="express_id[]" lay-skin="primary" value="{$vo1['id']}" title="选择">
                                     {/if}
-                                </select>
-                            </td>
-                            <td>
-                                <textarea class="layui-textarea" name="express_remark[]" placeholder="卖家发货备注信息">{if isset($list['goods']['express_info']['express_info'][$key-1]['express_paytype'])}{if $vo1['id']==$list['goods']['express_info']['express_info'][$key-1]['express_id']}{$list['goods']['express_info']['express_info'][$key-1]['express_remark']}{/if}{/if}</textarea>
-                            </td>
-                            <td>
-                                {if isset($list['goods']['express_info']['express_info'][$key-1]['express_paytype'])}
-                                    <input type="checkbox" name="express_id[]" lay-skin="primary" value="{$list['goods']['express_info']['express_info'][$key-1]['express_id']}" title="选择" {if $vo1['id']==$list['goods']['express_info']['express_info'][$key-1]['express_id']}checked{/if}>
-                                {else}
-                                    <input type="checkbox" name="express_id[]" lay-skin="primary" value="{$vo1['id']}" title="选择">
-                                {/if}
-                            </td>
-                        </tr>
-                    {/volist}
-                {/if}
-            </tbody>
-        </table>
-        
+                                </td>
+                            </tr>
+                        {/volist}
+                    {/if}
+                </tbody>
+            </table>
+        {/if}
         
     </div>
 

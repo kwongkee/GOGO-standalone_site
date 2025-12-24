@@ -224,7 +224,7 @@
         <div class="layui-input-block">
             <div class="layui-upload" id="contract_type" style="margin-top: 10px;">
                 <button type="button" class="layui-btn" id="temp_file-upload">上传模板</button>
-                <a href="/uploads/goods_inventory/更新商品库存模板.xlsx" download style="color:#ff2222;text-decoration:underline;">下载模板</a>
+                <a href="/uploads/goods_inventory/更新商品库存模板.xlsx" download style="color:#ff2222;text-decoration:underline;margin-left:10px;">下载模板</a>
                 <!--                                    <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">-->
                 <!--                                        预览图：-->
                 <!--                                        <div class="layui-upload-list" id="temp_file-upload-list">-->
@@ -248,7 +248,7 @@
     </div>
     
     <!-- 库存更新列表 -->
-    <div id="inventoryList" style="max-height: 400px; overflow-y: auto; margin-bottom: 20px;">
+    <div id="inventoryList" style="max-height: 400px; overflow-y: auto; margin-bottom: 20px;padding-top:2px;">
         <!-- 数据将通过JS动态生成 -->
     </div>
     
@@ -261,7 +261,7 @@
             <i class="layui-icon layui-icon-release"></i> 提交确认
         </button>
         <button type="button" class="btn btn-outline" id="cancelConfirmBtn" style="background: #f56c6c; color: white; border-color: #f56c6c;">
-            <i class="layui-icon layui-icon-close"></i> 取消
+            <i class="layui-icon layui-icon-close"></i> 取消确认
         </button>
     </div>
 </div>
@@ -358,7 +358,7 @@
             const change = parseInt(item.now_goods_num) - parseInt(item.origin_goods_num);
             const changeClass = change >= 0 ? 'stock-increase' : 'stock-decrease';
             const changeText = change >= 0 ? `+${change}` : change;
-            const changeType = change >= 0 ? '增加' : '减少';
+            const changeType = change >= 0 ? '+' : '-';
             
             const itemHtml = `
                 <div class="confirm-item" data-index="${index}" id="confirmItem-${index}">
@@ -387,7 +387,7 @@
                         </div>
                     </div>
                     <div class="confirm-actions">
-                        <button type="button" class="btn btn-outline btn-small view-detail" data-index="${index}">
+                        <button type="button" class="btn btn-outline btn-small view-detail" data-index="${index}" style="display:none;">
                             <i class="layui-icon layui-icon-search"></i> 查看详情
                         </button>
                         <button type="button" class="btn btn-primary btn-small confirm-single" data-index="${index}">
@@ -417,7 +417,11 @@
             submitBtn.prop('disabled', false).text(`提交确认 (${confirmedCount}/${totalCount})`);
             $('#confirmAllBtn').prop('disabled', true).text('已全部确认');
         } else {
-            submitBtn.prop('disabled', true).text(`提交确认 (${confirmedCount}/${totalCount})`);
+            if(confirmedCount>0){
+                submitBtn.prop('disabled', false).text(`提交确认 (${confirmedCount}/${totalCount})`);
+            }else{
+                submitBtn.prop('disabled', true).text(`提交确认 (${confirmedCount}/${totalCount})`);
+            }
             $('#confirmAllBtn').prop('disabled', false).text('全部确认');
         }
     }
@@ -465,6 +469,9 @@
             .addClass('status-confirmed')
             .text('已确认');
         
+        //隐藏“拒绝”
+        itemElement.find('.reject-single').hide();
+        
         // 更新确认按钮
         itemElement.find('.confirm-single').prop('disabled', true).html('<i class="layui-icon layui-icon-ok"></i> 已确认');
         itemElement.find('.reject-single').prop('disabled', true);
@@ -489,6 +496,9 @@
             .removeClass('status-pending')
             .addClass('status-rejected')
             .text('已拒绝');
+        
+        //隐藏“确认”
+        itemElement.find('.confirm-single').hide();
         
         // 更新按钮
         itemElement.find('.confirm-single').prop('disabled', true);
@@ -524,13 +534,14 @@
         layer.load();
         
         $.ajax({
-            url: '/?s=index/confirm_inventory_update',
+            url: '/?s=index/inventory_info',
             method: 'post',
             data: {
-                company_id: $('input[name="company_id"]').val(),
-                company_type: $('input[name="company_type"]').val(),
+                company_id: "{$company_id}",
+                company_type: "{$company_type}",
                 confirm_data: JSON.stringify(confirmedItems),
                 method: '{$method}',
+                type: '{$type}',
                 pa: 2  // 表示确认操作
             },
             dataType: 'JSON',
@@ -540,14 +551,16 @@
                 if (res.code === 0) {
                     layer.msg(res.msg, {icon: 1, time: 2000}, function() {
                         // 清空确认区域
-                        $('#inventoryConfirmArea').hide();
-                        $('#inventoryList').empty();
-                        confirmData = [];
+                        // $('#inventoryConfirmArea').hide();
+                        // $('#inventoryList').empty();
+                        // confirmData = [];
                         
+                        window.location.reload();
                         // 如果需要重新加载页面或跳转
-                        if (res.data && res.data.redirect) {
-                            window.location.href = res.data.redirect;
-                        }
+                        // if (res.data && res.data.redirect) {
+                            // window.location.href = res.data.redirect;
+                            
+                        // }
                     });
                 } else {
                     layer.msg(res.msg || '提交失败', {icon: 2});
@@ -586,7 +599,7 @@
                         if(res.data && res.data.length > 0){
                             // 渲染确认列表
                             renderConfirmList(res.data);
-                            layer.msg(res.msg, {time: 3000});
+                            // layer.msg(res.msg, {time: 3000});
                         } else {
                             layer.msg('导入成功，没有需要更新的数据', {time: 3000});
                         }

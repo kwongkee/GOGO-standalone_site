@@ -54,16 +54,8 @@
         .form-group select:focus,
         .form-group textarea:focus {border-color: var(--primary);outline: none;}
         .form-group textarea {min-height: 120px;resize: vertical;}
-        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;padding-top: 20px;border-top: 2px solid var(--accent);}
 
-
-        /*.form-group {margin-bottom: 20px;}*/
-        /*.form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}*/
-        /*.form-group input,*/
-        /*.form-group select {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}*/
-        /*.form-group input:focus,*/
-        /*.form-group select:focus {border-color: var(--primary);outline: none;}*/
-        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
 
         .disf{display: flex;align-items: center;}
         .btn{background:var(--primary-light);color: white;border: none;}
@@ -76,7 +68,7 @@
         .layui-table th{background: var(--accent);color: var(--primary-dark);font-weight: 600;}
 
         .process_div{width:100%;overflow-x:auto;padding-bottom:10px;border-bottom:1px solid #e6e6e6;cursor:pointer;}
-        .process_child{margin-left:5px;width:60px;text-align: center;margin-right:35px;padding:5px 10px;background:var(--primary);opacity:0.5;border-radius:5px;}
+        .process_child{margin-left:5px;width:80px;text-align: center;margin-right:35px;padding:5px 10px;background:var(--primary);opacity:0.5;border-radius:5px;}
         .process_active{color:#fff;border-radius: 5px;background:var(--primary);opacity:1;}
         .no_active{background: #a0a0a0;opacity:1;}
 
@@ -100,7 +92,7 @@
 
 </head>
 <body>
-<div class="form-group" style="padding:20px;">
+<div class="form-group" style="padding:0px;">
     <div class="disf process_div">
         {volist name="process" key="key" id="vo"}
             <div {if($vo['id']!=16)}onclick="show_process(this,{$vo['id']},'{$vo['link']}','{$vo['id']}',1)"{/if}

@@ -12,7 +12,7 @@
 
         * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
         .action-buttons {display: flex;justify-content:end;gap: 15px;}
-        .btn {padding: 10px 20px;border-radius: 50px;font-weight: 600;cursor: pointer;transition: all 0.3s ease;display: flex;align-items: center;gap: 8px;border: none;}
+        .btn {padding: 5px 10px;border-radius: 50px;font-weight: 600;cursor: pointer;transition: all 0.3s ease;display: flex;align-items: center;gap: 8px;border: none;}
         .btn-primary {background: var(--gradient);color: white;}
         .btn-primary:hover {transform: translateY(-3px);box-shadow: var(--shadow-hover);}
         .btn-outline {background: transparent;color: var(--primary);border: 2px solid var(--primary-light);}
@@ -90,7 +90,7 @@
                         <td>{$vo['content_name']}</td>
                         <td>
                             <div class="channel-actions">
-                                <button class="channel-btn btn-warn btn" onclick="content_manage({$vo['id']},{$vo['content_id']},'{$vo['title']}')"><i class="fas fa-edit"></i> 内容管理</button>
+                                <button class="channel-btn btn-warn btn" onclick="content_manage({$vo['id']},{$vo['content_id']},'{$vo['title']}')"><i class="fas fa-eye"></i> 内容管理</button>
                                 <button class="channel-btn btn-edit btn" onclick="edit({$vo['id']},'{$vo['title']}')"><i class="fas fa-edit"></i> 编辑</button>
                                 <button class="channel-btn btn-delete btn" onclick="del_component({$vo['id']},'{$vo['title']}')"><i class="fas fa-trash"></i> 删除</button>
                             </div>
@@ -147,11 +147,12 @@
     //模块内容
     function content_manage(id,pid,title=''){
         // window.location.href='/?s=index/shop_guide_content_list&pid='+pid+'&guide_id='+id;
-        var modal = document.getElementById('saveMenuModal');
-        modal.style.display = 'flex';
-        $('.content_title').show();
-        $('.module_title').hide();
-            $('#saveMenuModal .menu_iframe').attr('src','/?s=index/shop_guide_content_list&company_id={$company_id}&company_type={$company_type}&guide_id='+id);
+        window.location.href='/?s=index/shop_guide_content_list&company_id={$company_id}&company_type={$company_type}&guide_id='+id;
+        // var modal = document.getElementById('saveMenuModal');
+        // modal.style.display = 'flex';
+        // $('.content_title').show();
+        // $('.module_title').hide();
+        //     $('#saveMenuModal .menu_iframe').attr('src','/?s=index/shop_guide_content_list&company_id={$company_id}&company_type={$company_type}&guide_id='+id);
     }
 
     function save(type) {

@@ -27,7 +27,9 @@
         .nav-links a:hover {color: var(--primary);}
         .nav-links a:hover::after {width: 80%;}
         .auth-buttons {display: flex;align-items: center;}
-        .btn {padding: 10px 20px;border-radius: 50px;text-decoration: none;font-weight: 600;transition: all 0.3s ease;cursor: pointer;display: inline-block;text-align: center;border: none;font-family: 'Montserrat', sans-serif;}
+        .btn {padding: 5px 10px;border-radius: 50px;text-decoration: none;font-weight: 600;transition: all 0.3s ease;cursor: pointer;display: inline-block;text-align: center;border: none;font-family: 'Montserrat', sans-serif;}
+        .layui-table-cell{height:33px;}
+        .layui-table-cell .btn{padding:0px 10px;margin-right:7px;}
         .btn-outline {border: 2px solid var(--primary);color: var(--primary);background: transparent;margin-right: 15px;}
         .btn-outline:hover {background: var(--primary);color: white;transform: translateY(-3px);box-shadow: var(--shadow);}
         .btn-primary {background: var(--gradient);color: white;border: 2px solid transparent;}
@@ -55,16 +57,7 @@
         .form-group select:focus,
         .form-group textarea:focus {border-color: var(--primary);outline: none;}
         .form-group textarea {min-height: 120px;resize: vertical;}
-        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
-
-
-        /*.form-group {margin-bottom: 20px;}*/
-        /*.form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}*/
-        /*.form-group input,*/
-        /*.form-group select {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}*/
-        /*.form-group input:focus,*/
-        /*.form-group select:focus {border-color: var(--primary);outline: none;}*/
-        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;padding-top: 20px;border-top: 2px solid var(--accent);}
 
         .disf{display: flex;align-items: center;}
         .btn{background:var(--primary-light);color: white;border: none;}
@@ -159,9 +152,9 @@
                 ,{align:'center', fixed: 'right', title: '操作', templet: function(d){
                         var result = "";
 
-                        result += '<a onclick="save(1,' + "'/?s=index/save_keywords2&company_type={$company_type}&company_id={$company_id}&type_id={$type_id}&id="+ d.id + '\');" class="layui-btn layui-btn-xs btn-edit btn"><i class="fas fa-edit"></i> 编辑</a>';
-                        result += '<a onclick="save(2,' + "'/?s=index/rule_manage&company_type={$company_type}&company_id={$company_id}&type_id="+d.type_id+"&key_id="+ d.id + '\');" class="layui-btn layui-btn-xs btn-edit btn"><i class="fas fa-manage"></i> 管理规则</a>';
-                        result += '<a onclick="del('+ "'"+d.id+"'" +',1);" class="layui-btn layui-btn-xs btn-delete btn"><i class="fas fa-trash"></i> 删除</a>';
+                        result += '<a onclick="save(1,' + "'/?s=index/save_keywords2&company_type={$company_type}&company_id={$company_id}&type_id={$type_id}&id="+ d.id + '\');" class="btn-edit btn"><i class="fas fa-edit"></i> 编辑</a>';
+                        result += '<a onclick="save(2,' + "'/?s=index/rule_manage&company_type={$company_type}&company_id={$company_id}&type_id="+d.type_id+"&key_id="+ d.id + '\');" class="btn-waring btn"><i class="fas fa-eye"></i> 管理规则</a>';
+                        result += '<a onclick="del('+ "'"+d.id+"'" +',1);" class="btn-delete btn"><i class="fas fa-trash"></i> 删除</a>';
 
                         return [
                             result

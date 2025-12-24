@@ -54,16 +54,7 @@
         .form-group select:focus,
         .form-group textarea:focus {border-color: var(--primary);outline: none;}
         .form-group textarea {min-height: 120px;resize: vertical;}
-        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
-
-
-        /*.form-group {margin-bottom: 20px;}*/
-        /*.form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}*/
-        /*.form-group input,*/
-        /*.form-group select {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}*/
-        /*.form-group input:focus,*/
-        /*.form-group select:focus {border-color: var(--primary);outline: none;}*/
-        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;padding-top: 20px;border-top: 2px solid var(--accent);}
 
         .disf{display: flex;align-items: center;}
         .btn{background:var(--primary-light);color: white;border: none;}
@@ -147,7 +138,7 @@
                         // if(d.goods_status==1){
                         //     strr = strr.concat(['<a onclick="del('+ "'"+d.id+"'" +');" class="layui-btn layui-btn-xs layui-btn-danger">下架商品</a>']);
                         // }else if(d.goods_status==0){
-                        strr = strr.concat(['<a onclick="save(2,'+ "'"+d.id+"'" +','+"'"+d.goods_name+"'"+');" class="layui-btn layui-btn-xs layui-btn-success"><i class="fas fa-edit"></i> 管理上架</a>']);
+                        strr = strr.concat(['<a onclick="save(2,'+ "'"+d.id+"'" +','+"'"+d.goods_name+"'"+');" class="layui-btn layui-btn-xs layui-btn-success"><i class="fas fa-eye"></i> 管理上架</a>']);
                         // }
                         return strr.join('');
                     }}

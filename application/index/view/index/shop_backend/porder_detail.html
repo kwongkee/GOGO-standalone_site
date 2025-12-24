@@ -100,13 +100,13 @@
         <div class="back_text">返回</div>
     </div>
 </div>
-<form class="layui-form" id="siteForm" action="" method="post" lay-filter="component-form-group" style="padding:10px;">
+<form class="layui-form" id="siteForm" action="" method="post" lay-filter="component-form-group" style="padding-top:10px;">
     <input type="hidden" name="company_id" value="{$company_id}">
     <input type="hidden" name="company_type" value="{$company_type}">
     <input type="hidden" name="id" value="{$id}">
     <input type="text" style="display:none;" name="pa" id="pa" value="1">
 
-    <div class="form-group" style="padding:10px;">
+    <div class="form-group" style="padding:0px;">
         <fieldset class="layui-elem-field">
             <legend>订购清单信息</legend>
             <div class="layui-field-box">
@@ -174,7 +174,29 @@
                 {/if}
             </div>
         </fieldset>
-
+        
+        {if $order['status']==1 && $order['is_daifa']==1}
+            <!--不是代发，自发仓库-->
+            <div class="info_div">
+                <input type="text" name="printer_id" id="printer_id" value="{$list['express_infos']['printer_id']}" style="display:none;"/>
+                <div class="layui-form-item direct_ship">
+                    <div class="layui-form-label">选择快递</div>
+                    <div class="layui-input-block inline">
+                        <select name="direct_ship[express_id]" lay-search>
+                            <option value="">请选择</option>
+                            {volist name="list['express_infos']['express_info']" id="v"}
+                            <option value="{$v['express_id']}">快递名称：【{$v['express_name']}】,快递产品：【{$v['express_typename']}】，支付方式：【{$v['express_payname']}】</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" lay-submit lay-filter="component-form-element2">立即保存</button>
+            </div>
+        {/if}
+        
         {if ($order['status']==-2 && $order['type']==0 && $order['issend']==0) || $order['accept_type']==1}
             <!--待确认-->
             <div class="layui-form-item">
@@ -204,7 +226,8 @@
             </div>
         {/if}
 
-        {if $order['status']==1 && $order['accept_type']==0}
+        {if $order['status']==1 && $order['accept_type']==0 && $order['is_daifa']==2}
+            <!--代发订单-->
             <!--已付款，待采购-->
             <div class="info_div">
                 <div class="layui-form-item">
@@ -240,7 +263,8 @@
             </div>
         {/if}
 
-        {if $order['accept_type']==2 && $order['status']==1}
+        {if $order['accept_type']==2 && $order['status']==1 && $order['is_daifa']==2}
+            <!--代发订单-->
             <div class="info_div">
                 <div class="layui-form-item">
                     <div class="layui-form-label">发货类型</div>

@@ -3991,51 +3991,97 @@ class Index extends Controller
         $method = isset($dat['method'])?intval($dat['method']):0;#1生成库存更新信息表，2同步库存信息表
         
         if(isset($dat['pa'])){
-            $file = $request->file('file');
-            if (!$file) {
-                return json(['code' => -1, 'msg' => '请上传文件']);
-            }
-            $path = ROOT_PATH.'public'.DS.'uploads'.DS.'goods_inventory';
-
-            $saveResult = $file->validate(['ext' => 'xls,csv,xlsx'])->move($path);
-            if (!$saveResult) {
-                return json(['code' => -1, 'msg' => $file->getError()]);
-            }
-            $fileName = $path.'/'.$saveResult->getSaveName();
-            $dir = '/www/wwwroot/gogo/collect_website/vendor/phpoffice/phpexcel/Classes/PHPExcel';
-            require_once($dir."/IOFactory.php");
-            $inputFileType = PHPExcel_IOFactory::identify($fileName);
-            $objRead = PHPExcel_IOFactory::createReader($inputFileType);
-            $objRead->setReadDataOnly(true);
-            $PHPRead = $objRead->load($fileName);
-            $sheets = $PHPRead->getSheetCount();#获取所有工作表单
-            @unlink($fileName);
-
-            $update_info = [];
-            for($i=0;$i<$sheets;$i++){
-                $data = [];
-                $sheet = $PHPRead->getSheet($i);
-                $sheet_name = trim($PHPRead->getSheet($i)->getTitle());
-                $allRow = $sheet->getHighestRow();
-
-                for ($currentRow = 2; $currentRow <= $allRow; $currentRow++) {
-                    $goods_name = trim($PHPRead->getSheet($i)->getCell("A".$currentRow)->getValue());
-                    $sku_name = trim($PHPRead->getSheet($i)->getCell("B".$currentRow)->getValue());
-                    $origin_goods_num = trim($PHPRead->getSheet($i)->getCell("C".$currentRow)->getValue());
-                    $now_goods_num = trim($PHPRead->getSheet($i)->getCell("D".$currentRow)->getValue());
-                    $goods_sn = trim($PHPRead->getSheet($i)->getCell("E".$currentRow)->getValue());
-                    $goods_barcode = trim($PHPRead->getSheet($i)->getCell("F".$currentRow)->getValue());
-                    $goods_stockcode = trim($PHPRead->getSheet($i)->getCell("G".$currentRow)->getValue());
-                    
-                    // $goods_info = Db::connect($this->config)->name('goods_merchant')->where(['cid'=>$company_id,'goods_name'=>$goods_name,'goods_sn'=>$goods_sn,'goods_barcode'=>$goods_barcode,'goods_stockcode'=>$goods_stockcode])->find();
-                    // $sku_info = Db::connect($this->config)->name('goods_sku_merchant')->where(['goods_id'=>$goods_info['id'],'spec_names'=>$sku_name])->find();
-                    // $sku_info['sku_prices'] = json_decode($sku_info['sku_prices'],true);
-                    
-                    array_push($update_info,['goods_name'=>$goods_name,'sku_name'=>$sku_name,'origin_goods_num'=>$origin_goods_num,'now_goods_num'=>$now_goods_num,'goods_sn'=>$goods_sn,'goods_barcode'=>$goods_barcode,'goods_stockcode'=>$goods_stockcode]);
+            if($dat['pa']==1){
+                #上传文件
+                $file = $request->file('file');
+                if (!$file) {
+                    return json(['code' => -1, 'msg' => '请上传文件']);
                 }
+                $path = ROOT_PATH.'public'.DS.'uploads'.DS.'goods_inventory';
+    
+                $saveResult = $file->validate(['ext' => 'xls,csv,xlsx'])->move($path);
+                if (!$saveResult) {
+                    return json(['code' => -1, 'msg' => $file->getError()]);
+                }
+                $fileName = $path.'/'.$saveResult->getSaveName();
+                $dir = '/www/wwwroot/gogo/collect_website/vendor/phpoffice/phpexcel/Classes/PHPExcel';
+                require_once($dir."/IOFactory.php");
+                $inputFileType = PHPExcel_IOFactory::identify($fileName);
+                $objRead = PHPExcel_IOFactory::createReader($inputFileType);
+                $objRead->setReadDataOnly(true);
+                $PHPRead = $objRead->load($fileName);
+                $sheets = $PHPRead->getSheetCount();#获取所有工作表单
+                @unlink($fileName);
+    
+                $update_info = [];
+                for($i=0;$i<$sheets;$i++){
+                    $data = [];
+                    $sheet = $PHPRead->getSheet($i);
+                    $sheet_name = trim($PHPRead->getSheet($i)->getTitle());
+                    $allRow = $sheet->getHighestRow();
+    
+                    for ($currentRow = 2; $currentRow <= $allRow; $currentRow++) {
+                        $goods_name = trim($PHPRead->getSheet($i)->getCell("A".$currentRow)->getValue());
+                        $sku_name = trim($PHPRead->getSheet($i)->getCell("B".$currentRow)->getValue());
+                        $origin_goods_num = trim($PHPRead->getSheet($i)->getCell("C".$currentRow)->getValue());
+                        $now_goods_num = trim($PHPRead->getSheet($i)->getCell("D".$currentRow)->getValue());
+                        $goods_sn = trim($PHPRead->getSheet($i)->getCell("E".$currentRow)->getValue());
+                        $goods_barcode = trim($PHPRead->getSheet($i)->getCell("F".$currentRow)->getValue());
+                        $goods_stockcode = trim($PHPRead->getSheet($i)->getCell("G".$currentRow)->getValue());
+                        
+                        // $goods_info = Db::connect($this->config)->name('goods_merchant')->where(['cid'=>$company_id,'goods_name'=>$goods_name,'goods_sn'=>$goods_sn,'goods_barcode'=>$goods_barcode,'goods_stockcode'=>$goods_stockcode])->find();
+                        // $sku_info = Db::connect($this->config)->name('goods_sku_merchant')->where(['goods_id'=>$goods_info['id'],'spec_names'=>$sku_name])->find();
+                        // $sku_info['sku_prices'] = json_decode($sku_info['sku_prices'],true);
+                        
+                        array_push($update_info,['goods_name'=>$goods_name,'sku_name'=>$sku_name,'origin_goods_num'=>$origin_goods_num,'now_goods_num'=>$now_goods_num,'goods_sn'=>$goods_sn,'goods_barcode'=>$goods_barcode,'goods_stockcode'=>$goods_stockcode]);
+                    }
+                }
+                
+                return json(['code'=>0,'msg'=>'已导入，待确认','data'=>$update_info]);
             }
-            
-            return json(['code'=>0,'msg'=>'已导入，待确认','data'=>$update_info]);
+            elseif($dat['pa']==2){
+                #提交确认“变更库存”
+                $confirm_data = json_decode($dat['confirm_data'],true);
+                foreach($confirm_data as $k=>$v){
+                    if($v['confirmed']==1 && $v['status']=='confirmed' && $v['origin_goods_num']!=$v['now_goods_num']){
+                        $sku_info = Db::connect($this->config)->name('goods_sku_merchant')->where(['goods_sn'=>$v['goods_sn'],'goods_barcode'=>$v['goods_barcode'],'goods_stockcode'=>$v['goods_stockcode'],'spec_names'=>$v['sku_name']])->find();
+                        $sku_info['sku_prices'] = json_decode($sku_info['sku_prices'],true);
+                        $goods_info = Db::connect($this->config)->name('goods_merchant')->where(['cid'=>$company_id,'id'=>$sku_info['goods_id']])->find();
+                        
+                        #更新库存
+                        $sku_info['sku_prices']['goods_number'] = intval($v['now_goods_num']);
+                        Db::connect($this->config)->name('goods_sku_merchant')->where(['goods_sn'=>$v['goods_sn'],'goods_barcode'=>$v['goods_barcode'],'goods_stockcode'=>$v['goods_stockcode'],'goods_id'=>$goods_info['id']])->update(['sku_prices'=>json_encode($sku_info['sku_prices'],true),'goods_number'=>intval($v['now_goods_num'])]);
+                        
+                        $goods_number = Db::connect($this->config)->name('goods_sku_merchant')->where(['goods_id'=>$goods_info['id']])->sum('goods_number');
+                        Db::connect($this->config)->name('goods_merchant')->where(['cid'=>$company_id,'id'=>$sku_info['goods_id']])->update(['goods_number'=>$goods_number]);
+                        
+                        if($goods_info['shelf_id']>0){
+                            #上架id
+                            Db::connect($this->config)->name('goods')->where(['shop_id'=>$company_id,'goods_id'=>$goods_info['shelf_id']])->update(['goods_number'=>$goods_number]);
+                            
+                            Db::connect($this->config)->name('goods_sku')->where(['goods_id'=>$goods_info['shelf_id'],'goods_sn'=>$v['goods_sn'],'goods_barcode'=>$v['goods_barcode'],'goods_stockcode'=>$v['goods_stockcode'],'spec_names'=>$v['sku_name']])->update(['sku_prices'=>json_encode($sku_info['sku_prices'],true),'goods_number'=>intval($v['now_goods_num'])]);
+                        }
+                        
+                        #记录在企业商家库存变化表中
+                        #商家规格库存变化表
+                        Db::name('website_warehouse_inventory_change_log')->insert([
+                            'company_id'=>$company_id,
+                            'warehouse_id'=>$goods_info['wid'],
+                            'goods_id'=>$sku_info['goods_id'],
+                            'sku_id'=>$sku_info['sku_id'],
+                            'origin_num'=>$v['origin_goods_num'],
+                            'now_num'=>$v['now_goods_num']
+                        ]);
+                        
+                        #商家商品规格现有库存表
+                        Db::name('website_warehouse_goodsnum')->where(['company_id'=>$company_id,'warehouse_id'=>$goods_info['wid'],'goods_id'=>$sku_info['goods_id'],'sku_id'=>$sku_info['sku_id']])->update(['num'=>$v['now_goods_num']]);
+                        
+                        // $insert_ids .= $iid.',';#通知仓库库存变更（看需不需要，待办）
+                    }
+                    
+                }
+                return json(['code'=>0,'msg'=>'确认成功，已变更库存']);
+            }
         }else{
             return view('index/shop_backend/inventory_info',compact('company_id','company_type','type','method'));
         }
@@ -6045,6 +6091,11 @@ class Index extends Controller
                 }
             }
             // dd($list['express']);
+            
+            #获取商品仓库类型
+            $warehouse_merchant = Db::name('centralize_warehouse_merchant')->where(['id'=>$list['goods']['wid']])->find();
+            $list['goods']['warehouse_form'] = Db::name('centralize_warehouse_list')->where(['id'=>$warehouse_merchant['warehouse_id']])->field('warehouse_form')->find()['warehouse_form'];
+            
             #获取终端
             $list['terminal'] = Db::name('centralize_warehouse_merchant_printer')->where(['company_id'=>$company_id,'wm_id'=>$list['goods']['wid']])->select();
             foreach($list['terminal'] as $k=>$v){
@@ -8278,305 +8329,322 @@ class Index extends Controller
             $system = Db::name('centralize_system_notice')->where(['uid'=>0])->find();
             $manage_openid = $system['account'];
             
-            if(isset($dat['status'])){
-                if($dat['status']==1){
-                    #有货（无修改），通知总后台
-                    Db::name('website_order_list')->where(['id'=>$order['id']])->update([
-                        'status'=>-9,
-                    ]);
-                    common_notice([
-                        'openid'=>$manage_openid,
-                        'phone'=>'',
-                        'email'=>''
-                    ],[
-                        'msg'=>'清单['.$order['ordersn'].']已确认有货[无修改]，点击链接查看：https://www.gogo198.net/?s=shop/audit',
-                        'opera'=>'确认有货（无修改）',
-                        'url'=>'https://www.gogo198.net/?s=shop/audit'
+            #查询订单信息
+            $order = Db::name('website_order_list')->where(['id'=>$id])->find();
+            if($order['is_daifa']==1 && $order['status']==1 && $order['is_printer']==0){
+                #不是代发和已付款未打印
+                // $printer_info = Db::name('centralize_warehouse_express')->where(['id'=>intval($dat['direct_ship']['express_id'])])->find();
+                $post = ['order_id'=>$id,'warehouse_express_id'=>$dat['direct_ship']['express_id']];
+                $res = httpRequest('https://shop.gogo198.cn/collect_website/public/?s=/api/func/print_order',$post);
+                dd($res);
+                if($res){
+                    Db::name('website_order_list')->where(['id'=>$id])->update([
+                        'status'=>1,
+                        'is_printer'=>1
                     ]);
                 }
-                elseif($dat['status']==-4){
-                    #无货，通知总后台
-                    Db::name('website_order_list')->where(['id'=>$order['id']])->update([
-                        'status'=>-11,
-                    ]);
-                    common_notice([
-                        'openid'=>$manage_openid,
-                        'phone'=>'',
-                        'email'=>''
-                    ],[
-                        'msg'=>'清单['.$order['ordersn'].']已确认无货，点击链接查看：https://www.gogo198.net/?s=shop/audit',
-                        'opera'=>'确认无货',
-                        'url'=>'https://www.gogo198.net/?s=shop/audit'
-                    ]);
-                }
-                elseif($dat['status']==-9){
-                    //有货（已修改），通知总后台
-                    Db::name('website_order_list')->where(['id'=>$order['id']])->update([
-                        'status'=>-10,
-                    ]);
-                    common_notice([
-                        'openid'=>$manage_openid,
-                        'phone'=>'',
-                        'email'=>''
-                    ],[
-                        'msg'=>'清单['.$order['ordersn'].']已确认有货[有修改]，点击链接查看：https://www.gogo198.net/?s=shop/audit',
-                        'opera'=>'确认有货（有修改）',
-                        'url'=>'https://www.gogo198.net/?s=shop/audit'
-                    ]);
-                }
-                elseif($dat['status']==2){
-                    #库存有货，立即发货
-                    Db::name('website_order_list')->where(['id'=>$order['id']])->update([
-                        'accept_type'=>2,
-                    ]);
-                }
-            }
-            elseif(isset($dat['accept_type'])){
-                if($dat['accept_type']==1){
-                    #接受
-                    if(isset($dat['have_under'])){
-                        if($dat['have_under']==0){
-                            if(empty($dat['company_id']) || $dat['company_id']==-1){
-                                return json(['code'=>-1,'msg'=>'请选择或配置下游信息']);
-                            }
-
-                            $res = Db::name('website_order_list')->where(['id'=>$id])->update(['accept_type'=>1,'company_id'=>$dat['company_id']]);
-                        }
-                    }else{
-                        $res = Db::name('website_order_list')->where(['id'=>$id])->update(['accept_type'=>1]);
-                    }
-                    if($res){
-                        return json(['code'=>0,'msg'=>'接受成功！']);
-                    }
-                }
-                elseif($dat['accept_type']==2){
-                    #退订
-                    $res = Db::name('website_order_list')->where(['id'=>$id])->update(['status'=>-3]);
-                    if($res){
-                        $order = Db::name('website_order_list')->where(['id'=>$id])->find();
-                        #通知管理员
+            }else{
+                if(isset($dat['status'])){
+                    if($dat['status']==1){
+                        #有货（无修改），通知总后台
+                        Db::name('website_order_list')->where(['id'=>$order['id']])->update([
+                            'status'=>-9,
+                        ]);
                         common_notice([
                             'openid'=>$manage_openid,
                             'phone'=>'',
                             'email'=>''
                         ],[
-                            'msg'=>'订单['.$order['ordersn'].']已申请取消退订，点击链接查看：https://www.gogo198.net/?s=shop/audit',
-                            'opera'=>'买手取消退订',
+                            'msg'=>'清单['.$order['ordersn'].']已确认有货[无修改]，点击链接查看：https://www.gogo198.net/?s=shop/audit',
+                            'opera'=>'确认有货（无修改）',
                             'url'=>'https://www.gogo198.net/?s=shop/audit'
                         ]);
-                        return json(['code'=>0,'msg'=>'退订成功！']);
                     }
-                }
-            }
-            elseif(isset($dat['delivery_type'])){
-                #已采购，保存发货信息
-
-                if($dat['delivery_type']==1){
-                    #直邮发货
-                    if(empty($dat['direct_ship']['express_id']) || empty($dat['direct_ship']['express_no']) || empty($dat['direct_ship']['address']) || empty($dat['direct_ship']['postal']) || empty($dat['direct_ship']['user_name']) || empty($dat['direct_ship']['area_mobile']) || empty($dat['direct_ship']['mobile'])){
-                        return json(['code'=>-1,'msg'=>'请输入发货信息']);
-                    }
-
-                    $res = Db::name('website_order_list')->where(['id'=>$dat['id']])->update([
-                        'status'=>2,
-                        'accept_type'=>4,
-                        'direct_ship'=>json_encode($dat['direct_ship'],true)
-                    ]);
-
-                    #6、通知买家
-//                    common_notice($user,[
-//                        'msg'=>'订单['.$order['ordersn'].']状态变更为[已预报]，点击链接查看：https://gather.gogo198.cn/',
-//                        'opera'=>'包裹已预报',
-//                        'url'=>'https://gather.gogo198.cn'
-//                    ]);
-
-                    return json(['code'=>0,'msg'=>'保存成功']);
-                }
-                elseif($dat['delivery_type']==2){
-                    #集运发货
-                    if(empty($dat['warehouse_id'])){return json(['code'=>-1,'msg'=>'请选择集货仓库']);}
-                    if($dat['delivery_logistics']==1){
-                        if(empty($dat['delivery_method'])){return json(['code'=>-1,'msg'=>'请选择送仓物流']);}
-                        if($dat['delivery_method']==1 || $dat['delivery_method']==2){
-                            if(empty($dat['express_id']) || empty($dat['express_no'])){return json(['code'=>-1,'msg'=>'请填写物流信息']);}
-                        }
-                        elseif($dat['delivery_method']==3){
-                            if(empty($dat['inwarehouse_date']) || empty($dat['contact_name']) || empty($dat['contact_mobile'])){return json(['code'=>-1,'msg'=>'请填写入仓信息']);}
-                        }
-                    }
-
-                    #1、仓库预定
-                    $prediction_id = 2;#1直接转运T，2集货转运G
-                    $start = strtotime(date('Y-01-01 00:00:00'));$end = strtotime(date('Y-12-31 23:59:59'));
-                    $order_num = Db::name('centralize_parcel_order')->where(['prediction_id'=>$prediction_id,'user_id'=>$user['id']])->whereBetween('createtime',[$start,$end],'AND')->count();
-                    $order_num = str_pad($order_num+1,3,'0',STR_PAD_LEFT);
-                    $ordersn = substr($user['custom_id'],-5) . date('Y') . $order_num;
-                    #多个包裹
-                    $content = [
-                        'user_id'    => $user['id'],
-                        'agent_id'   => $user['agent_id'],
-                        'ordersn'    => 'G'.$ordersn,
-                        'warehouse_id'=> intval($dat['warehouse_id']),#默认仓库地址
-                        'prediction_id'=> $prediction_id,
-                        'task_id'    => 0,
-                        'sure_prediction'=>1,
-                        'createtime' => $time
-                    ];
-                    $orderid = Db::name('centralize_parcel_order')->insertGetId($content);
-
-                    //1.1、任务信息处理（废弃）
-                    #获取任务流水号
-//                $start_num = $this->get_today_task($time);
-//                if(empty($start_num)){
-//                    $serial_number = 'MC'.date('ymdHis',$time).str_pad(1,2,'0',STR_PAD_LEFT);
-//                }else{
-//                    $serial_number = 'MC'.date('ymdHis',$time).str_pad(intval($start_num)+1,2,'0',STR_PAD_LEFT);
-//                }
-//                #获取任务名称
-//                $task_name = $user['custom_id'].'发起任务[仓库预报]';
-//                Db::name('centralize_task')->insertGetId([
-//                    'user_id'=>$user['id'],
-//                    'type'=>3,
-//                    'task_name'=>$task_name,
-//                    'task_id'=>19,
-//                    'order_id'=>$orderid,
-//                    'serial_number'=>$serial_number,
-//                    'remark'=>'',
-//                    'status'=>1,
-//                    'createtime'=>$time
-//                ]);
-
-                    #2、包裹预报
-                    $insert_data = [
-                        'user_id'=>$user['id'],
-                        'orderid'=>$orderid,
-                        'gogo_oid'=>$order['id'],
-                        'express_id'=>intval($dat['express_id']),
-                        'express_no'=>trim($dat['express_no']),
-                        #入仓信息
-                        'delivery_logistics'=>intval($dat['delivery_logistics']),#1物流到仓，2上门提货
-                        'delivery_method'=>intval($dat['delivery_method']),#1快递，2物流，3自送入仓
-                        #物品信息
-                        'inspection_method'=>1,#1拍照验货，2在线视频
-                        #包装材质
-                        'package'=>trim($dat['package']),
-                        'package_name'=>trim($dat['package_name']),
-                        #包裹毛重
-                        'grosswt'=>trim($dat['grosswt']),
-                        #包裹体积
-                        'volumn'=>trim($dat['long']).'*'.trim($dat['width']).'*'.trim($dat['height']),
-                        #状态
-                        'status2'=>0,#直接转运或集货转运都要先签收入库
-                        #创建时间
-                        'createtime'=>$time
-                    ];
-                    $package_id = Db::name('centralize_parcel_order_package')->insertGetId($insert_data);
-
-                    #3、预报商品
-                    $brand_name = '';
-//                if($dat['goods_brand']==2){
-//                    #仿牌
-//                    $brand_name=$dat['goods_brand_name2'];
-//                }
-//                elseif($dat['goods_brand']==3){
-//                    #普通品牌
-//                    $brand_name=$dat['goods_brand_name'];
-//                }
-//                elseif($dat['goods_brand']==4){
-//                    #奢侈品牌
-//                    $brand_name=$dat['goods_brand_name3'];
-//                }
-                    foreach($dat['goods_desc'] as $k=>$v){
-                        #商品规格信息
-                        $sku_info = Db::connect($this->config)->name('goods_sku')->where(['sku_id'=>$dat['goods_sku'][$k]])->find();
-                        if(!empty($sku_info)){
-                            $sku_info['sku_prices'] = json_decode($sku_info['sku_prices'],true);
-                            $dat['goods_currency'][$k] = $sku_info['sku_prices']['currency'][0];
-                            $usd_to_cny = Db::name('centralize_currency')->where(['id'=>60])->field('to_cny_rate')->find()['to_cny_rate'];
-
-                            #区间价格
-                            if(count($sku_info['sku_prices']['start_num'])==1){
-                                #单个区间价格
-                                $dat['goods_price'][$k] = sprintf('%.2f',$dat['goods_num'][$k]*$sku_info['sku_prices']['price'][0]);
-                            }else{
-                                #多个区间价格
-                                foreach($sku_info['sku_prices']['start_num'] as $k2=>$v2){
-                                    if($v2<=$dat['goods_num'][$k] && $dat['goods_num'][$k]<=$sku_info['sku_prices']['end_num'][$k2]){
-                                        $dat['goods_price'][$k] = sprintf('%.2f',$dat['goods_num']*$sku_info['sku_prices']['price'][$k2]);
-                                    }
-                                }
-                            }
-                            $dat['goods_usdprice'][$k] = sprintf('%.2f',$dat['goods_price'][$k] / $usd_to_cny);
-                        }
-
-                        Db::name('centralize_parcel_order_goods')->insert([
-                            'user_id'=>$user['id'],
-                            'orderid'=>$orderid,
-                            'package_id'=>$package_id,
-                            #物品属性
-                            'valueid'=>isset($dat['valueid'][$k])?$dat['valueid'][$k]:'',
-                            #物品描述
-                            'good_desc'=>trim($v),
-                            #物品数量
-                            'good_num'=>isset($dat['goods_num'][$k])?$dat['goods_num'][$k]:'',
-                            #物品单位
-                            'good_unit'=>isset($dat['goods_unit'][$k])?$dat['goods_unit'][$k]:'',
-                            #物品币种
-                            'good_currency'=>isset($dat['goods_currency'][$k])?$dat['goods_currency'][$k]:'',
-                            #物品金额
-                            'good_price'=>isset($dat['goods_price'][$k])?$dat['goods_price'][$k]:'',
-                            #物品金额（等值美元）
-                            'goods_usdprice'=>isset($dat['goods_usdprice'][$k])?$dat['goods_usdprice'][$k]:'',
-                            #物品包装
-                            'good_package'=>isset($dat['goods_package'])?$dat['goods_package']:'',
-                            #物品品牌类型
-                            'brand_type'=>isset($dat['goods_brand'][$k])?$dat['goods_brand'][$k]:'',
-                            'brand_name'=>$brand_name,
-                            #物品备注
-                            'good_remark'=>isset($dat['goods_remark'][$k])?$dat['goods_remark'][$k]:'',
-                            #创建时间
-                            'createtime'=>$time
+                    elseif($dat['status']==-4){
+                        #无货，通知总后台
+                        Db::name('website_order_list')->where(['id'=>$order['id']])->update([
+                            'status'=>-11,
+                        ]);
+                        common_notice([
+                            'openid'=>$manage_openid,
+                            'phone'=>'',
+                            'email'=>''
+                        ],[
+                            'msg'=>'清单['.$order['ordersn'].']已确认无货，点击链接查看：https://www.gogo198.net/?s=shop/audit',
+                            'opera'=>'确认无货',
+                            'url'=>'https://www.gogo198.net/?s=shop/audit'
                         ]);
                     }
-
-                    #插入物品属性指定id下的标签
-//                if(!empty($dat['goods_desc'])){
-//                    $gvalue = Db::name('centralize_gvalue_list')->where(['id'=>$dat['valueid']])->field('keywords')->find();
-//                    $gvalue['keywords'] = $gvalue['keywords'].'、'.trim($dat['goods_desc']);
-//                    Db::name('centralize_gvalue_list')->where(['id'=>$dat['valueid']])->update(['keywords'=>$gvalue['keywords']]);
-//                }
-
-                    #4、包裹订单
-                    Db::name('centralize_order_fee_log')->insert([
-                        'type'=>1,#1国内订单，2集运订单
-                        'ordersn'=>'G'.date('YmdHis'),
-                        'user_id'=>$user['id'],
-                        'orderid'=>$orderid,
-                        #包裹id
-                        'good_id'=>$package_id,
-                        'express_no'=>trim($dat['express_no']),
-                        'service_status'=>1,
-                        'order_status'=>0,
-                        'createtime'=>$time
-                    ]);
-
-                    #5、修改购购网订单表
-                    Db::name('website_order_list')->where(['id'=>$id])->update(['status'=>2,'accept_type'=>3]);
-
-                    #6、通知买家
-                    common_notice($user,[
-                        'page'=>'',
-                        'msg'=>'订单['.$order['ordersn'].']状态变更为[已预报]，点击链接查看：https://gather.gogo198.cn/?s=gather/package_info&id='.$package_id.'&process1=19&process2=21&process3=undefined',
-                        'opera'=>'包裹已预报',
-                        'url'=>'https://gather.gogo198.cn/?s=gather/package_info&id='.$package_id.'&process1=19&process2=21&process3=undefined'
-                    ]);
-
-                    return json(['code'=>0,'msg'=>'已生成发货预报并通知客户']);
+                    elseif($dat['status']==-9){
+                        //有货（已修改），通知总后台
+                        Db::name('website_order_list')->where(['id'=>$order['id']])->update([
+                            'status'=>-10,
+                        ]);
+                        common_notice([
+                            'openid'=>$manage_openid,
+                            'phone'=>'',
+                            'email'=>''
+                        ],[
+                            'msg'=>'清单['.$order['ordersn'].']已确认有货[有修改]，点击链接查看：https://www.gogo198.net/?s=shop/audit',
+                            'opera'=>'确认有货（有修改）',
+                            'url'=>'https://www.gogo198.net/?s=shop/audit'
+                        ]);
+                    }
+                    elseif($dat['status']==2){
+                        #库存有货，立即发货
+                        Db::name('website_order_list')->where(['id'=>$order['id']])->update([
+                            'accept_type'=>2,
+                        ]);
+                    }
+                }
+                elseif(isset($dat['accept_type'])){
+                    if($dat['accept_type']==1){
+                        #接受
+                        if(isset($dat['have_under'])){
+                            if($dat['have_under']==0){
+                                if(empty($dat['company_id']) || $dat['company_id']==-1){
+                                    return json(['code'=>-1,'msg'=>'请选择或配置下游信息']);
+                                }
+    
+                                $res = Db::name('website_order_list')->where(['id'=>$id])->update(['accept_type'=>1,'company_id'=>$dat['company_id']]);
+                            }
+                        }else{
+                            $res = Db::name('website_order_list')->where(['id'=>$id])->update(['accept_type'=>1]);
+                        }
+                        if($res){
+                            return json(['code'=>0,'msg'=>'接受成功！']);
+                        }
+                    }
+                    elseif($dat['accept_type']==2){
+                        #退订
+                        $res = Db::name('website_order_list')->where(['id'=>$id])->update(['status'=>-3]);
+                        if($res){
+                            $order = Db::name('website_order_list')->where(['id'=>$id])->find();
+                            #通知管理员
+                            common_notice([
+                                'openid'=>$manage_openid,
+                                'phone'=>'',
+                                'email'=>''
+                            ],[
+                                'msg'=>'订单['.$order['ordersn'].']已申请取消退订，点击链接查看：https://www.gogo198.net/?s=shop/audit',
+                                'opera'=>'买手取消退订',
+                                'url'=>'https://www.gogo198.net/?s=shop/audit'
+                            ]);
+                            return json(['code'=>0,'msg'=>'退订成功！']);
+                        }
+                    }
+                }
+                elseif(isset($dat['delivery_type'])){
+                    #已采购，保存发货信息
+    
+                    if($dat['delivery_type']==1){
+                        #直邮发货
+                        if(empty($dat['direct_ship']['express_id']) || empty($dat['direct_ship']['express_no']) || empty($dat['direct_ship']['address']) || empty($dat['direct_ship']['postal']) || empty($dat['direct_ship']['user_name']) || empty($dat['direct_ship']['area_mobile']) || empty($dat['direct_ship']['mobile'])){
+                            return json(['code'=>-1,'msg'=>'请输入发货信息']);
+                        }
+    
+                        $res = Db::name('website_order_list')->where(['id'=>$dat['id']])->update([
+                            'status'=>2,
+                            'accept_type'=>4,
+                            'direct_ship'=>json_encode($dat['direct_ship'],true)
+                        ]);
+    
+                        #6、通知买家
+    //                    common_notice($user,[
+    //                        'msg'=>'订单['.$order['ordersn'].']状态变更为[已预报]，点击链接查看：https://gather.gogo198.cn/',
+    //                        'opera'=>'包裹已预报',
+    //                        'url'=>'https://gather.gogo198.cn'
+    //                    ]);
+    
+                        return json(['code'=>0,'msg'=>'保存成功']);
+                    }
+                    elseif($dat['delivery_type']==2){
+                        #集运发货
+                        if(empty($dat['warehouse_id'])){return json(['code'=>-1,'msg'=>'请选择集货仓库']);}
+                        if($dat['delivery_logistics']==1){
+                            if(empty($dat['delivery_method'])){return json(['code'=>-1,'msg'=>'请选择送仓物流']);}
+                            if($dat['delivery_method']==1 || $dat['delivery_method']==2){
+                                if(empty($dat['express_id']) || empty($dat['express_no'])){return json(['code'=>-1,'msg'=>'请填写物流信息']);}
+                            }
+                            elseif($dat['delivery_method']==3){
+                                if(empty($dat['inwarehouse_date']) || empty($dat['contact_name']) || empty($dat['contact_mobile'])){return json(['code'=>-1,'msg'=>'请填写入仓信息']);}
+                            }
+                        }
+    
+                        #1、仓库预定
+                        $prediction_id = 2;#1直接转运T，2集货转运G
+                        $start = strtotime(date('Y-01-01 00:00:00'));$end = strtotime(date('Y-12-31 23:59:59'));
+                        $order_num = Db::name('centralize_parcel_order')->where(['prediction_id'=>$prediction_id,'user_id'=>$user['id']])->whereBetween('createtime',[$start,$end],'AND')->count();
+                        $order_num = str_pad($order_num+1,3,'0',STR_PAD_LEFT);
+                        $ordersn = substr($user['custom_id'],-5) . date('Y') . $order_num;
+                        #多个包裹
+                        $content = [
+                            'user_id'    => $user['id'],
+                            'agent_id'   => $user['agent_id'],
+                            'ordersn'    => 'G'.$ordersn,
+                            'warehouse_id'=> intval($dat['warehouse_id']),#默认仓库地址
+                            'prediction_id'=> $prediction_id,
+                            'task_id'    => 0,
+                            'sure_prediction'=>1,
+                            'createtime' => $time
+                        ];
+                        $orderid = Db::name('centralize_parcel_order')->insertGetId($content);
+    
+                        //1.1、任务信息处理（废弃）
+                        #获取任务流水号
+    //                $start_num = $this->get_today_task($time);
+    //                if(empty($start_num)){
+    //                    $serial_number = 'MC'.date('ymdHis',$time).str_pad(1,2,'0',STR_PAD_LEFT);
+    //                }else{
+    //                    $serial_number = 'MC'.date('ymdHis',$time).str_pad(intval($start_num)+1,2,'0',STR_PAD_LEFT);
+    //                }
+    //                #获取任务名称
+    //                $task_name = $user['custom_id'].'发起任务[仓库预报]';
+    //                Db::name('centralize_task')->insertGetId([
+    //                    'user_id'=>$user['id'],
+    //                    'type'=>3,
+    //                    'task_name'=>$task_name,
+    //                    'task_id'=>19,
+    //                    'order_id'=>$orderid,
+    //                    'serial_number'=>$serial_number,
+    //                    'remark'=>'',
+    //                    'status'=>1,
+    //                    'createtime'=>$time
+    //                ]);
+    
+                        #2、包裹预报
+                        $insert_data = [
+                            'user_id'=>$user['id'],
+                            'orderid'=>$orderid,
+                            'gogo_oid'=>$order['id'],
+                            'express_id'=>intval($dat['express_id']),
+                            'express_no'=>trim($dat['express_no']),
+                            #入仓信息
+                            'delivery_logistics'=>intval($dat['delivery_logistics']),#1物流到仓，2上门提货
+                            'delivery_method'=>intval($dat['delivery_method']),#1快递，2物流，3自送入仓
+                            #物品信息
+                            'inspection_method'=>1,#1拍照验货，2在线视频
+                            #包装材质
+                            'package'=>trim($dat['package']),
+                            'package_name'=>trim($dat['package_name']),
+                            #包裹毛重
+                            'grosswt'=>trim($dat['grosswt']),
+                            #包裹体积
+                            'volumn'=>trim($dat['long']).'*'.trim($dat['width']).'*'.trim($dat['height']),
+                            #状态
+                            'status2'=>0,#直接转运或集货转运都要先签收入库
+                            #创建时间
+                            'createtime'=>$time
+                        ];
+                        $package_id = Db::name('centralize_parcel_order_package')->insertGetId($insert_data);
+    
+                        #3、预报商品
+                        $brand_name = '';
+    //                if($dat['goods_brand']==2){
+    //                    #仿牌
+    //                    $brand_name=$dat['goods_brand_name2'];
+    //                }
+    //                elseif($dat['goods_brand']==3){
+    //                    #普通品牌
+    //                    $brand_name=$dat['goods_brand_name'];
+    //                }
+    //                elseif($dat['goods_brand']==4){
+    //                    #奢侈品牌
+    //                    $brand_name=$dat['goods_brand_name3'];
+    //                }
+                        foreach($dat['goods_desc'] as $k=>$v){
+                            #商品规格信息
+                            $sku_info = Db::connect($this->config)->name('goods_sku')->where(['sku_id'=>$dat['goods_sku'][$k]])->find();
+                            if(!empty($sku_info)){
+                                $sku_info['sku_prices'] = json_decode($sku_info['sku_prices'],true);
+                                $dat['goods_currency'][$k] = $sku_info['sku_prices']['currency'][0];
+                                $usd_to_cny = Db::name('centralize_currency')->where(['id'=>60])->field('to_cny_rate')->find()['to_cny_rate'];
+    
+                                #区间价格
+                                if(count($sku_info['sku_prices']['start_num'])==1){
+                                    #单个区间价格
+                                    $dat['goods_price'][$k] = sprintf('%.2f',$dat['goods_num'][$k]*$sku_info['sku_prices']['price'][0]);
+                                }else{
+                                    #多个区间价格
+                                    foreach($sku_info['sku_prices']['start_num'] as $k2=>$v2){
+                                        if($v2<=$dat['goods_num'][$k] && $dat['goods_num'][$k]<=$sku_info['sku_prices']['end_num'][$k2]){
+                                            $dat['goods_price'][$k] = sprintf('%.2f',$dat['goods_num']*$sku_info['sku_prices']['price'][$k2]);
+                                        }
+                                    }
+                                }
+                                $dat['goods_usdprice'][$k] = sprintf('%.2f',$dat['goods_price'][$k] / $usd_to_cny);
+                            }
+    
+                            Db::name('centralize_parcel_order_goods')->insert([
+                                'user_id'=>$user['id'],
+                                'orderid'=>$orderid,
+                                'package_id'=>$package_id,
+                                #物品属性
+                                'valueid'=>isset($dat['valueid'][$k])?$dat['valueid'][$k]:'',
+                                #物品描述
+                                'good_desc'=>trim($v),
+                                #物品数量
+                                'good_num'=>isset($dat['goods_num'][$k])?$dat['goods_num'][$k]:'',
+                                #物品单位
+                                'good_unit'=>isset($dat['goods_unit'][$k])?$dat['goods_unit'][$k]:'',
+                                #物品币种
+                                'good_currency'=>isset($dat['goods_currency'][$k])?$dat['goods_currency'][$k]:'',
+                                #物品金额
+                                'good_price'=>isset($dat['goods_price'][$k])?$dat['goods_price'][$k]:'',
+                                #物品金额（等值美元）
+                                'goods_usdprice'=>isset($dat['goods_usdprice'][$k])?$dat['goods_usdprice'][$k]:'',
+                                #物品包装
+                                'good_package'=>isset($dat['goods_package'])?$dat['goods_package']:'',
+                                #物品品牌类型
+                                'brand_type'=>isset($dat['goods_brand'][$k])?$dat['goods_brand'][$k]:'',
+                                'brand_name'=>$brand_name,
+                                #物品备注
+                                'good_remark'=>isset($dat['goods_remark'][$k])?$dat['goods_remark'][$k]:'',
+                                #创建时间
+                                'createtime'=>$time
+                            ]);
+                        }
+    
+                        #插入物品属性指定id下的标签
+    //                if(!empty($dat['goods_desc'])){
+    //                    $gvalue = Db::name('centralize_gvalue_list')->where(['id'=>$dat['valueid']])->field('keywords')->find();
+    //                    $gvalue['keywords'] = $gvalue['keywords'].'、'.trim($dat['goods_desc']);
+    //                    Db::name('centralize_gvalue_list')->where(['id'=>$dat['valueid']])->update(['keywords'=>$gvalue['keywords']]);
+    //                }
+    
+                        #4、包裹订单
+                        Db::name('centralize_order_fee_log')->insert([
+                            'type'=>1,#1国内订单，2集运订单
+                            'ordersn'=>'G'.date('YmdHis'),
+                            'user_id'=>$user['id'],
+                            'orderid'=>$orderid,
+                            #包裹id
+                            'good_id'=>$package_id,
+                            'express_no'=>trim($dat['express_no']),
+                            'service_status'=>1,
+                            'order_status'=>0,
+                            'createtime'=>$time
+                        ]);
+    
+                        #5、修改购购网订单表
+                        Db::name('website_order_list')->where(['id'=>$id])->update(['status'=>2,'accept_type'=>3]);
+    
+                        #6、通知买家
+                        common_notice($user,[
+                            'page'=>'',
+                            'msg'=>'订单['.$order['ordersn'].']状态变更为[已预报]，点击链接查看：https://gather.gogo198.cn/?s=gather/package_info&id='.$package_id.'&process1=19&process2=21&process3=undefined',
+                            'opera'=>'包裹已预报',
+                            'url'=>'https://gather.gogo198.cn/?s=gather/package_info&id='.$package_id.'&process1=19&process2=21&process3=undefined'
+                        ]);
+    
+                        return json(['code'=>0,'msg'=>'已生成发货预报并通知客户']);
+                    }
                 }
             }
 
             return json(['code'=>0,'msg'=>'保存成功']);
         }else{
+            
             if(!empty($order['edit_address'])){
                 $address = json_decode($order['edit_address'],true);
             }
@@ -8584,42 +8652,48 @@ class Index extends Controller
                 #收货信息
                 if(isset($order['content']['address_id'])){
                     $address = Db::name('centralize_user_address')->where(['id' => $order['content']['address_id']])->find();
-                    $address['postal_code'] = json_decode($address['postal_code'], true);
-                    $address['postal'] = '';
-                    foreach ($address['postal_code'] as $k => $v) {
-                        $address['postal'] .= $v;
-                    }
+                    
+                    $address['postal'] = $address['postal_code'];
+                    // $address['postal_code'] = json_decode($address['postal_code'], true);
+                    // $address['postal'] = '';
+                    // foreach ($address['postal_code'] as $k => $v) {
+                    //     $address['postal'] .= $v;
+                    // }
+                    
                     $country = Db::name('centralize_diycountry_content')->where(['id' => $address['country_id']])->find();#国
-                    $province = '';
-                    if (!empty($address['province'])) {
-                        $province = Db::name('centralize_adminstrative_area')->where(['id' => $address['province']])->find()['code_name'];#省
+                    $province = $city = $area_info = $area_info2 = $area_info3 = $area_info4 = '';
+                    
+                    if($address['have_postal_code']==1){
+                        #有邮政编码
+                        $province = $address['pre_address'];
                     }
-                    $city = '';
-                    if (!empty($address['city'])) {
-                        $city = Db::name('centralize_adminstrative_area')->where(['id' => $address['city']])->find()['code_name'];#市
+                    elseif($address['have_postal_code']==2){
+                        #无邮政编码
+                        if($address['province']>0){
+                            $province = Db::name('centralize_country_areas')->where(['id'=>$address['province']])->field('name')->find()['name'];
+                        }
+                        if($address['city']>0){
+                            $city = Db::name('centralize_country_areas')->where(['id'=>$address['city']])->field('name')->find()['name'];
+                        }
+                        if($address['area']>0){
+                            $area_info = Db::name('centralize_country_areas')->where(['id'=>$address['area']])->field('name')->find()['name'];
+                        }
+                        if($address['area2']>0){
+                            $area_info2 = Db::name('centralize_country_areas')->where(['id'=>$address['area2']])->field('name')->find()['name'];
+                        }
+                        if($address['area3']>0){
+                            $area_info3 = Db::name('centralize_country_areas')->where(['id'=>$address['area3']])->field('name')->find()['name'];
+                        }
+                        if($address['area4']>0){
+                            $area_info4 = Db::name('centralize_country_areas')->where(['id'=>$address['area4']])->field('name')->find()['name'];
+                        }
                     }
-                    $area_info = '';
-                    $area_info2 = '';
-                    $area_info3 = '';
-                    $area_info4 = '';
-                    if (!empty($address['area'])) {
-                        $area_info = Db::name('centralize_adminstrative_area')->where(['id' => $address['area']])->find()['code_name'];#区1
-                    }
-                    if (!empty($address['area2'])) {
-                        $area_info2 = Db::name('centralize_adminstrative_area')->where(['id' => $address['area2']])->find()['code_name'];#区2
-                    }
-                    if (!empty($address['area3'])) {
-                        $area_info3 = Db::name('centralize_adminstrative_area')->where(['id' => $address['area3']])->find()['code_name'];#区3
-                    }
-                    if (!empty($address['area4'])) {
-                        $area_info4 = Db::name('centralize_adminstrative_area')->where(['id' => $address['area4']])->find()['code_name'];#区4
-                    }
-
+                    
                     $address['address2'] = json_decode($address['address2'], true);
                     $address2 = '';
                     if (!empty($address['address2'])) {
                         foreach ($address['address2'] as $k => $v) {
-                            $address2 .= $v;
+                            $address2 .= '/'.$v;
                         }
                     }
 
@@ -8629,10 +8703,10 @@ class Index extends Controller
                     $address['address2'] = '';
                     $address['address'] = '';
                 }
-
             }
+            
             $order['status_name'] = $this->get_statusname($order['status']);
-
+            
             $express = Db::name('centralize_diycountry_content')->where(['pid'=>6])->select();
             $unit = Db::name('unit')->select();
             $currency = Db::name('centralize_currency')->select();
@@ -8647,9 +8721,48 @@ class Index extends Controller
                 }
             }
             $goods = $order['content']['goods_info'];
-
+            
             $list = [];
-            if($order['status']==1 && $order['accept_type']==0){
+            
+            if($order['status']==1 && $order['is_daifa']==1){
+                #直接发货流程
+                #获取该商品支持的物流
+                $express_infos = [];
+                foreach($goods as $k=>$v){
+                    $express_info = Db::connect($this->config)->name('goods_merchant')->where(['shelf_id'=>$v['good_id']])->field('express_info')->find();
+                    $express_info = json_decode($express_info['express_info'],true);
+                    $express_infos = $express_info;
+                }
+                
+                if(empty($express_infos)){
+                    $list['express_company'] = Db::name('centralize_express_product')->select();
+                }else{
+                    #获取该商品支持的快递终端
+                    
+                    #商品所属打印机
+                    $merchant_printer = Db::name('centralize_warehouse_merchant_printer')->where(['id'=>$express_infos['printer_id']])->find();
+                    // $printer = Db::name('centralize_warehouse_printer')->where(['id'=>$merchant_printer['printer_id']])->find();
+                    foreach($express_infos['express_info'] as $k=>$v){
+                        
+                        $true_express = Db::name('centralize_warehouse_express')->where(['id'=>$v['express_id']])->field('express_id,express_type')->find();
+                        #快递名称
+                        $express_infos['express_info'][$k]['express_name'] = Db::name('centralize_express_product')->where(['id'=>$true_express['express_id']])->field('name')->find()['name'];
+
+                        #快递产品
+                        $express_infos['express_info'][$k]['express_typename'] = $true_express['express_type'];
+
+                        #支付方式
+                        $paytype = ['1'=>'寄方月结','2'=>'寄方付款','3'=>'收方到付'];
+                        $express_infos['express_info'][$k]['express_payname'] = $paytype[$v['express_paytype']];
+                        
+                    }
+                    $list['express_infos'] = $express_infos;
+                    // dd($express_infos);
+                }
+            }
+            
+            if($order['status']==1 && $order['accept_type']==0 && $order['is_daifa']==2){
+                #代发流程
                 #接受采购,判断有无下级功能
                 $ishave = getUnFun(194,$company_id);
                 $list['have_under'] = $ishave;
@@ -8659,9 +8772,10 @@ class Index extends Controller
                 }
             }
 
-            if($order['accept_type']==2){
+            if($order['accept_type']==2 && $order['is_daifa']==2){
+                #代发流程，不需要填写物流信息（待改）
                 #库存有货，订单发货
-                $list['express_company'] = Db::name('centralize_diycountry_content')->where(['pid'=>6])->select();
+                $list['express_company'] = Db::name('centralize_express_product')->select();
                 #仓库
                 $list['warehouse'] = Db::name('centralize_warehouse_list')->where(['uid'=>0,'status'=>0])->select();
                 $warehouse = Db::name('centralize_warehouse_list')->where(['uid'=>$company_id,'status'=>0])->select();
@@ -9187,13 +9301,14 @@ class Index extends Controller
                 $page = $limit * $page;
             }
             $keyword = isset($dat['keywords']) ? trim($dat['keywords']) : '';
+            
             #获取企业管理员下的买手id
-            $buyer_info = Db::name('website_user_company')
-                ->alias('a')
-                ->join('website_buyer b','b.uid=a.user_id')
-                ->where(['a.id'=>$company_id])
-                ->field(['b.*'])
-                ->find();
+            // $buyer_info = Db::name('website_user_company')
+            //     ->alias('a')
+            //     ->join('website_buyer b','b.uid=a.user_id')
+            //     ->where(['a.id'=>$company_id])
+            //     ->field(['b.*'])
+            //     ->find();
 
             // if($uid>0){
             //     $customIds = [$uid];
@@ -9203,8 +9318,9 @@ class Index extends Controller
             //         ->column('id');
             // }
 
-            $where =['buyer_id'=>$buyer_info['id']];
-            $count = Db::name('website_order_list')->where($where)->where('ordersn', 'like', '%'.$keyword.'%')->whereRaw('accept_type=0 and pay_id<>0 and ( status=1 or status=-3 or status=-9 or status=-10 or status=-11 )')->count();
+            // $where =['buyer_id'=>$buyer_info['id']];
+            $where = ['company_id'=>$company_id];
+            $count = Db::name('website_order_list')->where($where)->where('ordersn', 'like', '%'.$keyword.'%')->whereRaw('accept_type=0 and pay_id<>0 and ( status=1 or status=2 or status=-3 or status=-9 or status=-10 or status=-11 )')->count();
             $rows = DB::name('website_order_list')
                 ->where($where)
                 // ->where('user_id','in',$customIds)

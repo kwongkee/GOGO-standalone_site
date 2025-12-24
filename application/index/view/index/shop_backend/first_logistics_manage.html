@@ -54,16 +54,7 @@
         .form-group select:focus,
         .form-group textarea:focus {border-color: var(--primary);outline: none;}
         .form-group textarea {min-height: 120px;resize: vertical;}
-        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
-
-
-        /*.form-group {margin-bottom: 20px;}*/
-        /*.form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}*/
-        /*.form-group input,*/
-        /*.form-group select {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}*/
-        /*.form-group input:focus,*/
-        /*.form-group select:focus {border-color: var(--primary);outline: none;}*/
-        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;padding-top: 20px;border-top: 2px solid var(--accent);}
 
         .disf{display: flex;align-items: center;}
         .btn{background:var(--primary-light);color: white;border: none;}
@@ -89,7 +80,7 @@
 
 </head>
 <body>
-<div class="form-group" style="padding:20px;">
+<div class="form-group" style="padding:0px;">
     <table class="layui-hide" id="mainTable"></table>
 </div>
 
@@ -142,7 +133,7 @@
                 ,{field:'status_name', width:200, title: '状态'}
                 ,{field:'createtime', title: '创建时间'}
                 ,{ align:'center', fixed: 'right', title: '操作', templet: function(d){
-                        var strr = ['<a onclick="save(1,' + "'/?s=index/porder_detail&company_type={$company_type}&company_id={$company_id}&id="+ d.id +"'" + ');" class="layui-btn layui-btn-xs btn-edit btn"><i class="fas fa-edit"></i> 查看订单</a>'];
+                        var strr = ['<a onclick="save(1,' + "'/?s=index/porder_detail&company_type={$company_type}&company_id={$company_id}&id="+ d.id +"'" + ');" class="layui-btn layui-btn-xs btn-edit btn"><i class="fas fa-eye"></i> 查看订单</a>'];
                         return strr.join('');
                     }}
             ]]
