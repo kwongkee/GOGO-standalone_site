@@ -1,0 +1,143 @@
+/* 企业后台管理主样式 */
+:root {
+    --primary-color: #9b4de3;
+    --primary-hover: #8a3ad2;
+    --success-color: #52c41a;
+    --warning-color: #faad14;
+    --error-color: #ff4d4f;
+    --text-color: #333;
+    --text-secondary: #666;
+    --border-color: #e6e6e6;
+    --background-color: #f8f8f8;
+    --white: #fff;
+}
+
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    color: var(--text-color);
+    background: var(--background-color);
+}
+
+/* 表格样式 */
+.layui-table {
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.layui-table th {
+    background: #fafafa;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.layui-table tr:hover {
+    background: #fafafa;
+}
+
+/* 按钮样式 */
+.layui-btn {
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.layui-btn-normal {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.layui-btn-normal:hover {
+    background-color: var(--primary-hover);
+    border-color: var(--primary-hover);
+}
+
+/* 步骤指示器 */
+.step-active {
+    color: var(--primary-color);
+    font-weight: bold;
+    position: relative;
+}
+
+.step-active:after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 3px;
+    background: var(--primary-color);
+    border-radius: 2px;
+}
+
+/* 表单样式 */
+.layui-form-label {
+    font-weight: 500;
+}
+
+.layui-input, .layui-select, .layui-textarea {
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+}
+
+.layui-input:focus, .layui-select:focus, .layui-textarea:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(155, 77, 227, 0.1);
+}
+
+/* 卡片样式 */
+.layui-card {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.layui-card-header {
+    background: var(--white);
+    border-bottom: 1px solid var(--border-color);
+    padding: 15px 20px;
+    font-weight: 500;
+}
+
+.layui-card-body {
+    padding: 20px;
+}
+
+/* 进度条 */
+.layui-progress {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.layui-progress-bar {
+    border-radius: 10px;
+}
+
+/* 模态框 */
+.layui-layer {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* 文本对齐 */
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-left {
+    text-align: left;
+}
+
+/* 间距工具类 */
+.mt-10 { margin-top: 10px; }
+.mt-20 { margin-top: 20px; }
+.mt-30 { margin-top: 30px; }
+.mb-10 { margin-bottom: 10px; }
+.mb-20 { margin-bottom: 20px; }
+.mb-30 { margin-bottom: 30px; }
+.ml-10 { margin-left: 10px; }
+.mr-10 { margin-right: 10px; }

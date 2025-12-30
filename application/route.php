@@ -42,6 +42,7 @@ Route::any('index/save_warehouse', 'index/Index/save_warehouse');#企业网店-�
 Route::any('index/del_warehouse', 'index/Index/del_warehouse');#企业网店-删除仓库
 Route::any('index/terminal_list', 'index/Index/terminal_list');#企业网店-终端列表
 Route::any('index/save_terminal', 'index/Index/save_terminal');#企业网店-保存选择终端
+Route::any('index/express_list', 'index/Index/express_list');#企业网店-"代发仓库"的快递列表
 Route::any('index/get_terminal_express', 'index/Index/get_terminal_express');#企业网店-获取终端支持的快递
 Route::any('index/del_terminal', 'index/Index/del_terminal');#企业网店-删除终端
 Route::any('index/shop_head_menu', 'index/Index/shop_head_menu');#企业网店-页头菜单管理
@@ -89,7 +90,18 @@ Route::any('index/save_product_series', 'index/Index/save_product_series');#企�
 Route::any('index/del_product_series', 'index/Index/del_product_series');#企业网店-供应管理-删除产品系列
 Route::any('index/procurement_manage', 'index/Index/procurement_manage');#企业网店-供应管理-采购管理
 Route::any('index/save_procurement', 'index/Index/save_procurement');#企业网店-供应管理-保存采购
+Route::any('index/get_suppliers', 'index/Index/get_suppliers');#企业网店-供应管理-获取供应商
+
+Route::any('index/create_procurement', 'index/Index/create_procurement');#企业网店-供应管理-创建采购单
+Route::any('index/get_warehouses', 'index/Index/get_warehouses');#企业网店-供应管理-获取仓库
+Route::any('index/select_goods', 'index/Index/select_goods');#企业网店-供应管理-获取店铺商品
+Route::any('index/get_express_companies', 'index/Index/get_express_companies');#企业网店-供应管理-获取快递企业
+Route::any('index/get_express_products', 'index/Index/get_express_products');#企业网店-供应管理-获取快递下的产品
+Route::any('index/get_freight_config', 'index/Index/get_freight_config');#企业网店-供应管理-加载运费配置
 Route::any('index/get_goods', 'index/Index/get_goods');#企业网店-供应管理-获取商店所有商品
+Route::any('index/get_merchant_warehouse_terminals', 'index/Index/get_merchant_warehouse_terminals');#企业网店-供应管理-获取商家在仓库下的终端列表（直接发货仓库）
+Route::any('index/get_merchant_warehouse_expresses', 'index/Index/get_merchant_warehouse_expresses');#企业网店-供应管理-获取商家在仓库下的快递企业列表（代发货仓库）
+
 Route::any('index/del_procurement', 'index/Index/del_procurement');#企业网店-供应管理-删除采购
 Route::any('index/save_supplier', 'index/Index/save_supplier');#企业网店-供应管理-保存供应企业
 Route::any('index/transfer_manage', 'index/Index/transfer_manage');#企业网店-供应管理-调拔管理

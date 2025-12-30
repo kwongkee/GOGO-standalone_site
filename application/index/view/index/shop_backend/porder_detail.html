@@ -175,7 +175,7 @@
             </div>
         </fieldset>
         
-        {if $order['status']==1 && $order['is_daifa']==1}
+        {if $order['status']==1 && $order['is_daifa']==1 && $order['is_printer']==0}
             <!--不是代发，自发仓库-->
             <div class="info_div">
                 <input type="text" name="printer_id" id="printer_id" value="{$list['express_infos']['printer_id']}" style="display:none;"/>
@@ -185,7 +185,9 @@
                         <select name="direct_ship[express_id]" lay-search>
                             <option value="">请选择</option>
                             {volist name="list['express_infos']['express_info']" id="v"}
-                            <option value="{$v['express_id']}">快递名称：【{$v['express_name']}】,快递产品：【{$v['express_typename']}】，支付方式：【{$v['express_payname']}】</option>
+                                {if isset($v['express_name'])}
+                                <option value="{$v['express_id']}">快递名称：【{$v['express_name']}】,快递产品：【{$v['express_typename']}】，支付方式：【{$v['express_payname']}】</option>
+                                {/if}
                             {/volist}
                         </select>
                     </div>

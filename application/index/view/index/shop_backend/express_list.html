@@ -69,69 +69,55 @@
         .layui-form-item .layui-form-label{width:100px;}
 
         .edui-editor{z-index: 1 !important;}
+        
+        /*返回按钮*/
+        .backDiv{padding: 5px 5px 5px 20px;border-bottom: 1px solid #d9d9d9;}
+        .backDiv .backBox{display: flex;align-items: center;cursor: pointer;}
+        .backDiv .back_icon{font-size: 18px;color: #333;margin-right: 10px;position: relative;}
+        .backDiv .back_icon:before{content:'';position:absolute;width:9px;height:9px;border-left:2px solid #000;border-top:2px solid #000;transform:rotate(-45deg);margin-right:5px;top:-7px;}
+        .backDiv .back_text{font-size: 16px;color: #333;font-weight: 500;margin-left: 5px;}
     </style>
 </head>
 <body>
+<div class="backDiv">
+    <div class="backBox" onclick="javascript:window.history.back(-1);">
+        <div class="back_icon"></div>
+        <div class="back_text">返回</div>
+    </div>
+</div>
 <form id="siteForm" class="layui-form" action="" method="post" lay-filter="component-form-menu" style="padding:10px;margin-bottom:0px;">
     <input type="hidden" name="company_id" value="{$company_id}">
     <input type="hidden" name="company_type" value="{$company_type}">
-    <input type="hidden" name="id" value="{$id}">
-
-    <div class="layui-form-item">
-        <div class="layui-form-label">企业名称</div>
-        <div class="layui-input-block">
-            <input type="text" class="layui-input" lay-verify="required" name="company_name" value="{$data['company_name']}" placeholder="请输入供应企业名称">
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <div class="layui-form-label">国家地区</div>
-        <div class="layui-input-block">
-            <select name="country_id" id="country_id" lay-filter="country_id" lay-search lay-verify="required">
-                <option value="">请选择国家地区</option>
-                {volist name="list.country" id="vo"}
-                    <option value="{$vo['id']}" {if $data['country_id']==$vo['id']}selected{/if} data-pre_tel="{$vo['param8']}">{$vo['param2']}</option>
+    <input type="hidden" name="warehouse_id" value="{$warehouse_id}">
+    
+    <!--显示终端下的快递面单信息（快递企业和快递产品类型）-->
+    <table class="layui-table express_table">
+        <thead>
+            <th>快递名称</th>
+            <th>快递产品</th>
+            <th>操作</th>
+        </thead>
+        <tbody>
+            
+                {volist name="list" id="vo"}
+                    <tr>
+                        <td>{$vo.express_name}</td>
+                        <td>{$vo.express_type}</td>
+                        <td>
+                            {if !empty($data)}
+                                <input type="checkbox" name="express_id[]" lay-skin="primary" value="{$vo.id}" {if in_array($vo.id,$data.express_id)}checked{/if} title="选择">
+                            {else}
+                                <input type="checkbox" name="express_id[]" lay-skin="primary" value="{$vo.id}" title="选择">
+                            {/if}
+                        </td>
+                    </tr>
                 {/volist}
-            </select>
-        </div>
-    </div>
-
-    <div class="layui-form-item">
-        <div class="layui-form-label">邮政编码</div>
-        <div class="layui-input-block">
-            <input type="text" class="layui-input" name="postal_code" id="postal_code" value="{$data['postal_code']}" placeholder="请输入邮政编码" lay-verify="required">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <div class="layui-form-label">详细地址</div>
-        <div class="layui-input-block">
-            <span class="address_pcq pre_box" style="font-size:15px;margin-right:0px;">{$data['pre_address']}</span>
-            <input type="text" class="layui-input" name="address" value="{$data['address']}" placeholder="请输入详细地址" lay-verify="required">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <div class="layui-form-label">联系人员</div>
-        <div class="layui-input-block">
-            <input type="text" class="layui-input" name="name" value="{$data['name']}" placeholder="请输入联系人员名称" lay-verify="required">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <div class="layui-form-label">邮箱地址</div>
-        <div class="layui-input-block">
-            <input type="text" class="layui-input" name="email" value="{$data['email']}" placeholder="请输入邮箱地址" lay-verify="required">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <div class="layui-form-label">联系电话</div>
-        <div class="layui-input-block">
-            <div class="disf">
-                <input type="text" class="layui-input" name="tel" value="{$data['tel']}" id="tel" placeholder="请输入联系电话" lay-verify="required">
-            </div>
-        </div>
-    </div>
+            
+        </tbody>
+    </table>
 
     <div class="form-actions">
-        <button type="button" class="btn btn-outline" id="cancelBtnMenu" style="background:transparent;border: 2px solid var(--primary);color: var(--primary);">取消</button>
+        <button type="button" class="btn btn-outline" id="cancelBtnMenu" style="background:transparent;border: 2px solid var(--primary);color: var(--primary);display:none;">取消</button>
         <button type="submit" class="btn btn-primary" lay-submit lay-filter="component-form-menu2">立即保存</button>
     </div>
 </form>
@@ -152,69 +138,16 @@
         const cancelBtn = document.getElementById('cancelBtnMenu');
         // 关闭模态框
         function closeModal() {
-            // modal.style.display = 'none';
-            parent.layer.closeAll();
+            modal.style.display = 'none';
         }
         cancelBtn.addEventListener('click', closeModal);
-
-
-        //选择国地
-        form.on('select(country_id)',function(data){
-            let val = data.value;
-            let pretel = $(data.elem).find('option:selected').data('pre_tel');
-
-            let tel = pretel+" "+$('#tel').val();
-            $("#tel").val(pretel+" ");
-        });
-
-        //监听邮政编码输入+防抖事件
-        let requestSeq = 0;
-        let timer = null;
-        $('#postal_code').on('input', function(){
-            clearTimeout(timer);
-
-            let val = $(this).val();
-            let country_id = $('#country_id').val();
-            if(country_id=='' || country_id==0){
-                layer.msg('请先选择国地');
-                return false;
-            }
-
-            // 显示加载状态
-            $('.address_pcq').text('查询中...').addClass('loading');
-
-            // 300ms防抖 + 500ms超时提醒
-            timer = setTimeout(() => {
-                const currentSeq = ++requestSeq;
-                $.ajax({
-                    url: "https://shop.gogo198.cn/collect_website/public/?s=api/func/get_area",
-                    method: 'post',
-                    data: {'val': val, 'country_id': country_id},
-                    dataType: 'JSON',
-                    timeout: 10000,
-                    success: function (res) {
-                        // 只处理最新请求
-                        if(currentSeq !== requestSeq) return;
-
-                        if (res.code == 0) {
-                            $('.address_pcq').text(res.msg);
-                        } else {
-                            $('.address_pcq').text('');
-                        }
-                    },
-                    error: function (data) {
-                        layer.msg('系统错误', {time: 2000});
-                    }
-                });
-            },300);
-        });
-
 
         form.on('submit(component-form-menu2)', function(data){
             layer.load();
 
+            
             $.ajax({
-                url:"/?s=index/save_supplier",
+                url:"/?s=index/express_list",
                 method:'post',
                 data:data.field,
                 dataType:'JSON',
@@ -223,10 +156,7 @@
                     layer.msg(res.msg,{time:2000}, function () {
                         if(res.code == 0)
                         {
-                            // let currentUrl = new URL(parent.location.href);
-                            // currentUrl.searchParams.set('tab', 'shop_head_menu');
-                            // parent.history.pushState({}, '', currentUrl.toString());
-                            parent.location.reload();
+                            window.history.back(-1);
                         }
                     });
                 },

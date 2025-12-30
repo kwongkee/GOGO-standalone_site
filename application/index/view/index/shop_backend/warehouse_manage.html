@@ -95,7 +95,11 @@
                                 <td>
                                     <div class="channel-actions">
                                         {if $vo['warehouse_form']==1}
-                                        <button class="channel-btn btn-warning btn" onclick="terminal({$vo['id']})"><i class="fas fa-eye"></i> 终端列表</button>
+                                            <!--直发仓库-->
+                                            <button class="channel-btn btn-warning btn" onclick="terminal({$vo['id']})"><i class="fas fa-eye"></i> 终端列表</button>
+                                        {elseif($vo['warehouse_form']==2)}
+                                            <!--代发仓库-->
+                                            <button class="channel-btn btn-warning btn" onclick="express_list({$vo['id']})"><i class="fas fa-eye"></i> 快递列表</button>
                                         {/if}
                                         <button class="channel-btn btn-edit btn" onclick="edit({$vo['id']})"><i class="fas fa-edit"></i> 编辑</button>
                                         <button class="channel-btn btn-delete btn" onclick="del_component({$vo['id']})"><i class="fas fa-trash"></i> 删除</button>
@@ -177,6 +181,12 @@
         // var modal = document.getElementById('saveMenuModal');
         // modal.style.display = 'flex';
         // $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_printer&company_id={$company_id}&company_type={$company_type}&id='+id);
+    }
+    
+    //快递列表
+    function express_list(id){
+        var layer = layui.layer,$ = layui.$;
+        window.location.href="/?s=index/express_list&company_id={$company_id}&company_type={$company_type}&warehouse_id="+id;
     }
 
     //仓库删除
