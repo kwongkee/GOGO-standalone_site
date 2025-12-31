@@ -101,6 +101,14 @@ Route::any('index/get_freight_config', 'index/Index/get_freight_config');#企业
 Route::any('index/get_goods', 'index/Index/get_goods');#企业网店-供应管理-获取商店所有商品
 Route::any('index/get_merchant_warehouse_terminals', 'index/Index/get_merchant_warehouse_terminals');#企业网店-供应管理-获取商家在仓库下的终端列表（直接发货仓库）
 Route::any('index/get_merchant_warehouse_expresses', 'index/Index/get_merchant_warehouse_expresses');#企业网店-供应管理-获取商家在仓库下的快递企业列表（代发货仓库）
+Route::any('index/save_freight_config', 'index/Index/save_freight_config');#企业网店-供应管理-保存运费配置
+Route::any('index/delete_freight_config', 'index/Index/delete_freight_config');#企业网店-供应管理-删除运费配置
+Route::any('index/get_freight_config_detail', 'index/Index/get_freight_config_detail');#企业网店-供应管理-获取运费配置详情
+Route::any('index/get_delivery_companies', 'index/Index/get_delivery_companies');#企业网店-供应管理-获取物流企业列表
+Route::any('index/get_procurement_detail', 'index/Index/get_procurement_detail');#企业网店-供应管理-获取采购单信息
+Route::any('index/get_goods_detail', 'index/Index/get_goods_detail');#企业网店-供应管理-获取商品详情
+Route::any('index/procurement_detail_page', 'index/Index/procurement_detail_page');#企业网店-供应管理-获取商品详情
+Route::any('index/procurement_detail', 'index/Index/procurement_detail');#企业网店-供应管理-获取商品详情
 
 Route::any('index/del_procurement', 'index/Index/del_procurement');#企业网店-供应管理-删除采购
 Route::any('index/save_supplier', 'index/Index/save_supplier');#企业网店-供应管理-保存供应企业

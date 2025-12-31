@@ -470,16 +470,12 @@ function refreshProcurementList() {
 
 // 查看采购单详情
 function viewProcurement(id) {
-    layer.open({
-        type: 2,
-        title: '采购单详情',
-        area: ['80%', '80%'],
-        content: '/?s=index/get_procurement_detail&id=' + id,
-        btn: ['关闭'],
-        yes: function(index, layero){
-            layer.close(index);
-        }
-    });
+    var company_id = getUrlParam('company_id');
+    var company_type = getUrlParam('company_type');
+    
+    window.location.href='/?s=index/procurement_detail&id=' + id + 
+                '&company_id=' + company_id + 
+                '&company_type=' + company_type;
 }
 
 // 编辑采购单

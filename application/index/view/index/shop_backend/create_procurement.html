@@ -5,9 +5,7 @@
     <title>采购管理</title>
     <link rel="stylesheet" href="layui/css/layui.css">
     <style>
-        .disf{display: flex;align-items: center;}
-        .jifei_qujian{margin-bottom:10px;}
-        .unit_name{min-width: 45px;text-align: center;}
+        .disf{display:flex;align-items:center;}
         
         .procurement-container { padding: 5px; }
         .step-indicator { margin-bottom: 30px; }
@@ -106,6 +104,60 @@
             font-weight: 700;
         }
         /* 添加运费配置相关样式 end*/
+        .freight-detail .config-section {
+            margin-bottom: 20px;
+        }
+        .freight-detail h4 {
+            margin: 15px 0 10px 0;
+            color: #333;
+            font-weight: bold;
+        }
+        /*快递运费配置样式*/
+        .qujian,.unitdiv,.currencydiv{width:100px;}
+        .overdiv{width:200px;}
+        .jifei_qujian{margin-bottom:10px;}
+        .unit_name{min-width: 45px;text-align: center;}
+        /*快递运费配置样式*/
+        
+        /* 运费详情查看样式 */
+        .freight-detail-view {
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+        
+        .freight-detail-view h4 {
+            margin: 15px 0 10px 0;
+            color: #333;
+            font-weight: bold;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .freight-detail-view .layui-colla-content {
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+        
+        .freight-detail-view .layui-colla-title {
+            background: #f5f5f5;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+        
+        /* 按钮状态样式 */
+        .config-btn-group {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .config-btn-group button {
+            margin-right: 10px;
+            margin-bottom: 5px;
+        }
         
         /*返回按钮*/
         .backDiv{padding: 5px 5px 5px 20px;border-bottom: 1px solid #d9d9d9;}
@@ -283,11 +335,18 @@
                             </div>
                         </div>
                         
+                        <!-- 修改直接发货仓库运费配置按钮 -->
                         <div class="layui-form-item" id="directFreightConfigBtn" style="display: none;">
                             <div class="layui-input-block">
                                 <button type="button" class="layui-btn layui-btn-normal" onclick="showFreightConfig('direct')">
                                     <i class="layui-icon"></i> 配置运费
                                 </button>
+                                <button type="button" class="layui-btn layui-btn-success" id="directViewFreightBtn" style="display: none; margin-left: 10px;" onclick="viewFreightConfigDetail('direct')">
+                                    <i class="layui-icon">&#xe615;</i> 查看配置
+                                </button>
+                                <span id="directConfigStatus" style="margin-left: 10px; color: #52c41a; display: none;">
+                                    <i class="layui-icon">&#xe616;</i> 已配置
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -316,11 +375,18 @@
                             </div>
                         </div>
                         
+                        <!-- 修改代发货仓库运费配置按钮 -->
                         <div class="layui-form-item" id="proxyFreightConfigBtn" style="display: none;">
                             <div class="layui-input-block">
                                 <button type="button" class="layui-btn layui-btn-normal" onclick="showFreightConfig('proxy')">
                                     <i class="layui-icon"></i> 配置运费
                                 </button>
+                                <button type="button" class="layui-btn layui-btn-success" id="proxyViewFreightBtn" style="display: none; margin-left: 10px;" onclick="viewFreightConfigDetail('proxy')">
+                                    <i class="layui-icon">&#xe615;</i> 查看配置
+                                </button>
+                                <span id="proxyConfigStatus" style="margin-left: 10px; color: #52c41a; display: none;">
+                                    <i class="layui-icon">&#xe616;</i> 已配置
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -335,146 +401,260 @@
     
     <!-- 运费配置模态框 -->
     <div class="modal" id="freightConfigModal" style="display: none;">
-        <style>
-            /* 运费配置模态框样式 */
-            .modal-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0,0,0,0.5);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 9999;
-            }
-            
-            .charge-intervals .interval-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 15px;
-                padding-bottom: 10px;
-                border-bottom: 1px solid #eee;
-            }
-            
-            .interval-item {
-                background: #f9f9f9;
-                border: 1px solid #eee;
-                border-radius: 4px;
-                padding: 15px;
-                margin-bottom: 10px;
-                position: relative;
-            }
-            
-            .interval-item .remove-interval {
-                position: absolute;
-                right: 10px;
-                top: 10px;
-                color: #ff5722;
-                cursor: pointer;
-            }
-            
-            .interval-form-item {
-                margin-bottom: 15px;
-            }
-            
-            .charge-method-item {
-                background: #f5f5f5;
-                border: 1px solid #e0e0e0;
-                border-radius: 4px;
-                padding: 10px;
-                margin-top: 10px;
-                position: relative;
-            }
-            
-            .charge-method-item .remove-method {
-                position: absolute;
-                right: 10px;
-                top: 10px;
-                color: #ff5722;
-                cursor: pointer;
-            }
-            
-            .segment-item {
-                background: #f0f0f0;
-                border: 1px solid #ddd;
-                border-radius: 3px;
-                padding: 8px;
-                margin-top: 8px;
-                position: relative;
-            }
-            
-            .segment-item .remove-segment {
-                position: absolute;
-                right: 8px;
-                top: 8px;
-                color: #ff5722;
-                cursor: pointer;
-            }
-        </style>
-        <div class="freight-config-form">
-            <form class="layui-form" id="freightConfigForm" lay-filter="component-form-group">
-                <input type="hidden" name="warehouse_type" id="config_warehouse_type">
-                <input type="hidden" name="warehouse_id" id="config_warehouse_id">
-                <input type="hidden" name="terminal_id" id="config_terminal_id">
-                <input type="hidden" name="express_id" id="config_express_id">
-                <input type="hidden" name="product_type" id="config_product_type">
-                <input type="hidden" name="company_id" id="config_company_id">
-                
-                <!-- 计费标准 -->
-                <div class="layui-card" style="margin-top: 15px;">
-                    <div class="layui-card-header">计费标准</div>
-                    <div class="layui-card-body">
-                        <div class="layui-form-item">
-                            <label class="layui-form-label">最低消费</label>
-                            <div class="layui-input-block disf">
-                                <select name="mini_cost" lay-filter="mini_cost">
+        
+            <div class="freight-config-form">
+                <form class="layui-form" id="freightConfigForm" lay-filter="component-form-group">
+                    <input type="hidden" name="warehouse_type" id="config_warehouse_type">
+                    <input type="hidden" name="warehouse_id" id="config_warehouse_id">
+                    <input type="hidden" name="terminal_id" id="config_terminal_id">
+                    <input type="hidden" name="express_id" id="config_express_id">
+                    <input type="hidden" name="product_type" id="config_product_type">
+                    <input type="hidden" name="company_id" id="config_company_id">
+                    
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">最低消费</label>
+                        <div class="layui-input-block disf">
+                            <div class="mini_cost">
+                                <select name="content[mini_cost][]" lay-filter="mini_cost">
                                     <option value="0">无最低</option>
                                     <option value="1">有最低</option>
                                 </select>
-                                <div class="minicost_div" style="display: none; margin-left: 10px;">
-                                    <input type="number" name="mini_num" placeholder="最低消费值" 
-                                           autocomplete="off" class="layui-input" style="width: 120px;" 
-                                           min="0" step="0.01" value="0">
-                                    <div class="minicost_unit" style="margin-left: 5px;">
-                                        <select name="minicost_unit" lay-search>
-                                            <option value="">请选择单位</option>
-                                            {volist name="value['unit']" key="k" id="v"}
-                                            <option value="{$v['code_value']}">{$v['code_name']}</option>
-                                            {/volist}
-                                        </select>
+                            </div>
+                            <div class="minicost_div" style="display: none;">
+                                <input type="text" name="content[mini_num][]" lay-verify="" placeholder="请输入最低消费值" autocomplete="off" class="layui-input" value="" onchange="mini_num(this)">
+                                <div class="minicost_unit">
+                                    <select name="content[minicost_unit][]" lay-filter="minicost_unit">
+                                        <option value="">请选择单位</option>
+                                        {volist name="value['unit']" key="k" id="v"}
+                                        <option value="{$v['code_value']}" data-title="{$v['code_name']}">{$v['code_name']}</option>
+                                        {/volist}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-collapse jifei_qujian" lay-accordion>
+                        <div class="layui-colla-item" data-idx="0">
+                            <div class="layui-colla-title disf" style="justify-content: space-between;">
+                                <h4>计费区间1</h4>
+                                <div>
+                                    <div class="layui-btn layui-btn-success" onclick="add_qujian(this,0)">+</div>
+                                </div>
+                            </div>
+                            <div class="layui-colla-content">
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">计费区间</label>
+                                    <div class="layui-input-block disf">
+                                        自&nbsp;
+                                        <input type="number" name="content[qj1][0][]" lay-verify="required" placeholder="数值" class="layui-input qujian" value="">
+                                        <div class="unitdiv">
+                                            <select name="content[unit][0][]" lay-filter="unit" lay-search>
+                                                <option value="">请选择</option>
+                                                {volist name="value['unit']" key="k" id="v"}
+                                                <option value="{$v['code_value']}" data-title="{$v['code_name']}">{$v['code_name']}</option>
+                                                {/volist}
+                                            </select>
+                                        </div>
+                                        &nbsp;至&nbsp;
+                                        <div class="unitdiv">
+                                            <select name="content[qj2_method][0][]" id="qj2_method" lay-filter="qj2_method">
+                                                <option value="1">数值</option>
+                                                <option value="2">以上</option>
+                                            </select>
+                                        </div>
+                                        <input type="number" class="layui-input qujian qujian2" name="content[qj2][0][]" id="qj2" placeholder="数值" value="">
+                                        <div class="unit_name"></div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <label class="layui-form-label">计费进阶</label>
+                                    <div class="layui-input-block disf">
+                                        <input type="number" class="layui-input" name="content[jinjie][0][]" id="jinjie" placeholder="数值" value="">
+                                        <div class="unit_name"></div>
+                                    </div>
+                                </div>
+                                <div class="layui-collapse jifei_fangshi" lay-accordion>
+                                    <div class="layui-colla-item" data-idx="0">
+                                        <div class="layui-colla-title disf" style="justify-content: space-between;">
+                                            <h4>计费方式1</h4>
+                                            <div>
+                                                <div class="layui-btn layui-btn-success" onclick="add_jifei(this,0)">+</div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-colla-content">
+                                            <div class="layui-form-item">
+                                                <label class="layui-form-label">计费方式</label>
+                                                <div class="layui-input-block disf">
+                                                    <select name="content[jf_method][0][0][]" id="jf_method" lay-filter="jf_method">
+                                                        <option value="1">首续计费</option>
+                                                        <option value="2">按量计费</option>
+                                                        <option value="3">分段计费</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="layui-form-item jf_method">
+                                                <label class="layui-form-label"></label>
+                                                <div class="layui-input-block">
+                                                    <div class="jf_div1">
+                                                        <div class="disf">
+                                                            首重&nbsp;
+                                                            <input type="number" name="content[shouzhong][0][0][]" lay-verify="" placeholder="数值" class="layui-input qujian" value="">
+                                                            <div class="unit_name"></div>
+                                                            <div class="currencydiv">
+                                                                <select class="currency_sel" name="content[currency][0][0][]" lay-search>
+                                                                    <option value="">请选择币种</option>
+                                                                    {volist name="value['currency']" key="k" id="v"}
+                                                                    <option value="{$v['id']}" {if $v['id']==$value['start_currency']['id']}
+                                                                    selected
+                                                                    {/if}>{$v['currency_symbol_standard']}</option>
+                                                                    {/volist}
+                                                                </select>
+                                                            </div>
+                                                            <input type="number" name="content[shouzhong_money][0][0][]" lay-verify="" placeholder="数值" class="layui-input qujian" value="">
+                                                        </div>
+                                                        <div class="disf">
+                                                            续重&nbsp;
+                                                            <input type="number" name="content[xuzhong][0][0][]" lay-verify="" placeholder="数值" class="layui-input qujian" value="">
+                                                            <div class="unit_name"></div>
+                                                            <div class="currencydiv">
+                                                                <select class="currency_sel" name="content[currency][0][0][]" lay-search>
+                                                                    <option value="">请选择币种</option>
+                                                                    {volist name="value['currency']" key="k" id="v"}
+                                                                    <option value="{$v['id']}" {if $v['id']==$value['start_currency']['id']}
+                                                                    selected
+                                                                    {/if}>{$v['currency_symbol_standard']}</option>
+                                                                    {/volist}
+                                                                </select>
+                                                            </div>
+                                                            <input type="number" name="content[xuzhong_money][0][0][]" lay-verify="" placeholder="数值" class="layui-input qujian" value="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="jf_div2" style="display: none;">
+                                                        <div class="disf">
+                                                            <input type="number" name="content[anliang][0][0][]" lay-verify="" placeholder="数值" class="layui-input qujian" value="">
+                                                            <div class="unit_name"></div>
+                                                            <div class="currencydiv">
+                                                                <select class="currency_sel" name="content[currency][0][0][]" lay-search>
+                                                                    <option value="">请选择币种</option>
+                                                                    {volist name="value['currency']" key="k" id="v"}
+                                                                    <option value="{$v['id']}" {if $v['id']==$value['start_currency']['id']}
+                                                                    selected
+                                                                    {/if}>{$v['currency_symbol_standard']}</option>
+                                                                    {/volist}
+                                                                </select>
+                                                            </div>
+                                                            <input type="number" name="content[anliang_money][0][0][]" lay-verify="" placeholder="数值" class="layui-input qujian" value="">
+                                                        </div>
+                                                    </div>
+                                                    <div class="layui-collapse jf_div3 jifei_fenduan" lay-accordion style="display: none;">
+                                                        <div class="layui-colla-item">
+                                                            <div class="layui-colla-title disf" style="justify-content: space-between;">
+                                                                <h4>分段计费1</h4>
+                                                                <div>
+                                                                    <div class="layui-btn layui-btn-success" onclick="add_fenduan(this,0)">+</div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="layui-colla-content">
+                                                                <div class="disf">
+                                                                    <input type="number" name="content[fenduan_num1][0][0][0][]" lay-verify="" placeholder="数值" class="layui-input qujian" value="">
+                                                                    <div class="unit_name"></div>
+                                                                    &nbsp;至&nbsp;
+                                                                    <div class="unitdiv">
+                                                                        <select name="content[fenduan_method][0][0][0][]" lay-filter="fenduan_method">
+                                                                            <option value="1">数值</option>
+                                                                            <option value="2">以上</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div class="fenduan_num">
+                                                                        <div class="disf">
+                                                                            <input type="number" name="content[fenduan_num2][0][0][0][]" lay-verify="" placeholder="数值" class="layui-input qujian" value="">
+                                                                            <div class="unit_name"></div>
+                                                                            <div class="currencydiv">
+                                                                                <select class="currency_sel" name="content[currency][0][0][0][]" lay-search>
+                                                                                    <option value="">请选择币种</option>
+                                                                                    {volist name="value['currency']" key="k" id="v"}
+                                                                                    <option value="{$v['id']}" {if $v['id']==$value['start_currency']['id']}
+                                                                                    selected
+                                                                                    {/if}>{$v['currency_symbol_standard']}</option>
+                                                                                    {/volist}
+                                                                                </select>
+                                                                            </div>
+                                                                            <input type="number" name="content[fenduan_money][0][0][0][]" lay-verify="" placeholder="数值" class="layui-input" value="">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- 计费区间 -->
-                        <div class="charge-intervals">
-                            <div class="interval-header">
-                                <h4>计费区间</h4>
-                                <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" 
-                                        onclick="addInterval()">
-                                    <i class="layui-icon layui-icon-add-1"></i> 添加区间
-                                </button>
-                            </div>
-                            
-                            <div class="interval-list" id="intervalList">
-                                <!-- 计费区间动态添加 -->
-                            </div>
+                    </div>
+                    
+                    <div class="layui-form-item" style="margin-top: 20px; text-align: right;">
+                        <div class="layui-input-block">
+                            <button type="button" class="layui-btn layui-btn-primary" onclick="saveFreightConfig()">保存配置</button>
+                            <button type="button" class="layui-btn layui-btn-primary layui-btn-danger" onclick="closeFreightConfig()" style="margin-left: 10px;">取消</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+    </div>
+    
+    <!-- 运费配置查看模态框 -->
+    <div class="modal" id="viewFreightModal" style="display: none;">
+        
+            
+            <div class="modal-body" id="freightDetailContent">
+                <!-- 运费配置详情将动态加载到这里 -->
+            </div>
+        
+    </div>
+    
+    <!-- 运费配置详情查看模态框 -->
+    <div class="modal" id="freightDetailModal" style="display: none;">
+        
+            <div class="modal-body">
+                <div class="layui-card">
+                    <div class="layui-card-header">基本信息</div>
+                    <div class="layui-card-body">
+                        <table class="layui-table">
+                            <tbody id="freightBasicInfo">
+                                <!-- 基本信息动态加载 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="layui-card" style="margin-top: 15px;">
+                    <div class="layui-card-header">配置详情</div>
+                    <div class="layui-card-body">
+                        <div id="freightConfigDetail">
+                            <!-- 配置详情动态加载 -->
                         </div>
                     </div>
                 </div>
                 
-                <div class="layui-form-item" style="margin-top: 20px; text-align: right;">
-                    <div class="layui-input-block">
-                        <button type="button" class="layui-btn layui-btn-primary" onclick="saveFreightConfig()">保存配置</button>
-                        <button type="button" class="layui-btn layui-btn-primary layui-btn-danger" onclick="closeFreightConfig()" style="margin-left: 10px;">取消</button>
+                <div class="layui-card" style="margin-top: 15px; border-color: #9b4de3;">
+                    <div class="layui-card-header" style="background: #f9f0ff; color: #9b4de3;">操作</div>
+                    <div class="layui-card-body">
+                        <div style="text-align: center;">
+                            <button type="button" class="layui-btn layui-btn-normal" onclick="editFreightConfig()">
+                                <i class="layui-icon">&#xe642;</i> 修改配置
+                            </button>
+                            <button type="button" class="layui-btn layui-btn-danger" onclick="deleteFreightConfig()" style="margin-left: 10px;">
+                                <i class="layui-icon">&#xe640;</i> 删除配置
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </form>
-        </div>
+            </div>
+        
     </div>
     
     <!-- 步骤5: 采购结算 -->
@@ -714,24 +894,15 @@ var chargeItems = [];
 var freightConfig = [];
 // 运费配置相关变量
 var currentFreightConfig = {
-    id: 0,
-    procurement_id: 0,
-    company_id: 0,
     warehouse_type: '',
     warehouse_id: 0,
     terminal_id: 0,
     express_id: 0,
     product_type: '',
-    config_name: '',
-    is_default: 0,
-    config_data: {
-        mini_cost: 0,
-        mini_num: 0,
-        minicost_unit: '',
-        intervals: []
-    }
+    config_data: null
 };
 var globalCurrency = ''; // 全局币种
+var currentFreightConfigId = 0; // 当前运费配置ID
 
 layui.use(['form', 'laydate', 'layer', 'table','element'], function(){
     var form = layui.form;
@@ -767,6 +938,7 @@ layui.use(['form', 'laydate', 'layer', 'table','element'], function(){
         }
     });
     
+    // 仓库类型选择
     // 仓库类型选择事件
     form.on('radio(warehouseType)', function(data){
         warehouseType = data.value;
@@ -913,7 +1085,7 @@ layui.use(['form', 'laydate', 'layer', 'table','element'], function(){
     // 加载供应商
     loadSuppliers();
     
-    //运费配置============================================start
+    //配置运费弹窗============================================start
     //是否有最低值
     form.on('select(mini_cost)',function(data){
         let val = data.value;
@@ -971,29 +1143,314 @@ layui.use(['form', 'laydate', 'layer', 'table','element'], function(){
             $(t).parent().parent().parent().parent().parent().find('.jf_method').find('.jf_div3').show();
         }
     });
-    //运费配置============================================start
+    
+    //分段计费
+    form.on('select(fenduan_method)',function(data){
+        let val = data.value;
+        let t = this;
+        if(val==2){
+            $(t).parent().parent().parent().parent().find('.fenduan_num').find('.qujian').hide();
+        }else{
+            $(t).parent().parent().parent().parent().find('.fenduan_num').find('.qujian').show();
+        }
+    });
+    //配置运费弹窗============================================end
 });
+
+// 编辑模式相关变量
+var edit_id = <?php echo isset($edit_id) ? $edit_id : 0; ?>;
+var procurementData = <?php echo isset($procurement_data) ? json_encode($procurement_data, JSON_UNESCAPED_UNICODE) : 'null'; ?>;
+
+// 页面加载时检查运费配置
+$(document).ready(function() {
+    // 设置表单初始值
+    setTimeout(function() {
+        if (edit_id > 0 && procurementData) {
+            initEditMode(procurementData);
+        }
+    }, 500);
+    
+    // 监听仓库类型变化
+    layui.form.on('radio(warehouseType)', function(data) {
+        // 延迟检查，等待相关下拉框加载完成
+        setTimeout(checkExistingFreightConfig, 500);
+    });
+    
+    // 监听相关下拉框变化
+    layui.form.on('select(directWarehouse)', function(data) {
+        setTimeout(checkExistingFreightConfig, 300);
+    });
+    
+    layui.form.on('select(proxyWarehouse)', function(data) {
+        setTimeout(checkExistingFreightConfig, 300);
+    });
+    
+    layui.form.on('select(directTerminal)', function(data) {
+        setTimeout(checkExistingFreightConfig, 300);
+    });
+    
+    layui.form.on('select(directExpress)', function(data) {
+        setTimeout(checkExistingFreightConfig, 300);
+    });
+    
+    layui.form.on('select(directProduct)', function(data) {
+        setTimeout(checkExistingFreightConfig, 300);
+    });
+    
+    layui.form.on('select(proxyExpress)', function(data) {
+        setTimeout(checkExistingFreightConfig, 300);
+    });
+    
+    layui.form.on('select(proxyProduct)', function(data) {
+        setTimeout(checkExistingFreightConfig, 300);
+    });
+});
+
+// 初始化编辑模式
+function initEditMode(data) {
+    if (!data) return;
+    
+    // 设置页面标题
+    document.title = '编辑采购单 - ' + data.id;
+    
+    // 步骤1: 供应商和仓库
+    $('#supplier_id').val(data.supplier_id);
+    layui.form.render('select');
+    
+    // 步骤2: 仓库类型和仓库
+    setTimeout(function() {
+        // 设置仓库类型
+        if (data.warehouse_type) {
+            $('input[name="warehouse_type"][value="' + data.warehouse_type + '"]').prop('checked', true);
+            layui.form.render('radio');
+            
+            // 触发仓库类型选择
+            warehouseType = data.warehouse_type;
+            
+            // 等待仓库列表加载
+            setTimeout(function() {
+                if (data.warehouse_type === 'direct') {
+                    $('#direct_warehouse_id').val(data.warehouse_id);
+                    loadMerchantTerminals(data.warehouse_id, function() {
+                        // 等待终端列表加载后设置运费配置
+                        loadFreightConfigForEdit(data);
+                    });
+                } else {
+                    $('#proxy_warehouse_id').val(data.warehouse_id);
+                    loadMerchantExpresses(data.warehouse_id, function() {
+                        loadFreightConfigForEdit(data);
+                    });
+                }
+                layui.form.render('select');
+            }, 1000);
+        }
+    }, 500);
+    
+    // 步骤3: 商品清单
+    if (data.goods_info && data.goods_info.length > 0) {
+        selectedGoods = [];
+        $('#goodsTbody').empty();
+        
+        data.goods_info.forEach(function(goods) {
+            // 查找商品详情
+            $.ajax({
+                url: '/?s=index/get_goods_detail',
+                type: 'GET',
+                data: {
+                    goods_id: goods.goods_id,
+                    sku_id: goods.sku_id,
+                    company_id: getUrlParam('company_id')
+                },
+                async: false,
+                success: function(res){
+                    if(res.code === 0 && res.data) {
+                        var goodsDetail = res.data;
+                        var price = parseFloat(goods.goods_price || goods.price || 0);
+                        var quantity = parseInt(goods.goods_quantity || goods.quantity || 0);
+                        var taxRate = parseFloat(goods.goods_tax || goods.tax_rate || 0);
+                        
+                        selectedGoods.push({
+                            goods_id: goods.goods_id,
+                            sku_id: goods.sku_id,
+                            goods_name: goodsDetail.goods_name,
+                            sku_name: goodsDetail.sku_name,
+                            price: price,
+                            quantity: quantity,
+                            tax_rate: taxRate,
+                            subtotal: price * quantity * (1 + taxRate/100)
+                        });
+                        
+                        // 添加到表格
+                        addGoodsRow(goods.goods_id, goods.sku_id, goodsDetail.goods_name, goodsDetail.sku_name, price, quantity, taxRate);
+                    }
+                }
+            });
+        });
+        
+        calculateGoodsTotal();
+    }
+    
+    // 步骤4: 运费配置（已经在仓库设置中处理）
+    
+    // 步骤5: 采购结算
+    if (data.payment_method !== undefined) {
+        $('#payment_method').val(data.payment_method);
+    }
+    
+    if (data.supplier_currency !== undefined) {
+        $('#supplier_currency').val(data.supplier_currency);
+    }
+    
+    // 收费项目
+    if (data.charge_items && data.charge_items.length > 0) {
+        chargeItems = [];
+        $('#chargeTbody').empty();
+        
+        data.charge_items.forEach(function(item) {
+            chargeItems.push({
+                name: item.name || '',
+                price: parseFloat(item.price || 0),
+                quantity: parseInt(item.quantity || 0),
+                subtotal: parseFloat(item.price || 0) * parseInt(item.quantity || 0)
+            });
+            
+            var html = '<tr class="charge-item">' +
+                '<td><input type="text" class="layui-input charge-name" value="' + (item.name || '') + '" placeholder="请输入项目名称" lay-verify="required"></td>' +
+                '<td><input type="number" class="layui-input charge-price" value="' + (parseFloat(item.price || 0).toFixed(2)) + '" min="0" step="0.01" placeholder="单价" onchange="updateChargeSubtotal(this)"></td>' +
+                '<td><input type="number" class="layui-input charge-quantity" value="' + (item.quantity || 0) + '" min="1" placeholder="数量" onchange="updateChargeSubtotal(this)"></td>' +
+                '<td class="charge-subtotal">' + (parseFloat(item.price || 0) * parseInt(item.quantity || 0)).toFixed(2) + '</td>' +
+                '<td><button type="button" class="layui-btn layui-btn-xs layui-btn-danger" onclick="removeChargeItem(this)">删除</button></td>' +
+                '</tr>';
+            
+            $('#chargeTbody').append(html);
+        });
+        
+        updateProjectTotal();
+    }
+    
+    // 步骤6: 物流信息
+    if (data.delivery_id) {
+        $('#delivery_id').val(data.delivery_id);
+    }
+    
+    if (data.delivery_method) {
+        $('#delivery_method').val(data.delivery_method);
+    }
+    
+    if (data.delivery_time) {
+        $('#delivery_time').val(data.delivery_time);
+    }
+    
+    if (data.delivery_no) {
+        $('#delivery_no').val(data.delivery_no);
+    }
+    
+    if (data.delivery_remark) {
+        $('#delivery_remark').val(data.delivery_remark);
+    }
+    
+    // 重新渲染表单
+    setTimeout(function() {
+        layui.form.render();
+        layui.laydate.render({
+            elem: '#delivery_time',
+            type: 'datetime',
+            format: 'yyyy-MM-dd HH:mm:ss',
+            value: data.delivery_time
+        });
+    }, 1000);
+}
+
+// 加载商品详情（新增接口）
+function loadGoodsDetail(goods_id, sku_id, callback) {
+    $.ajax({
+        url: '/?s=index/get_goods_detail',
+        type: 'GET',
+        data: {
+            goods_id: goods_id,
+            sku_id: sku_id,
+            company_id: getUrlParam('company_id')
+        },
+        success: function(res){
+            if(res.code === 0 && res.data) {
+                callback(res.data);
+            } else {
+                callback(null);
+            }
+        }
+    });
+}
+
+// 加载运费配置（编辑模式）
+function loadFreightConfigForEdit(data) {
+    if (!data.freight_config_id) return;
+    
+    $.ajax({
+        url: '/?s=index/get_freight_config_detail',
+        type: 'GET',
+        data: {id: data.freight_config_id},
+        success: function(res){
+            if(res.code === 0 && res.data) {
+                var config = res.data;
+                
+                // 设置快递企业和产品
+                if (data.warehouse_type === 'direct') {
+                    $('#direct_express').val(config.express_id);
+                    layui.form.render('select');
+                    
+                    // 加载快递产品
+                    loadExpressProducts(config.express_id, 'direct_product', function() {
+                        $('#direct_product').val(config.product_type);
+                        layui.form.render('select');
+                        
+                        // 显示配置按钮状态
+                        $('#directFreightConfigBtn').show();
+                        $('#directViewFreightBtn').show();
+                        $('#directConfigStatus').show();
+                        
+                        // 保存配置ID
+                        currentFreightConfigId = config.id;
+                        currentFreightConfig.config_id = config.id;
+                        currentFreightConfig.config_data = config.config_data;
+                    });
+                } else {
+                    $('#proxy_express').val(config.express_id);
+                    layui.form.render('select');
+                    
+                    loadExpressProducts(config.express_id, 'proxy_product', function() {
+                        $('#proxy_product').val(config.product_type);
+                        layui.form.render('select');
+                        
+                        $('#proxyFreightConfigBtn').show();
+                        $('#proxyViewFreightBtn').show();
+                        $('#proxyConfigStatus').show();
+                        
+                        currentFreightConfigId = config.id;
+                        currentFreightConfig.config_id = config.id;
+                        currentFreightConfig.config_data = config.config_data;
+                    });
+                }
+            }
+        }
+    });
+}
 
 // 步骤导航
 function nextStep(step) {
-    // 根据仓库类型调整步骤
-    if (warehouseType === 'proxy') {
-        // 代发货仓库跳过步骤5和6
-        if (currentStep === 4) {
-            step = 7; // 从步骤4直接到步骤7
-            // 修改步骤7文本
-            $('.step-item[data-step="7"]').text('5. 代发确认');
-            // 隐藏步骤5、6
-            $('.step-item[data-step="5"], .step-item[data-step="6"]').hide();
-        }
-    } else if (warehouseType === 'direct') {
-        // 直接发货仓库显示所有步骤
-        $('.step-item[data-step="5"], .step-item[data-step="6"]').show();
-        $('.step-item[data-step="7"]').text('7. 账单确认');
+    // 验证当前步骤
+    if(!validateStep(currentStep)) {
+        return;
     }
     
-    if (!validateStep(currentStep)) {
-        return;
+    // 如果仓库类型是代发货，跳过步骤5和6
+    if(warehouseType === 'proxy') {
+        if(currentStep === 4) {
+            // 从步骤4直接到步骤7（对于代发货来说，步骤7变成了步骤5）
+            step = 7;
+        } else if(currentStep === 7 && step === 5) {
+            // 防止从步骤7回到隐藏的步骤5
+            step = 7;
+        }
     }
     
     // 更新步骤指示器
@@ -1003,8 +1460,13 @@ function nextStep(step) {
     document.getElementById('step' + currentStep).style.display = 'none';
     document.getElementById('step' + step).style.display = 'block';
     
-    // 如果是最终确认步骤，加载确认数据
-    if (step === 7 || (warehouseType === 'proxy' && step === 7)) {
+    // 如果是步骤5，加载结算相关数据
+    if(step === 5) {
+        loadSettlementData();
+    }
+    
+    // 如果是步骤7，加载确认数据
+    if(step === 7) {
         loadConfirmationData();
     }
     
@@ -1012,14 +1474,14 @@ function nextStep(step) {
 }
 
 function prevStep() {
-    if (currentStep <= 1) return;
+    if(currentStep <= 1) return;
     
     var prevStep = currentStep - 1;
     
     // 如果仓库类型是代发货，跳过隐藏的步骤
-    if (warehouseType === 'proxy') {
-        if (prevStep === 5 || prevStep === 6) {
-            prevStep = 4;
+    if(warehouseType === 'proxy') {
+        if(prevStep === 5 || prevStep === 6) {
+            prevStep = 4; // 从步骤7直接回到步骤4
         }
     }
     
@@ -1223,7 +1685,7 @@ function loadExpressCompaniesForTerminal(warehouseId, terminalId) {
 }
 
 // 加载快递产品
-function loadExpressProducts(expressId, targetId) {
+function loadExpressProducts(expressId, targetId, callback) {
     $.ajax({
         url: '/?s=index/get_express_products',
         type: 'GET',
@@ -1242,12 +1704,11 @@ function loadExpressProducts(expressId, targetId) {
                 }
                 $('#' + targetId).html(html);
                 layui.form.render('select');
+                
+                if (callback) callback();
             } else {
-                layer.msg(res.msg || '加载快递产品失败', {icon: 2});
+                if (callback) callback();
             }
-        },
-        error: function() {
-            layer.msg('网络错误，请重试', {icon: 2});
         }
     });
 }
@@ -1267,6 +1728,37 @@ function resetFreightConfig() {
     $('#direct_terminal, #direct_express, #direct_product, #proxy_express, #proxy_product').val('');
     $('#directFreightConfigBtn, #proxyFreightConfigBtn').hide();
     layui.form.render('select');
+}
+
+// 加载快递企业列表
+function loadExpressCompanies(warehouseId, target) {
+    $.ajax({
+        url: '/?s=index/get_express_companies',
+        type: 'GET',
+        data: {
+            company_id: getUrlParam('company_id'),
+            warehouse_id: warehouseId,
+            type: warehouseType
+        },
+        success: function(res){
+            if(res.code === 0) {
+                var html = '<select class="layui-select express-select" id="' + target + 'Express">';
+                html += '<option value="">请选择快递企业</option>';
+                $.each(res.data, function(index, express){
+                    html += '<option value="' + express.id + '">' + express.express_name + ' (' + express.code + ')</option>';
+                });
+                html += '</select>';
+                
+                if(target === 'unified') {
+                    $('#unifiedExpressSelect').html(html);
+                } else if(target === 'proxy') {
+                    $('#proxyExpressSelect').html(html);
+                }
+                
+                layui.form.render('select');
+            }
+        }
+    });
 }
 
 // 显示运费配置模态框
@@ -1319,9 +1811,12 @@ function showFreightConfig(type) {
     $('#config_product_type').val(currentFreightConfig.product_type);
     $('#config_company_id').val(currentFreightConfig.company_id);
     
-    // 加载现有配置
-    loadFreightConfigData();
     
+    // 在显示模态框后，加载现有配置
+    loadExistingFreightConfig();
+    
+    // 显示模态框
+    // $('#freightConfigModal').show();
     layui.layer.open({
         type: 1,
         title: '运费配置',
@@ -1330,368 +1825,997 @@ function showFreightConfig(type) {
     });
 }
 
-// 加载运费配置数据
-function loadFreightConfigData() {
+// 加载现有运费配置
+function loadExistingFreightConfig() {
+    var params = {
+        company_id: currentFreightConfig.company_id,
+        warehouse_id: currentFreightConfig.warehouse_id,
+        express_id: currentFreightConfig.express_id,
+        product_type: currentFreightConfig.product_type,
+        warehouse_type: currentFreightConfig.warehouse_type,
+        terminal_id: currentFreightConfig.terminal_id
+    };
+    
+    layui.layer.load(2);
+    
     $.ajax({
         url: '/?s=index/get_freight_config',
         type: 'GET',
-        data: {
-            company_id: currentFreightConfig.company_id,
-            warehouse_id: currentFreightConfig.warehouse_id,
-            terminal_id: currentFreightConfig.terminal_id,
-            express_id: currentFreightConfig.express_id,
-            product_type: currentFreightConfig.product_type,
-            warehouse_type: currentFreightConfig.warehouse_type
-        },
-        success: function(res) {
-            if (res.code === 0 && res.data) {
-                renderFreightConfigForm(res.data);
-            } else {
-                // 初始化空表单
-                initFreightConfigForm();
+        data: params,
+        dataType: 'json',
+        success: function(res){
+            layui.layer.closeAll('loading');
+            if(res.code === 0 && res.data && res.data.config_data) {
+                // 填充表单数据
+                fillFreightConfigForm(res.data.config_data);
+                currentFreightConfig.config_id = res.data.id;
             }
         },
-        error: function() {
-            initFreightConfigForm();
+        error: function(){
+            layui.layer.closeAll('loading');
         }
     });
 }
 
-// 初始化运费配置表单
-function initFreightConfigForm() {
-    // 清空表单
-    $('#freightConfigForm')[0].reset();
-    $('#intervalList').empty();
+// 填充运费配置表单
+function fillFreightConfigForm(configData) {
+    // 这里需要根据表单结构填充数据
+    // 由于表单结构复杂，这里提供通用方法
+    if (configData.content) {
+        $.each(configData.content, function(key, value) {
+            if (Array.isArray(value)) {
+                // 处理数组数据
+                value.forEach(function(item, index) {
+                    if (Array.isArray(item)) {
+                        item.forEach(function(subItem, subIndex) {
+                            // 多级数组处理
+                            $('[name="content[' + key + '][' + index + '][' + subIndex + ']"]').val(subItem);
+                        });
+                    } else {
+                        $('[name="content[' + key + '][' + index + ']"]').val(item);
+                    }
+                });
+            } else {
+                $('[name="content[' + key + ']"]').val(value);
+            }
+        });
+    }
     
-    // 设置默认值
-    $('#config_id').val(0);
-    $('#config_procurement_id').val(0);
-    $('#config_is_default').val(0);
-    
-    // 添加第一个计费区间
-    addInterval();
-    
-    layui.form.render();
+    // 重新渲染表单
+    layui.form.render(null, 'component-form-group');
 }
 
 // 渲染运费配置表单
 function renderFreightConfigForm(config) {
-    $('#config_id').val(config.id || 0);
-    $('#config_procurement_id').val(config.procurement_id || 0);
-    
-    // 基础信息
-    $('input[name="config_name"]').val(config.config_name || '');
-    $('input[name="is_default"]').prop('checked', config.is_default == 1);
-    
-    // 最低消费
-    $('select[name="mini_cost"]').val(config.config_data.mini_cost || 0);
-    if (config.config_data.mini_cost == 1) {
-        $('.minicost_div').show();
-        $('input[name="mini_num"]').val(config.config_data.mini_num || 0);
-        $('select[name="minicost_unit"]').val(config.config_data.minicost_unit || '');
+    // 计费标准
+    if(config.has_min_charge) {
+        $('input[name="has_min_charge"][value="1"]').prop('checked', true);
+        $('#minChargeConfig').show();
+        $('input[name="min_charge_value"]').val(config.min_charge_value);
+        $('input[name="min_charge_unit"]').val(config.min_charge_unit);
     } else {
-        $('.minicost_div').hide();
+        $('input[name="has_min_charge"][value="0"]').prop('checked', true);
+        $('#minChargeConfig').hide();
     }
     
     // 计费区间
-    $('#intervalList').empty();
-    if (config.config_data.intervals && config.config_data.intervals.length > 0) {
-        config.config_data.intervals.forEach(function(interval, index) {
-            addInterval(interval);
+    $('#intervalTbody').empty();
+    if(config.intervals && config.intervals.length > 0) {
+        $.each(config.intervals, function(index, interval){
+            addIntervalRow(interval);
         });
-    } else {
-        addInterval();
     }
     
-    // 设置全局币种
-    if (config.config_data.intervals && config.config_data.intervals.length > 0) {
-        globalCurrency = config.config_data.intervals[0].charge_methods[0].currency || '';
+    // 分段计费方式
+    $('#segmentPriceTbody').empty();
+    if(config.segment_prices && config.segment_prices.length > 0) {
+        $.each(config.segment_prices, function(index, price){
+            addSegmentPriceRow(price);
+        });
     }
     
     layui.form.render();
 }
 
-// 添加计费区间
-function addInterval(intervalData) {
-    var intervalId = 'interval_' + Date.now() + '_' + Math.random().toString(36).substr(2);
-    var intervalIndex = $('#intervalList .interval-item').length;
+// 查看运费配置
+function viewFreightConfig(configId) {
+    if (!configId) return;
     
-    var html = '<div class="interval-item" id="' + intervalId + '">' +
-        '<span class="remove-interval" onclick="removeInterval(\'' + intervalId + '\')">' +
-        '<i class="layui-icon layui-icon-close"></i></span>' +
-        
-        '<div class="interval-form-item">' +
-        '<label class="layui-form-label">区间范围</label>' +
-        '<div class="layui-input-block disf">' +
-        '自 <input type="number" class="layui-input start-value" placeholder="起始值" ' +
-        'value="' + (intervalData ? intervalData.start_value : '0') + '" style="width: 100px;">' +
-        '<div class="unit-select" style="margin: 0 10px;">' +
-        '<select class="unit" lay-search>' +
-        '<option value="">单位</option>';
-        {volist name="value['unit']" key="k" id="v"}
-            html += '<option value="{$v["code_value"]}" ' + 
-                (intervalData && intervalData.unit == '{$v["code_value"]}' ? 'selected' : '') + '>' +
-        '{$v["code_name"]}</option>';
-        {/volist}
-        html += '</select></div>' +
-        '至 <input type="number" class="layui-input end-value" placeholder="结束值" ' +
-        'value="' + (intervalData ? intervalData.end_value : '') + '" style="width: 100px;">' +
-        '<div style="margin-left: 10px;">' +
-        '<select class="interval-type">' +
-        '<option value="value" ' + (intervalData && intervalData.interval_type == 'value' ? 'selected' : '') + '>数值</option>' +
-        '<option value="above" ' + (intervalData && intervalData.interval_type == 'above' ? 'selected' : '') + '>以上</option>' +
-        '</select></div></div></div>';
+    layui.layer.load(2);
     
-    // 计费方式
-    html += '<div class="charge-methods">';
-    if (intervalData && intervalData.charge_methods) {
-        intervalData.charge_methods.forEach(function(method, methodIndex) {
-            html += createChargeMethodHtml(methodIndex, method, intervalId);
+    $.ajax({
+        url: '/?s=index/get_freight_config_detail',
+        type: 'GET',
+        data: {id: configId},
+        dataType: 'json',
+        success: function(res){
+            layui.layer.closeAll('loading');
+            if(res.code === 0) {
+                renderFreightDetail(res.data);
+                $('#viewFreightModal').show();
+            } else {
+                layui.layer.msg(res.msg, {icon: 2});
+            }
+        },
+        error: function(){
+            layui.layer.closeAll('loading');
+            layui.layer.msg('加载失败', {icon: 2});
+        }
+    });
+}
+
+// 保存运费配置后的回调函数
+function afterSaveFreightConfig(configId, configData) {
+    // 保存配置ID到全局变量
+    currentFreightConfig.config_id = configId;
+    currentFreightConfig.config_data = configData;
+    currentFreightConfigId = configId; // 存储配置ID
+    
+    // 更新按钮状态
+    updateFreightConfigStatus(true);
+    
+    layui.layer.msg('运费配置保存成功', {icon: 1, time: 2000});
+    closeFreightConfig();
+}
+
+// 更新运费配置状态
+function updateFreightConfigStatus(isConfigured) {
+    if (warehouseType === 'direct') {
+        if (isConfigured) {
+            $('#directFreightConfigBtn button').hide();
+            $('#directViewFreightBtn').show();
+            $('#directConfigStatus').show();
+        } else {
+            $('#directFreightConfigBtn button').show();
+            $('#directViewFreightBtn').hide();
+            $('#directConfigStatus').hide();
+        }
+    } else {
+        if (isConfigured) {
+            $('#proxyFreightConfigBtn button').hide();
+            $('#proxyViewFreightBtn').show();
+            $('#proxyConfigStatus').show();
+        } else {
+            $('#proxyFreightConfigBtn button').show();
+            $('#proxyViewFreightBtn').hide();
+            $('#proxyConfigStatus').hide();
+        }
+    }
+}
+
+// 查看运费配置详情
+function viewFreightConfigDetail(type) {
+    if (!currentFreightConfig.config_id) {
+        // 如果没有配置ID，尝试从数据库加载
+        loadExistingFreightConfig(function(config) {
+            if (config) {
+                renderFreightDetail(config);
+                $('#freightDetailModal').show();
+                layui.layer.closeAll('loading');
+            } else {
+                layui.layer.msg('未找到运费配置', {icon: 2});
+            }
         });
     } else {
-        html += createChargeMethodHtml(0, null, intervalId);
+        // 直接使用当前配置
+        loadFreightConfigById(currentFreightConfig.config_id);
     }
-    html += '</div>';
-    
-    html += '<button type="button" class="layui-btn layui-btn-sm layui-btn-primary" ' +
-        'style="margin-top: 10px;" onclick="addChargeMethod(\'' + intervalId + '\')">' +
-        '<i class="layui-icon layui-icon-add-1"></i> 添加计费方式</button>' +
-        '</div>';
-    
-    $('#intervalList').append(html);
-    layui.form.render();
-    
-    // 绑定事件
-    bindIntervalEvents(intervalId);
 }
 
-// 创建计费方式HTML
-function createChargeMethodHtml(methodIndex, methodData, intervalId) {
-    var methodId = intervalId + '_method_' + methodIndex;
+// 根据ID加载运费配置
+function loadFreightConfigById(configId) {
+    layui.layer.load(2);
     
-    var html = '<div class="charge-method-item" id="' + methodId + '">' +
-        '<span class="remove-method" onclick="removeChargeMethod(\'' + methodId + '\')">' +
-        '<i class="layui-icon layui-icon-close"></i></span>' +
+    $.ajax({
+        url: '/?s=index/get_freight_config_detail',
+        type: 'GET',
+        data: {id: configId},
+        dataType: 'json',
+        success: function(res){
+            layui.layer.closeAll('loading');
+            if(res.code === 0) {
+                renderFreightDetail(res.data);
+                // $('#freightDetailModal').show();
+                layui.layer.open({
+                    type: 1,
+                    title: '运费配置',
+                    area: ['90%', '90%'],
+                    content: $('#freightDetailModal')
+                });
+            } else {
+                layui.layer.msg(res.msg, {icon: 2});
+            }
+        },
+        error: function(){
+            layui.layer.closeAll('loading');
+            layui.layer.msg('加载失败', {icon: 2});
+        }
+    });
+}
+
+// 渲染运费配置详情
+function renderFreightDetail(data) {
+    // 渲染基本信息
+    var basicHtml = '<tr><td>仓库：</td><td>' + (data.warehouse_info ? data.warehouse_info.warehouse_name : '未知') + '</td></tr>' +
+                   '<tr><td>仓库类型：</td><td>' + (data.warehouse_type === 'direct' ? '直接发货' : '代发货') + '</td></tr>';
+    
+    if (data.warehouse_type === 'direct' && data.terminal_id) {
+        basicHtml += '<tr><td>终端ID：</td><td>' + data.terminal_id + '</td></tr>';
+    }
+    
+    basicHtml += '<tr><td>快递企业：</td><td>' + (data.express_info ? data.express_info.name : '未知') + '</td></tr>' +
+                '<tr><td>产品类型：</td><td>' + data.product_type + '</td></tr>' +
+                '<tr><td>创建时间：</td><td>' + (data.createtime ? new Date(data.createtime * 1000).toLocaleString() : '未知') + '</td></tr>' +
+                '<tr><td>更新时间：</td><td>' + (data.updatetime ? new Date(data.updatetime * 1000).toLocaleString() : '未知') + '</td></tr>';
+    
+    $('#freightBasicInfo').html(basicHtml);
+    
+    // 渲染配置详情
+    var detailHtml = '';
+    if (data.config_data) {
+        var config = data.config_data;
         
-        '<div class="layui-form-item">' +
-        '<label class="layui-form-label">计费方式</label>' +
-        '<div class="layui-input-block">' +
-        '<select class="charge-method-type" lay-filter="charge-method-type">' +
-        '<option value="first_continue" ' + (methodData && methodData.method_type == 'first_continue' ? 'selected' : '') + '>首续计费</option>' +
-        '<option value="by_quantity" ' + (methodData && methodData.method_type == 'by_quantity' ? 'selected' : '') + '>按量计费</option>' +
-        '<option value="segment" ' + (methodData && methodData.method_type == 'segment' ? 'selected' : '') + '>分段计费</option>' +
-        '</select></div></div>';
-    
-    // 计费内容
-    html += '<div class="charge-content">';
-    if (methodData) {
-        html += createChargeContentHtml(methodData.method_type, methodData, methodId);
+        // 显示最低消费配置
+        if (config.mini_cost && config.mini_cost.length > 0) {
+            detailHtml += '<h4>最低消费配置：</h4>';
+            detailHtml += '<table class="layui-table">';
+            detailHtml += '<thead><tr><th>是否有最低消费</th><th>最低消费值</th><th>单位</th></tr></thead>';
+            detailHtml += '<tbody>';
+            
+            config.mini_cost.forEach(function(item, index) {
+                detailHtml += '<tr>';
+                detailHtml += '<td>' + (item == '1' ? '有最低' : '无最低') + '</td>';
+                detailHtml += '<td>' + (config.mini_num && config.mini_num[index] ? config.mini_num[index] : '-') + '</td>';
+                detailHtml += '<td>' + (config.minicost_unit && config.minicost_unit[index] ? config.minicost_unit[index] : '-') + '</td>';
+                detailHtml += '</tr>';
+            });
+            
+            detailHtml += '</tbody></table>';
+        }
+        
+        // 显示计费区间配置
+        if (config.qj1 && config.qj1.length > 0) {
+            detailHtml += '<h4 style="margin-top: 20px;">计费区间配置：</h4>';
+            detailHtml += '<table class="layui-table">';
+            detailHtml += '<thead><tr><th>区间</th><th>起始值</th><th>结束方式</th><th>结束值</th><th>计费进阶</th><th>单位</th></tr></thead>';
+            detailHtml += '<tbody>';
+            
+            config.qj1.forEach(function(item, index) {
+                detailHtml += '<tr>';
+                detailHtml += '<td>区间' + (index + 1) + '</td>';
+                detailHtml += '<td>' + item + '</td>';
+                detailHtml += '<td>' + (config.qj2_method && config.qj2_method[index] == '2' ? '以上' : '数值') + '</td>';
+                detailHtml += '<td>' + (config.qj2 && config.qj2[index] ? config.qj2[index] : '-') + '</td>';
+                detailHtml += '<td>' + (config.jinjie && config.jinjie[index] ? config.jinjie[index] : '-') + '</td>';
+                detailHtml += '<td>' + (config.unit && config.unit[index] ? config.unit[index] : '-') + '</td>';
+                detailHtml += '</tr>';
+            });
+            
+            detailHtml += '</tbody></table>';
+        }
+        
+        // 显示计费方式配置
+        if (config.jf_method && config.jf_method.length > 0) {
+            detailHtml += '<h4 style="margin-top: 20px;">计费方式配置：</h4>';
+            
+            // 这里可以根据需要显示更详细的计费方式信息
+            detailHtml += '<div class="layui-collapse" lay-accordion>';
+            
+            config.jf_method.forEach(function(methodArray, intervalIndex) {
+                if (methodArray && methodArray.length > 0) {
+                    methodArray.forEach(function(method, methodIndex) {
+                        detailHtml += '<div class="layui-colla-item">';
+                        detailHtml += '<div class="layui-colla-title">计费方式 ' + (methodIndex + 1) + '（区间' + (intervalIndex + 1) + '）</div>';
+                        detailHtml += '<div class="layui-colla-content">';
+                        
+                        if (method == '1') {
+                            detailHtml += '<p>类型：首续计费</p>';
+                            detailHtml += '<p>首重：' + (config.shouzhong && config.shouzhong[intervalIndex] && config.shouzhong[intervalIndex][methodIndex] ? config.shouzhong[intervalIndex][methodIndex] : '-') + '</p>';
+                            detailHtml += '<p>首重费用：' + (config.shouzhong_money && config.shouzhong_money[intervalIndex] && config.shouzhong_money[intervalIndex][methodIndex] ? config.shouzhong_money[intervalIndex][methodIndex] : '-') + '</p>';
+                        } else if (method == '2') {
+                            detailHtml += '<p>类型：按量计费</p>';
+                        } else if (method == '3') {
+                            detailHtml += '<p>类型：分段计费</p>';
+                        }
+                        
+                        detailHtml += '</div></div>';
+                    });
+                }
+            });
+            
+            detailHtml += '</div>';
+        }
     } else {
-        html += createChargeContentHtml('first_continue', null, methodId);
+        detailHtml = '<p>暂无配置详情</p>';
     }
-    html += '</div></div>';
     
-    return html;
+    $('#freightConfigDetail').html(detailHtml);
+    
+    // 重新渲染折叠面板
+    layui.element.render('collapse');
 }
 
-// 绑定区间事件
-function bindIntervalEvents(intervalId) {
-    var $interval = $('#' + intervalId);
+// 关闭详情模态框
+function closeFreightDetail() {
+    $('#freightDetailModal').hide();
+}
+
+// 修改配置
+function editFreightConfig() {
+    closeFreightDetail();
+    showFreightConfig(warehouseType);
+}
+
+// 删除配置
+function deleteFreightConfig() {
+    if (!currentFreightConfig.config_id) {
+        layui.layer.msg('没有可删除的配置', {icon: 2});
+        return;
+    }
     
-    // 计费方式类型变化
-    $interval.find('.charge-method-type').off('change').on('change', function() {
-        var methodType = $(this).val();
-        var $methodItem = $(this).closest('.charge-method-item');
-        var methodId = $methodItem.attr('id');
+    layui.layer.confirm('确定要删除此运费配置吗？', function(index){
+        $.ajax({
+            url: '/?s=index/delete_freight_config',
+            type: 'POST',
+            data: {id: currentFreightConfig.config_id},
+            dataType: 'json',
+            success: function(res){
+                if(res.code === 0) {
+                    layui.layer.msg('删除成功', {icon: 1});
+                    closeFreightDetail();
+                    
+                    // 重置状态
+                    currentFreightConfig.config_id = null;
+                    currentFreightConfig.config_data = null;
+                    updateFreightConfigStatus(false);
+                } else {
+                    layui.layer.msg(res.msg, {icon: 2});
+                }
+            },
+            error: function(){
+                layui.layer.msg('删除失败', {icon: 2});
+            }
+        });
+        layui.layer.close(index);
+    });
+}
+
+// 关闭查看模态框
+function closeViewFreight() {
+    $('#viewFreightModal').hide();
+}
+
+// 验证直接发货仓库的运费配置
+function validateDirectFreightConfig() {
+    var terminal = $('#direct_terminal').val();
+    var express = $('#direct_express').val();
+    var product = $('#direct_product').val();
+    
+    if (!terminal || !express || !product) {
+        layui.layer.msg('请完成运费配置：选择终端、快递企业和产品');
+        return false;
+    }
+    
+    // 检查是否已配置运费
+    var isConfigured = $('#directConfigStatus').is(':visible') || 
+                      currentFreightConfig.config_id || 
+                      currentFreightConfig.config_data;
+    
+    if (!isConfigured) {
+        layui.layer.msg('请先配置运费规则');
+        return false;
+    }
+    
+    return true;
+}
+
+// 验证代发货仓库的运费配置
+function validateProxyFreightConfig() {
+    var express = $('#proxy_express').val();
+    var product = $('#proxy_product').val();
+    
+    if (!express || !product) {
+        layui.layer.msg('请完成运费配置：选择快递企业和产品');
+        return false;
+    }
+    
+    // 检查是否已配置运费
+    var isConfigured = $('#proxyConfigStatus').is(':visible') || 
+                      currentFreightConfig.config_id || 
+                      currentFreightConfig.config_data;
+    
+    if (!isConfigured) {
+        layui.layer.msg('请先配置运费规则');
+        return false;
+    }
+    
+    return true;
+}
+
+// 检查现有运费配置
+function checkExistingFreightConfig() {
+    var params = {};
+    
+    if (warehouseType === 'direct') {
+        var warehouseId = $('#direct_warehouse_id').val();
+        var terminalId = $('#direct_terminal').val();
+        var expressId = $('#direct_express').val();
+        var productType = $('#direct_product').val();
         
-        $methodItem.find('.charge-content').html(createChargeContentHtml(methodType, null, methodId));
-        layui.form.render();
-    });
-    
-    // 币种选择变化 - 同步全局币种
-    $interval.find('.currency-select').off('change').on('change', function() {
-        globalCurrency = $(this).val();
-        // 更新所有币种选择框
-        $('.currency-select').val(globalCurrency);
-        layui.form.render();
-    });
-    
-    // 区间类型变化
-    $interval.find('.interval-type').off('change').on('change', function() {
-        var $endValue = $(this).closest('.disf').find('.end-value');
-        if ($(this).val() === 'above') {
-            $endValue.hide().val('');
-        } else {
-            $endValue.show();
+        if (!warehouseId || !terminalId || !expressId || !productType) {
+            return;
         }
-    });
+        
+        params = {
+            company_id: getUrlParam('company_id'),
+            warehouse_id: warehouseId,
+            terminal_id: terminalId,
+            express_id: expressId,
+            product_type: productType,
+            warehouse_type: 'direct'
+        };
+    } else {
+        var warehouseId = $('#proxy_warehouse_id').val();
+        var expressId = $('#proxy_express').val();
+        var productType = $('#proxy_product').val();
+        
+        if (!warehouseId || !expressId || !productType) {
+            return;
+        }
+        
+        params = {
+            company_id: getUrlParam('company_id'),
+            warehouse_id: warehouseId,
+            terminal_id: 0,
+            express_id: expressId,
+            product_type: productType,
+            warehouse_type: 'proxy'
+        };
+    }
     
-    // 分段计费类型变化
-    $interval.find('.segment-type').off('change').on('change', function() {
-        var $segment = $(this).closest('.segment-item');
-        var $numInput = $segment.find('.segment-end-value');
-        if ($(this).val() === 'above') {
-            $numInput.hide().val('');
-        } else {
-            $numInput.show();
+    $.ajax({
+        url: '/?s=index/get_freight_config',
+        type: 'GET',
+        data: params,
+        dataType: 'json',
+        success: function(res){
+            if(res.code === 0 && res.data && res.data.id) {
+                currentFreightConfigId = res.data.id; // 保存配置ID
+                currentFreightConfig.config_id = res.data.id;
+                currentFreightConfig.config_data = res.data.config_data;
+                updateFreightConfigStatus(true);
+            } else {
+                updateFreightConfigStatus(false);
+            }
         }
     });
 }
 
-// 添加分段计费行
-function addSegmentPrice(priceData) {
-    var intervalNo = priceData ? priceData.interval_no : '';
-    var startValue = priceData ? priceData.start_value : '';
-    var intervalLimit = priceData ? priceData.interval_limit : '数值';
-    var endValue = priceData ? priceData.end_value : '';
-    var currency = priceData ? priceData.currency : 'CNY';
-    var price = priceData ? priceData.price : '';
-    
-    var html = '<tr>';
-    html += '<td><input type="number" class="layui-input segment-interval-no" value="' + intervalNo + '" min="1" style="width: 80px;"></td>';
-    html += '<td><input type="number" class="layui-input segment-start-value" value="' + startValue + '" min="0" step="0.01" style="width: 100px;"></td>';
-    html += '<td><select class="layui-select segment-interval-limit" style="width: 100px;">';
-    html += '<option value="数值"' + (intervalLimit === '数值' ? ' selected' : '') + '>数值</option>';
-    html += '<option value="以上"' + (intervalLimit === '以上' ? ' selected' : '') + '>以上</option>';
-    html += '</select></td>';
-    html += '<td><input type="number" class="layui-input segment-end-value" value="' + endValue + '" min="0" step="0.01" style="width: 100px;"></td>';
-    html += '<td><select class="layui-select segment-currency" style="width: 80px;">';
-    html += '<option value="CNY"' + (currency === 'CNY' ? ' selected' : '') + '>CNY</option>';
-    html += '<option value="USD"' + (currency === 'USD' ? ' selected' : '') + '>USD</option>';
-    html += '<option value="EUR"' + (currency === 'EUR' ? ' selected' : '') + '>EUR</option>';
-    html += '</select></td>';
-    html += '<td><input type="number" class="layui-input segment-price" value="' + price + '" min="0" step="0.01" style="width: 100px;"></td>';
-    html += '<td><button type="button" class="layui-btn layui-btn-xs layui-btn-danger" onclick="$(this).closest(\'tr\').remove()">删除</button></td>';
-    html += '</tr>';
-    
-    $('#segmentPriceTbody').append(html);
-    layui.form.render('select');
+//最低值
+function mini_num(t){
+    var $ = layui.$
+        , layer = layui.layer;
+    let num = $(t).val();
+    $(t).parents(":eq(3)").find('.jifei_qujian').find('.layui-colla-item').eq(0).find('.layui-colla-content').eq(0).find('.layui-form-item').eq(0).find('input').eq(0).val(num);
+}
+
+//计费区间
+function add_qujian(t,num){
+    var $ = layui.$
+        , layer = layui.layer
+        , form = layui.form
+        , element = layui.element;
+    let qj2_method = $(t).parents(":eq(2)").find('.layui-colla-content').find('#qj2_method').val();
+    let next_qj1 = 0;
+    if(qj2_method==2){
+        layer.msg('计费已选“以上”，不可新增计费');return false;
+    }else{
+        let qj2 = $(t).parents(":eq(2)").find('.layui-colla-content').find('#qj2').val();
+        let jinjie = $(t).parents(":eq(2)").find('.layui-colla-content').find('#jinjie').val();
+        if(qj2=='' || jinjie==''){
+            layer.msg('请先填写区间值');return false;
+        }
+        next_qj1 = parseFloat(qj2) + parseFloat(jinjie);
+    }
+    $(t).parent().hide();
+
+    // let num2 = $(t).parents(":eq(5)").data('idx');
+    let num2 = $(t).parents(":eq(3)").children().length;
+    let cnum = parseInt($(t).parents(":eq(3)").children().length) + 1;
+    let unit_name = $(t).parents(":eq(6)").find('.unit_name').eq(0).text();
+    let currency = $('input[name="start_currency"]').val();
+    // console.log(num2,cnum,unit_name);return false;
+    let html = '<div class="layui-colla-item" data-idx="'+num2+'">\n' +
+        '                                                            <div class="layui-colla-title disf" style="justify-content: space-between;">\n' +
+        '                                                                <h4>计费区间'+cnum+'</h4>\n' +
+        '                                                                <div>\n' +
+        '                                                                    <div class="layui-btn layui-btn-danger" onclick="del_method(this)">-</div>\n' +
+        '                                                                    <div class="layui-btn layui-btn-success" onclick="add_qujian(this,'+num+')">+</div>\n' +
+        '                                                                </div>\n' +
+        '                                                            </div>\n' +
+        '                                                            <div class="layui-colla-content">\n' +
+        '                                                                <div class="layui-form-item">\n' +
+        '                                                                    <label class="layui-form-label">计费区间</label>\n' +
+        '                                                                    <div class="layui-input-block disf">\n' +
+        '                                                                        自&nbsp;\n' +
+        '                                                                        <input type="number" name="content[qj1]['+num+']['+num2+']" readonly lay-verify="required" placeholder="数值" class="layui-input qujian" value="'+next_qj1+'">\n' +
+        '                                                                        <div class="unit_name">'+unit_name+'</div>\n' +
+        '                                                                        &nbsp;至&nbsp;\n' +
+        '                                                                        <div class="unitdiv">\n' +
+        '                                                                            <select name="content[qj2_method]['+num+']['+num2+']" id="qj2_method" lay-filter="qj2_method">\n' +
+        '                                                                                <option value="1">数值</option>\n' +
+        '                                                                                <option value="2">以上</option>\n' +
+        '                                                                            </select>\n' +
+        '                                                                        </div>\n' +
+        '                                                                        <input type="number" class="layui-input qujian qujian2" name="content[qj2]['+num+']['+num2+']" id="qj2" placeholder="数值" value="">\n' +
+        '                                                                        <div class="unit_name">'+unit_name+'</div>\n' +
+        '                                                                    </div>\n' +
+        '                                                                </div>\n' +
+        '                                                                <div class="layui-form-item">\n' +
+        '                                                                    <label class="layui-form-label">计费进阶</label>\n' +
+        '                                                                    <div class="layui-input-block disf">\n' +
+        '                                                                        <input type="number" class="layui-input" name="content[jinjie]['+num+']['+num2+']" id="jinjie" placeholder="数值" value="">\n' +
+        '                                                                        <div class="unit_name">'+unit_name+'</div>\n' +
+        '                                                                    </div>\n' +
+        '                                                                </div>\n' +
+        '                                                                <div class="layui-collapse jifei_fangshi" lay-accordion>\n' +
+        '                                                                    <div class="layui-colla-item" data-idx="0">\n' +
+        '                                                                        <div class="layui-colla-title disf" style="justify-content: space-between;">\n' +
+        '                                                                            <h4>计费方式1</h4>\n' +
+        '                                                                            <div>\n' +
+        '                                                                                <div class="layui-btn layui-btn-success" onclick="add_jifei(this,'+num+')">+</div>\n' +
+        '                                                                            </div>\n' +
+        '                                                                        </div>\n' +
+        '                                                                        <div class="layui-colla-content layui-show">\n' +
+        '                                                                            <div class="layui-form-item">\n' +
+        '                                                                                <label class="layui-form-label">计费方式</label>\n' +
+        '                                                                                <div class="layui-input-block disf">\n' +
+        '                                                                                    <select name="content[jf_method]['+num+']['+num2+'][]" id="jf_method" lay-filter="jf_method">\n' +
+        '                                                                                        <option value="1">首续计费</option>\n' +
+        '                                                                                        <option value="2">按量计费</option>\n' +
+        '                                                                                        <option value="3">分段计费</option>\n' +
+        '                                                                                    </select>\n' +
+        '                                                                                </div>\n' +
+        '                                                                            </div>\n' +
+        '                                                                            <div class="layui-form-item jf_method">\n' +
+        '                                                                                <label class="layui-form-label"></label>\n' +
+        '                                                                                <div class="layui-input-block">\n' +
+        '                                                                                    <div class="jf_div1">\n' +
+        '                                                                                        <div class="disf">\n' +
+        '                                                                                            首重&nbsp;\n' +
+        '                                                                                            <input type="number" name="content[shouzhong]['+num+']['+num2+'][]" lay-verify="" placeholder="数值" class="layui-input qujian" value="">\n' +
+        '                                                                                            <div class="unit_name">'+unit_name+'</div>\n' +
+        '                                                                                            <div class="currencydiv">\n' +
+        '                                                                                                <select class="currency_sel" name="content[currency]['+num+']['+num2+'][]" lay-search>\n' +
+        '                                                                                                    <option value="">请选择币种</option>\n';
+{volist name="value['currency']" key="k" id="v"}
+    if(currency=="{$v['id']}"){
+        html+='<option value="{$v['id']}" selected>{$v['currency_symbol_standard']}</option>';
+    }else{
+        html+='<option value="{$v['id']}">{$v['currency_symbol_standard']}</option>\n';
+    }
+{/volist}
+    html+='                                                                                          </select>\n' +
+        '                                                                                            </div>\n' +
+        '                                                                                            <input type="number" name="content[shouzhong_money]['+num+']['+num2+'][]" lay-verify="" placeholder="数值" class="layui-input qujian" value="">\n' +
+        '                                                                                        </div>\n' +
+        '                                                                                        <div class="disf">\n' +
+        '                                                                                            续重&nbsp;\n' +
+        '                                                                                            <input type="number" name="content[xuzhong]['+num+']['+num2+'][]" lay-verify="" placeholder="数值" class="layui-input qujian" value="">\n' +
+        '                                                                                            <div class="unit_name">'+unit_name+'</div>\n' +
+        '                                                                                            <div class="currencydiv">\n' +
+        '                                                                                                <select class="currency_sel" name="content[currency]['+num+']['+num2+'][]" lay-search>\n' +
+        '                                                                                                    <option value="">请选择币种</option>\n';
+{volist name="value['currency']" key="k" id="v"}
+    if(currency=="{$v['id']}"){
+        html+='<option value="{$v['id']}" selected>{$v['currency_symbol_standard']}</option>';
+    }else{
+        html+='<option value="{$v['id']}">{$v['currency_symbol_standard']}</option>\n';
+    }
+{/volist}
+    html+='                                                                                          </select>\n' +
+        '                                                                                            </div>\n' +
+        '                                                                                            <input type="number" name="content[xuzhong_money]['+num+']['+num2+'][]" lay-verify="" placeholder="数值" class="layui-input qujian" value="">\n' +
+        '                                                                                        </div>\n' +
+        '                                                                                    </div>\n' +
+        '                                                                                    <div class="jf_div2" style="display: none;">\n' +
+        '                                                                                        <div class="disf">\n' +
+        '                                                                                            <input type="number" name="content[anliang]['+num+']['+num2+'][]" lay-verify="" placeholder="数值" class="layui-input qujian" value="">\n' +
+        '                                                                                            <div class="unit_name">'+unit_name+'</div>\n' +
+        '                                                                                            <div class="currencydiv">\n' +
+        '                                                                                                <select class="currency_sel" name="content[currency]['+num+']['+num2+'][]" lay-search>\n' +
+        '                                                                                                    <option value="">请选择币种</option>\n';
+{volist name="value['currency']" key="k" id="v"}
+    if(currency=="{$v['id']}"){
+        html+='<option value="{$v['id']}" selected>{$v['currency_symbol_standard']}</option>';
+    }else{
+        html+='<option value="{$v['id']}">{$v['currency_symbol_standard']}</option>\n';
+    }
+{/volist}
+    html+='                                                                                          </select>\n' +
+        '                                                                                            </div>\n' +
+        '                                                                                            <input type="number" name="content[anliang_money]['+num+']['+num2+'][]" lay-verify="" placeholder="数值" class="layui-input qujian" value="">\n' +
+        '                                                                                        </div>\n' +
+        '                                                                                    </div>\n' +
+        '                                                                                    <div class="layui-collapse jf_div3 jifei_fenduan" lay-accordion style="display: none;">\n' +
+        '                                                                                        <div class="layui-colla-item">\n' +
+        '                                                                                            <div class="layui-colla-title disf" style="justify-content: space-between;">\n' +
+        '                                                                                                <h4>分段计费1</h4>\n' +
+        '                                                                                                <div>\n' +
+        '                                                                                                    <div class="layui-btn layui-btn-success" onclick="add_fenduan(this,'+num+')">+</div>\n' +
+        '                                                                                                </div>\n' +
+        '                                                                                            </div>\n' +
+        '                                                                                            <div class="layui-colla-content">\n' +
+        '                                                                                                <div class="disf">\n' +
+        '                                                                                                    <input type="number" name="content[fenduan_num1]['+num+']['+num2+'][0][]" lay-verify="" placeholder="数值" class="layui-input qujian" value="">\n' +
+        '                                                                                                    <div class="unit_name">'+unit_name+'</div>\n' +
+        '                                                                                                    &nbsp;至&nbsp;\n' +
+        '                                                                                                    <div class="unitdiv">\n' +
+        '                                                                                                        <select name="content[fenduan_method]['+num+']['+num2+'][0][]" lay-filter="fenduan_method">\n' +
+        '                                                                                                            <option value="1">数值</option>\n' +
+        '                                                                                                            <option value="2">以上</option>\n' +
+        '                                                                                                        </select>\n' +
+        '                                                                                                    </div>\n' +
+        '                                                                                                    <div class="fenduan_num">\n' +
+        '                                                                                                        <div class="disf">\n' +
+        '                                                                                                            <input type="number" name="content[fenduan_num2]['+num+']['+num2+'][0][]" lay-verify="" placeholder="数值" class="layui-input qujian" value="">\n' +
+        '                                                                                                            <div class="unit_name">'+unit_name+'</div>\n' +
+        '                                                                                                            <div class="currencydiv">\n' +
+        '                                                                                                                <select class="currency_sel" name="content[currency]['+num+']['+num2+'][0][]" lay-search>\n' +
+        '                                                                                                                    <option value="">请选择币种</option>\n';
+{volist name="value['currency']" key="k" id="v"}
+    if(currency=="{$v['id']}"){
+        html+='<option value="{$v['id']}" selected>{$v['currency_symbol_standard']}</option>';
+    }else{
+        html+='<option value="{$v['id']}">{$v['currency_symbol_standard']}</option>\n';
+    }
+{/volist}
+    html+='                                                                                                           </select>\n' +
+        '                                                                                                            </div>\n' +
+        '                                                                                                            <input type="number" name="content[fenduan_money]['+num+']['+num2+'][0][]" lay-verify="" placeholder="数值" class="layui-input" value="">\n' +
+        '                                                                                                        </div>\n' +
+        '                                                                                                    </div>\n' +
+        '                                                                                                </div>\n' +
+        '                                                                                            </div>\n' +
+        '                                                                                        </div>\n' +
+        '                                                                                    </div>\n' +
+        '                                                                                </div>\n' +
+        '                                                                            </div>\n' +
+        '                                                                        </div>\n' +
+        '                                                                    </div>\n' +
+        '                                                                </div>\n' +
+        '                                                            </div>\n' +
+        '                                                        </div>';
+
+    $(t).parents(":eq(3)").append(html);
+    form.render(null,'component-form-group');
+    element.render('collapse');
+}
+//计费方式
+function add_jifei(t,num){
+    var $ = layui.$
+        , layer = layui.layer
+        , form = layui.form
+        , element = layui.element;
+    //“首续计费”和“按量计费”不可再添加计费方式
+    let jf_method = $(t).parents(":eq(2)").find('.layui-colla-content').find('#jf_method').val();
+    if(jf_method==1 || jf_method==2){
+        layer.msg('“首续计费”和“按量计费”不可再添加计费方式');return false;
+    }
+    $(t).parent().hide();
+    let num2 = $(t).parents(":eq(5)").data('idx');
+    let num3 = $(t).parents(":eq(3)").children().length;
+    let cnum = parseInt($(t).parents(":eq(3)").children().length) + 1;
+    let unit_name = $(t).parents(":eq(11)").find('.unit_name').eq(0).text();
+    let currency = $('input[name="start_currency"]').val();
+    // console.log(num,num2,$(t).parents(":eq(3)").children(),cnum);
+
+    let html = '<div class="layui-colla-item" data-idx="'+num3+'">\n' +
+        '                                                                        <div class="layui-colla-title disf" style="justify-content: space-between;">\n' +
+        '                                                                            <h4>计费方式'+cnum+'</h4>\n' +
+        '                                                                            <div>\n' +
+        '                                                                                <div class="layui-btn layui-btn-danger" onclick="del_method(this)">-</div>\n' +
+        '                                                                                <div class="layui-btn layui-btn-success" onclick="add_jifei(this,'+num+')">+</div>\n' +
+        '                                                                            </div>\n' +
+        '                                                                        </div>\n' +
+        '                                                                        <div class="layui-colla-content layui-show">\n' +
+        '                                                                            <div class="layui-form-item">\n' +
+        '                                                                                <label class="layui-form-label">计费方式</label>\n' +
+        '                                                                                <div class="layui-input-block disf">\n' +
+        '                                                                                    <select name="content[jf_method]['+num+']['+num2+']['+num3+']" id="jf_method" lay-filter="jf_method">\n' +
+        '                                                                                        <option value="1" disabled>首续计费</option>\n' +
+        '                                                                                        <option value="2" disabled>按量计费</option>\n' +
+        '                                                                                        <option value="3" selected>分段计费</option>\n' +
+        '                                                                                    </select>\n' +
+        '                                                                                </div>\n' +
+        '                                                                            </div>\n' +
+        '                                                                            <div class="layui-form-item jf_method">\n' +
+        '                                                                                <label class="layui-form-label"></label>\n' +
+        '                                                                                <div class="layui-input-block">\n' +
+        '                                                                                    <div class="jf_div1" style="display:none;">\n' +
+        '                                                                                        <div class="disf">\n' +
+        '                                                                                            首重&nbsp;\n' +
+        '                                                                                            <input type="number" name="content[shouzhong]['+num+']['+num2+']['+num3+']" lay-verify="" placeholder="数值" class="layui-input qujian" value="">\n' +
+        '                                                                                            <div class="unit_name">'+unit_name+'</div>\n' +
+        '                                                                                            <div class="currencydiv">\n' +
+        '                                                                                                <select class="currency_sel" name="content[currency]['+num+']['+num2+']['+num3+']" lay-search>\n' +
+        '                                                                                                    <option value="">请选择币种</option>\n';
+{volist name="value['currency']" key="k" id="v"}
+    if(currency=="{$v['id']}"){
+        html+='<option value="{$v['id']}" selected>{$v['currency_symbol_standard']}</option>';
+    }else{
+        html+='<option value="{$v['id']}">{$v['currency_symbol_standard']}</option>\n';
+    }
+{/volist}
+    html += '                                                                                        </select>\n' +
+        '                                                                                            </div>\n' +
+        '                                                                                            <input type="number" name="content[shouzhong_money]['+num+']['+num2+']['+num3+']" lay-verify="" placeholder="数值" class="layui-input qujian" value="">\n' +
+        '                                                                                        </div>\n' +
+        '                                                                                        <div class="disf">\n' +
+        '                                                                                            续重&nbsp;\n' +
+        '                                                                                            <input type="number" name="content[xuzhong]['+num+']['+num2+']['+num3+']" lay-verify="" placeholder="数值" class="layui-input qujian" value="">\n' +
+        '                                                                                            <div class="unit_name">'+unit_name+'</div>\n' +
+        '                                                                                            <div class="currencydiv">\n' +
+        '                                                                                                <select class="currency_sel" name="content[currency]['+num+']['+num2+']['+num3+']" lay-search>\n' +
+        '                                                                                                    <option value="">请选择币种</option>\n';
+{volist name="value['currency']" key="k" id="v"}
+    if(currency=="{$v['id']}"){
+        html+='<option value="{$v['id']}" selected>{$v['currency_symbol_standard']}</option>';
+    }else{
+        html+='<option value="{$v['id']}">{$v['currency_symbol_standard']}</option>\n';
+    }
+{/volist}
+    html += '                                                                                        </select>\n' +
+        '                                                                                            </div>\n' +
+        '                                                                                            <input type="number" name="content[xuzhong_money]['+num+']['+num2+']['+num3+']" lay-verify="" placeholder="数值" class="layui-input qujian" value="">\n' +
+        '                                                                                        </div>\n' +
+        '                                                                                    </div>\n' +
+        '                                                                                    <div class="jf_div2" style="display: none;">\n' +
+        '                                                                                        <div class="disf">\n' +
+        '                                                                                            <input type="number" name="content[anliang]['+num+']['+num2+']['+num3+']" lay-verify="" placeholder="数值" class="layui-input qujian" value="">\n' +
+        '                                                                                            <div class="unit_name">'+unit_name+'</div>\n' +
+        '                                                                                            <div class="currencydiv">\n' +
+        '                                                                                                <select class="currency_sel" name="content[currency]['+num+']['+num2+']['+num3+']" lay-search>\n' +
+        '                                                                                                    <option value="">请选择币种</option>\n';
+{volist name="value['currency']" key="k" id="v"}
+    if(currency=="{$v['id']}"){
+        html+='<option value="{$v['id']}" selected>{$v['currency_symbol_standard']}</option>';
+    }else{
+        html+='<option value="{$v['id']}">{$v['currency_symbol_standard']}</option>\n';
+    }
+{/volist}
+    html +='                                                                                         </select>\n' +
+        '                                                                                            </div>\n' +
+        '                                                                                            <input type="number" name="content[anliang_money]['+num+']['+num2+']['+num3+']" lay-verify="" placeholder="数值" class="layui-input qujian" value="">\n' +
+        '                                                                                        </div>\n' +
+        '                                                                                    </div>\n' +
+        '                                                                                    <div class="layui-collapse jf_div3 jifei_fenduan" lay-accordion style="display: block;">\n' +
+        '                                                                                        <div class="layui-colla-item">\n' +
+        '                                                                                            <div class="layui-colla-title disf" style="justify-content: space-between;">\n' +
+        '                                                                                                <h4>分段计费1</h4>\n' +
+        '                                                                                                <div>\n' +
+        '                                                                                                    <div class="layui-btn layui-btn-success" onclick="add_fenduan(this,'+num+')">+</div>\n' +
+        '                                                                                                </div>\n' +
+        '                                                                                            </div>\n' +
+        '                                                                                            <div class="layui-colla-content">\n' +
+        '                                                                                                <div class="disf">\n' +
+        '                                                                                                    <input type="number" name="content[fenduan_num1]['+num+']['+num2+']['+num3+'][]" lay-verify="" placeholder="数值" class="layui-input qujian" value="">\n' +
+        '                                                                                                    <div class="unit_name">'+unit_name+'</div>\n' +
+        '                                                                                                    &nbsp;至&nbsp;\n' +
+        '                                                                                                    <div class="unitdiv">\n' +
+        '                                                                                                        <select name="content[fenduan_method]['+num+']['+num2+']['+num3+'][]" lay-filter="fenduan_method">\n' +
+        '                                                                                                            <option value="1">数值</option>\n' +
+        '                                                                                                            <option value="2">以上</option>\n' +
+        '                                                                                                        </select>\n' +
+        '                                                                                                    </div>\n' +
+        '                                                                                                    <div class="fenduan_num">\n' +
+        '                                                                                                        <div class="disf">\n' +
+        '                                                                                                            <input type="number" name="content[fenduan_num2]['+num+']['+num2+']['+num3+'][]" lay-verify="" placeholder="数值" class="layui-input qujian" value="">\n' +
+        '                                                                                                            <div class="unit_name">'+unit_name+'</div>\n' +
+        '                                                                                                            <div class="currencydiv">\n' +
+        '                                                                                                                <select class="currency_sel" name="content[currency]['+num+']['+num2+']['+num3+'][]" lay-search>\n' +
+        '                                                                                                                    <option value="">请选择币种</option>\n';
+{volist name="value['currency']" key="k" id="v"}
+    if(currency=="{$v['id']}"){
+        html+='<option value="{$v['id']}" selected>{$v['currency_symbol_standard']}</option>';
+    }else{
+        html+='<option value="{$v['id']}">{$v['currency_symbol_standard']}</option>\n';
+    }
+{/volist}
+    html += '                                                                                                        </select>\n' +
+        '                                                                                                            </div>\n' +
+        '                                                                                                            <input type="number" name="content[fenduan_money]['+num+']['+num2+']['+num3+'][]" lay-verify="" placeholder="数值" class="layui-input" value="">\n' +
+        '                                                                                                        </div>\n' +
+        '                                                                                                    </div>\n' +
+        '                                                                                                </div>\n' +
+        '                                                                                            </div>\n' +
+        '                                                                                        </div>\n' +
+        '                                                                                    </div>\n' +
+        '                                                                                </div>\n' +
+        '                                                                            </div>\n' +
+        '                                                                        </div>\n' +
+        '                                                                    </div>';
+    $(t).parents(":eq(3)").append(html);
+    form.render(null,'component-form-group');
+    element.render('collapse');
+}
+//分段计费
+function add_fenduan(t,num){
+    var $ = layui.$
+        , layer = layui.layer
+        , form = layui.form
+        , element = layui.element;
+    $(t).parent().hide();
+    let num2 = $(t).parents(":eq(10)").data('idx');
+    let num3 = $(t).parents(":eq(7)").data('idx');
+    let num4 = $(t).parents(":eq(3)").find('.layui-colla-item').length;
+    let cnum = parseInt($(t).parents(":eq(3)").find('.layui-colla-item').length) + 1;
+    let unit_name = $(t).parents(":eq(16)").find('.unit_name').eq(0).text();//11 16
+    let currency = $('input[name="start_currency"]').val();
+
+    let html = '<div class="layui-colla-item ">\n' +
+        '                                                                                            <div class="layui-colla-title disf" style="justify-content: space-between;">\n' +
+        '                                                                                                <h4>分段计费'+cnum+'</h4>\n' +
+        '                                                                                                <div>\n' +
+        '                                                                                                    <div class="layui-btn layui-btn-danger" onclick="del_method(this)">-</div>\n' +
+        '                                                                                                    <div class="layui-btn layui-btn-success" onclick="add_fenduan(this,'+num+')">+</div>\n' +
+        '                                                                                                </div>\n' +
+        '                                                                                            </div>\n' +
+        '                                                                                            <div class="layui-colla-content">\n' +
+        '                                                                                                <div class="disf">\n' +
+        '                                                                                                    <input type="number" name="content[fenduan_num1]['+num+']['+num2+']['+num3+']['+num4+']" lay-verify="" placeholder="数值" class="layui-input qujian" value="">\n' +
+        '                                                                                                    <div class="unit_name">'+unit_name+'</div>\n' +
+        '                                                                                                    &nbsp;至&nbsp;\n' +
+        '                                                                                                    <div class="unitdiv">\n' +
+        '                                                                                                        <select name="content[fenduan_method]['+num+']['+num2+']['+num3+']['+num4+']" lay-filter="fenduan_method">\n' +
+        '                                                                                                            <option value="1">数值</option>\n' +
+        '                                                                                                            <option value="2">以上</option>\n' +
+        '                                                                                                        </select>\n' +
+        '                                                                                                    </div>\n' +
+        '                                                                                                    <div class="fenduan_num">\n' +
+        '                                                                                                        <div class="disf">\n' +
+        '                                                                                                            <input type="number" name="content[fenduan_num2]['+num+']['+num2+']['+num3+']['+num4+']" lay-verify="" placeholder="数值" class="layui-input qujian" value="">\n' +
+        '                                                                                                            <div class="unit_name">'+unit_name+'</div>\n' +
+        '                                                                                                            <div class="currencydiv">\n' +
+        '                                                                                                                <select class="currency_sel" name="content[currency]['+num+']['+num2+']['+num3+']['+num4+']" lay-search>\n' +
+        '                                                                                                                    <option value="">请选择币种</option>\n';
+{volist name="value['currency']" key="k" id="v"}
+    if(currency=="{$v['id']}"){
+        html+='<option value="{$v['id']}" selected>{$v['currency_symbol_standard']}</option>';
+    }else{
+        html+='<option value="{$v['id']}">{$v['currency_symbol_standard']}</option>\n';
+    }
+{/volist}
+    html += '                                                                                                        </select>\n' +
+        '                                                                                                            </div>\n' +
+        '                                                                                                            <input type="number" name="content[fenduan_money]['+num+']['+num2+']['+num3+']['+num4+']" lay-verify="" placeholder="数值" class="layui-input" value="">\n' +
+        '                                                                                                        </div>\n' +
+        '                                                                                                    </div>\n' +
+        '                                                                                                </div>\n' +
+        '                                                                                            </div>\n' +
+        '                                                                                        </div>';
+
+    $(t).parents(":eq(3)").append(html);
+    form.render(null,'component-form-group');
+    element.render('collapse');
 }
 
 // 保存运费配置
 function saveFreightConfig() {
-    var formData = new FormData();
-    var configData = collectFreightConfigData();
+    var formData = $('#freightConfigForm').serializeArray();
+    var formDataObj = {};
     
-    // 验证数据
-    if (!validateFreightConfig(configData)) {
-        return;
+    // 将表单数据转换为对象
+    $.each(formData, function() {
+        if (formDataObj[this.name] !== undefined) {
+            if (!formDataObj[this.name].push) {
+                formDataObj[this.name] = [formDataObj[this.name]];
+            }
+            formDataObj[this.name].push(this.value || '');
+        } else {
+            formDataObj[this.name] = this.value || '';
+        }
+    });
+    
+    // 验证必填字段
+    var requiredFields = {
+        'warehouse_type': '仓库类型',
+        'warehouse_id': '仓库',
+        'express_id': '快递企业',
+        'product_type': '快递产品'
+    };
+    
+    for (var field in requiredFields) {
+        if (!formDataObj[field] || formDataObj[field] === '') {
+            layui.layer.msg('请先选择' + requiredFields[field]);
+            return;
+        }
     }
     
-    formData.append('id', $('#config_id').val());
-    formData.append('procurement_id', $('#config_procurement_id').val());
-    formData.append('company_id', $('#config_company_id').val());
-    formData.append('warehouse_type', $('#config_warehouse_type').val());
-    formData.append('warehouse_id', $('#config_warehouse_id').val());
-    formData.append('terminal_id', $('#config_terminal_id').val());
-    formData.append('express_id', $('#config_express_id').val());
-    formData.append('product_type', $('#config_product_type').val());
-    formData.append('config_name', $('input[name="config_name"]').val());
-    formData.append('is_default', $('input[name="is_default"]').prop('checked') ? 1 : 0);
-    formData.append('config_data', JSON.stringify(configData));
+    // 添加公司ID
+    formDataObj.company_id = getUrlParam('company_id');
+    
+    layui.layer.load(2); // 显示加载层
     
     $.ajax({
         url: '/?s=index/save_freight_config',
         type: 'POST',
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function(res) {
-            if (res.code === 0) {
-                layer.msg('运费配置保存成功', {icon: 1});
-                // 更新配置ID
-                if (res.data && res.data.id) {
-                    $('#config_id').val(res.data.id);
-                }
-                closeFreightConfig();
+        data: formDataObj,
+        dataType: 'json',
+        success: function(res){
+            layui.layer.closeAll('loading');
+            if(res.code === 0) {
+                // 使用新的回调函数
+                afterSaveFreightConfig(res.data.id, formDataObj);
             } else {
-                layer.msg(res.msg, {icon: 2});
+                layui.layer.msg(res.msg, {icon: 2});
             }
         },
-        error: function() {
-            layer.msg('保存失败，请重试', {icon: 2});
+        error: function(){
+            layui.layer.closeAll('loading');
+            layui.layer.msg('网络错误，请重试', {icon: 2});
         }
     });
 }
 
-// 收集运费配置数据
-function collectFreightConfigData() {
-    var configData = {
-        mini_cost: $('select[name="mini_cost"]').val(),
-        mini_num: $('input[name="mini_num"]').val() || 0,
-        minicost_unit: $('select[name="minicost_unit"]').val() || '',
-        intervals: []
-    };
+// 标记运费配置已完成
+function markFreightConfigCompleted() {
+    var configBtn = warehouseType === 'direct' ? 
+        $('#directFreightConfigBtn') : $('#proxyFreightConfigBtn');
     
-    // 收集计费区间
-    $('#intervalList .interval-item').each(function() {
-        var $interval = $(this);
-        var interval = {
-            start_value: $interval.find('.start-value').val() || 0,
-            end_value: $interval.find('.end-value').val() || '',
-            unit: $interval.find('.unit').val() || '',
-            interval_type: $interval.find('.interval-type').val() || 'value',
-            charge_methods: []
-        };
+    configBtn.html('<span style="color:#52c41a;"><i class="layui-icon">&#xe616;</i> 已配置</span>');
+    $('#step4 .step-action button').prop('disabled', false);
+}
+
+// 验证步骤4
+function validateStep4() {
+    if(warehouseType === 'direct') {
+        var terminal = $('#direct_terminal').val();
+        var express = $('#direct_express').val();
+        var product = $('#direct_product').val();
         
-        // 收集计费方式
-        $interval.find('.charge-method-item').each(function() {
-            var $method = $(this);
-            var methodType = $method.find('.charge-method-type').val();
-            var method = {
-                method_type: methodType
-            };
-            
-            // 根据计费方式收集数据
-            if (methodType === 'first_continue') {
-                method.first_weight = $method.find('.first-weight').val() || 0;
-                method.first_price = $method.find('.first-price').val() || 0;
-                method.continue_weight = $method.find('.continue-weight').val() || 0;
-                method.continue_price = $method.find('.continue-price').val() || 0;
-                method.currency = $method.find('.currency-select').val() || '';
-            } else if (methodType === 'by_quantity') {
-                method.quantity = $method.find('.quantity').val() || 0;
-                method.price = $method.find('.price').val() || 0;
-                method.currency = $method.find('.currency-select').val() || '';
-            } else if (methodType === 'segment') {
-                method.segments = [];
-                $method.find('.segment-item').each(function() {
-                    var $segment = $(this);
-                    method.segments.push({
-                        start: $segment.find('.segment-start').val() || 0,
-                        end: $segment.find('.segment-end-value').val() || '',
-                        end_type: $segment.find('.segment-type').val() || 'value',
-                        price: $segment.find('.segment-price').val() || 0,
-                        currency: $segment.find('.currency-select').val() || ''
-                    });
-                });
-            }
-            
-            interval.charge_methods.push(method);
-        });
+        if(!terminal || !express || !product) {
+            layer.msg('请完成运费配置');
+            return false;
+        }
+    } else {
+        var express = $('#proxy_express').val();
+        var product = $('#proxy_product').val();
         
-        configData.intervals.push(interval);
-    });
+        if(!express || !product) {
+            layer.msg('请完成运费配置');
+            return false;
+        }
+    }
     
-    return configData;
+    // 检查是否有运费配置
+    if(!currentFreightConfig.config_data) {
+        layer.msg('请配置运费规则');
+        return false;
+    }
+    
+    return true;
 }
 
 // 关闭运费配置模态框
 function closeFreightConfig() {
     $('#freightConfigModal').hide();
+    layui.layer.closeAll();
 }
 
-// 验证代发货运费配置
-function validateProxyFreightConfig() {
-    var express = $('#proxyExpress').val();
-    var product = $('#proxyProduct').val();
-    
-    if(!express || !product) {
-        layer.msg('请选择快递企业和产品');
-        return false;
-    }
-    
-    return true;
+//删除
+function del_method(t){
+    var $ = layui.$
+        , layer = layui.layer;
+    let idx = layer.confirm('确认删除吗？', {
+        btn: ['删除','取消']
+    }, function() {
+        $(t).parents(":eq(2)").prev().find('.layui-colla-title').find('div').show();
+        $(t).parent().parent().parent().remove();
+        layer.close(idx);
+    }, function(){
+
+    });
 }
 //setp4:运费配置==========================================end
 
@@ -1742,17 +2866,26 @@ function addGoods() {
     });
 }
 
-function addGoodsRow(goodsId, skuId, goodsName, skuName, price) {
+function addGoodsRow(goodsId, skuId, goodsName, skuName, price, quantity, taxRate) {
+    quantity = quantity || 1;
+    price = price || 0;
+    taxRate = taxRate || 0;
+    
     var rowId = 'goods_' + goodsId + '_' + skuId;
     var safePrice = parseFloat(price) || 0;
+    
+    // 计算小计
+    var baseAmount = quantity * safePrice;
+    var taxAmount = baseAmount * (taxRate / 100);
+    var subtotal = baseAmount + taxAmount;
     
     var html = '<tr id="' + rowId + '">' +
         '<td>' + goodsName + '<br><small style="color:#666;">' + skuName + '</small></td>' +
         '<td><input type="text" class="layui-input goods-code" value="" placeholder="规格编码" style="height:30px;padding:0 5px;"></td>' +
-        '<td><input type="number" class="layui-input goods-quantity" value="1" min="1" onchange="updateGoodsSubtotal(\'' + rowId + '\')" style="height:30px;padding:0 5px;"></td>' +
+        '<td><input type="number" class="layui-input goods-quantity" value="' + quantity + '" min="1" onchange="updateGoodsSubtotal(\'' + rowId + '\')" style="height:30px;padding:0 5px;"></td>' +
         '<td><input type="number" class="layui-input goods-price" value="' + safePrice.toFixed(2) + '" min="0" step="0.01" onchange="updateGoodsSubtotal(\'' + rowId + '\')" style="height:30px;padding:0 5px;"></td>' +
-        '<td><div style="position:relative;"><input type="number" class="layui-input goods-tax" value="0" min="0" max="100" step="0.01" onchange="updateGoodsSubtotal(\'' + rowId + '\')" style="height:30px;padding:0 5px 0 5px;padding-right:20px;"><span style="position:absolute;right:8px;top:6px;color:#666;font-size:12px;">%</span></div></td>' +
-        '<td class="goods-subtotal">' + safePrice.toFixed(2) + '</td>' +
+        '<td><div style="position:relative;"><input type="number" class="layui-input goods-tax" value="' + taxRate + '" min="0" max="100" step="0.01" onchange="updateGoodsSubtotal(\'' + rowId + '\')" style="height:30px;padding:0 5px 0 5px;padding-right:20px;"><span style="position:absolute;right:8px;top:6px;color:#666;font-size:12px;">%</span></div></td>' +
+        '<td class="goods-subtotal">' + subtotal.toFixed(2) + '</td>' +
         '<td><button class="layui-btn layui-btn-xs layui-btn-danger" onclick="removeGoods(\'' + rowId + '\')">删除</button></td>' +
         '</tr>';
     
@@ -1814,31 +2947,59 @@ function calculateGoodsTotal() {
 
 // 添加收费项目
 function addChargeItem() {
-    var html = '<tr>' +
-        '<td><input type="text" class="layui-input charge-name" value=""></td>' +
-        '<td><input type="number" class="layui-input charge-price" value="0" min="0" step="0.01" onchange="updateChargeSubtotal(this)"></td>' +
-        '<td><input type="number" class="layui-input charge-quantity" value="1" min="1" onchange="updateChargeSubtotal(this)"></td>' +
+    var html = '<tr class="charge-item">' +
+        '<td><input type="text" class="layui-input charge-name" value="" placeholder="请输入项目名称" lay-verify="required"></td>' +
+        '<td><input type="number" class="layui-input charge-price" value="0" min="0" step="0.01" placeholder="单价" onchange="updateChargeSubtotal(this)"></td>' +
+        '<td><input type="number" class="layui-input charge-quantity" value="1" min="1" placeholder="数量" onchange="updateChargeSubtotal(this)"></td>' +
         '<td class="charge-subtotal">0.00</td>' +
-        '<td><button class="layui-btn layui-btn-xs layui-btn-danger" onclick="removeChargeItem(this)">删除</button></td>' +
+        '<td><button type="button" class="layui-btn layui-btn-xs layui-btn-danger" onclick="removeChargeItem(this)">删除</button></td>' +
         '</tr>';
     
     $('#chargeTbody').append(html);
+    
+    // 添加数据到chargeItems数组
+    chargeItems.push({
+        name: '',
+        price: 0,
+        quantity: 1,
+        subtotal: 0
+    });
+    
+    // 重新渲染表单验证
+    layui.form.render();
     updateProjectTotal();
 }
 
 function updateChargeSubtotal(element) {
     var row = $(element).closest('tr');
+    var rowIndex = row.index();
     var price = parseFloat(row.find('.charge-price').val()) || 0;
     var quantity = parseFloat(row.find('.charge-quantity').val()) || 0;
     
     var subtotal = price * quantity;
     row.find('.charge-subtotal').text(subtotal.toFixed(2));
     
+    // 更新 chargeItems 数组
+    if (chargeItems[rowIndex]) {
+        chargeItems[rowIndex].name = row.find('.charge-name').val() || '';
+        chargeItems[rowIndex].price = price;
+        chargeItems[rowIndex].quantity = quantity;
+        chargeItems[rowIndex].subtotal = subtotal;
+    }
+    
     updateProjectTotal();
 }
 
 function removeChargeItem(element) {
-    $(element).closest('tr').remove();
+    var row = $(element).closest('tr');
+    var rowIndex = row.index();
+    
+    // 从数组中移除对应项
+    if (chargeItems[rowIndex]) {
+        chargeItems.splice(rowIndex, 1);
+    }
+    
+    row.remove();
     updateProjectTotal();
 }
 
@@ -1850,6 +3011,57 @@ function updateProjectTotal() {
     $('#projectTotalAmount').text(total.toFixed(2));
 }
 
+// 加载物流企业
+function loadDeliveryCompanies() {
+    $.ajax({
+        url: '/?s=index/get_delivery_companies',
+        type: 'GET',
+        data: {
+            company_id: getUrlParam('company_id'),
+            company_type: getUrlParam('company_type')
+        },
+        success: function(res){
+            if(res.code === 0) {
+                var html = '<option value="">请选择物流企业</option>';
+                if(res.data && res.data.length > 0) {
+                    $.each(res.data, function(index, company){
+                        html += '<option value="' + company.id + '">' + company.name + '</option>';
+                    });
+                }
+                $('#delivery_id').html(html);
+                layui.form.render('select');
+            } else {
+                console.log('加载物流企业失败:', res.msg);
+            }
+        },
+        error: function(){
+            console.log('网络错误，加载物流企业失败');
+        }
+    });
+}
+
+// 加载物流方式
+function loadDeliveryMethods() {
+    // 这里可以根据物流企业动态加载物流方式
+    // 暂时加载固定的物流方式
+    var html = '<option value="">请选择物流方式</option>' +
+               '<option value="1">陆运</option>' +
+               '<option value="2">空运</option>' +
+               '<option value="3">海运</option>' +
+               '<option value="4">铁路运输</option>';
+    $('#delivery_method').html(html);
+    layui.form.render('select');
+}
+
+// 在页面加载或步骤切换时调用
+function loadSettlementData() {
+    // 加载物流企业
+    loadDeliveryCompanies();
+    
+    // 加载物流方式
+    loadDeliveryMethods();
+}
+
 // 提交采购单
 function submitProcurement() {
     // 收集所有数据
@@ -1858,10 +3070,10 @@ function submitProcurement() {
         company_type: getUrlParam('company_type'),
         supplier_id: $('#supplier_id').val(),
         warehouse_type: warehouseType,
-        warehouses: warehouseType === 'direct' ? $('#direct_warehouse_id').val() : $('#proxy_warehouse_id').val(),
+        warehouse_id: warehouseType === 'direct' ? $('#direct_warehouse_id').val() : $('#proxy_warehouse_id').val(),
         goods: selectedGoods,
         charge_items: chargeItems,
-        freight_config: freightConfig,
+        freight_config_id: currentFreightConfigId, // 传递运费配置ID
         payment_method: $('#payment_method').val(),
         supplier_currency: $('#supplier_currency').val(),
         delivery_id: $('#delivery_id').val(),
@@ -1875,14 +3087,29 @@ function submitProcurement() {
         total_amount: calculateTotalAmount()
     };
     
+    // 验证是否已配置运费（直接发货和代发货都需要）
+    if (!currentFreightConfigId) {
+        layui.layer.msg('请先配置运费', {icon: 2});
+        return;
+    }
+    
+    // 验证运费配置是否完整
+    if (!currentFreightConfig.config_data) {
+        layui.layer.msg('运费配置不完整，请重新配置', {icon: 2});
+        return;
+    }
+    
     // 发送请求
     layui.layer.confirm('确认提交采购单吗？', function(index){
+        layui.layer.load(2); // 显示加载层
+        
         $.ajax({
             url: '/?s=index/save_procurement',
             type: 'POST',
             data: procurementData,
             dataType: 'json',
             success: function(res){
+                layui.layer.closeAll('loading');
                 if(res.code === 0) {
                     layui.layer.msg('采购单提交成功', {icon: 1});
                     setTimeout(function(){
@@ -1893,11 +3120,120 @@ function submitProcurement() {
                 }
             },
             error: function(){
+                layui.layer.closeAll('loading');
                 layui.layer.msg('网络错误，请重试', {icon: 2});
             }
         });
         layui.layer.close(index);
     });
+}
+
+// 验证步骤5：采购结算
+function validateSettlement() {
+    // 如果是代发货仓库，跳过验证
+    if (warehouseType === 'proxy') {
+        return true;
+    }
+    
+    var paymentMethod = $('#payment_method').val();
+    var supplierCurrency = $('#supplier_currency').val();
+    
+    // 验证结算方式
+    if (!paymentMethod) {
+        layui.layer.msg('请选择结算方式');
+        return false;
+    }
+    
+    // 验证供应商货币
+    if (!supplierCurrency) {
+        layui.layer.msg('请选择供应商货币');
+        return false;
+    }
+    
+    // 检查收费项目是否填写完整
+    var hasInvalidChargeItems = false;
+    $('#chargeTbody tr').each(function() {
+        var name = $(this).find('.charge-name').val();
+        var price = $(this).find('.charge-price').val();
+        var quantity = $(this).find('.charge-quantity').val();
+        
+        // 如果有收费项目行，则检查必填
+        if (name || price || quantity) {
+            if (!name || name.trim() === '') {
+                layui.layer.msg('请填写收费项目名称');
+                hasInvalidChargeItems = true;
+                return false;
+            }
+            if (!price || isNaN(parseFloat(price)) || parseFloat(price) < 0) {
+                layui.layer.msg('请填写有效的单价');
+                hasInvalidChargeItems = true;
+                return false;
+            }
+            if (!quantity || isNaN(parseInt(quantity)) || parseInt(quantity) <= 0) {
+                layui.layer.msg('请填写有效的数量');
+                hasInvalidChargeItems = true;
+                return false;
+            }
+        }
+    });
+    
+    if (hasInvalidChargeItems) {
+        return false;
+    }
+    
+    return true;
+}
+
+// 验证步骤6：物流信息
+function validateLogistics() {
+    // 如果是代发货仓库，跳过验证
+    if (warehouseType === 'proxy') {
+        return true;
+    }
+    
+    var deliveryId = $('#delivery_id').val();
+    var deliveryMethod = $('#delivery_method').val();
+    var deliveryTime = $('#delivery_time').val();
+    var deliveryNo = $('#delivery_no').val();
+    
+    // 验证物流企业
+    if (!deliveryId) {
+        layui.layer.msg('请选择物流企业');
+        return false;
+    }
+    
+    // 验证物流方式
+    if (!deliveryMethod) {
+        layui.layer.msg('请选择物流方式');
+        return false;
+    }
+    
+    // 验证运抵时间
+    if (!deliveryTime) {
+        layui.layer.msg('请选择运抵时间');
+        return false;
+    }
+    
+    // 验证日期格式
+    var dateRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+    if (!dateRegex.test(deliveryTime)) {
+        layui.layer.msg('运抵时间格式不正确，请使用 YYYY-MM-DD HH:mm:ss 格式');
+        return false;
+    }
+    
+    // 验证运单编码
+    if (!deliveryNo || deliveryNo.trim() === '') {
+        layui.layer.msg('请填写运单编码');
+        return false;
+    }
+    
+    // 运单编码长度验证（可根据实际情况调整）
+    if (deliveryNo.trim().length < 5) {
+        layui.layer.msg('运单编码长度不能少于5个字符');
+        return false;
+    }
+    
+    return true;
 }
 
 // 加载确认数据

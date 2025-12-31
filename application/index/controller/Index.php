@@ -6470,6 +6470,7 @@ class Index extends Controller
         $dat = input();
         $company_id = intval($dat['company_id']);
         $company_type = intval($dat['company_type']);
+        $edit_id = isset($dat['edit_id']) ? intval($dat['edit_id']) : 0;
         
         #币种
         $currency = Db::name('centralize_currency')->select();
@@ -6490,7 +6491,238 @@ class Index extends Controller
         
         $value = ['unit'=>$unit,'currency'=>$currency,'start_currency'=>['id'=>5]];
         
-        return view('index/shop_backend/create_procurement', compact('company_id','company_type','value'));
+        // 如果是编辑模式，获取原采购单信息
+        $procurement_data = [];
+        if($edit_id > 0) {
+            $procurement = Db::name('website_procurement')
+                ->where(['id' => $edit_id, 'company_id' => $company_id])
+                ->find();
+            
+            if($procurement) {
+                // 解析JSON字段
+                $procurement['goods_info'] = json_decode($procurement['goods_info'], true);
+                $procurement['charge_items'] = json_decode($procurement['charge_items'], true);
+                
+                // 获取供应商信息
+                $procurement['supplier'] = Db::name('website_supplier')
+                    ->where(['id' => $procurement['supplier_id']])
+                    ->find();
+                
+                // 获取仓库信息
+                $procurement['warehouse'] = Db::name('centralize_warehouse_list')
+                    ->where(['id' => $procurement['warehouse_id']])
+                    ->find();
+                
+                // 获取运费配置
+                if($procurement['freight_config_id']) {
+                    $freight_config = Db::name('freight_config')
+                        ->where(['id' => $procurement['freight_config_id']])
+                        ->find();
+                    if($freight_config) {
+                        $freight_config['config_data'] = json_decode($freight_config['config_data'], true);
+                        $procurement['freight_config'] = $freight_config;
+                    }
+                }
+                
+                $procurement_data = $procurement;
+            }
+        }
+        
+        return view('index/shop_backend/create_procurement', compact('company_id','company_type','value','edit_id','procurement_data'));
+    }
+    
+    // 获取商品详情
+    public function get_goods_detail(Request $request) {
+        $goods_id = input('goods_id/d', 0);
+        $sku_id = input('sku_id/d', 0);
+        $company_id = input('company_id/d', 0);
+        
+        try {
+            $goods = Db::connect($this->config)->name('goods_merchant')
+                ->where(['id' => $goods_id])
+                ->find();
+            
+            if (!$goods) {
+                return json(['code' => -1, 'msg' => '商品不存在']);
+            }
+            
+            $result = [
+                'goods_id' => $goods_id,
+                'goods_name' => $goods['goods_name'],
+                'sku_id' => $sku_id,
+                'sku_name' => ''
+            ];
+            
+            // 获取规格信息
+            if ($sku_id > 0) {
+                $sku = Db::connect($this->config)->name('goods_sku_merchant')
+                    ->where(['sku_id' => $sku_id])
+                    ->find();
+                
+                if ($sku) {
+                    $result['sku_name'] = $sku['spec_names'];
+                }
+            } else {
+                $result['sku_name'] = $goods['goods_name'];
+            }
+            
+            return json(['code' => 0, 'data' => $result]);
+            
+        } catch (\Exception $e) {
+            return json(['code' => -1, 'msg' => '获取商品详情失败']);
+        }
+    }
+    
+    // 采购单详情页面
+    public function procurement_detail_page(Request $request) {
+        $dat = input();
+        $id = intval($dat['id']);
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);
+        
+        // 获取采购单详情
+        $procurement = Db::name('website_procurement')
+            ->where(['id' => $id, 'company_id' => $company_id])
+            ->find();
+        
+        if (!$procurement) {
+            return '采购单不存在';
+        }
+        
+        // 解析JSON字段
+        $procurement['goods_info'] = json_decode($procurement['goods_info'], true);
+        $procurement['charge_items'] = json_decode($procurement['charge_items'], true);
+        
+        // 获取供应商信息
+        $procurement['supplier'] = Db::name('website_supplier')
+            ->where(['id' => $procurement['supplier_id']])
+            ->find();
+        
+        // 获取仓库信息
+        $procurement['warehouse'] = Db::name('centralize_warehouse_list')
+            ->where(['id' => $procurement['warehouse_id']])
+            ->find();
+        
+        // 获取运费配置
+        if ($procurement['freight_config_id']) {
+            $freight_config = Db::name('freight_config')
+                ->where(['id' => $procurement['freight_config_id']])
+                ->find();
+            if ($freight_config) {
+                $freight_config['config_data'] = json_decode($freight_config['config_data'], true);
+                $procurement['freight_config'] = $freight_config;
+            }
+        }
+        
+        // 获取物流企业信息
+        if ($procurement['delivery_id']) {
+            $delivery_company = Db::name('centralize_diycountry_content')
+                ->where(['id' => $procurement['delivery_id']])
+                ->field('param3 as name')
+                ->find();
+            $procurement['delivery_company_name'] = $delivery_company ? $delivery_company['name'] : '';
+        }
+        
+        // 获取物流方式名称
+        if ($procurement['delivery_method']) {
+            $delivery_methods = [
+                '1' => '陆运',
+                '2' => '空运',
+                '3' => '海运',
+                '4' => '铁路运输'
+            ];
+            $procurement['delivery_method_name'] = $delivery_methods[$procurement['delivery_method']] ?? '';
+        }
+        
+        // 获取结算方式名称
+        $payment_methods = [
+            '0' => '无',
+            '1' => '货到付款',
+            '2' => '收货后付款',
+            '3' => '预付款',
+            '4' => 'Net 7',
+            '5' => 'Net 15',
+            '6' => 'Net 30',
+            '7' => 'Net 45',
+            '8' => 'Net 60'
+        ];
+        $procurement['payment_method_name'] = $payment_methods[$procurement['payment_method']] ?? '';
+        
+        // 获取货币名称
+        $currencies = [
+            '5' => 'CNY',
+            '1' => 'USD',
+            '2' => 'EUR'
+        ];
+        $procurement['supplier_currency_name'] = $currencies[$procurement['supplier_currency']] ?? 'CNY';
+        
+        // 获取商品详情（名称和规格）
+        if (!empty($procurement['goods_info'])) {
+            foreach ($procurement['goods_info'] as &$goods) {
+                // 获取商品名称
+                $goods_detail = Db::connect($this->config)->name('goods_merchant')
+                    ->where(['id' => $goods['goods_id']])
+                    ->field('goods_name')
+                    ->find();
+                
+                $goods['goods_name'] = $goods_detail['goods_name'] ?? '未知商品';
+                
+                // 获取规格名称
+                if ($goods['sku_id'] > 0) {
+                    $sku_detail = Db::connect($this->config)->name('goods_sku_merchant')
+                        ->where(['sku_id' => $goods['sku_id']])
+                        ->field('spec_names')
+                        ->find();
+                    
+                    $goods['sku_name'] = $sku_detail['spec_names'] ?? '默认规格';
+                } else {
+                    $goods['sku_name'] = '默认规格';
+                }
+            }
+        }
+        
+        return view('index/shop_backend/procurement_detail', compact('procurement', 'company_id', 'company_type'));
+    }
+    
+    // 采购单详情页面
+    public function procurement_detail(Request $request) {
+        $dat = input();
+        $id = intval($dat['id']);
+        
+        // 这里返回 JSON 数据，供 AJAX 调用
+        if ($request->isAjax()) {
+            $procurement = Db::name('website_procurement')
+                ->where(['id' => $id])
+                ->find();
+            
+            if (!$procurement) {
+                return json(['code' => -1, 'msg' => '采购单不存在']);
+            }
+            
+            // 解析JSON字段
+            $procurement['goods_info'] = json_decode($procurement['goods_info'], true);
+            $procurement['charge_items'] = json_decode($procurement['charge_items'], true);
+            
+            // 获取供应商信息
+            $procurement['supplier'] = Db::name('website_supplier')
+                ->where(['id' => $procurement['supplier_id']])
+                ->find();
+            
+            // 获取仓库信息
+            $procurement['warehouse'] = Db::name('centralize_warehouse_list')
+                ->where(['id' => $procurement['warehouse_id']])
+                ->find();
+            
+            return json(['code' => 0, 'data' => $procurement]);
+        }
+        
+        // 如果是页面请求，重定向到详情页面
+        $company_id = input('company_id/d', 0);
+        $company_type = input('company_type/d', 0);
+        
+        return redirect('/?s=index/procurement_detail_page&id=' . $id . 
+                       '&company_id=' . $company_id . 
+                       '&company_type=' . $company_type);
     }
     
      // 获取供应商列表
@@ -6631,14 +6863,24 @@ class Index extends Controller
         
         try {
             // 获取仓库的快递企业配置
-            $expresses = Db::name('centralize_warehouse_express')
+            $support_expresses = Db::name('centralize_warehouse_merchant')
+                ->alias('wm')
+                ->join('centralize_warehouse_merchant_printer wmp','wmp.wm_id = wm.id')
+                ->where(['wm.warehouse_id'=>$warehouse_id,'wm.company_id'=>$company_id])
+                ->field('wm.id,wmp.express_id')
+                ->find();
+            $support_expresses['express_id'] = explode(',',$support_expresses['express_id']);
+            
+            $expresses = [];
+            foreach($support_expresses['express_id'] as $k=>$v){
+                $express = Db::name('centralize_warehouse_express')
                 ->alias('we')
-                ->join('centralize_express_product ep', 'we.express_id = ep.id')
-                ->where([
-                    'we.printer_id' => $warehouse_id
-                ])
-                ->field('we.id, ep.name as express_name, ep.code as express_code')
-                ->select();
+                ->join('centralize_express_product ep','we.express_id = ep.id')
+                ->where(['we.id'=>$v])
+                ->field('we.id,ep.name as express_name, ep.code as express_code')
+                ->find();
+                array_push($expresses,$express);
+            }
             
             return json(['code' => 0, 'data' => $expresses ?: []]);
             
@@ -6806,65 +7048,265 @@ class Index extends Controller
         
         $data = $request->post();
         
-        // 验证数据
-        $validate = new Validate([
-            'company_id' => 'require|number',
-            'warehouse_id' => 'require|number',
-            'express_id' => 'require|number',
-            'product_type' => 'require',
-            'warehouse_type' => 'require|in:direct,proxy',
-            'config_name' => 'require',
-            'config_data' => 'require'
-        ]);
+        // 验证必填字段
+        $requiredFields = [
+            'company_id' => '商家ID',
+            'warehouse_id' => '仓库ID',
+            'express_id' => '快递企业ID',
+            'product_type' => '产品类型',
+            'warehouse_type' => '仓库类型'
+        ];
         
-        if (!$validate->check($data)) {
-            return json(['code' => -1, 'msg' => $validate->getError()]);
+        foreach ($requiredFields as $field => $name) {
+            if (empty($data[$field])) {
+                return json(['code' => -1, 'msg' => $name . '不能为空']);
+            }
         }
         
         try {
-            // 如果是设置为默认配置，需要取消其他默认配置
-            if (isset($data['is_default']) && $data['is_default'] == 1) {
-                Db::name('freight_config')->where([
-                    'company_id' => $data['company_id'],
-                    'warehouse_id' => $data['warehouse_id'],
-                    'warehouse_type' => $data['warehouse_type'],
-                    'is_default' => 1
-                ])->update(['is_default' => 0]);
-            }
+            // 处理配置数据 - 收集表单中的所有 content 数据
+            $configData = [];
             
+            // 收集最低消费配置
+            $configData['mini_cost'] = isset($data['content']['mini_cost']) ? $data['content']['mini_cost'] : [];
+            $configData['mini_num'] = isset($data['content']['mini_num']) ? $data['content']['mini_num'] : [];
+            $configData['minicost_unit'] = isset($data['content']['minicost_unit']) ? $data['content']['minicost_unit'] : [];
+            
+            // 收集计费区间数据
+            $configData['qj1'] = isset($data['content']['qj1']) ? $data['content']['qj1'] : [];
+            $configData['qj2_method'] = isset($data['content']['qj2_method']) ? $data['content']['qj2_method'] : [];
+            $configData['qj2'] = isset($data['content']['qj2']) ? $data['content']['qj2'] : [];
+            $configData['unit'] = isset($data['content']['unit']) ? $data['content']['unit'] : [];
+            $configData['jinjie'] = isset($data['content']['jinjie']) ? $data['content']['jinjie'] : [];
+            
+            // 收集计费方式数据
+            $configData['jf_method'] = isset($data['content']['jf_method']) ? $data['content']['jf_method'] : [];
+            $configData['shouzhong'] = isset($data['content']['shouzhong']) ? $data['content']['shouzhong'] : [];
+            $configData['shouzhong_money'] = isset($data['content']['shouzhong_money']) ? $data['content']['shouzhong_money'] : [];
+            $configData['xuzhong'] = isset($data['content']['xuzhong']) ? $data['content']['xuzhong'] : [];
+            $configData['xuzhong_money'] = isset($data['content']['xuzhong_money']) ? $data['content']['xuzhong_money'] : [];
+            $configData['anliang'] = isset($data['content']['anliang']) ? $data['content']['anliang'] : [];
+            $configData['anliang_money'] = isset($data['content']['anliang_money']) ? $data['content']['anliang_money'] : [];
+            $configData['currency'] = isset($data['content']['currency']) ? $data['content']['currency'] : [];
+            
+            // 收集分段计费数据
+            $configData['fenduan_num1'] = isset($data['content']['fenduan_num1']) ? $data['content']['fenduan_num1'] : [];
+            $configData['fenduan_method'] = isset($data['content']['fenduan_method']) ? $data['content']['fenduan_method'] : [];
+            $configData['fenduan_num2'] = isset($data['content']['fenduan_num2']) ? $data['content']['fenduan_num2'] : [];
+            $configData['fenduan_money'] = isset($data['content']['fenduan_money']) ? $data['content']['fenduan_money'] : [];
+            $configData['fenduan_currency'] = isset($data['content']['fenduan_currency']) ? $data['content']['fenduan_currency'] : [];
+            
+            // 准备保存的数据
             $saveData = [
-                'company_id' => $data['company_id'],
-                'warehouse_id' => $data['warehouse_id'],
-                'terminal_id' => isset($data['terminal_id']) ? $data['terminal_id'] : 0,
-                'express_id' => $data['express_id'],
-                'product_type' => $data['product_type'],
+                'company_id' => intval($data['company_id']),
+                'warehouse_id' => intval($data['warehouse_id']),
                 'warehouse_type' => $data['warehouse_type'],
-                'config_name' => $data['config_name'],
-                'is_default' => isset($data['is_default']) ? $data['is_default'] : 0,
-                'config_data' => $data['config_data'],
+                'terminal_id' => isset($data['terminal_id']) ? intval($data['terminal_id']) : 0,
+                'express_id' => intval($data['express_id']),
+                'product_type' => $data['product_type'],
+                'config_data' => json_encode($configData, JSON_UNESCAPED_UNICODE),
                 'status' => 1,
                 'updatetime' => time()
             ];
             
+            // 如果有采购单ID，则关联
             if (!empty($data['procurement_id'])) {
-                $saveData['procurement_id'] = $data['procurement_id'];
+                $saveData['procurement_id'] = intval($data['procurement_id']);
             }
             
-            if (!empty($data['id']) && $data['id'] > 0) {
-                // 更新
-                Db::name('freight_config')->where(['id' => $data['id']])->update($saveData);
-                $configId = $data['id'];
+            // 检查是否已存在相同配置
+            $where = [
+                'company_id' => $saveData['company_id'],
+                'warehouse_id' => $saveData['warehouse_id'],
+                'warehouse_type' => $saveData['warehouse_type'],
+                'express_id' => $saveData['express_id'],
+                'product_type' => $saveData['product_type']
+            ];
+            
+            if ($saveData['terminal_id'] > 0) {
+                $where['terminal_id'] = $saveData['terminal_id'];
+            }
+            
+            $existingConfig = Db::name('freight_config')->where($where)->find();
+            
+            if ($existingConfig) {
+                // 更新现有配置
+                Db::name('freight_config')->where(['id' => $existingConfig['id']])->update($saveData);
+                $configId = $existingConfig['id'];
             } else {
-                // 新增
+                // 新增配置
                 $saveData['createtime'] = time();
                 $configId = Db::name('freight_config')->insertGetId($saveData);
             }
             
-            return json(['code' => 0, 'msg' => '保存成功', 'data' => ['id' => $configId]]);
+            return json([
+                'code' => 0, 
+                'msg' => '运费配置保存成功', 
+                'data' => ['id' => $configId]
+            ]);
             
         } catch (\Exception $e) {
             return json(['code' => -1, 'msg' => '保存失败: ' . $e->getMessage()]);
         }
+    }
+    
+    // 获取运费配置详情
+    public function get_freight_config_detail(Request $request) {
+        $id = input('id/d', 0);
+        
+        if ($id <= 0) {
+            return json(['code' => -1, 'msg' => '参数错误']);
+        }
+        
+        $config = Db::name('freight_config')->where(['id' => $id])->find();
+        
+        if (!$config) {
+            return json(['code' => -1, 'msg' => '运费配置不存在']);
+        }
+        
+        // 解析配置数据
+        $config['config_data'] = json_decode($config['config_data'], true);
+        
+        // 获取关联信息
+        if ($config['warehouse_id']) {
+            $warehouse = Db::name('centralize_warehouse_list')
+                ->where(['id' => $config['warehouse_id']])
+                ->field('warehouse_name, warehouse_code')
+                ->find();
+            $config['warehouse_info'] = $warehouse;
+        }
+        
+        if ($config['express_id']) {
+            $express_info = Db::name('centralize_warehouse_express')->where(['id'=>$config['express_id']])->find();
+            $express = Db::name('centralize_express_product')
+                ->where(['id' => $express_info['express_id']])
+                ->field('name, code')
+                ->find();
+            $config['express_info'] = $express;
+        }
+        
+        return json(['code' => 0, 'data' => $config]);
+    }
+    
+    //获取物流企业
+    public function get_delivery_companies(Request $request) {
+        $company_id = input('company_id/d', 0);
+        $company_type = input('company_type/d', 0);
+        
+        try {
+            // 这里可以根据实际情况获取物流企业
+            // 暂时返回示例数据
+            // $data = [
+            //     ['id' => 1, 'name' => '顺丰速运', 'code' => 'SF'],
+            //     ['id' => 2, 'name' => '中通快递', 'code' => 'ZTO'],
+            //     ['id' => 3, 'name' => '圆通速递', 'code' => 'YTO'],
+            //     ['id' => 4, 'name' => '韵达快递', 'code' => 'YD'],
+            //     ['id' => 5, 'name' => '申通快递', 'code' => 'STO'],
+            //     ['id' => 6, 'name' => '百世快递', 'code' => 'HTKY'],
+            //     ['id' => 7, 'name' => '德邦物流', 'code' => 'DBL'],
+            //     ['id' => 8, 'name' => '京东物流', 'code' => 'JD']
+            // ];
+            
+            // 也可以从数据库获取
+            $data = Db::name('centralize_diycountry_content')->where(['pid'=>6])->field('id,param3 as name,param2 as code')->select();
+
+            #物流方式
+            // $list['express_method'] = Db::name('centralize_lines_transport_method')->select();
+            
+            return json(['code' => 0, 'data' => $data]);
+            
+        } catch (\Exception $e) {
+            return json(['code' => -1, 'msg' => '获取物流企业失败: ' . $e->getMessage(), 'data' => []]);
+        }
+    }
+    
+    // 删除运费配置
+    public function delete_freight_config(Request $request) {
+        if (!$request->isAjax()) {
+            return json(['code' => -1, 'msg' => '非法请求']);
+        }
+        
+        $id = input('id/d', 0);
+        
+        if ($id <= 0) {
+            return json(['code' => -1, 'msg' => '参数错误']);
+        }
+        
+        try {
+            // 检查配置是否存在
+            $config = Db::name('freight_config')->where(['id' => $id])->find();
+            
+            if (!$config) {
+                return json(['code' => -1, 'msg' => '运费配置不存在']);
+            }
+            
+            // 检查是否有关联的采购单
+            if ($config['procurement_id']) {
+                $procurement = Db::name('website_procurement')
+                    ->where(['id' => $config['procurement_id']])
+                    ->find();
+                
+                if ($procurement && $procurement['status'] > 1) {
+                    return json(['code' => -1, 'msg' => '该配置已关联处理中的采购单，无法删除']);
+                }
+            }
+            
+            // 删除配置
+            $result = Db::name('freight_config')->where(['id' => $id])->delete();
+            
+            if ($result) {
+                return json(['code' => 0, 'msg' => '删除成功']);
+            } else {
+                return json(['code' => -1, 'msg' => '删除失败']);
+            }
+            
+        } catch (\Exception $e) {
+            return json(['code' => -1, 'msg' => '删除失败: ' . $e->getMessage()]);
+        }
+    }
+    
+    // 获取采购单的运费配置列表
+    public function get_procurement_freight_configs(Request $request) {
+        $procurement_id = input('procurement_id/d', 0);
+        $company_id = input('company_id/d', 0);
+        
+        $where = [];
+        if ($procurement_id > 0) {
+            $where['procurement_id'] = $procurement_id;
+        }
+        if ($company_id > 0) {
+            $where['company_id'] = $company_id;
+        }
+        
+        $list = Db::name('freight_config')
+            ->where($where)
+            ->order('id desc')
+            ->select();
+        
+        foreach ($list as &$item) {
+            // 解析配置数据
+            $item['config_data'] = json_decode($item['config_data'], true);
+            
+            // 获取仓库名称
+            $warehouse = Db::name('centralize_warehouse_list')
+                ->where(['id' => $item['warehouse_id']])
+                ->field('warehouse_name')
+                ->find();
+            $item['warehouse_name'] = $warehouse['warehouse_name'] ?? '';
+            
+            // 获取快递企业名称
+            $express = Db::name('centralize_express_product')
+                ->where(['id' => $item['express_id']])
+                ->field('name')
+                ->find();
+            $item['express_name'] = $express['name'] ?? '';
+            
+            // 格式化时间
+            $item['createtime'] = date('Y-m-d H:i:s', $item['createtime']);
+            $item['updatetime'] = date('Y-m-d H:i:s', $item['updatetime']);
+        }
+        
+        return json(['code' => 0, 'data' => $list]);
     }
     
     // 保存采购单
@@ -6881,11 +7323,29 @@ class Index extends Controller
             'supplier_id' => 'require|number',
             'warehouse_type' => 'require|in:direct,proxy',
             'warehouse_id' => 'require|number',
-            'goods' => 'require|array|min:1'
+            'goods' => 'require|array|min:1',
+            'freight_config_id' => 'require|number' // 验证运费配置ID
         ]);
         
         if (!$validate->check($data)) {
             return json(['code' => -1, 'msg' => $validate->getError()]);
+        }
+        
+        // 验证运费配置是否存在
+        $freightConfigId = intval($data['freight_config_id']);
+        if ($freightConfigId <= 0) {
+            return json(['code' => -1, 'msg' => '运费配置ID无效']);
+        }
+        
+        $freightConfig = Db::name('freight_config')
+            ->where([
+                'id' => $freightConfigId,
+                'company_id' => $data['company_id']
+            ])
+            ->find();
+        
+        if (!$freightConfig) {
+            return json(['code' => -1, 'msg' => '运费配置不存在或不属于当前商家']);
         }
         
         Db::startTrans();
@@ -6910,6 +7370,7 @@ class Index extends Controller
                 'project_total_price' => $data['project_total'] ?? 0,
                 'freight_total_price' => $data['freight_total'] ?? 0,
                 'total_price' => $data['total_amount'] ?? 0,
+                'freight_config_id' => $freightConfigId, // 保存运费配置ID
                 'status' => 1,
                 'createtime' => time(),
                 'updatetime' => time()
@@ -6917,14 +7378,13 @@ class Index extends Controller
             
             $procurementId = Db::name('website_procurement')->insertGetId($procurementData);
             
-            // 2. 保存运费配置（如果有）
-            if (isset($data['freight_config']) && $data['freight_config']) {
-                $freightConfig = json_decode($data['freight_config'], true);
-                if ($freightConfig) {
-                    $freightConfig['procurement_id'] = $procurementId;
-                    Db::name('freight_config')->insert($freightConfig);
-                }
-            }
+            // 2. 更新运费配置的采购单ID
+            Db::name('freight_config')
+                ->where(['id' => $freightConfigId])
+                ->update([
+                    'procurement_id' => $procurementId,
+                    'updatetime' => time()
+                ]);
             
             // 3. 如果是直接发货仓库，更新库存
             if ($data['warehouse_type'] == 'direct') {
