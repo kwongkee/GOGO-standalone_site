@@ -65,18 +65,19 @@
         .status-6 { background-color: #fee2e2; color: #991b1b; } /* 已取消 */
         
         /* 操作按钮 */
-        .action-btn {
-            display: inline-block;
-            padding: 4px 8px;
-            margin-right: 5px;
-            border-radius: 4px;
-            font-size: 12px;
-            cursor: pointer;
-        }
-        
+        /*.action-btn {*/
+        /*    display: inline-block;*/
+        /*    padding: 4px 8px;*/
+        /*    margin-right: 5px;*/
+        /*    border-radius: 4px;*/
+        /*    font-size: 12px;*/
+        /*    cursor: pointer;*/
+        /*}*/
+        .channel-actions {display: flex;gap: 10px;justify-content: center;}
+        .btn {padding: 5px 10px;border-radius: 50px;font-weight: 600;cursor: pointer;transition: all 0.3s ease;display: flex;align-items: center;gap: 8px;border: none;}
         .view-btn { background-color: #3b82f6; color: white; }
-        .edit-btn { background-color: #10b981; color: white; }
-        .cancel-btn { background-color: #ef4444; color: white; }
+        .edit-btn { background-color: #9b4de3; color: white; }
+        .cancel-btn { background: transparent;color: #ff4757;border: 2px solid #ff4757;}
         
         /* 分页样式 */
         .pagination {
@@ -351,15 +352,19 @@ function renderProcurementList(data) {
         html += '<td><span class="status-badge status-' + (item.status || 1) + '">' + (item.status_text || '待处理') + '</span></td>';
         html += '<td>' + (item.createtime || '--') + '</td>';
         html += '<td>';
-        html += '<button class="action-btn view-btn" onclick="viewProcurement(' + item.id + ')">查看</button>';
+        // html += '<button class="action-btn view-btn" onclick="viewProcurement(' + item.id + ')">查看</button>';
         
         if (item.status == 1) { // 待处理状态
-            html += '<button class="action-btn edit-btn" onclick="editProcurement(' + item.id + ')">编辑</button>';
-            html += '<button class="action-btn cancel-btn" onclick="cancelProcurement(' + item.id + ')">取消</button>';
+            html += '<div class="channel-actions">';
+            html += '<button class="action-btn edit-btn btn" onclick="editProcurement(' + item.id + ')">编辑</button>';
+            html += '<button class="action-btn cancel-btn btn" onclick="cancelProcurement(' + item.id + ')">取消</button>';
+            html += '</div>';
         }
         
         if (item.status == 4) { // 已发货状态
-            html += '<button class="action-btn edit-btn" onclick="completeProcurement(' + item.id + ')">完成</button>';
+            html += '<div class="channel-actions">';
+            html += '<button class="action-btn edit-btn btn" onclick="completeProcurement(' + item.id + ')">完成</button>';
+            html += '</div>';
         }
         
         html += '</td>';

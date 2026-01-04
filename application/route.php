@@ -109,6 +109,8 @@ Route::any('index/get_procurement_detail', 'index/Index/get_procurement_detail')
 Route::any('index/get_goods_detail', 'index/Index/get_goods_detail');#企业网店-供应管理-获取商品详情
 Route::any('index/procurement_detail_page', 'index/Index/procurement_detail_page');#企业网店-供应管理-获取商品详情
 Route::any('index/procurement_detail', 'index/Index/procurement_detail');#企业网店-供应管理-获取商品详情
+Route::any('index/cancel_procurement', 'index/Index/cancel_procurement');#企业网店-供应管理-取消订购单
+Route::any('index/complete_procurement', 'index/Index/complete_procurement');#企业网店-供应管理-完成订购单
 
 Route::any('index/del_procurement', 'index/Index/del_procurement');#企业网店-供应管理-删除采购
 Route::any('index/save_supplier', 'index/Index/save_supplier');#企业网店-供应管理-保存供应企业

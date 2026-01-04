@@ -159,158 +159,6 @@
             margin-bottom: 5px;
         }
         
-        /*多选快递终端 start*/
-        .selector-box {
-            border: 1px solid #e6e6e6;
-            border-radius: 4px;
-            padding: 10px;
-            background: #fff;
-        }
-        
-        .selector-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        
-        .selector-header button {
-            margin-right: 10px;
-        }
-        
-        .selected-count {
-            margin-left: auto;
-            color: #666;
-            font-size: 14px;
-        }
-        
-        .selector-content {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        
-        .selector-item {
-            display: flex;
-            align-items: center;
-            padding: 8px 10px;
-            border-bottom: 1px solid #f5f5f5;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        
-        .selector-item:hover {
-            background-color: #f9f9f9;
-        }
-        
-        .selector-item.selected {
-            background-color: #e6f7ff;
-            border-left: 3px solid #1890ff;
-        }
-        
-        .selector-item .checkbox {
-            margin-right: 10px;
-        }
-        
-        .selector-item .item-info {
-            flex: 1;
-        }
-        
-        .selector-item .item-name {
-            font-weight: 500;
-        }
-        
-        .selector-item .item-desc {
-            font-size: 12px;
-            color: #999;
-            margin-top: 2px;
-        }
-        
-        .config-summary {
-            background: #f9f9f9;
-            border: 1px solid #e6e6e6;
-            border-radius: 4px;
-            padding: 15px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-        
-        .config-item {
-            display: flex;
-            align-items: center;
-            padding: 8px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .config-item:last-child {
-            border-bottom: none;
-        }
-        
-        .config-status {
-            margin-left: auto;
-        }
-        
-        .config-status .status-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            margin-right: 5px;
-        }
-        
-        .config-status .configured {
-            background-color: #52c41a;
-        }
-        
-        .config-status .not-configured {
-            background-color: #ff4d4f;
-        }
-        
-        .selected-products-list {
-            margin-bottom: 20px;
-            padding: 15px;
-            background: #f9f9f9;
-            border-radius: 4px;
-            border: 1px solid #e6e6e6;
-        }
-        
-        .product-tag {
-            display: inline-block;
-            padding: 4px 8px;
-            margin: 4px;
-            background: #e6f7ff;
-            border: 1px solid #91d5ff;
-            border-radius: 4px;
-            font-size: 12px;
-        }
-        
-        .configs-list {
-            max-height: 500px;
-            overflow-y: auto;
-        }
-        
-        .config-card {
-            border: 1px solid #e6e6e6;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            padding: 15px;
-        }
-        
-        .config-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        
-        .config-card-actions {
-            display: flex;
-            gap: 10px;
-        }
-        /*多选快递终端 end*/
-        
         /*返回按钮*/
         .backDiv{padding: 5px 5px 5px 20px;border-bottom: 1px solid #d9d9d9;}
         .backDiv .backBox{display: flex;align-items: center;cursor: pointer;}
@@ -457,94 +305,48 @@
                 <!-- 直接发货仓库配置 -->
                 <div id="directFreightConfig" style="display: none;">
                     <div class="layui-form">
-                        <!-- 选择终端 -->
                         <div class="layui-form-item">
                             <label class="layui-form-label">选择终端</label>
                             <div class="layui-input-block">
-                                <div class="selector-box" id="terminalSelector">
-                                    <div class="selector-header">
-                                        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" onclick="selectAll('terminal')">
-                                            <i class="layui-icon">&#xe616;</i> 全选
-                                        </button>
-                                        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" onclick="deselectAll('terminal')">
-                                            <i class="layui-icon">&#xe617;</i> 取消
-                                        </button>
-                                        <span class="selected-count" id="terminalSelectedCount">已选择 0 个终端</span>
-                                    </div>
-                                    <div class="selector-content" id="terminalList">
-                                        <!-- 终端列表将通过JS动态加载 -->
-                                    </div>
-                                </div>
+                                <select name="direct_terminal" id="direct_terminal" lay-filter="directTerminal" lay-verify="required">
+                                    <option value="">请选择终端</option>
+                                    <!-- 动态加载终端 -->
+                                </select>
                             </div>
                         </div>
                         
-                        <!-- 选择快递企业 -->
                         <div class="layui-form-item">
-                            <label class="layui-form-label">选择快递企业</label>
+                            <label class="layui-form-label">快递企业</label>
                             <div class="layui-input-block">
-                                <div class="selector-box" id="expressSelector" style="display: none;">
-                                    <div class="selector-header">
-                                        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" onclick="selectAll('express')">
-                                            <i class="layui-icon">&#xe616;</i> 全选
-                                        </button>
-                                        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" onclick="deselectAll('express')">
-                                            <i class="layui-icon">&#xe617;</i> 取消
-                                        </button>
-                                        <span class="selected-count" id="expressSelectedCount">已选择 0 个快递企业</span>
-                                    </div>
-                                    <div class="selector-content" id="expressList">
-                                        <!-- 快递企业列表将通过JS动态加载 -->
-                                    </div>
-                                </div>
-                                <div id="expressLoading" style="display: none; color: #999; padding: 10px;">
-                                    <i class="layui-icon layui-icon-loading layui-icon"></i> 加载中...
-                                </div>
+                                <select name="direct_express" id="direct_express" lay-filter="directExpress" lay-verify="required">
+                                    <option value="">请选择快递企业</option>
+                                    <!-- 动态加载快递企业 -->
+                                </select>
                             </div>
                         </div>
                         
-                        <!-- 选择快递产品 -->
                         <div class="layui-form-item">
-                            <label class="layui-form-label">选择快递产品</label>
+                            <label class="layui-form-label">快递产品</label>
                             <div class="layui-input-block">
-                                <div class="selector-box" id="productSelector" style="display: none;">
-                                    <div class="selector-header">
-                                        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" onclick="selectAll('product')">
-                                            <i class="layui-icon">&#xe616;</i> 全选
-                                        </button>
-                                        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" onclick="deselectAll('product')">
-                                            <i class="layui-icon">&#xe617;</i> 取消
-                                        </button>
-                                        <span class="selected-count" id="productSelectedCount">已选择 0 个产品</span>
-                                    </div>
-                                    <div class="selector-content" id="productList">
-                                        <!-- 产品列表将通过JS动态加载 -->
-                                    </div>
-                                </div>
-                                <div id="productLoading" style="display: none; color: #999; padding: 10px;">
-                                    <i class="layui-icon layui-icon-loading"></i> 加载中...
-                                </div>
+                                <select name="direct_product" id="direct_product" lay-filter="directProduct" lay-verify="required">
+                                    <option value="">请选择快递产品</option>
+                                    <!-- 动态加载快递产品 -->
+                                </select>
                             </div>
                         </div>
                         
-                        <!-- 配置按钮 -->
-                        <div class="layui-form-item">
+                        <!-- 修改直接发货仓库运费配置按钮 -->
+                        <div class="layui-form-item" id="directFreightConfigBtn" style="display: none;">
                             <div class="layui-input-block">
-                                <button type="button" class="layui-btn layui-btn-normal" onclick="configureFreightForSelectedProducts('direct')" id="configureDirectBtn" disabled>
-                                    <i class="layui-icon">&#xe642;</i> 配置选中的产品运费
+                                <button type="button" class="layui-btn layui-btn-normal setFreight" onclick="showFreightConfig('direct')">
+                                    <i class="layui-icon"></i> 配置运费
                                 </button>
-                                <button type="button" class="layui-btn layui-btn-success" onclick="viewAllConfigs('direct')" id="viewDirectConfigsBtn" style="display: none; margin-left: 10px;">
-                                    <i class="layui-icon">&#xe615;</i> 查看所有配置
+                                <button type="button" class="layui-btn layui-btn-success" id="directViewFreightBtn" style="display: none; margin-left: 10px;" onclick="viewFreightConfigDetail('direct')">
+                                    <i class="layui-icon">&#xe615;</i> 查看配置
                                 </button>
-                            </div>
-                        </div>
-                        
-                        <!-- 已配置的产品列表 -->
-                        <div class="layui-form-item" id="directConfigList" style="display: none;">
-                            <label class="layui-form-label">已配置的产品</label>
-                            <div class="layui-input-block">
-                                <div class="config-summary" id="directConfigSummary">
-                                    <!-- 已配置的产品列表 -->
-                                </div>
+                                <span id="directConfigStatus" style="margin-left: 10px; color: #52c41a; display: none;">
+                                    <i class="layui-icon2">√</i> 已配置
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -553,70 +355,38 @@
                 <!-- 代发货仓库配置 -->
                 <div id="proxyFreightConfig" style="display: none;">
                     <div class="layui-form">
-                        <!-- 选择快递企业 -->
                         <div class="layui-form-item">
-                            <label class="layui-form-label">选择快递企业</label>
+                            <label class="layui-form-label">快递企业</label>
                             <div class="layui-input-block">
-                                <div class="selector-box" id="proxyExpressSelector">
-                                    <div class="selector-header">
-                                        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" onclick="selectAll('proxy_express')">
-                                            <i class="layui-icon">&#xe616;</i> 全选
-                                        </button>
-                                        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" onclick="deselectAll('proxy_express')">
-                                            <i class="layui-icon">&#xe617;</i> 取消
-                                        </button>
-                                        <span class="selected-count" id="proxyExpressSelectedCount">已选择 0 个快递企业</span>
-                                    </div>
-                                    <div class="selector-content" id="proxyExpressList">
-                                        <!-- 快递企业列表将通过JS动态加载 -->
-                                    </div>
-                                </div>
+                                <select name="proxy_express" id="proxy_express" lay-filter="proxyExpress" lay-verify="required">
+                                    <option value="">请选择快递企业</option>
+                                    <!-- 动态加载快递企业 -->
+                                </select>
                             </div>
                         </div>
                         
-                        <!-- 选择快递产品 -->
                         <div class="layui-form-item">
-                            <label class="layui-form-label">选择快递产品</label>
+                            <label class="layui-form-label">快递产品</label>
                             <div class="layui-input-block">
-                                <div class="selector-box" id="proxyProductSelector" style="display: none;">
-                                    <div class="selector-header">
-                                        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" onclick="selectAll('proxy_product')">
-                                            <i class="layui-icon">&#xe616;</i> 全选
-                                        </button>
-                                        <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" onclick="deselectAll('proxy_product')">
-                                            <i class="layui-icon">&#xe617;</i> 取消
-                                        </button>
-                                        <span class="selected-count" id="proxyProductSelectedCount">已选择 0 个产品</span>
-                                    </div>
-                                    <div class="selector-content" id="proxyProductList">
-                                        <!-- 产品列表将通过JS动态加载 -->
-                                    </div>
-                                </div>
-                                <div id="proxyProductLoading" style="display: none; color: #999; padding: 10px;">
-                                    <i class="layui-icon layui-icon-loading"></i> 加载中...
-                                </div>
+                                <select name="proxy_product" id="proxy_product" lay-filter="proxyProduct" lay-verify="required">
+                                    <option value="">请选择快递产品</option>
+                                    <!-- 动态加载快递产品 -->
+                                </select>
                             </div>
                         </div>
                         
-                        <!-- 配置按钮 -->
-                        <div class="layui-form-item">
+                        <!-- 修改代发货仓库运费配置按钮 -->
+                        <div class="layui-form-item" id="proxyFreightConfigBtn" style="display: none;">
                             <div class="layui-input-block">
-                                <button type="button" class="layui-btn layui-btn-normal" onclick="configureFreightForSelectedProducts('proxy')" id="configureProxyBtn" disabled>
-                                    <i class="layui-icon">&#xe642;</i> 配置选中的产品运费
+                                <button type="button" class="layui-btn layui-btn-normal setFreight" onclick="showFreightConfig('proxy')">
+                                    <i class="layui-icon"></i> 配置运费
                                 </button>
-                                <button type="button" class="layui-btn layui-btn-success" onclick="viewAllConfigs('proxy')" id="viewProxyConfigsBtn" style="display: none; margin-left: 10px;">
-                                    <i class="layui-icon">&#xe615;</i> 查看所有配置
+                                <button type="button" class="layui-btn layui-btn-success" id="proxyViewFreightBtn" style="display: none; margin-left: 10px;" onclick="viewFreightConfigDetail('proxy')">
+                                    <i class="layui-icon">&#xe615;</i> 查看配置
                                 </button>
-                            </div>
-                        </div>
-                        
-                        <!-- 已配置的产品列表 -->
-                        <div class="layui-form-item" id="proxyConfigList" style="display: none;">
-                            <label class="layui-form-label">已配置的产品</label>
-                            <div class="layui-input-block">
-                                <div class="config-summary" id="proxyConfigSummary">
-                                    <!-- 已配置的产品列表 -->
-                                </div>
+                                <span id="proxyConfigStatus" style="margin-left: 10px; color: #52c41a; display: none;">
+                                    <i class="layui-icon2">√</i> 已配置
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -626,48 +396,6 @@
         <div class="step-action">
             <button class="layui-btn layui-btn-primary" onclick="prevStep()">上一步</button>
             <button class="layui-btn" onclick="nextStep(5)">下一步</button>
-        </div>
-    </div>
-    
-    <!-- 多产品运费配置模态框 -->
-    <div class="modal" id="batchFreightConfigModal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4>批量配置运费</h4>
-                <span class="close" onclick="closeBatchConfigModal()">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div class="selected-products-list" id="selectedProductsList">
-                    <!-- 选中的产品列表 -->
-                </div>
-                
-                <div class="freight-config-form" id="batchConfigForm">
-                    <!-- 运费配置表单（与单个配置相同） -->
-                    <!-- 这里可以复用原有的freightConfigForm，但需要修改以支持批量 -->
-                </div>
-                
-                <div class="layui-form-item" style="margin-top: 20px; text-align: right;">
-                    <div class="layui-input-block">
-                        <button type="button" class="layui-btn layui-btn-primary" onclick="saveBatchFreightConfig()">保存配置</button>
-                        <button type="button" class="layui-btn layui-btn-primary layui-btn-danger" onclick="closeBatchConfigModal()" style="margin-left: 10px;">取消</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- 所有配置查看模态框 -->
-    <div class="modal" id="allConfigsModal" style="display: none;">
-        <div class="modal-content" style="width: 90%;">
-            <div class="modal-header">
-                <h4>运费配置列表</h4>
-                <span class="close" onclick="closeAllConfigsModal()">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div class="configs-list" id="configsList">
-                    <!-- 配置列表 -->
-                </div>
-            </div>
         </div>
     </div>
     
@@ -1429,13 +1157,6 @@ var currentFreightConfig = {
     product_type: '',
     config_data: null
 };
-// 全局变量
-var selectedTerminals = []; // 选中的终端
-var selectedExpresses = []; // 选中的快递企业
-var selectedProducts = [];  // 选中的产品
-var selectedProxyExpresses = []; // 代发货选中的快递企业
-var selectedProxyProducts = [];  // 代发货选中的产品
-var freightConfigs = {}; // 存储所有运费配置 {productKey: configData}
 var globalCurrency = ''; // 全局币种
 var currentFreightConfigId = 0; // 当前运费配置ID
 

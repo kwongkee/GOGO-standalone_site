@@ -5,6 +5,7 @@
     <title>选择商品</title>
     <link rel="stylesheet" href="layui/css/layui.css">
     <style>
+        .disf{display:flex;align-items:center;}
         .goods-container { padding: 15px; }
         .goods-category { margin-bottom: 15px; }
         .goods-list { display: flex; flex-wrap: wrap; }
@@ -39,8 +40,9 @@
 </head>
 <body>
 <div class="goods-container">
-    <div class="select-all">
+    <div class="select-all disf">
         <input type="checkbox" id="selectAll" lay-skin="primary" title="全选所有商品和规格">
+        <div class="layui-form-mid layui-word-aux" style="margin-left: 8px;padding: 0 !important;line-height: 0;">全选所有商品和规格</div>
     </div>
     
     <div class="goods-list" id="goodsList">
@@ -57,10 +59,10 @@
                 <div class="goods-info">
                     <div class="goods-name">{$product.goods_name}</div>
                     {if condition="$product.variants and count($product.variants) gt 0"}
-                    <div class="goods-price">¥ {$product.variants.0.goods_price|default='0.00'}</div>
+                    <div class="goods-price">{$product.goods_currency} {$product.variants.0.goods_price|default='0.00'}</div>
                     <div class="goods-stock">库存: {$product.variants.0.goods_number|default=0}</div>
                     {else /}
-                    <div class="goods-price">¥ 0.00</div>
+                    <div class="goods-price">{$product.goods_currency} 0.00</div>
                     <div class="goods-stock">库存: 0</div>
                     {/if}
                 </div>
@@ -81,7 +83,7 @@
                            data-price="{$variant.goods_price|default='0.00'}"
                            lay-skin="primary">
                     <div class="variant-name">{$variant.spec_names}</div>
-                    <div class="variant-price">¥ {$variant.goods_price|default='0.00'}</div>
+                    <div class="variant-price">{$product.goods_currency} {$variant.goods_price|default='0.00'}</div>
                     <div class="goods-stock">{$variant.goods_number|default=0}</div>
                 </div>
                 {/volist}
