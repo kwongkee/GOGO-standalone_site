@@ -6998,11 +6998,14 @@ class Index extends Controller
                 $expressIds = [];
                 foreach ($terminalIds as $terminalId) {
                     $terminalConfig = Db::name('centralize_warehouse_merchant_printer')
+                        ->alias('wmp')
+                        ->join('centralize_warehouse_merchant wm','wm.id = wmp.wm_id')
                         ->where([
-                            'company_id' => $company_id,
-                            'printer_id' => $terminalId,
-                            'wm_id' => $warehouse_id
+                            'wmp.company_id' => $company_id,
+                            'wmp.printer_id' => $terminalId,
+                            'wm.warehouse_id' => $warehouse_id
                         ])
+                        ->field('wmp.express_id')
                         ->find();
                     
                     if ($terminalConfig && !empty($terminalConfig['express_id'])) {
@@ -7030,11 +7033,24 @@ class Index extends Controller
                 
             } else {
                 // 代发货仓库：获取该仓库的所有快递企业（商家可用的）
+                $warehouse = Db::name('centralize_warehouse_merchant_printer')
+                    ->alias('wmp')
+                    ->join('centralize_warehouse_merchant wm','wm.warehouse_id = wmp.wm_id')
+                    ->where([
+                        'wmp.company_id' => $company_id,
+                        'wmp.printer_id' => 0,
+                        'wm.warehouse_id' => $warehouse_id
+                    ])
+                    ->field('wmp.express_id')
+                    ->find();
+                $express_id = explode(',', $warehouse['express_id']);
+                
                 $expresses = Db::name('centralize_warehouse_express')
                     ->alias('we')
                     ->join('centralize_express_product ep', 'we.express_id = ep.id')
                     ->where([
-                        'we.printer_id' => $warehouse_id
+                        'we.warehouse_id' => $warehouse_id,
+                        'we.id' => ['in', $express_id]
                     ])
                     ->field('we.id, ep.name as express_name, ep.code as express_code')
                     ->select();
@@ -7096,20 +7112,19 @@ class Index extends Controller
             $products = [];
             
             foreach ($expressIds as $expressId) {
-                // 从ims_centralize_express_product表获取产品
-                $product = Db::name('centralize_express_product')
-                    ->where(['id' => $expressId])
-                    ->field('id, typename')
+                // 从ims_centralize_warehouse_express表获取快递企业的快递产品
+                $product = Db::name('centralize_warehouse_express')
+                    ->where(['id'=>$expressId])
+                    ->field('express_id,express_type')
                     ->find();
-                
-                if($product && !empty($product['typename'])) {
-                    // 解析产品类型字符串（中文顿号分隔）
-                    $productTypes = explode('、', $product['typename']);
+                if($product && !empty($product['express_type'])){
+                    $productTypes = explode(',',$product['express_type']);
                     
-                    foreach($productTypes as $type) {
+                    foreach($productTypes as $type){
+                        $product_name = Db::name('centralize_express_product')->where(['id'=>$product['express_id']])->value('name');
                         $products[] = [
-                            'express_id' => $expressId,
-                            'express_name' => $product['name'] ?? '',
+                            'express_id' => $product['express_id'],
+                            'express_name' => $product_name,
                             'typename' => trim($type)
                         ];
                     }

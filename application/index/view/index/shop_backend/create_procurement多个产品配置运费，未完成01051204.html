@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="layui/css/layui.css">
     <style>
         .disf{display:flex;align-items:center;}
-        .layui-form-item .layui-form-checkbox{display:none;}
         
         .procurement-container { padding: 5px; }
         .step-indicator { margin-bottom: 30px; }
@@ -71,6 +70,16 @@
         .freight-config-form table th {
             background-color: #f2f2f2;
             font-weight: 600;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            width: 90%;
+            max-width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
         }
         
         .close-modal {
@@ -155,9 +164,7 @@
             border: 1px solid #e6e6e6;
             border-radius: 4px;
             padding: 10px;
-            max-height: 300px;
-            overflow-y: auto;
-            background-color: #fff;
+            background: #fff;
         }
         
         .selector-header {
@@ -174,44 +181,35 @@
         
         .selected-count {
             margin-left: auto;
-            color: #1890ff;
-            font-weight: bold;
+            color: #666;
+            font-size: 14px;
         }
         
         .selector-content {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+            max-height: 300px;
+            overflow-y: auto;
         }
         
         .selector-item {
             display: flex;
             align-items: center;
-            padding: 8px 12px;
-            border: 1px solid #e6e6e6;
-            border-radius: 4px;
+            padding: 8px 10px;
+            border-bottom: 1px solid #f5f5f5;
             cursor: pointer;
-            transition: all 0.3s;
-            min-width: 200px;
-            background-color: #fafafa;
+            transition: background-color 0.2s;
         }
         
         .selector-item:hover {
-            border-color: #1890ff;
-            background-color: #e6f7ff;
+            background-color: #f9f9f9;
         }
         
         .selector-item.selected {
-            border-color: #1890ff;
             background-color: #e6f7ff;
+            border-left: 3px solid #1890ff;
         }
         
         .selector-item .checkbox {
             margin-right: 10px;
-        }
-        
-        .selector-item .checkbox .layui-icon {
-            font-size: 18px;
         }
         
         .selector-item .item-info {
@@ -219,218 +217,97 @@
         }
         
         .selector-item .item-name {
-            font-weight: bold;
-            margin-bottom: 4px;
+            font-weight: 500;
         }
         
         .selector-item .item-desc {
             font-size: 12px;
-            color: #666;
-        }
-        
-        .selector-item .config-status {
-            margin-left: 10px;
-            padding: 2px 6px;
-            border-radius: 12px;
-            font-size: 12px;
-        }
-        
-        .selector-item .status-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            margin-right: 4px;
-        }
-        
-        .selector-item .configured {
-            background-color: #52c41a;
-        }
-        
-        .selector-item .not-configured {
-            background-color: #faad14;
-        }
-        
-        /* 模态框样式 */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-        }
-        
-        .modal-content {
-            position: relative;
-            background-color: #fff;
-            margin: 1% auto;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #e8e8e8;
-        }
-        
-        .modal-header h4 {
-            margin: 0;
-            color: #fff;
-        }
-        
-        .modal-header .close {
-            font-size: 24px;
             color: #999;
-            cursor: pointer;
-            padding: 0 10px;
+            margin-top: 2px;
         }
         
-        .modal-header .close:hover {
-            color: #333;
-        }
-        
-        /* 产品标签样式 */
-        .product-tag {
-            display: inline-block;
-            padding: 4px 12px;
-            margin: 4px;
-            background-color: #f0f2f5;
-            border-radius: 4px;
-            border: 1px solid #d9d9d9;
-            font-size: 14px;
-        }
-        
-        .selected-products-title {
-            margin-bottom: 15px;
-            font-weight: bold;
-            color: #333;
-        }
-        
-        /* 配置摘要样式 */
         .config-summary {
-            border: 1px solid #e8e8e8;
+            background: #f9f9f9;
+            border: 1px solid #e6e6e6;
             border-radius: 4px;
             padding: 15px;
-            background-color: #fafafa;
+            max-height: 200px;
+            overflow-y: auto;
         }
         
         .config-item {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #f0f0f0;
+            padding: 8px;
+            border-bottom: 1px solid #eee;
         }
         
         .config-item:last-child {
             border-bottom: none;
         }
         
-        .config-info {
-            flex: 1;
+        .config-status {
+            margin-left: auto;
         }
         
-        .config-actions button {
-            margin-left: 5px;
+        .config-status .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 5px;
         }
         
-        /* 标签页样式 */
+        .config-status .configured {
+            background-color: #52c41a;
+        }
         
-        .tab-nav {
-            display: flex;
-            border-bottom: 1px solid #e8e8e8;
+        .config-status .not-configured {
+            background-color: #ff4d4f;
+        }
+        
+        .selected-products-list {
             margin-bottom: 20px;
-        }
-        
-        .tab-item {
-            padding: 10px 20px;
-            cursor: pointer;
-            border: 1px solid transparent;
-            border-bottom: none;
-            margin-bottom: -1px;
-            background-color: #fafafa;
-        }
-        
-        .tab-item.active {
-            background-color: #fff;
-            border-color: #e8e8e8;
-            border-bottom-color: #fff;
-            color: #1890ff;
-        }
-        
-        .tab-content {
-            padding: 0px;
-            border: 1px solid #e8e8e8;
-            border-top: none;
-            background-color: #fff;
-        }
-        
-        .product-config-tab {
-            border: 1px solid #e8e8e8;
+            padding: 15px;
+            background: #f9f9f9;
             border-radius: 4px;
-            padding: 0px;
-            margin-bottom: 15px;
-            background-color: #fff;
+            border: 1px solid #e6e6e6;
         }
-        /*处理折叠面板的箭头问题*/
-        .product-config-tab .layui-colla-icon{left: 5px;top: 10px;}
         
-        .config-product-title {
-            margin-bottom: 20px;
-            padding-bottom: 15px;
+        .product-tag {
+            display: inline-block;
+            padding: 4px 8px;
+            margin: 4px;
+            background: #e6f7ff;
+            border: 1px solid #91d5ff;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .configs-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .config-card {
+            border: 1px solid #e6e6e6;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            padding: 15px;
+        }
+        
+        .config-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
             border-bottom: 1px solid #f0f0f0;
         }
         
-        .config-product-title h4 {
-            margin: 0;
-            color: #333;
-        }
-        
-        /* 表单样式增强 */
-        .disf {
+        .config-card-actions {
             display: flex;
-            align-items: center;
-        }
-        
-        .disf > * {
-            margin-right: 10px;
-        }
-        
-        .disf > *:last-child {
-            margin-right: 0;
-        }
-        
-        .unitdiv, .currencydiv {
-            min-width: 120px;
-        }
-        
-        .qujian {
-            width: 100px;
-        }
-        
-        .unit_name {
-            min-width: 60px;
-            color: #666;
-        }
-        
-        /* 响应式调整 */
-        @media (max-width: 768px) {
-            .modal-content {
-                width: 95%;
-                margin: 10% auto;
-            }
-            
-            .selector-item {
-                min-width: 100%;
-            }
+            gap: 10px;
         }
         /*多选快递终端 end*/
         
@@ -440,652 +317,6 @@
         .backDiv .back_icon{font-size: 18px;color: #333;margin-right: 10px;position: relative;}
         .backDiv .back_icon:before{content:'';position:absolute;width:9px;height:9px;border-left:2px solid #000;border-top:2px solid #000;transform:rotate(-45deg);margin-right:5px;top:-7px;}
         .backDiv .back_text{font-size: 16px;color: #333;font-weight: 500;margin-left: 5px;}
-    </style>
-    <style>
-        /* 批量配置运费弹窗样式优化 */
-        #batchFreightConfigModal .modal-content {
-            width: 95%;
-            max-width: 1200px;
-            max-height: 100vh; /* 限制最大高度为视窗高度的85% */
-            display: flex;
-            flex-direction: column;
-        }
-        
-        #batchFreightConfigModal .modal-header {
-            flex-shrink: 0; /* 防止标题被压缩 */
-            padding: 15px 20px;
-            background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
-            color: white;
-            border-radius: 8px 8px 0 0;
-        }
-        
-        #batchFreightConfigModal .modal-header h4 {
-            margin: 0;
-            font-size: 18px;
-            font-weight: bold;
-        }
-        
-        #batchFreightConfigModal .modal-header .close {
-            color: white;
-            font-size: 28px;
-            opacity: 0.8;
-        }
-        
-        #batchFreightConfigModal .modal-header .close:hover {
-            opacity: 1;
-        }
-        
-        /* 选中的产品列表样式优化 */
-        .selected-products-list {
-            background: #f8f9fa;
-            border-radius: 6px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid #e9ecef;
-        }
-        
-        .selected-products-title {
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #1890ff;
-            font-size: 16px;
-        }
-        
-        .product-tag {
-            display: inline-flex;
-            align-items: center;
-            padding: 6px 12px;
-            margin: 4px;
-            background: white;
-            border-radius: 20px;
-            border: 1px solid #d9d9d9;
-            font-size: 13px;
-            color: #333;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            transition: all 0.3s;
-        }
-        
-        .product-tag:hover {
-            border-color: #1890ff;
-            box-shadow: 0 2px 8px rgba(24, 144, 255, 0.2);
-            transform: translateY(-1px);
-        }
-        
-        /* 标签页样式优化 */
-        .freight-config-tabs {
-            margin-top: 0px;
-            border: 1px solid #e8e8e8;
-            border-radius: 6px;
-            overflow: hidden;
-            background: white;
-        }
-        
-        .tab-nav {
-            display: flex;
-            background: #fafafa;
-            border-bottom: 1px solid #e8e8e8;
-            overflow-x: auto; /* 标签过多时可横向滚动 */
-            white-space: nowrap;
-        }
-        
-        .tab-nav::-webkit-scrollbar {
-            height: 4px;
-        }
-        
-        .tab-nav::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        
-        .tab-nav::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 2px;
-        }
-        
-        .tab-item {
-            padding: 12px 24px;
-            cursor: pointer;
-            border: none;
-            background: transparent;
-            border-bottom: 3px solid transparent;
-            color: #666;
-            font-weight: 500;
-            transition: all 0.3s;
-            position: relative;
-            white-space: nowrap;
-        }
-        
-        .tab-item:hover {
-            background: #f0f7ff;
-            color: #1890ff;
-        }
-        
-        .tab-item.active {
-            background: white;
-            color: #1890ff;
-            border-bottom-color: #1890ff;
-        }
-        
-        .tab-item .layui-icon {
-            margin-right: 6px;
-            font-size: 14px;
-        }
-        
-        .tab-item.active .layui-icon {
-            color: #52c41a;
-        }
-        
-        .tab-content {
-            padding: 0px;
-            background: white;
-            min-height: 400px;
-            max-height: 500px; /* 限制内容区域高度 */
-            overflow-y: auto; /* 内容超出时滚动 */
-        }
-        
-        /* 单个产品配置区域样式优化 */
-        .product-config-tab {
-            animation: fadeIn 0.3s ease-in-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .config-product-title {
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #f0f0f0;
-            position: relative;
-        }
-        
-        .config-product-title h4 {
-            margin: 0;
-            color: #333;
-            font-size: 16px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-        }
-        
-        .config-product-title h4::before {
-            content: '';
-            display: inline-block;
-            width: 4px;
-            height: 16px;
-            background: #1890ff;
-            margin-right: 10px;
-            border-radius: 2px;
-        }
-        
-        /* 表单样式优化 */
-        .freight-config-form {
-            background: white;
-            border-radius: 6px;
-        }
-        
-        .single-freight-form .layui-form-item {
-            margin-bottom: 20px;
-        }
-        
-        .single-freight-form .layui-form-label {
-            width: 120px;
-            font-weight: 500;
-            color: #333;
-        }
-        
-        .single-freight-form .layui-input-block {
-            margin-left: 0px;
-        }
-        
-        /* 折叠面板样式优化 */
-        .layui-colla-item {
-            border: 1px solid #e8e8e8 !important;
-            border-radius: 4px !important;
-            margin-bottom: 10px !important;
-            /*overflow: hidden;*/
-        }
-        
-        .layui-colla-title {
-            background: #fafafa !important;
-            padding: 10px 20px !important;
-            font-weight: 600 !important;
-            color: #333 !important;
-            transition: all 0.3s !important;
-        }
-        
-        .layui-colla-title:hover {
-            background: #f0f7ff !important;
-        }
-        
-        .layui-colla-content {
-            padding: 20px !important;
-            background: white !important;
-        }
-        
-        /* 按钮区域样式优化 */
-        .freight-config-form .layui-form-item:last-child {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #f0f0f0;
-            background: #fafafa;
-            padding: 20px;
-            border-radius: 6px;
-            text-align: center;
-        }
-        
-        .freight-config-form .layui-form-item:last-child .layui-btn {
-            min-width: 50px;
-            height: 40px;
-            font-size: 14px;
-            border-radius: 0px;
-        }
-        
-        /* 隐藏类 */
-        .hidden {
-            display: none !important;
-        }
-        
-        /* 滚动条美化 */
-        .modal-body::-webkit-scrollbar,
-        .tab-content::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        .modal-body::-webkit-scrollbar-track,
-        .tab-content::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 3px;
-        }
-        
-        .modal-body::-webkit-scrollbar-thumb,
-        .tab-content::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 3px;
-        }
-        
-        .modal-body::-webkit-scrollbar-thumb:hover,
-        .tab-content::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
-        }
-        
-        /* 响应式调整 */
-        @media (max-width: 768px) {
-            #batchFreightConfigModal .modal-content {
-                width: 98%;
-                max-height: 90vh;
-                margin: 2% auto;
-            }
-            
-            .tab-item {
-                padding: 10px 15px;
-                font-size: 13px;
-            }
-            
-            .single-freight-form .layui-form-label {
-                width: 100px;
-            }
-            
-            .single-freight-form .layui-input-block {
-                margin-left: 0px;
-            }
-        }
-        
-        /* 模态框遮罩层 */
-        .modal-backdrop {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 9998;
-        }
-        
-        /* 产品标签容器 */
-        .products-tags-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            max-height: 120px;
-            overflow-y: auto;
-            padding: 5px;
-            margin-top: 10px;
-        }
-        
-        .product-tag[data-index] {
-            cursor: pointer;
-            position: relative;
-            transition: all 0.3s;
-        }
-        
-        .product-tag[data-index]:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(24, 144, 255, 0.3);
-        }
-        
-        .product-tag.active {
-            border-color: #1890ff;
-            background: #e6f7ff;
-            box-shadow: 0 2px 8px rgba(24, 144, 255, 0.2);
-        }
-        
-        .config-status-badge {
-            margin-left: 6px;
-            font-weight: normal;
-        }
-        
-        /* 加载指示器 */
-        .config-loading {
-            text-align: center;
-            padding: 40px;
-            color: #999;
-        }
-        
-        .config-loading .layui-icon {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-        
-        /* 空状态提示 */
-        .config-empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #999;
-        }
-        
-        .config-empty-state .layui-icon {
-            font-size: 48px;
-            color: #d9d9d9;
-            margin-bottom: 15px;
-        }
-        
-        /* 表单验证样式 */
-        .layui-form-item.required .layui-form-label::before {
-            content: '*';
-            color: #ff4d4f;
-            margin-right: 4px;
-        }
-        
-        /* 输入框焦点状态 */
-        .layui-input:focus, .layui-select:focus {
-            border-color: #1890ff !important;
-            box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
-        }
-        
-        /* 按钮组样式 */
-        .button-group {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        .button-group .layui-btn {
-            min-width: 120px;
-        }
-        
-        /* 进度指示器 */
-        .config-progress {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            padding: 10px 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-        
-        .progress-step {
-            display: flex;
-            align-items: center;
-            color: #999;
-        }
-        
-        .progress-step.active {
-            color: #1890ff;
-        }
-        
-        .progress-step .step-number {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: #f0f0f0;
-            margin-right: 8px;
-            font-size: 12px;
-        }
-        
-        .progress-step.active .step-number {
-            background: #1890ff;
-            color: white;
-        }
-        
-        /* 强制select下拉框向下弹出 */
-        #batchFreightConfigModal .layui-form-select .layui-anim {
-            top: 41px !important;
-            bottom: auto !important;
-            max-height: 200px !important;
-            overflow-y: auto !important;
-        }
-        
-        #batchFreightConfigModal .layui-form-select dl {
-            max-height: 200px !important;
-            overflow-y: auto !important;
-        }
-        
-        /* 确保select组件有足够的空间显示下拉框 */
-        #batchFreightConfigModal .layui-form-select {
-            z-index: 999999 !important;
-        }
-        
-        /* 防止下拉框被模态框裁剪 */
-        #batchFreightConfigModal .layui-form-selected dl {
-            position: absolute !important;
-            z-index: 1000000 !important;
-        }
-        
-        /* 为模态框内的select组件增加更多空间 */
-        #batchFreightConfigModal .layui-input-block {
-            position: relative;
-            z-index: auto;
-        }
-        
-        /* 确保下拉框在模态框内正确显示 */
-        #batchFreightConfigModal {
-            overflow: visible !important;
-        }
-        
-        #batchFreightConfigModal .modal-content {
-            overflow: visible !important;
-        }
-        
-        #batchFreightConfigModal .modal-body {
-            overflow: visible !important;
-        }
-        
-        /* 特殊处理：当select在底部时，强制下拉框向上 */
-        #batchFreightConfigModal .layui-form-select.layui-form-selected .layui-anim {
-            bottom: 41px !important;
-            top: auto !important;
-        }
-        
-        /* 改进select下拉框样式 */
-        #batchFreightConfigModal .layui-form-select dl dd.layui-this {
-            background-color: #e8f4ff !important;
-            color: #1890ff !important;
-        }
-        
-        #batchFreightConfigModal .layui-form-select dl dd:hover {
-            background-color: #f5f5f5 !important;
-        }
-        
-        /* 调整select输入框高度 */
-        #batchFreightConfigModal .layui-form-select .layui-input {
-            height: 38px !important;
-            line-height: 38px !important;
-        }
-        
-        /* 确保下拉框不会被其他元素遮挡 */
-        #batchFreightConfigModal .layui-layer {
-            z-index: 1000001 !important;
-        }
-        
-        /* 为下拉框添加阴影效果 */
-        #batchFreightConfigModal .layui-form-select .layui-anim {
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
-            border: 1px solid #e8e8e8 !important;
-        }
-        
-        /* 响应式调整 */
-        @media (max-height: 600px) {
-            #batchFreightConfigModal .layui-form-select .layui-anim {
-                max-height: 150px !important;
-            }
-            
-            #batchFreightConfigModal .layui-form-select dl {
-                max-height: 150px !important;
-            }
-        }
-        
-        /* 确保在tab内容中也能正确显示 */
-        #batchFreightConfigModal .tab-content .layui-form-select .layui-anim {
-            top: 41px !important;
-            bottom: auto !important;
-        }
-        
-        /* 币种选择器除外 */
-        #batchFreightConfigModal .currencydiv .layui-form-select .layui-anim {top:-202px !important;bottom:unset !important;}
-        
-        /* 处理折叠面板内的select */
-        #batchFreightConfigModal .layui-colla-content .layui-form-select .layui-anim {
-            position: absolute !important;
-            z-index: 1000000 !important;
-        }
-        
-        /* 添加下拉框滚动条样式 */
-        #batchFreightConfigModal .layui-form-select dl::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        #batchFreightConfigModal .layui-form-select dl::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        
-        #batchFreightConfigModal .layui-form-select dl::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 3px;
-        }
-        
-        #batchFreightConfigModal .layui-form-select dl::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
-        }
-        
-        /* 响应式调整 */
-        @media (max-height: 700px) {
-            #batchFreightConfigModal .modal-content {
-                max-height: 95vh;
-            }
-            
-            #batchFreightConfigModal .modal-body {
-                max-height: calc(95vh - 150px);
-            }
-            
-            .tab-content {
-                max-height: 400px;
-            }
-        }
-        
-        /* 修改现有的 .tab-content 样式 */
-        #batchFreightConfigModal .tab-content {
-            padding: 0px;
-            background: white;
-            min-height: 300px;
-            max-height: 400px; /* 减少最大高度，为其他内容留出空间 */
-            overflow-y: hidden;
-            overflow-x: hidden;
-            position: relative;
-        }
-        
-        /* 添加新的样式来控制产品配置区域 */
-        #batchFreightConfigModal .product-config-tab {
-            animation: fadeIn 0.3s ease-in-out;
-            max-height: 380px; /* 限制每个标签页的最大高度 */
-            overflow-y: auto;
-            overflow-x: hidden;
-            padding-right: 5px; /* 为滚动条留出空间 */
-        }
-        
-        /* 确保折叠面板内容可滚动 */
-        #batchFreightConfigModal .layui-colla-content {
-            max-height: 250px;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-        
-        /* 修改模态框整体高度分配 */
-        #batchFreightConfigModal .modal-body {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            max-height: calc(100vh - 170px); /* 减少高度，为标题和按钮留更多空间 */
-            display: flex;
-            flex-direction: column;
-        }
-        
-        #batchFreightConfigModal .selected-products-list {
-            flex-shrink: 0; /* 防止产品标签区域被压缩 */
-            margin-bottom: 15px;
-        }
-        
-        #batchFreightConfigModal .freight-config-tabs {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            min-height: 0; /* 重要：允许内容区域收缩 */
-        }
-        
-        /* 优化产品标签容器，防止过多标签撑开高度 */
-        .products-tags-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            max-height: 80px; /* 限制标签显示高度 */
-            overflow-y: auto;
-            padding: 5px;
-            margin-top: 10px;
-            border: 1px solid #e8e8e8;
-            border-radius: 4px;
-            background: #fafafa;
-        }
-        
-        /* 优化滚动条样式 */
-        #batchFreightConfigModal .tab-content::-webkit-scrollbar,
-        #batchFreightConfigModal .product-config-tab::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        #batchFreightConfigModal .tab-content::-webkit-scrollbar-track,
-        #batchFreightConfigModal .product-config-tab::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 3px;
-        }
-        
-        #batchFreightConfigModal .tab-content::-webkit-scrollbar-thumb,
-        #batchFreightConfigModal .product-config-tab::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 3px;
-        }
-        
-        #batchFreightConfigModal .tab-content::-webkit-scrollbar-thumb:hover,
-        #batchFreightConfigModal .product-config-tab::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
-        }
-        
-        
     </style>
 </head>
 <body>
@@ -1398,9 +629,9 @@
         </div>
     </div>
     
-    <!-- 批量运费配置模态框 -->
+    <!-- 多产品运费配置模态框 -->
     <div class="modal" id="batchFreightConfigModal" style="display: none;">
-        <div class="modal-content" style="width: 95%; max-width: 1200px;">
+        <div class="modal-content">
             <div class="modal-header">
                 <h4>批量配置运费</h4>
                 <span class="close" onclick="closeBatchConfigModal()">&times;</span>
@@ -1410,15 +641,14 @@
                     <!-- 选中的产品列表 -->
                 </div>
                 
-                <div class="freight-config-tabs" id="freightConfigTabs">
-                    <!-- 产品配置标签页 -->
+                <div class="freight-config-form" id="batchConfigForm">
+                    <!-- 运费配置表单（与单个配置相同） -->
+                    <!-- 这里可以复用原有的freightConfigForm，但需要修改以支持批量 -->
                 </div>
                 
                 <div class="layui-form-item" style="margin-top: 20px; text-align: right;">
                     <div class="layui-input-block">
-                        <button type="button" class="layui-btn layui-btn-primary" onclick="saveAllBatchFreightConfigs()">
-                            <i class="layui-icon">&#xe605;</i> 保存所有配置
-                        </button>
+                        <button type="button" class="layui-btn layui-btn-primary" onclick="saveBatchFreightConfig()">保存配置</button>
                         <button type="button" class="layui-btn layui-btn-primary layui-btn-danger" onclick="closeBatchConfigModal()" style="margin-left: 10px;">取消</button>
                     </div>
                 </div>
@@ -1579,7 +809,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="layui-form-item jf_method">
-                                                        <!--<label class="layui-form-label"></label>-->
+                                                        <label class="layui-form-label"></label>
                                                         <div class="layui-input-block">
                                                             <!--首续重计费-->
                                                             <div class="jf_div1" style="display:{if 1!=$procurement_data['freight_config']['config_data']['jf_method'][0][$k2][$k3]}
@@ -1791,7 +1021,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="layui-form-item jf_method">
-                                                    <!--<label class="layui-form-label"></label>-->
+                                                    <label class="layui-form-label"></label>
                                                     <div class="layui-input-block">
                                                         <div class="jf_div1">
                                                             <div class="disf">
@@ -1953,225 +1183,6 @@
                 </div>
             </div>
         
-    </div>
-    
-    <!-- 单个产品运费配置表单（隐藏，用作模板） -->
-    <div id="singleFreightConfigTemplate" style="display: none;">
-        <div class="product-config-tab">
-            <div class="freight-config-form">
-                <form class="layui-form single-freight-form" lay-filter="single-freight-form">
-                    <input type="hidden" name="warehouse_type">
-                    <input type="hidden" name="warehouse_id">
-                    <input type="hidden" name="terminal_id">
-                    <input type="hidden" name="express_id">
-                    <input type="hidden" name="product_type">
-                    <input type="hidden" name="company_id">
-                    <input type="hidden" name="procurement_id">
-                    <input type="hidden" name="config_id" value="0">
-                    
-                    <div class="config-product-title">
-                        <h4><span class="express-name"></span> - <span class="product-type"></span></h4>
-                    </div>
-                    
-                    <!-- 最低消费配置 -->
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">最低消费</label>
-                        <div class="layui-input-block disf">
-                            <div class="mini_cost">
-                                <select name="content[mini_cost][]" lay-filter="mini_cost">
-                                    <option value="0">无最低</option>
-                                    <option value="1">有最低</option>
-                                </select>
-                            </div>
-                            <div class="minicost_div" style="display: none;">
-                                <input type="text" name="content[mini_num][]" placeholder="请输入最低消费值" autocomplete="off" class="layui-input">
-                                <div class="minicost_unit">
-                                    <select name="content[minicost_unit][]" lay-filter="minicost_unit">
-                                        <option value="">请选择单位</option>
-                                        {volist name="value['unit']" key="k" id="v"}
-                                        <option value="{$v['code_value']}" data-title="{$v['code_name']}">{$v['code_name']}</option>
-                                        {/volist}
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 计费区间 -->
-                    <div class="layui-collapse jifei_qujian" lay-accordion>
-                        <div class="layui-colla-item" data-idx="0">
-                            <div class="layui-colla-title disf" style="justify-content: space-between;">
-                                <h4>计费区间1</h4>
-                                <div>
-                                    <div class="layui-btn layui-btn-success" onclick="addQujian(this)">+</div>
-                                </div>
-                            </div>
-                            <div class="layui-colla-content">
-                                <!-- 计费区间内容 -->
-                                <div class="layui-form-item">
-                                    <label class="layui-form-label">计费区间</label>
-                                    <div class="layui-input-block disf">
-                                        自&nbsp;
-                                        <input type="number" name="content[qj1][0][]" placeholder="数值" class="layui-input qujian">
-                                        <div class="unitdiv">
-                                            <select name="content[unit][0][]" lay-filter="unit" lay-search>
-                                                <option value="">请选择</option>
-                                                {volist name="value['unit']" key="k" id="v"}
-                                                <option value="{$v['code_value']}" data-title="{$v['code_name']}">{$v['code_name']}</option>
-                                                {/volist}
-                                            </select>
-                                        </div>
-                                        &nbsp;至&nbsp;
-                                        <div class="unitdiv">
-                                            <select name="content[qj2_method][0][]" lay-filter="qj2_method">
-                                                <option value="1">数值</option>
-                                                <option value="2">以上</option>
-                                            </select>
-                                        </div>
-                                        <input type="number" class="layui-input qujian qujian2" name="content[qj2][0][]" placeholder="数值">
-                                        <div class="unit_name"></div>
-                                    </div>
-                                </div>
-                                
-                                <div class="layui-form-item">
-                                    <label class="layui-form-label">计费进阶</label>
-                                    <div class="layui-input-block disf">
-                                        <input type="number" class="layui-input" name="content[jinjie][0][]" placeholder="数值">
-                                        <div class="unit_name"></div>
-                                    </div>
-                                </div>
-                                
-                                <!-- 计费方式 -->
-                                <div class="layui-collapse jifei_fangshi" lay-accordion>
-                                    <div class="layui-colla-item" data-idx="0">
-                                        <div class="layui-colla-title disf" style="justify-content: space-between;">
-                                            <h4>计费方式1</h4>
-                                            <div>
-                                                <div class="layui-btn layui-btn-success" onclick="addJifei(this)">+</div>
-                                            </div>
-                                        </div>
-                                        <div class="layui-colla-content">
-                                            <div class="layui-form-item">
-                                                <label class="layui-form-label">计费方式</label>
-                                                <div class="layui-input-block disf">
-                                                    <select name="content[jf_method][0][0][]" lay-filter="jf_method">
-                                                        <option value="1">首续计费</option>
-                                                        <option value="2">按量计费</option>
-                                                        <option value="3">分段计费</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="layui-form-item jf_method">
-                                                <!--<label class="layui-form-label"></label>-->
-                                                <div class="layui-input-block">
-                                                    <!-- 首续计费 -->
-                                                    <div class="jf_div1">
-                                                        <div class="disf">
-                                                            首重&nbsp;
-                                                            <input type="number" name="content[shouzhong][0][0][]" placeholder="数值" class="layui-input qujian">
-                                                            <div class="unit_name"></div>
-                                                            <div class="currencydiv">
-                                                                <select class="currency_sel" name="content[currency][0][0][]" lay-search>
-                                                                    <option value="">请选择币种</option>
-                                                                    {volist name="value['currency']" key="k" id="v"}
-                                                                    <option value="{$v['id']}">{$v['currency_symbol_standard']}</option>
-                                                                    {/volist}
-                                                                </select>
-                                                            </div>
-                                                            <input type="number" name="content[shouzhong_money][0][0][]" placeholder="金额" class="layui-input qujian">
-                                                        </div>
-                                                        <div class="disf">
-                                                            续重&nbsp;
-                                                            <input type="number" name="content[xuzhong][0][0][]" placeholder="数值" class="layui-input qujian">
-                                                            <div class="unit_name"></div>
-                                                            <div class="currencydiv">
-                                                                <select class="currency_sel" name="content[currency][0][0][]" lay-search>
-                                                                    <option value="">请选择币种</option>
-                                                                    {volist name="value['currency']" key="k" id="v"}
-                                                                    <option value="{$v['id']}">{$v['currency_symbol_standard']}</option>
-                                                                    {/volist}
-                                                                </select>
-                                                            </div>
-                                                            <input type="number" name="content[xuzhong_money][0][0][]" placeholder="金额" class="layui-input qujian">
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <!-- 按量计费 -->
-                                                    <div class="jf_div2" style="display: none;">
-                                                        <div class="disf">
-                                                            <input type="number" name="content[anliang][0][0][]" placeholder="数值" class="layui-input qujian">
-                                                            <div class="unit_name"></div>
-                                                            <div class="currencydiv">
-                                                                <select class="currency_sel" name="content[currency][0][0][]" lay-search>
-                                                                    <option value="">请选择币种</option>
-                                                                    {volist name="value['currency']" key="k" id="v"}
-                                                                    <option value="{$v['id']}">{$v['currency_symbol_standard']}</option>
-                                                                    {/volist}
-                                                                </select>
-                                                            </div>
-                                                            <input type="number" name="content[anliang_money][0][0][]" placeholder="金额" class="layui-input qujian">
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <!-- 分段计费 -->
-                                                    <div class="layui-collapse jf_div3 jifei_fenduan" lay-accordion style="display: none;">
-                                                        <div class="layui-colla-item">
-                                                            <div class="layui-colla-title disf" style="justify-content: space-between;">
-                                                                <h4>分段计费1</h4>
-                                                                <div>
-                                                                    <div class="layui-btn layui-btn-success" onclick="addFenduan(this)">+</div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="layui-colla-content">
-                                                                <div class="disf">
-                                                                    <input type="number" name="content[fenduan_num1][0][0][0][]" placeholder="数值" class="layui-input qujian">
-                                                                    <div class="unit_name"></div>
-                                                                    &nbsp;至&nbsp;
-                                                                    <div class="unitdiv">
-                                                                        <select name="content[fenduan_method][0][0][0][]" lay-filter="fenduan_method">
-                                                                            <option value="1">数值</option>
-                                                                            <option value="2">以上</option>
-                                                                        </select>
-                                                                    </div>
-                                                                    <div class="fenduan_num">
-                                                                        <div class="disf">
-                                                                            <input type="number" name="content[fenduan_num2][0][0][0][]" placeholder="数值" class="layui-input qujian">
-                                                                            <div class="unit_name"></div>
-                                                                            <div class="currencydiv">
-                                                                                <select class="currency_sel" name="content[currency][0][0][0][]" lay-search>
-                                                                                    <option value="">请选择币种</option>
-                                                                                    {volist name="value['currency']" key="k" id="v"}
-                                                                                    <option value="{$v['id']}">{$v['currency_symbol_standard']}</option>
-                                                                                    {/volist}
-                                                                                </select>
-                                                                            </div>
-                                                                            <input type="number" name="content[fenduan_money][0][0][0][]" placeholder="金额" class="layui-input">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="layui-form-item" style="margin-top: 20px; text-align: center;">
-                        <div class="layui-input-block">
-                            <button type="button" class="layui-btn layui-btn-normal" onclick="saveSingleFreightConfig(this)">
-                                <i class="layui-icon">&#xe605;</i> 保存当前配置
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
     </div>
     
     <!-- 步骤5: 采购结算 -->
@@ -2426,12 +1437,6 @@ var selectedProducts = [];  // 选中的产品
 var selectedProxyExpresses = []; // 代发货选中的快递企业
 var selectedProxyProducts = [];  // 代发货选中的产品
 var freightConfigs = {}; // 存储所有运费配置 {productKey: configData}
-var currentWarehouseType = '';   // 当前仓库类型
-var currentWarehouseId = 0;      // 当前仓库ID
-
-// 添加防抖变量
-var loadProductListTimeout = null;
-var loadProxyProductListTimeout = null;
 
 var globalCurrency = ''; // 全局币种
 var currentFreightConfigId = 0; // 当前运费配置ID
@@ -2462,6 +1467,11 @@ layui.use(['form', 'laydate', 'layer', 'table','element'], function(){
                 area: ['80%', '80%'],
                 content: '/?s=index/save_supplier&company_id={$company_id}&company_type={$company_type}',
             });
+            
+            // var modal = document.getElementById('saveMenuModal');
+            // modal.style.display = 'flex';
+
+            // $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_supplier&company_id={$company_id}&company_type={$company_type}');
         }
     });
     
@@ -2734,8 +1744,7 @@ layui.use(['form', 'laydate', 'layer', 'table','element'], function(){
     form.on('select(mini_cost)',function(data){
         let val = data.value;
         let t = this;
-        
-        if(val==0){
+        if(val==-1){
             $(t).parents(":eq(3)").find('.minicost_div').hide();
         }else{
             $(t).parents(":eq(3)").find('.minicost_div').css({'display':'flex','align-items':'center'});
@@ -2812,8 +1821,6 @@ $(document).ready(function(){
             loadFreightConfigs();
         }, 500);
     }
-    
-    initFreightFormListeners();
 });
 
 //全选-运费配置=========================================start
@@ -2823,8 +1830,6 @@ function loadTerminalList(warehouseId) {
         $('#terminalSelector').hide();
         return;
     }
-    
-    currentWarehouseId = warehouseId;
     
     $.ajax({
         url: '/?s=index/get_merchant_warehouse_terminals',
@@ -2884,7 +1889,7 @@ function loadExpressList(terminalIds) {
         type: 'GET',
         data: {
             company_id: getUrlParam('company_id'),
-            warehouse_id: warehouseId,//currentWarehouseId
+            warehouse_id: warehouseId,
             type: 'direct',
             terminal_ids: terminalIds
         },
@@ -2937,33 +1942,10 @@ function loadProductList(expressIds) {
         return;
     }
     
-    // 清除之前的防抖定时器
-    if (loadProductListTimeout) {
-        clearTimeout(loadProductListTimeout);
-    }
-    
-    // 设置新的防抖定时器
-    loadProductListTimeout = setTimeout(function() {
-        executeLoadProductList(expressIds);
-    }, 200);
-}
-
-// 分离实际的加载逻辑
-function executeLoadProductList(expressIds) {
-    if (!expressIds) {
-        $('#productSelector').hide();
-        return;
-    }
-    
     $('#productLoading').show();
     $('#productSelector').hide();
     
-    // 取消之前的请求（如果有）
-    if (window.currentProductRequest && window.currentProductRequest.readyState !== 4) {
-        window.currentProductRequest.abort();
-    }
-    
-    window.currentProductRequest = $.ajax({
+    $.ajax({
         url: '/?s=index/get_express_products',
         type: 'GET',
         data: {
@@ -2971,47 +1953,21 @@ function executeLoadProductList(expressIds) {
         },
         success: function(res){
             $('#productLoading').hide();
-            
-            console.log('原始响应数据:', JSON.stringify(res)); // 详细调试
-            
             if(res.code === 0) {
                 var html = '';
-                
-                // 检查数据结构
-                if (res.data && Array.isArray(res.data)) {
-                    console.log('产品数据是数组，长度:', res.data.length);
-                    
-                    // 遍历所有产品
-                    for (var i = 0; i < res.data.length; i++) {
-                        var product = res.data[i];
-                        
-                        console.log('第' + i + '个产品:', product);
-                        
-                        // 确保product有必要的属性
-                        if (!product.express_id || !product.typename) {
-                            console.warn('产品缺少必要属性:', product);
-                            continue;
-                        }
-                        
+                if(res.data && res.data.length > 0) {
+                    $.each(res.data, function(index, product){
                         var productKey = product.express_id + '_' + product.typename;
-                        var isSelected = selectedProducts.some(function(p) {
-                            return p.key === productKey;
-                        });
-                        
+                        var isSelected = selectedProducts.some(p => p.key === productKey);
                         var configStatus = freightConfigs[productKey] ? '已配置' : '未配置';
-                        var expressName = product.express_name || '未知快递企业';
                         
-                        html += '<div class="selector-item ' + (isSelected ? 'selected' : '') + '" ' +
-                                'data-express-id="' + product.express_id + '" ' +
-                                'data-product-type="' + product.typename + '" ' +
-                                'data-express-name="' + expressName + '" ' +
-                                'onclick="toggleSelectItem(this, \'product\')">' +
+                        html += '<div class="selector-item ' + (isSelected ? 'selected' : '') + '" data-express-id="' + product.express_id + '" data-product-type="' + product.typename + '" data-express-name="' + product.express_name + '" onclick="toggleSelectItem(this, \'product\')">' +
                                 '<div class="checkbox">' +
                                 '<input type="checkbox" style="display: none;" ' + (isSelected ? 'checked' : '') + '>' +
                                 '<i class="layui-icon ' + (isSelected ? 'layui-icon-ok-circle' : 'layui-icon-circle') + '" style="color: ' + (isSelected ? '#1890ff' : '#ccc') + ';"></i>' +
                                 '</div>' +
                                 '<div class="item-info">' +
-                                '<div class="item-name">' + expressName + ' - ' + product.typename + '</div>' +
+                                '<div class="item-name">' + product.express_name + ' - ' + product.typename + '</div>' +
                                 '<div class="item-desc">快递企业ID: ' + product.express_id + '</div>' +
                                 '</div>' +
                                 '<div class="config-status">' +
@@ -3019,46 +1975,30 @@ function executeLoadProductList(expressIds) {
                                 '<span>' + configStatus + '</span>' +
                                 '</div>' +
                                 '</div>';
-                    }
-                    
-                    if (html === '') {
-                        console.log('生成了空HTML，res.data内容:', res.data);
-                        html = '<div style="padding: 20px; text-align: center; color: #999;">没有可显示的产品</div>';
-                    }
-                    
+                    });
                     $('#productSelector').show();
                     
+                    // 更新配置按钮状态
+                    var selectedCount = selectedProducts.length;
+                    $('#configureDirectBtn').prop('disabled', selectedCount === 0);
+                    
+                    // 显示已配置的产品列表
+                    updateConfigSummary('direct');
+                    
                 } else {
-                    console.log('res.data不是数组或为空:', res.data);
                     html = '<div style="padding: 20px; text-align: center; color: #999;">暂无可用产品</div>';
                 }
-                
                 $('#productList').html(html);
-                console.log('最终HTML设置完成，元素数量:', $('#productList .selector-item').length);
-                
                 updateSelectedCount('product');
-                
-                // 更新配置按钮状态
-                var selectedCount = selectedProducts.length;
-                $('#configureDirectBtn').prop('disabled', selectedCount === 0);
-                
-                // 显示已配置的产品列表
-                updateConfigSummary('direct');
-                
             } else {
-                console.log('API返回code不为0:', res);
                 $('#productList').html('<div style="padding: 20px; text-align: center; color: #999;">' + (res.msg || '加载失败') + '</div>');
                 $('#productSelector').show();
             }
         },
-        error: function(xhr, status, error){
+        error: function(){
             $('#productLoading').hide();
-            console.log('AJAX错误:', status, error);
-            
-            if (status !== 'abort') {
-                $('#productList').html('<div style="padding: 20px; text-align: center; color: #999;">网络错误，加载失败</div>');
-                $('#productSelector').show();
-            }
+            $('#productList').html('<div style="padding: 20px; text-align: center; color: #999;">网络错误，加载失败</div>');
+            $('#productSelector').show();
         }
     });
 }
@@ -3081,11 +2021,26 @@ function toggleSelectItem(element, type) {
         
         switch(type) {
             case 'terminal':
-                if (!selectedTerminals.includes(id.toString())) {
-                    selectedTerminals.push(id.toString());
+                if (!isSelected) {
+                    // 选择
+                    if (!selectedTerminals.includes(id.toString())) {
+                        selectedTerminals.push(id.toString());
+                    }
+                    // 重新加载快递企业
+                    loadExpressList(selectedTerminals.join(','));
+                } else {
+                    // 取消选择
+                    selectedTerminals = selectedTerminals.filter(item => item !== id.toString());
+                    // 清空后续选择
+                    selectedExpresses = [];
+                    selectedProducts = [];
+                    $('#expressList').html('');
+                    $('#productList').html('');
+                    $('#expressSelector').hide();
+                    $('#productSelector').hide();
+                    updateSelectedCount('express');
+                    updateSelectedCount('product');
                 }
-                // 重新加载快递企业
-                loadExpressList(selectedTerminals.join(','));
                 break;
             case 'express':
                 if (!selectedExpresses.includes(id.toString())) {
@@ -3101,8 +2056,7 @@ function toggleSelectItem(element, type) {
                         key: productKey,
                         express_id: expressId,
                         product_type: productType,
-                        express_name: expressName,
-                        terminal_ids: selectedTerminals.join(',')
+                        express_name: expressName
                     });
                 }
                 break;
@@ -3142,44 +2096,23 @@ function toggleSelectItem(element, type) {
                 $('#expressSelector').hide();
                 $('#productSelector').hide();
                 break;
-                
             case 'express':
                 selectedExpresses = selectedExpresses.filter(item => item !== id.toString());
                 // 清空产品选择
                 selectedProducts = [];
                 $('#productList').html('');
-                
-                // 修复：如果有选中的快递企业，重新加载产品列表；否则隐藏产品选择器
-                if (selectedExpresses.length > 0) {
-                    // 延迟加载，避免频繁请求
-                    setTimeout(function() {
-                        loadProductList(selectedExpresses.join(','));
-                    }, 100);
-                } else {
-                    $('#productSelector').hide();
-                }
+                $('#productSelector').hide();
                 break;
-                
             case 'product':
                 selectedProducts = selectedProducts.filter(p => p.key !== (expressId + '_' + productType));
                 break;
-                
             case 'proxy_express':
                 selectedProxyExpresses = selectedProxyExpresses.filter(item => item !== id.toString());
                 // 清空产品选择
                 selectedProxyProducts = [];
                 $('#proxyProductList').html('');
-                
-                // 修复：如果有选中的代理快递企业，重新加载产品列表；否则隐藏产品选择器
-                if (selectedProxyExpresses.length > 0) {
-                    setTimeout(function() {
-                        loadProxyProductList(selectedProxyExpresses.join(','));
-                    }, 100);
-                } else {
-                    $('#proxyProductSelector').hide();
-                }
+                $('#proxyProductSelector').hide();
                 break;
-                
             case 'proxy_product':
                 selectedProxyProducts = selectedProxyProducts.filter(p => p.key !== (expressId + '_' + productType));
                 break;
@@ -3211,94 +2144,11 @@ function selectAll(type) {
             break;
     }
     
-    // 使用批量处理，避免多次调用toggleSelectItem
-    var items = $(selector);
-    var selectedItems = [];
-    
-    items.each(function() {
-        var $item = $(this);
-        if (!$item.hasClass('selected')) {
-            var id = $item.data('id');
-            var expressId = $item.data('express-id');
-            var productType = $item.data('product-type');
-            var expressName = $item.data('express-name');
-            
-            // 更新UI
-            $item.addClass('selected');
-            $item.find('.layui-icon').removeClass('layui-icon-circle').addClass('layui-icon-ok-circle').css('color', '#1890ff');
-            $item.find('input[type="checkbox"]').prop('checked', true);
-            
-            // 根据类型添加到相应的数组
-            switch(type) {
-                case 'terminal':
-                    if (!selectedTerminals.includes(id.toString())) {
-                        selectedTerminals.push(id.toString());
-                    }
-                    break;
-                case 'express':
-                    if (!selectedExpresses.includes(id.toString())) {
-                        selectedExpresses.push(id.toString());
-                    }
-                    break;
-                case 'product':
-                    var productKey = expressId + '_' + productType;
-                    if (!selectedProducts.some(p => p.key === productKey)) {
-                        selectedProducts.push({
-                            key: productKey,
-                            express_id: expressId,
-                            product_type: productType,
-                            express_name: expressName,
-                            terminal_ids: selectedTerminals.join(',')
-                        });
-                    }
-                    break;
-                case 'proxy_express':
-                    if (!selectedProxyExpresses.includes(id.toString())) {
-                        selectedProxyExpresses.push(id.toString());
-                    }
-                    break;
-                case 'proxy_product':
-                    var productKey = expressId + '_' + productType;
-                    if (!selectedProxyProducts.some(p => p.key === productKey)) {
-                        selectedProxyProducts.push({
-                            key: productKey,
-                            express_id: expressId,
-                            product_type: productType,
-                            express_name: expressName
-                        });
-                    }
-                    break;
-            }
+    $(selector).each(function() {
+        if (!$(this).hasClass('selected')) {
+            $(this).click();
         }
     });
-    
-    updateSelectedCount(type);
-    updateConfigureButtonState(type);
-    
-    // 批量加载相关数据
-    switch(type) {
-        case 'terminal':
-            if (selectedTerminals.length > 0) {
-                setTimeout(function() {
-                    loadExpressList(selectedTerminals.join(','));
-                }, 100);
-            }
-            break;
-        case 'express':
-            if (selectedExpresses.length > 0) {
-                setTimeout(function() {
-                    loadProductList(selectedExpresses.join(','));
-                }, 100);
-            }
-            break;
-        case 'proxy_express':
-            if (selectedProxyExpresses.length > 0) {
-                setTimeout(function() {
-                    loadProxyProductList(selectedProxyExpresses.join(','));
-                }, 100);
-            }
-            break;
-    }
 }
 
 // 取消全选
@@ -3400,697 +2250,15 @@ function configureFreightForSelectedProducts(warehouseType) {
         return;
     }
     
-    // 设置当前仓库类型
-    currentWarehouseType = warehouseType;
-    
     // 显示选中的产品列表
-    var productsHtml = '<div class="selected-products-title">' +
-        '<i class="layui-icon layui-icon-form" style="margin-right: 8px;"></i>' +
-        '已选择 ' + selectedItems.length + ' 个产品' +
-        '</div>' +
-        '<div class="products-tags-container">';
-    
+    var productsHtml = '<div class="selected-products-title">已选择 ' + selectedItems.length + ' 个产品：</div>';
     selectedItems.forEach(function(item, index) {
-        var configStatus = freightConfigs[item.key] ? 
-            '<span class="config-status-badge" style="color: #52c41a; font-size: 12px;">✓ 已配置</span>' : 
-            '<span class="config-status-badge" style="color: #faad14; font-size: 12px;">● 待配置</span>';
-        
-        productsHtml += '<span class="product-tag" data-index="' + index + '" onclick="switchConfigTab(' + index + ')">' +
-            item.express_name + ' - ' + item.product_type +
-            configStatus +
-            '</span>';
+        productsHtml += '<span class="product-tag">' + item.express_name + ' - ' + item.product_type + '</span>';
     });
-    productsHtml += '</div>';
     $('#selectedProductsList').html(productsHtml);
     
-    // 创建标签页
-    createConfigTabs(selectedItems, warehouseType);
-    
-    // 显示配置模态框
+    // 显示配置表单
     $('#batchFreightConfigModal').show();
-    
-    // 添加ESC键关闭功能
-    $(document).on('keydown', function(e) {
-        if (e.keyCode === 27) { // ESC键
-            closeBatchConfigModal();
-        }
-    });
-    
-    // 模态框显示后，重新渲染表单
-    setTimeout(function() {
-        setAllDefaultCurrencies();
-        layui.form.render();
-        layui.element.render('collapse');
-        
-        adjustModalHeight();
-        // 监听窗口大小变化
-        $(window).on('resize.modal', adjustModalHeight);
-    }, 300);
-}
-
-// 新增：设置所有币种选择器默认值
-function setAllDefaultCurrencies() {
-    // 遍历所有币种选择器
-    $('#batchFreightConfigModal select.currency_sel').each(function() {
-        var $select = $(this);
-        var currentValue = $select.val();
-        
-        // 如果当前没有值，或者值不是有效的币种，设置为CNY（5）
-        if (!currentValue || currentValue === '') {
-            // 检查是否有CNY选项
-            if ($select.find('option[value="5"]').length > 0) {
-                $select.val('5');
-            } else if ($select.find('option[value="1"]').length > 0) {
-                // 如果没有CNY，使用USD
-                $select.val('1');
-            }
-        }
-    });
-}
-
-function adjustModalHeight() {
-    var windowHeight = $(window).height();
-    var modalHeader = $('#batchFreightConfigModal .modal-header').outerHeight() || 60;
-    var modalFooter = 80; // 按钮区域估算高度
-    var otherElements = $('#batchFreightConfigModal .selected-products-list').outerHeight() || 100;
-    
-    // 计算可用高度
-    var availableHeight = windowHeight * 0.85 - modalHeader - modalFooter - otherElements - 40;
-    
-    // 设置内容区域高度
-    $('#batchFreightConfigModal .tab-content').css('max-height', Math.max(300, availableHeight) + 'px');
-}
-
-// 添加表单监听器
-function initFreightFormListeners() {
-    layui.use(['form', 'element'], function() {
-        var form = layui.form;
-        var element = layui.element;
-        
-        // 监听计费方式选择
-        form.on('select(jf_method)', function(data) {
-            var $item = $(data.elem).closest('.layui-colla-item');
-            var value = data.value;
-            
-            // 显示/隐藏对应的计费方式表单
-            var $jfMethod = $item.find('.jf_method');
-            $jfMethod.find('.jf_div1, .jf_div2, .jf_div3').hide();
-            
-            if (value == '1') {
-                $jfMethod.find('.jf_div1').show();
-            } else if (value == '2') {
-                $jfMethod.find('.jf_div2').show();
-            } else if (value == '3') {
-                $jfMethod.find('.jf_div3').show();
-                element.render('collapse');
-            }
-        });
-        
-        // 监听结束方式选择
-        form.on('select(qj2_method)', function(data) {
-            var value = data.value;
-            var $input = $(data.elem).closest('.layui-input-block').find('.qujian2');
-            
-            if (value == '1') {
-                $input.show();
-            } else {
-                $input.hide();
-                $input.val('');
-            }
-        });
-        
-        // 监听分段计费结束方式选择
-        form.on('select(fenduan_method)', function(data) {
-            var value = data.value;
-            var $input = $(data.elem).closest('.fenduan_num').find('.qujian');
-            
-            if (value == '1') {
-                $input.show();
-            } else {
-                $input.hide();
-                $input.val('');
-            }
-        });
-        
-        // 监听最低消费选择
-        form.on('select(mini_cost)', function(data) {
-            var value = data.value;
-            
-            var $div = $(data.elem).closest('.layui-input-block').find('.minicost_div');
-            
-            if (value == '1') {
-                $div.show();
-            } else {
-                $div.hide();
-            }
-        });
-        
-        // 监听单位选择
-        form.on('select(unit)', function(data) {
-            var unitText = $(data.elem).find('option:selected').text();
-            var $form = $(data.elem).closest('.single-freight-form');
-            $form.find('.unit_name').text(unitText);
-        });
-        
-        // 监听最低消费单位选择
-        form.on('select(minicost_unit)', function(data) {
-            var unitText = $(data.elem).find('option:selected').text();
-            var $form = $(data.elem).closest('.single-freight-form');
-            $form.find('.unit_name').first().text(unitText);
-        });
-    });
-}
-
-// 创建配置标签页
-function createConfigTabs(products, warehouseType) {
-    var tabsHtml = '';
-    var contentsHtml = '';
-    
-    // 创建标签导航
-    tabsHtml += '<div class="tab-nav">';
-    products.forEach(function(product, index) {
-        var configKey = product.key;
-        var hasConfig = freightConfigs[configKey] ? true : false;
-        var tabClass = index === 0 ? 'tab-item active' : 'tab-item';
-        var iconClass = hasConfig ? 'layui-icon-ok' : 'layui-icon-form';
-        
-        tabsHtml += '<div class="' + tabClass + '" data-index="' + index + '" onclick="switchConfigTab(' + index + ')">' +
-                    '<i class="layui-icon ' + iconClass + '" style="margin-right: 5px;"></i>' +
-                    product.express_name + ' - ' + product.product_type +
-                    '</div>';
-    });
-    tabsHtml += '</div>';
-    
-    // 创建内容区域
-    contentsHtml += '<div class="tab-content">';
-    products.forEach(function(product, index) {
-        var configKey = product.key;
-        var configData = freightConfigs[configKey] ? freightConfigs[configKey].config_data : null;
-        
-        var tabContentClass = index === 0 ? 'product-config-tab' : 'product-config-tab';
-        var tabContentStyle = index === 0 ? '' : 'display: none;';
-        
-        contentsHtml += '<div id="configTab' + index + '" class="' + tabContentClass + '" style="' + tabContentStyle + '">';
-        contentsHtml += createSingleConfigForm(product, configData, warehouseType, index);
-        contentsHtml += '</div>';
-    });
-    contentsHtml += '</div>';
-    
-    $('#freightConfigTabs').html(tabsHtml + contentsHtml);
-    
-    // 渲染表单
-    // layui.form.render();
-    // layui.element.render('collapse');
-    
-    setTimeout(function() {
-        // 初始化所有表单的layui组件
-        $('.single-freight-form').each(function(index) {
-            var $form = $(this);
-            var formFilter = $form.attr('lay-filter') || 'single-freight-form-' + index;
-            
-            // 确保每个表单都有唯一的lay-filter
-            if (!$form.attr('lay-filter')) {
-                $form.attr('lay-filter', formFilter);
-            }
-            
-            // 渲染表单组件
-            layui.form.render(null, formFilter);
-            
-            // 渲染折叠面板
-            $form.find('.layui-collapse').each(function() {
-                layui.element.render('collapse', $(this).attr('lay-filter'));
-            });
-        });
-    }, 300);
-}
-
-// 创建单个配置表单
-function createSingleConfigForm(product, configData, warehouseType, index) {
-    // 获取模板的HTML字符串，不是jQuery对象
-    var templateHtml = $('#singleFreightConfigTemplate').html();
-    
-    // 创建一个新的div容器
-    var $container = $('<div>').html(templateHtml);
-    var $form = $container.find('.single-freight-form');
-    
-    // 设置表单数据
-    $form.attr('data-index', index);
-    $form.attr('data-key', product.key);
-    $form.attr('lay-filter', 'single-freight-form-' + index); // 添加唯一的lay-filter
-    
-    // 设置隐藏字段
-    $form.find('input[name="warehouse_type"]').val(warehouseType);
-    $form.find('input[name="warehouse_id"]').val(currentWarehouseId);
-    $form.find('input[name="terminal_id"]').val(warehouseType === 'direct' ? product.terminal_ids : 0);
-    $form.find('input[name="express_id"]').val(product.express_id);
-    $form.find('input[name="product_type"]').val(product.product_type);
-    $form.find('input[name="company_id"]').val(getUrlParam('company_id'));
-    $form.find('input[name="procurement_id"]').val(edit_id > 0 ? edit_id : 0);
-    
-    // 设置产品标题
-    $form.find('.express-name').text(product.express_name);
-    $form.find('.product-type').text(product.product_type);
-    
-    // 如果有现有配置，填充表单
-    if (configData && freightConfigs[product.key]) {
-        var configInfo = freightConfigs[product.key];
-        $form.find('input[name="config_id"]').val(configInfo.config_id);
-        
-        // 填充配置数据
-        fillSingleConfigForm($form, configData);
-    } else {
-        // 确保币种默认值
-        var defaultCurrency = '5';
-        $form.find('select.currency_sel').each(function() {
-            if (!$(this).val()) {
-                $(this).val(defaultCurrency);
-            }
-        });
-    }
-    
-    // 返回HTML字符串，而不是jQuery对象
-    return $container.html();
-}
-
-// 专门用于填充单个表单的函数
-function fillSingleConfigForm($form, configData) {
-    if (!configData) return;
-    
-    // 填充最低消费配置
-    if (configData.mini_cost && configData.mini_cost.length > 0) {
-        $form.find('select[name="content[mini_cost][]"]').val(configData.mini_cost[0]);
-        
-        if (configData.mini_cost[0] == '1') {
-            $form.find('.minicost_div').show();
-            $form.find('input[name="content[mini_num][]"]').val(configData.mini_num ? configData.mini_num[0] : '');
-            $form.find('select[name="content[minicost_unit][]"]').val(configData.minicost_unit ? configData.minicost_unit[0] : '');
-        }
-    }
-    
-    // 填充单位信息
-    if (configData.unit && configData.unit[0] && configData.unit[0][0]) {
-        var unitValue = configData.unit[0][0];
-        var unitText = '';
-        $form.find('select[name="content[unit][0][]"] option').each(function() {
-            if ($(this).val() == unitValue) {
-                unitText = $(this).text();
-                return false;
-            }
-        });
-        $form.find('.unit_name').text(unitText);
-    }
-    
-    // 重新渲染表单
-    setTimeout(function() {
-        layui.form.render(null, 'single-freight-form-' + $form.data('index'));
-        layui.element.render('collapse');
-    }, 100);
-}
-
-// 填充配置表单
-function fillConfigForm($form, configData) {
-    if (!configData) {
-        console.log('没有配置数据可填充');
-        return;
-    }
-    
-    var form = layui.form;
-    var element = layui.element;
-    
-    console.log('开始填充配置表单', configData);
-    
-    // 1. 填充最低消费配置
-    if (configData.mini_cost && configData.mini_cost.length > 0) {
-        var miniCostValue = configData.mini_cost[0] || '0';
-        $form.find('select[name="content[mini_cost][]"]').val(miniCostValue);
-        
-        if (miniCostValue == '1') {
-            $form.find('.minicost_div').show();
-            if (configData.mini_num && configData.mini_num[0]) {
-                $form.find('input[name="content[mini_num][]"]').val(configData.mini_num[0]);
-            }
-            if (configData.minicost_unit && configData.minicost_unit[0]) {
-                $form.find('select[name="content[minicost_unit][]"]').val(configData.minicost_unit[0]);
-            }
-        }
-    }
-    
-    // 2. 填充计费区间
-    if (configData.qj1 && configData.qj1.length > 0) {
-        // 首先清空现有的计费区间（除了第一个）
-        $form.find('.jifei_qujian .layui-colla-item:gt(0)').remove();
-        
-        // 填充第一个区间
-        if (configData.qj1[0] && configData.qj1[0].length > 0) {
-            configData.qj1[0].forEach(function(qj1Value, qjIndex) {
-                if (qjIndex === 0) {
-                    // 填充第一个区间
-                    $form.find('input[name="content[qj1][0][]"]:first').val(qj1Value);
-                    
-                    if (configData.qj2_method && configData.qj2_method[0] && configData.qj2_method[0][qjIndex]) {
-                        $form.find('select[name="content[qj2_method][0][]"]:first').val(configData.qj2_method[0][qjIndex]);
-                        
-                        // 根据结束方式显示/隐藏输入框
-                        if (configData.qj2_method[0][qjIndex] == '2') {
-                            $form.find('.qujian2:first').hide();
-                        } else {
-                            $form.find('.qujian2:first').show();
-                        }
-                    }
-                    
-                    if (configData.qj2 && configData.qj2[0] && configData.qj2[0][qjIndex]) {
-                        $form.find('input[name="content[qj2][0][]"]:first').val(configData.qj2[0][qjIndex]);
-                    }
-                    
-                    if (configData.unit && configData.unit[0] && configData.unit[0][qjIndex]) {
-                        $form.find('select[name="content[unit][0][]"]:first').val(configData.unit[0][qjIndex]);
-                        
-                        // 更新单位显示
-                        var selectedOption = $form.find('select[name="content[unit][0][]"]:first option:selected');
-                        if (selectedOption.length > 0) {
-                            $form.find('.unit_name:first').text(selectedOption.text());
-                        }
-                    }
-                    
-                    if (configData.jinjie && configData.jinjie[0] && configData.jinjie[0][qjIndex]) {
-                        $form.find('input[name="content[jinjie][0][]"]:first').val(configData.jinjie[0][qjIndex]);
-                    }
-                } else {
-                    // 动态添加后续区间
-                    // 这里需要调用动态添加区间的方法
-                    // 由于数据结构复杂，这里简化处理，只提示用户
-                    console.log('需要动态添加第' + (qjIndex + 1) + '个计费区间');
-                }
-            });
-        }
-        
-        // 3. 填充计费方式
-        if (configData.jf_method && configData.jf_method[0] && configData.jf_method[0].length > 0) {
-            configData.jf_method[0].forEach(function(methodArray, qjIndex) {
-                if (methodArray && methodArray.length > 0) {
-                    methodArray.forEach(function(methodValue, methodIndex) {
-                        if (qjIndex === 0 && methodIndex === 0) {
-                            // 填充第一个区间的第一个计费方式
-                            fillFirstJifei($form, configData, qjIndex, methodIndex, methodValue);
-                        } else {
-                            // 动态添加后续计费方式
-                            console.log('需要动态添加计费方式：区间' + (qjIndex + 1) + '，方式' + (methodIndex + 1));
-                        }
-                    });
-                }
-            });
-        }
-    }
-    
-    // 重新渲染表单和折叠面板
-    setTimeout(function() {
-        form.render(null, $form.attr('lay-filter') || 'component-form-group');
-        element.render('collapse');
-    }, 100);
-}
-
-// 填充第一个计费方式
-function fillFirstJifei($form, configData, qjIndex, methodIndex, methodValue) {
-    // 设置计费方式
-    $form.find('select[name="content[jf_method][0][0][]"]:first').val(methodValue);
-    
-    // 根据计费方式显示对应的表单部分
-    if (methodValue == '1') {
-        // 首续计费
-        $form.find('.jf_div1:first').show();
-        $form.find('.jf_div2:first').hide();
-        $form.find('.jf_div3:first').hide();
-        
-        // 填充首重数据
-        if (configData.shouzhong && configData.shouzhong[0] && configData.shouzhong[0][qjIndex] && 
-            configData.shouzhong[0][qjIndex][methodIndex]) {
-            $form.find('input[name="content[shouzhong][0][0][]"]:first').val(configData.shouzhong[0][qjIndex][methodIndex]);
-        }
-        
-        if (configData.shouzhong_money && configData.shouzhong_money[0] && configData.shouzhong_money[0][qjIndex] && 
-            configData.shouzhong_money[0][qjIndex][methodIndex]) {
-            $form.find('input[name="content[shouzhong_money][0][0][]"]:first').val(configData.shouzhong_money[0][qjIndex][methodIndex]);
-        }
-        
-        // 填充续重数据
-        if (configData.xuzhong && configData.xuzhong[0] && configData.xuzhong[0][qjIndex] && 
-            configData.xuzhong[0][qjIndex][methodIndex]) {
-            $form.find('input[name="content[xuzhong][0][0][]"]:first').val(configData.xuzhong[0][qjIndex][methodIndex]);
-        }
-        
-        if (configData.xuzhong_money && configData.xuzhong_money[0] && configData.xuzhong_money[0][qjIndex] && 
-            configData.xuzhong_money[0][qjIndex][methodIndex]) {
-            $form.find('input[name="content[xuzhong_money][0][0][]"]:first').val(configData.xuzhong_money[0][qjIndex][methodIndex]);
-        }
-        
-        // 填充币种
-        if (configData.currency && configData.currency[0] && configData.currency[0][qjIndex] && 
-            configData.currency[0][qjIndex][methodIndex]) {
-            $form.find('select.currency_sel:first').val(configData.currency[0][qjIndex][methodIndex]);
-        }
-        
-    } else if (methodValue == '2') {
-        // 按量计费
-        $form.find('.jf_div1:first').hide();
-        $form.find('.jf_div2:first').show();
-        $form.find('.jf_div3:first').hide();
-        
-        // 填充按量计费数据
-        if (configData.anliang && configData.anliang[0] && configData.anliang[0][qjIndex] && 
-            configData.anliang[0][qjIndex][methodIndex]) {
-            $form.find('input[name="content[anliang][0][0][]"]:first').val(configData.anliang[0][qjIndex][methodIndex]);
-        }
-        
-        if (configData.anliang_money && configData.anliang_money[0] && configData.anliang_money[0][qjIndex] && 
-            configData.anliang_money[0][qjIndex][methodIndex]) {
-            $form.find('input[name="content[anliang_money][0][0][]"]:first').val(configData.anliang_money[0][qjIndex][methodIndex]);
-        }
-        
-        // 填充币种
-        if (configData.currency && configData.currency[0] && configData.currency[0][qjIndex] && 
-            configData.currency[0][qjIndex][methodIndex]) {
-            $form.find('select.currency_sel:first').val(configData.currency[0][qjIndex][methodIndex]);
-        }
-        
-    } else if (methodValue == '3') {
-        // 分段计费
-        $form.find('.jf_div1:first').hide();
-        $form.find('.jf_div2:first').hide();
-        $form.find('.jf_div3:first').show();
-        
-        // 填充分段计费数据
-        if (configData.fenduan_num1 && configData.fenduan_num1[0] && configData.fenduan_num1[0][qjIndex] && 
-            configData.fenduan_num1[0][qjIndex][methodIndex] && 
-            configData.fenduan_num1[0][qjIndex][methodIndex].length > 0) {
-            
-            // 填充第一个分段计费
-            if (configData.fenduan_num1[0][qjIndex][methodIndex][0]) {
-                $form.find('input[name="content[fenduan_num1][0][0][0][]"]:first').val(configData.fenduan_num1[0][qjIndex][methodIndex][0]);
-            }
-            
-            if (configData.fenduan_method && configData.fenduan_method[0] && configData.fenduan_method[0][qjIndex] && 
-                configData.fenduan_method[0][qjIndex][methodIndex] && 
-                configData.fenduan_method[0][qjIndex][methodIndex][0]) {
-                $form.find('select[name="content[fenduan_method][0][0][0][]"]:first').val(configData.fenduan_method[0][qjIndex][methodIndex][0]);
-                
-                // 根据结束方式显示/隐藏输入框
-                if (configData.fenduan_method[0][qjIndex][methodIndex][0] == '2') {
-                    $form.find('.fenduan_num .qujian:first').hide();
-                } else {
-                    $form.find('.fenduan_num .qujian:first').show();
-                }
-            }
-            
-            if (configData.fenduan_num2 && configData.fenduan_num2[0] && configData.fenduan_num2[0][qjIndex] && 
-                configData.fenduan_num2[0][qjIndex][methodIndex] && 
-                configData.fenduan_num2[0][qjIndex][methodIndex][0]) {
-                $form.find('input[name="content[fenduan_num2][0][0][0][]"]:first').val(configData.fenduan_num2[0][qjIndex][methodIndex][0]);
-            }
-            
-            if (configData.fenduan_money && configData.fenduan_money[0] && configData.fenduan_money[0][qjIndex] && 
-                configData.fenduan_money[0][qjIndex][methodIndex] && 
-                configData.fenduan_money[0][qjIndex][methodIndex][0]) {
-                $form.find('input[name="content[fenduan_money][0][0][0][]"]:first').val(configData.fenduan_money[0][qjIndex][methodIndex][0]);
-            }
-            
-            // 填充币种
-            if (configData.currency && configData.currency[0] && configData.currency[0][qjIndex] && 
-                configData.currency[0][qjIndex][methodIndex] && 
-                configData.currency[0][qjIndex][methodIndex][0]) {
-                $form.find('select.currency_sel:last').val(configData.currency[0][qjIndex][methodIndex][0]);
-            }
-        }
-    }
-}
-
-// 切换配置标签页
-function switchConfigTab(index) {
-    // 更新标签导航
-    $('.tab-nav .tab-item').removeClass('active');
-    $('.tab-nav .tab-item[data-index="' + index + '"]').addClass('active');
-    
-    // 更新内容区域
-    $('.product-config-tab').hide();
-    $('#configTab' + index).show();
-    $('#configTab' + index).find('.product-config-tab').show();
-    
-    // 重要：重新渲染当前选项卡的表单和组件
-    setTimeout(function() {
-        // 重新渲染表单
-        layui.form.render();
-        
-        // 重新渲染折叠面板
-        layui.element.render('collapse');
-        
-        // 重新渲染下拉选择框
-        layui.form.render('select');
-        
-        // 特别注意：对于当前选项卡内的表单，确保所有layui组件都已渲染
-        var $currentTab = $('#configTab' + index);
-        $currentTab.find('.layui-form').each(function() {
-            layui.form.render(null, $(this).attr('lay-filter'));
-        });
-    }, 100); // 增加延迟确保DOM完全更新
-}
-
-// 保存单个运费配置
-function saveSingleFreightConfig(button) {
-    var $form = $(button).closest('.single-freight-form');
-    var formData = $form.serializeArray();
-    var formDataObj = {};
-    var configKey = $form.data('key');
-    var index = $form.data('index');
-    
-    // 将表单数据转换为对象
-    $.each(formData, function() {
-        var name = this.name;
-        var value = this.value;
-        
-        // 处理数组类型的name
-        if (name.indexOf('[]') !== -1) {
-            name = name.replace('[]', '');
-            if (!formDataObj[name]) {
-                formDataObj[name] = [];
-            }
-            formDataObj[name].push(value);
-        } else {
-            formDataObj[name] = value;
-        }
-    });
-    
-    // 验证必填字段
-    var requiredFields = {
-        'warehouse_type': '仓库类型',
-        'warehouse_id': '仓库',
-        'express_id': '快递企业',
-        'product_type': '快递产品'
-    };
-    
-    for (var field in requiredFields) {
-        if (!formDataObj[field] || formDataObj[field] === '') {
-            layer.msg('请先选择' + requiredFields[field]);
-            return;
-        }
-    }
-    
-    // 准备发送的数据
-    var sendData = {
-        company_id: formDataObj.company_id,
-        warehouse_id: formDataObj.warehouse_id,
-        warehouse_type: formDataObj.warehouse_type,
-        terminal_id: formDataObj.terminal_id,
-        express_id: formDataObj.express_id,
-        product_type: formDataObj.product_type,
-        procurement_id: formDataObj.procurement_id,
-        config_id: formDataObj.config_id
-    };
-    
-    // 收集配置数据
-    var configData = {};
-    for (var key in formDataObj) {
-        if (key.startsWith('content[')) {
-            var realKey = key.replace('content[', '').replace(']', '');
-            configData[realKey] = formDataObj[key];
-        }
-    }
-    
-    sendData.config_data = configData;
-    
-    layer.load(2);
-    
-    $.ajax({
-        url: '/?s=index/save_freight_config',
-        type: 'POST',
-        data: sendData,
-        dataType: 'json',
-        success: function(res){
-            layer.closeAll('loading');
-            if(res.code === 0) {
-                // 更新配置状态
-                freightConfigs[configKey] = {
-                    config_id: res.data.id,
-                    config_data: configData
-                };
-                
-                // 更新标签页图标
-                $('.tab-nav .tab-item[data-index="' + index + '"] .layui-icon')
-                    .removeClass('layui-icon-form')
-                    .addClass('layui-icon-ok');
-                
-                layer.msg('配置保存成功', {icon: 1});
-                
-                // 更新配置摘要
-                updateConfigSummary(currentWarehouseType);
-                
-            } else {
-                layer.msg(res.msg || '保存失败', {icon: 2});
-            }
-        },
-        error: function(){
-            layer.closeAll('loading');
-            layer.msg('网络错误，请重试', {icon: 2});
-        }
-    });
-}
-
-// 保存所有批量配置
-function saveAllBatchFreightConfigs() {
-    // 检查是否所有产品都已配置
-    var unconfiguredProducts = [];
-    var selectedItems = currentWarehouseType === 'direct' ? selectedProducts : selectedProxyProducts;
-    
-    selectedItems.forEach(function(item) {
-        if (!freightConfigs[item.key]) {
-            unconfiguredProducts.push(item.express_name + ' - ' + item.product_type);
-        }
-    });
-    
-    if (unconfiguredProducts.length > 0) {
-        layer.msg('还有 ' + unconfiguredProducts.length + ' 个产品未配置：' + unconfiguredProducts.join(', '), {icon: 2});
-        return;
-    }
-    
-    layer.msg('所有配置已保存', {icon: 1});
-    closeBatchConfigModal();
-    
-    // 更新步骤4的配置状态
-    updateStep4ConfigStatus();
-}
-
-// 更新步骤4配置状态
-function updateStep4ConfigStatus() {
-    var configCount = Object.keys(freightConfigs).length;
-    if (configCount > 0) {
-        if (currentWarehouseType === 'direct') {
-            $('#directConfigStatus').text('已配置 ' + configCount + ' 个产品');
-            $('#directConfigStatus').show();
-            $('#configureDirectBtn').hide();
-        } else {
-            $('#proxyConfigStatus').text('已配置 ' + configCount + ' 个产品');
-            $('#proxyConfigStatus').show();
-            $('#configureProxyBtn').hide();
-        }
-    }
 }
 
 // 保存批量配置
@@ -4278,25 +2446,6 @@ function updateProductListConfigStatus() {
     });
 }
 
-// 更新代发货产品列表中的配置状态
-function updateProxyProductListConfigStatus() {
-    $('#proxyProductList .selector-item').each(function() {
-        var $item = $(this);
-        var expressId = $item.data('express-id');
-        var productType = $item.data('product-type');
-        var key = expressId + '_' + productType;
-        
-        var $status = $item.find('.config-status');
-        if (freightConfigs[key]) {
-            $status.find('.status-dot').removeClass('not-configured').addClass('configured');
-            $status.find('span:last').text('已配置');
-        } else {
-            $status.find('.status-dot').removeClass('configured').addClass('not-configured');
-            $status.find('span:last').text('未配置');
-        }
-    });
-}
-
 // 更新配置摘要
 function updateConfigSummary(warehouseType) {
     var configCount = Object.keys(freightConfigs).length;
@@ -4339,8 +2488,6 @@ function resetFreightSelections() {
     selectedProxyExpresses = [];
     selectedProxyProducts = [];
     freightConfigs = {};
-    currentWarehouseType = '';
-    currentWarehouseId = 0;
     
     // 清空显示
     $('#terminalList, #expressList, #productList, #proxyExpressList, #proxyProductList').html('');
@@ -4413,8 +2560,6 @@ function deleteConfig(configId) {
 // 关闭模态框
 function closeBatchConfigModal() {
     $('#batchFreightConfigModal').hide();
-    $('#freightConfigTabs').empty();
-    $(window).off('resize.modal'); // 移除监听
 }
 
 function closeAllConfigsModal() {
@@ -4427,8 +2572,6 @@ function loadProxyExpressList() {
     if (!warehouseId) {
         return;
     }
-    
-    currentWarehouseId = warehouseId;
     
     $.ajax({
         url: '/?s=index/get_merchant_warehouse_expresses',
@@ -4477,33 +2620,10 @@ function loadProxyProductList(expressIds) {
         return;
     }
     
-    // 防抖处理
-    if (loadProxyProductListTimeout) {
-        clearTimeout(loadProxyProductListTimeout);
-    }
-    
-    loadProxyProductListTimeout = setTimeout(function() {
-        executeLoadProxyProductList(expressIds);
-    }, 200);
-}
-
-function executeLoadProxyProductList(expressIds) {
-    if (!expressIds) {
-        $('#proxyProductSelector').hide();
-        return;
-    }
-    
     $('#proxyProductLoading').show();
     $('#proxyProductSelector').hide();
     
-    // 取消之前的请求（如果有）
-    if (window.currentProxyProductRequest && window.currentProxyProductRequest.readyState !== 4) {
-        window.currentProxyProductRequest.abort();
-    }
-    
-    console.log('代发货产品请求参数 express_ids:', expressIds); // 调试信息
-    
-    window.currentProxyProductRequest = $.ajax({
+    $.ajax({
         url: '/?s=index/get_express_products',
         type: 'GET',
         data: {
@@ -4511,50 +2631,21 @@ function executeLoadProxyProductList(expressIds) {
         },
         success: function(res){
             $('#proxyProductLoading').hide();
-            
-            console.log('代发货产品响应数据:', res); // 调试信息
-            
             if(res.code === 0) {
                 var html = '';
-                var expressIdsArray = expressIds.split(',');
-                
-                console.log('expressIdsArray:', expressIdsArray); // 调试信息
-                
                 if(res.data && res.data.length > 0) {
-                    console.log('代发货产品数据数量:', res.data.length); // 调试信息
-                    
-                    // 直接遍历所有返回的产品数据
                     $.each(res.data, function(index, product){
-                        console.log('处理第' + index + '个产品:', product); // 调试信息
-                        
-                        // 确保产品有必要的属性
-                        if (!product.express_id) {
-                            console.warn('产品缺少express_id属性:', product);
-                            return; // 跳过这个产品
-                        }
-                        
-                        var productKey = product.express_id + '_' + (product.typename || '未知类型');
-                        var isSelected = selectedProxyProducts.some(function(p) {
-                            return p.key === productKey;
-                        });
-                        
+                        var productKey = product.express_id + '_' + product.typename;
+                        var isSelected = selectedProxyProducts.some(p => p.key === productKey);
                         var configStatus = freightConfigs[productKey] ? '已配置' : '未配置';
-                        var expressName = product.express_name || '未知快递企业';
-                        var productType = product.typename || '未知产品类型';
                         
-                        console.log('产品键:', productKey, '是否已选中:', isSelected); // 调试信息
-                        
-                        html += '<div class="selector-item ' + (isSelected ? 'selected' : '') + '" ' +
-                                'data-express-id="' + product.express_id + '" ' +
-                                'data-product-type="' + productType + '" ' +
-                                'data-express-name="' + expressName + '" ' +
-                                'onclick="toggleSelectItem(this, \'proxy_product\')">' +
+                        html += '<div class="selector-item ' + (isSelected ? 'selected' : '') + '" data-express-id="' + product.express_id + '" data-product-type="' + product.typename + '" data-express-name="' + (product.express_name || product.name || '') + '" onclick="toggleSelectItem(this, \'proxy_product\')">' +
                                 '<div class="checkbox">' +
                                 '<input type="checkbox" style="display: none;" ' + (isSelected ? 'checked' : '') + '>' +
                                 '<i class="layui-icon ' + (isSelected ? 'layui-icon-ok-circle' : 'layui-icon-circle') + '" style="color: ' + (isSelected ? '#1890ff' : '#ccc') + ';"></i>' +
                                 '</div>' +
                                 '<div class="item-info">' +
-                                '<div class="item-name">' + expressName + ' - ' + productType + '</div>' +
+                                '<div class="item-name">' + (product.express_name || product.name || '') + ' - ' + product.typename + '</div>' +
                                 '<div class="item-desc">快递企业ID: ' + product.express_id + '</div>' +
                                 '</div>' +
                                 '<div class="config-status">' +
@@ -4563,47 +2654,29 @@ function executeLoadProxyProductList(expressIds) {
                                 '</div>' +
                                 '</div>';
                     });
+                    $('#proxyProductSelector').show();
                     
-                    if (html === '') {
-                        console.log('生成的产品HTML为空'); // 调试信息
-                        html = '<div style="padding: 20px; text-align: center; color: #999;">选中的快递企业暂无可用产品</div>';
-                    } else {
-                        console.log('成功生成产品HTML'); // 调试信息
-                        $('#proxyProductSelector').show();
-                    }
+                    // 更新配置按钮状态
+                    var selectedCount = selectedProxyProducts.length;
+                    $('#configureProxyBtn').prop('disabled', selectedCount === 0);
+                    
+                    // 显示已配置的产品列表
+                    updateConfigSummary('proxy');
                     
                 } else {
-                    console.log('API返回数据为空或不是数组'); // 调试信息
                     html = '<div style="padding: 20px; text-align: center; color: #999;">暂无可用产品</div>';
                 }
-                
                 $('#proxyProductList').html(html);
-                console.log('设置产品列表HTML完成，元素数量:', $('#proxyProductList .selector-item').length); // 调试信息
-                
                 updateSelectedCount('proxy_product');
-                
-                // 更新配置按钮状态
-                var selectedCount = selectedProxyProducts.length;
-                console.log('已选中的代发货产品数量:', selectedCount); // 调试信息
-                $('#configureProxyBtn').prop('disabled', selectedCount === 0);
-                
-                // 显示已配置的产品列表
-                updateConfigSummary('proxy');
-                
             } else {
-                console.log('API返回code不为0:', res.code, '消息:', res.msg); // 调试信息
                 $('#proxyProductList').html('<div style="padding: 20px; text-align: center; color: #999;">' + (res.msg || '加载失败') + '</div>');
                 $('#proxyProductSelector').show();
             }
         },
-        error: function(xhr, status, error){
+        error: function(){
             $('#proxyProductLoading').hide();
-            console.log('代发货产品AJAX错误:', status, error, '响应:', xhr.responseText); // 调试信息
-            
-            if (status !== 'abort') {
-                $('#proxyProductList').html('<div style="padding: 20px; text-align: center; color: #999;">网络错误，加载失败</div>');
-                $('#proxyProductSelector').show();
-            }
+            $('#proxyProductList').html('<div style="padding: 20px; text-align: center; color: #999;">网络错误，加载失败</div>');
+            $('#proxyProductSelector').show();
         }
     });
 }
@@ -5954,7 +4027,7 @@ function add_qujian(t,num){
         '                                                                                </div>\n' +
         '                                                                            </div>\n' +
         '                                                                            <div class="layui-form-item jf_method">\n' +
-        '                                                                                <label class="layui-form-label" style="display:none;"></label>\n' +
+        '                                                                                <label class="layui-form-label"></label>\n' +
         '                                                                                <div class="layui-input-block">\n' +
         '                                                                                    <div class="jf_div1">\n' +
         '                                                                                        <div class="disf">\n' +
@@ -6106,7 +4179,7 @@ function add_jifei(t,num){
         '                                                                                </div>\n' +
         '                                                                            </div>\n' +
         '                                                                            <div class="layui-form-item jf_method">\n' +
-        '                                                                                <label class="layui-form-label" style="display:none;"></label>\n' +
+        '                                                                                <label class="layui-form-label"></label>\n' +
         '                                                                                <div class="layui-input-block">\n' +
         '                                                                                    <div class="jf_div1" style="display:none;">\n' +
         '                                                                                        <div class="disf">\n' +
@@ -6393,476 +4466,6 @@ function validateStep4() {
     }
     
     return true;
-}
-
-// 辅助函数：动态添加计费区间、计费方式、分段计费
-function addQujian(button) {
-    var $ = layui.$;
-    var layer = layui.layer;
-    var form = layui.form;
-    var element = layui.element;
-    
-    // 获取当前计费区间的内容区域
-    var $qujianContent = $(button).parents(':eq(2)').find('.layui-colla-content');
-    
-    var qj2Method = $qujianContent.find('select[name^="content[qj2_method"]').val();
-    
-    if (qj2Method == '2') {
-        layer.msg('计费已选"以上"，不可新增计费');
-        return false;
-    }
-    
-    // 修复问题2：更精确地获取结束值
-    var qj2 = '';
-    // 方法1：查找可见的 .qujian2
-    qj2 = $qujianContent.find('input.qujian2:visible').val();
-    
-    // 方法2：如果方法1没找到，尝试查找所有 .qujian2
-    if (!qj2 || qj2.trim() === '') {
-        qj2 = $qujianContent.find('input[name*="qj2"]:visible').val();
-    }
-    
-    var jinjie = $qujianContent.find('input[name*="jinjie"]').val();
-    
-    // 验证
-    if (!qj2 || qj2.trim() === '') {
-        layer.msg('请先填写区间结束值');
-        return false;
-    }
-    
-    if (!jinjie || jinjie.trim() === '') {
-        layer.msg('请先填写计费进阶值');
-        return false;
-    }
-    
-    // 计算下一个区间的起始值
-    var next_qj1 = parseFloat(qj2) + parseFloat(jinjie);
-    
-    // 隐藏当前项的添加按钮
-    $(button).parent().hide();
-    
-    // 获取下一个索引
-    var $qujianContainer = $(button).closest('.jifei_qujian');
-    var qujianIndex = $qujianContainer.parent().find('.jifei_qujian').length;
-    
-    // 获取单位名称和币种
-    var unitName = $(button).closest('.jifei_qujian').find('.unit_name:first').text() || '';
-    var currency = $('input[name="start_currency"]').val() || '5';
-    
-    // 创建新的计费区间HTML
-    var html = '<div class="layui-colla-item" data-idx="' + qujianIndex + '">' +
-        '<div class="layui-colla-title disf" style="justify-content: space-between;">' +
-        '<h4>计费区间' + (qujianIndex + 1) + '</h4>' +
-        '<div>' +
-        '<div class="layui-btn layui-btn-danger" onclick="del_method(this)">-</div>' +
-        '<div class="layui-btn layui-btn-success" onclick="addQujian(this)">+</div>' +
-        '</div>' +
-        '</div>' +
-        '<div class="layui-colla-content">' +
-        '<div class="layui-form-item">' +
-        '<label class="layui-form-label">计费区间</label>' +
-        '<div class="layui-input-block disf">' +
-        '自&nbsp;' +
-        '<input type="number" name="content[qj1][0][' + qujianIndex + ']" readonly lay-verify="required" placeholder="数值" class="layui-input qujian" value="' + next_qj1 + '">' +
-        '<div class="unit_name">' + unitName + '</div>' +
-        '&nbsp;至&nbsp;' +
-        '<div class="unitdiv">' +
-        '<select name="content[qj2_method][0][' + qujianIndex + ']" lay-filter="qj2_method">' +
-        '<option value="1">数值</option>' +
-        '<option value="2">以上</option>' +
-        '</select>' +
-        '</div>' +
-        '<input type="number" class="layui-input qujian qujian2" name="content[qj2][0][' + qujianIndex + ']" placeholder="数值">' +
-        '<div class="unit_name">' + unitName + '</div>' +
-        '</div>' +
-        '</div>' +
-        '<div class="layui-form-item">' +
-        '<label class="layui-form-label">计费进阶</label>' +
-        '<div class="layui-input-block disf">' +
-        '<input type="number" class="layui-input" name="content[jinjie][0][' + qujianIndex + ']" placeholder="数值">' +
-        '<div class="unit_name">' + unitName + '</div>' +
-        '</div>' +
-        '</div>' +
-        '<div class="layui-collapse jifei_fangshi" lay-accordion>' +
-        '<div class="layui-colla-item" data-idx="0">' +
-        '<div class="layui-colla-title disf" style="justify-content: space-between;">' +
-        '<h4>计费方式1</h4>' +
-        '<div>' +
-        '<div class="layui-btn layui-btn-success" onclick="addJifei(this)">+</div>' +
-        '</div>' +
-        '</div>' +
-        '<div class="layui-colla-content layui-show">' +
-        '<div class="layui-form-item">' +
-        '<label class="layui-form-label">计费方式</label>' +
-        '<div class="layui-input-block disf">' +
-        '<select name="content[jf_method][0][' + qujianIndex + '][0]" lay-filter="jf_method">' +
-        '<option value="1">首续计费</option>' +
-        '<option value="2">按量计费</option>' +
-        '<option value="3">分段计费</option>' +
-        '</select>' +
-        '</div>' +
-        '</div>' +
-        '<div class="layui-form-item jf_method">' +
-        '<label class="layui-form-label" style="display:none;"></label>' +
-        '<div class="layui-input-block">' +
-        '<div class="jf_div1">' +
-        '<div class="disf">' +
-        '首重&nbsp;' +
-        '<input type="number" name="content[shouzhong][0][' + qujianIndex + '][0]" placeholder="数值" class="layui-input qujian">' +
-        '<div class="unit_name">' + unitName + '</div>' +
-        '<div class="currencydiv">' +
-        '<select class="currency_sel" name="content[currency][0][' + qujianIndex + '][0]" lay-search>' +
-        '<option value="">请选择币种</option>';
-    
-    <?php if(isset($value['currency'])): ?>
-    <?php foreach ($value['currency'] as $k => $v): ?>
-    html += '<option value="<?php echo $v['id']; ?>"' + (currency == "<?php echo $v['id']; ?>" ? ' selected' : '') + '><?php echo $v['currency_symbol_standard']; ?></option>';
-    <?php endforeach; ?>
-    <?php endif; ?>
-    
-    html += '</select>' +
-        '</div>' +
-        '<input type="number" name="content[shouzhong_money][0][' + qujianIndex + '][0]" placeholder="金额" class="layui-input qujian">' +
-        '</div>' +
-        '<div class="disf">' +
-        '续重&nbsp;' +
-        '<input type="number" name="content[xuzhong][0][' + qujianIndex + '][0]" placeholder="数值" class="layui-input qujian">' +
-        '<div class="unit_name">' + unitName + '</div>' +
-        '<div class="currencydiv">' +
-        '<select class="currency_sel" name="content[currency][0][' + qujianIndex + '][0]" lay-search>' +
-        '<option value="">请选择币种</option>';
-    
-    <?php if(isset($value['currency'])): ?>
-    <?php foreach ($value['currency'] as $k => $v): ?>
-    html += '<option value="<?php echo $v['id']; ?>"' + (currency == "<?php echo $v['id']; ?>" ? ' selected' : '') + '><?php echo $v['currency_symbol_standard']; ?></option>';
-    <?php endforeach; ?>
-    <?php endif; ?>
-    
-    html += '</select>' +
-        '</div>' +
-        '<input type="number" name="content[xuzhong_money][0][' + qujianIndex + '][0]" placeholder="金额" class="layui-input qujian">' +
-        '</div>' +
-        '</div>' +
-        '<div class="jf_div2" style="display: none;">' +
-        '<div class="disf">' +
-        '<input type="number" name="content[anliang][0][' + qujianIndex + '][0]" placeholder="数值" class="layui-input qujian">' +
-        '<div class="unit_name">' + unitName + '</div>' +
-        '<div class="currencydiv">' +
-        '<select class="currency_sel" name="content[currency][0][' + qujianIndex + '][0]" lay-search>' +
-        '<option value="">请选择币种</option>';
-    
-    <?php if(isset($value['currency'])): ?>
-    <?php foreach ($value['currency'] as $k => $v): ?>
-    html += '<option value="<?php echo $v['id']; ?>"' + (currency == "<?php echo $v['id']; ?>" ? ' selected' : '') + '><?php echo $v['currency_symbol_standard']; ?></option>';
-    <?php endforeach; ?>
-    <?php endif; ?>
-    
-    html += '</select>' +
-        '</div>' +
-        '<input type="number" name="content[anliang_money][0][' + qujianIndex + '][0]" placeholder="金额" class="layui-input qujian">' +
-        '</div>' +
-        '</div>' +
-        '<div class="layui-collapse jf_div3 jifei_fenduan" lay-accordion style="display: none;">' +
-        '<div class="layui-colla-item">' +
-        '<div class="layui-colla-title disf" style="justify-content: space-between;">' +
-        '<h4>分段计费1</h4>' +
-        '<div>' +
-        '<div class="layui-btn layui-btn-success" onclick="addFenduan(this)">+</div>' +
-        '</div>' +
-        '</div>' +
-        '<div class="layui-colla-content">' +
-        '<div class="disf">' +
-        '<input type="number" name="content[fenduan_num1][0][' + qujianIndex + '][0][0]" placeholder="数值" class="layui-input qujian">' +
-        '<div class="unit_name">' + unitName + '</div>' +
-        '&nbsp;至&nbsp;' +
-        '<div class="unitdiv">' +
-        '<select name="content[fenduan_method][0][' + qujianIndex + '][0][0]" lay-filter="fenduan_method">' +
-        '<option value="1">数值</option>' +
-        '<option value="2">以上</option>' +
-        '</select>' +
-        '</div>' +
-        '<div class="fenduan_num">' +
-        '<div class="disf">' +
-        '<input type="number" name="content[fenduan_num2][0][' + qujianIndex + '][0][0]" placeholder="数值" class="layui-input qujian">' +
-        '<div class="unit_name">' + unitName + '</div>' +
-        '<div class="currencydiv">' +
-        '<select class="currency_sel" name="content[currency][0][' + qujianIndex + '][0][0]" lay-search>' +
-        '<option value="">请选择币种</option>';
-    
-    <?php if(isset($value['currency'])): ?>
-    <?php foreach ($value['currency'] as $k => $v): ?>
-    html += '<option value="<?php echo $v['id']; ?>"' + (currency == "<?php echo $v['id']; ?>" ? ' selected' : '') + '><?php echo $v['currency_symbol_standard']; ?></option>';
-    <?php endforeach; ?>
-    <?php endif; ?>
-    
-    html += '</select>' +
-        '</div>' +
-        '<input type="number" name="content[fenduan_money][0][' + qujianIndex + '][0][0]" placeholder="金额" class="layui-input">' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>';
-    
-    // 添加到容器
-    $qujianContainer.append(html);
-    
-    // 重新渲染表单和折叠面板
-    setTimeout(function() {
-        form.render(null, $(button).closest('.single-freight-form').attr('lay-filter') || 'component-form-group');
-        element.render('collapse');
-    }, 100);
-}
-
-function addJifei(button) {
-    var $ = layui.$;
-    var layer = layui.layer;
-    var form = layui.form;
-    var element = layui.element;
-    
-    // 检查当前计费方式是否为"首续计费"或"按量计费"
-    var jfMethod = $(button).closest('.layui-colla-content').find('select[name*="jf_method"]').val();
-    if (jfMethod == '1' || jfMethod == '2') {
-        layer.msg('"首续计费"和"按量计费"不可再添加计费方式');
-        return false;
-    }
-    
-    // 隐藏当前项的添加按钮
-    $(button).parent().hide();
-    
-    // 获取当前计费区间和计费方式的索引
-    var $qujianItem = $(button).closest('.layui-colla-item[data-idx]');
-    var qujianIndex = $qujianItem.data('idx') || 0;
-    
-    var $jifeiContainer = $(button).closest('.jifei_fangshi');
-    var jifeiIndex = $jifeiContainer.find('.layui-colla-item').length;
-    
-    // 获取单位名称和币种
-    var unitName = $(button).closest('.jifei_qujian').find('.unit_name:first').text() || '';
-    var currency = $('input[name="start_currency"]').val() || '5';
-    
-    // 创建新的计费方式HTML
-    var html = '<div class="layui-colla-item" data-idx="' + jifeiIndex + '">' +
-        '<div class="layui-colla-title disf" style="justify-content: space-between;">' +
-        '<h4>计费方式' + (jifeiIndex + 1) + '</h4>' +
-        '<div>' +
-        '<div class="layui-btn layui-btn-danger" onclick="del_method(this)">-</div>' +
-        '<div class="layui-btn layui-btn-success" onclick="addJifei(this)">+</div>' +
-        '</div>' +
-        '</div>' +
-        '<div class="layui-colla-content layui-show">' +
-        '<div class="layui-form-item">' +
-        '<label class="layui-form-label">计费方式</label>' +
-        '<div class="layui-input-block disf">' +
-        '<select name="content[jf_method][0][' + qujianIndex + '][' + jifeiIndex + ']" lay-filter="jf_method">' +
-        '<option value="1" disabled>首续计费</option>' +
-        '<option value="2" disabled>按量计费</option>' +
-        '<option value="3" selected>分段计费</option>' +
-        '</select>' +
-        '</div>' +
-        '</div>' +
-        '<div class="layui-form-item jf_method">' +
-        '<label class="layui-form-label" style="display:none;"></label>' +
-        '<div class="layui-input-block">' +
-        '<div class="jf_div1" style="display:none;">' +
-        '<div class="disf">' +
-        '首重&nbsp;' +
-        '<input type="number" name="content[shouzhong][0][' + qujianIndex + '][' + jifeiIndex + ']" placeholder="数值" class="layui-input qujian">' +
-        '<div class="unit_name">' + unitName + '</div>' +
-        '<div class="currencydiv">' +
-        '<select class="currency_sel" name="content[currency][0][' + qujianIndex + '][' + jifeiIndex + ']" lay-search>' +
-        '<option value="">请选择币种</option>';
-    
-    // 添加币种选项
-    <?php if(isset($value['currency'])): ?>
-    <?php foreach ($value['currency'] as $k => $v): ?>
-    html += '<option value="<?php echo $v['id']; ?>"' + (currency == "<?php echo $v['id']; ?>" ? ' selected' : '') + '><?php echo $v['currency_symbol_standard']; ?></option>';
-    <?php endforeach; ?>
-    <?php endif; ?>
-    
-    html += '</select>' +
-        '</div>' +
-        '<input type="number" name="content[shouzhong_money][0][' + qujianIndex + '][' + jifeiIndex + ']" placeholder="金额" class="layui-input qujian">' +
-        '</div>' +
-        '<div class="disf">' +
-        '续重&nbsp;' +
-        '<input type="number" name="content[xuzhong][0][' + qujianIndex + '][' + jifeiIndex + ']" placeholder="数值" class="layui-input qujian">' +
-        '<div class="unit_name">' + unitName + '</div>' +
-        '<div class="currencydiv">' +
-        '<select class="currency_sel" name="content[currency][0][' + qujianIndex + '][' + jifeiIndex + ']" lay-search>' +
-        '<option value="">请选择币种</option>';
-    
-    <?php if(isset($value['currency'])): ?>
-    <?php foreach ($value['currency'] as $k => $v): ?>
-    html += '<option value="<?php echo $v['id']; ?>"' + (currency == "<?php echo $v['id']; ?>" ? ' selected' : '') + '><?php echo $v['currency_symbol_standard']; ?></option>';
-    <?php endforeach; ?>
-    <?php endif; ?>
-    
-    html += '</select>' +
-        '</div>' +
-        '<input type="number" name="content[xuzhong_money][0][' + qujianIndex + '][' + jifeiIndex + ']" placeholder="金额" class="layui-input qujian">' +
-        '</div>' +
-        '</div>' +
-        '<div class="jf_div2" style="display: none;">' +
-        '<div class="disf">' +
-        '<input type="number" name="content[anliang][0][' + qujianIndex + '][' + jifeiIndex + ']" placeholder="数值" class="layui-input qujian">' +
-        '<div class="unit_name">' + unitName + '</div>' +
-        '<div class="currencydiv">' +
-        '<select class="currency_sel" name="content[currency][0][' + qujianIndex + '][' + jifeiIndex + ']" lay-search>' +
-        '<option value="">请选择币种</option>';
-    
-    <?php if(isset($value['currency'])): ?>
-    <?php foreach ($value['currency'] as $k => $v): ?>
-    html += '<option value="<?php echo $v['id']; ?>"' + (currency == "<?php echo $v['id']; ?>" ? ' selected' : '') + '><?php echo $v['currency_symbol_standard']; ?></option>';
-    <?php endforeach; ?>
-    <?php endif; ?>
-    
-    html += '</select>' +
-        '</div>' +
-        '<input type="number" name="content[anliang_money][0][' + qujianIndex + '][' + jifeiIndex + ']" placeholder="金额" class="layui-input qujian">' +
-        '</div>' +
-        '</div>' +
-        '<div class="layui-collapse jf_div3 jifei_fenduan" lay-accordion style="display: block;">' +
-        '<div class="layui-colla-item">' +
-        '<div class="layui-colla-title disf" style="justify-content: space-between;">' +
-        '<h4>分段计费1</h4>' +
-        '<div>' +
-        '<div class="layui-btn layui-btn-success" onclick="addFenduan(this)">+</div>' +
-        '</div>' +
-        '</div>' +
-        '<div class="layui-colla-content">' +
-        '<div class="disf">' +
-        '<input type="number" name="content[fenduan_num1][0][' + qujianIndex + '][' + jifeiIndex + '][0]" placeholder="数值" class="layui-input qujian">' +
-        '<div class="unit_name">' + unitName + '</div>' +
-        '&nbsp;至&nbsp;' +
-        '<div class="unitdiv">' +
-        '<select name="content[fenduan_method][0][' + qujianIndex + '][' + jifeiIndex + '][0]" lay-filter="fenduan_method">' +
-        '<option value="1">数值</option>' +
-        '<option value="2">以上</option>' +
-        '</select>' +
-        '</div>' +
-        '<div class="fenduan_num">' +
-        '<div class="disf">' +
-        '<input type="number" name="content[fenduan_num2][0][' + qujianIndex + '][' + jifeiIndex + '][0]" placeholder="数值" class="layui-input qujian">' +
-        '<div class="unit_name">' + unitName + '</div>' +
-        '<div class="currencydiv">' +
-        '<select class="currency_sel" name="content[currency][0][' + qujianIndex + '][' + jifeiIndex + '][0]" lay-search>' +
-        '<option value="">请选择币种</option>';
-    
-    <?php if(isset($value['currency'])): ?>
-    <?php foreach ($value['currency'] as $k => $v): ?>
-    html += '<option value="<?php echo $v['id']; ?>"' + (currency == "<?php echo $v['id']; ?>" ? ' selected' : '') + '><?php echo $v['currency_symbol_standard']; ?></option>';
-    <?php endforeach; ?>
-    <?php endif; ?>
-    
-    html += '</select>' +
-        '</div>' +
-        '<input type="number" name="content[fenduan_money][0][' + qujianIndex + '][' + jifeiIndex + '][0]" placeholder="金额" class="layui-input">' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>';
-    
-    // 添加到容器
-    $jifeiContainer.append(html);
-    
-    // 重新渲染表单和折叠面板
-    setTimeout(function() {
-        form.render(null, $(button).closest('.single-freight-form').attr('lay-filter') || 'component-form-group');
-        element.render('collapse');
-    }, 100);
-}
-
-function addFenduan(button) {
-    var $ = layui.$;
-    var layer = layui.layer;
-    var form = layui.form;
-    var element = layui.element;
-    
-    // 隐藏当前项的添加按钮
-    // $(button).parent().hide();
-    
-    var fenduan_method = $(button).parents(":eq(2)").find('.layui-colla-content').find('.unitdiv').find('select[name*="fenduan_method"]').val();
-    if(fenduan_method==2){
-        layer.msg('计费段已选"以上"，不可新增计费段');return false;
-    }
-    
-    // 获取相关索引
-    var $fenduanContainer = $(button).closest('.jifei_fenduan');
-    var fenduanIndex = $fenduanContainer.find('.layui-colla-item').length;
-    
-    // 获取单位名称和币种
-    var unitName = $(button).closest('.jifei_qujian').find('.unit_name:first').text() || '';
-    var currency = $('input[name="start_currency"]').val() || '5';
-    
-    // 查找父级索引
-    var $jifeiItem = $(button).closest('.layui-colla-item[data-idx]');
-    var jifeiIndex = $jifeiItem.data('idx') || 0;
-    
-    var $qujianItem = $jifeiItem.closest('.layui-colla-item[data-idx]');
-    var qujianIndex = $qujianItem.data('idx') || 0;
-    
-    // 创建新的分段计费HTML
-    var html = '<div class="layui-colla-item">' +
-        '<div class="layui-colla-title disf" style="justify-content: space-between;">' +
-        '<h4>分段计费' + (fenduanIndex + 1) + '</h4>' +
-        '<div>' +
-        '<div class="layui-btn layui-btn-danger" onclick="del_method(this)">-</div>' +
-        '<div class="layui-btn layui-btn-success" onclick="addFenduan(this)">+</div>' +
-        '</div>' +
-        '</div>' +
-        '<div class="layui-colla-content">' +
-        '<div class="disf">' +
-        '<input type="number" name="content[fenduan_num1][0][' + qujianIndex + '][' + jifeiIndex + '][' + fenduanIndex + ']" placeholder="数值" class="layui-input qujian">' +
-        '<div class="unit_name">' + unitName + '</div>' +
-        '&nbsp;至&nbsp;' +
-        '<div class="unitdiv">' +
-        '<select name="content[fenduan_method][0][' + qujianIndex + '][' + jifeiIndex + '][' + fenduanIndex + ']" lay-filter="fenduan_method">' +
-        '<option value="1">数值</option>' +
-        '<option value="2">以上</option>' +
-        '</select>' +
-        '</div>' +
-        '<div class="fenduan_num">' +
-        '<div class="disf">' +
-        '<input type="number" name="content[fenduan_num2][0][' + qujianIndex + '][' + jifeiIndex + '][' + fenduanIndex + ']" placeholder="数值" class="layui-input qujian">' +
-        '<div class="unit_name">' + unitName + '</div>' +
-        '<div class="currencydiv">' +
-        '<select class="currency_sel" name="content[currency][0][' + qujianIndex + '][' + jifeiIndex + '][' + fenduanIndex + ']" lay-search>' +
-        '<option value="">请选择币种</option>';
-    
-    <?php if(isset($value['currency'])): ?>
-    <?php foreach ($value['currency'] as $k => $v): ?>
-    html += '<option value="<?php echo $v['id']; ?>"' + (currency == "<?php echo $v['id']; ?>" ? ' selected' : '') + '><?php echo $v['currency_symbol_standard']; ?></option>';
-    <?php endforeach; ?>
-    <?php endif; ?>
-    
-    html += '</select>' +
-        '</div>' +
-        '<input type="number" name="content[fenduan_money][0][' + qujianIndex + '][' + jifeiIndex + '][' + fenduanIndex + ']" placeholder="金额" class="layui-input">' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '</div>';
-    
-    // 添加到容器
-    $fenduanContainer.append(html);
-    
-    // 重新渲染表单和折叠面板
-    setTimeout(function() {
-        form.render(null, $(button).closest('.single-freight-form').attr('lay-filter') || 'component-form-group');
-        element.render('collapse');
-    }, 100);
 }
 
 // 关闭运费配置模态框
