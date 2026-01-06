@@ -111,6 +111,9 @@ Route::any('index/procurement_detail_page', 'index/Index/procurement_detail_page
 Route::any('index/procurement_detail', 'index/Index/procurement_detail');#企业网店-供应管理-获取商品详情
 Route::any('index/cancel_procurement', 'index/Index/cancel_procurement');#企业网店-供应管理-取消订购单
 Route::any('index/complete_procurement', 'index/Index/complete_procurement');#企业网店-供应管理-完成订购单
+Route::any('index/batch_get_platform_freight_configs', 'index/Index/batch_get_platform_freight_configs');#企业网店-供应管理-批量获取平台配置的运费标准
+Route::any('index/batch_save_freight_configs', 'index/Index/batch_save_freight_configs');#企业网店-供应管理-批量保存平台配置的运费标准
+Route::any('index/get_freight_configs', 'index/Index/get_freight_configs');#企业网店-供应管理-批量保存平台配置的运费标准
 
 Route::any('index/del_procurement', 'index/Index/del_procurement');#企业网店-供应管理-删除采购
 Route::any('index/save_supplier', 'index/Index/save_supplier');#企业网店-供应管理-保存供应企业

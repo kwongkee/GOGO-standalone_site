@@ -6520,7 +6520,7 @@ class Index extends Controller
                         ->find();
                     if($freight_config) {
                         $freight_config['config_data'] = json_decode($freight_config['config_data'], true);
-                        $procurement['freight_config'] = $freight_config;
+                        $procurement['freight_config'] = $freight_config['config_data'];
                         
                         // 添加终端ID到采购单数据
                         if ($freight_config['terminal_id']) {
@@ -6530,11 +6530,7 @@ class Index extends Controller
                 }
                 
                 // 计费计量单位
-                foreach($procurement['freight_config']['config_data']['unit'] as $k=>$v){
-                    foreach($v as $k2 => $v2){
-                        $procurement['freight_config']['config_data']['unit_name'][$k][$k2] = Db::name('unit')->where(['code_value'=>$v2])->value('code_name');
-                    }
-                } 
+                // $procurement['freight_config'][0]['config_data']['unit_name'][$k][$k2] = Db::name('unit')->where(['code_value'=>$v2])->value('code_name');
                 
                 
                 $procurement_data = $procurement;
@@ -7353,6 +7349,138 @@ class Index extends Controller
         }
     }
     
+    //获取平台运费配置（用于直接发货和代发货）
+    public function get_platform_freight_config(Request $request){
+        $params = $request->param();
+        
+        // 验证参数
+        $requiredFields = ['warehouse_id', 'express_id', 'product_type'];
+        foreach ($requiredFields as $field) {
+            if (empty($params[$field])) {
+                return json(['code' => -1, 'msg' => $field . '不能为空']);
+            }
+        }
+        
+        try {
+            $where = [
+                'warehouse_id' => intval($params['warehouse_id']),
+                'express_id' => intval($params['express_id']),
+                'express_type' => trim($params['product_type'])
+            ];
+            
+            // 如果是直接发货，需要printer_id（终端ID）
+            if (!empty($params['terminal_id'])) {
+                $where['printer_id'] = intval($params['terminal_id']);
+            }
+            
+            // 查询平台配置
+            $platformConfig = Db::name('centralize_freight_config')
+                ->where($where)
+                ->find();
+            
+            if (!$platformConfig) {
+                return json([
+                    'code' => 0,
+                    'data' => null,
+                    'msg' => '该产品暂无平台运费配置'
+                ]);
+            }
+            
+            // 解析配置数据
+            $configData = json_decode($platformConfig['config_data'], true);
+            
+            // 格式化返回数据
+            $result = [
+                'platform_config_id' => $platformConfig['id'],
+                'warehouse_id' => $platformConfig['warehouse_id'],
+                'printer_id' => $platformConfig['printer_id'] ?? 0,
+                'express_id' => $platformConfig['express_id'],
+                'product_type' => $platformConfig['express_type'],
+                'config_data' => $configData,
+                'is_platform_config' => true
+            ];
+            
+            return json(['code' => 0, 'data' => $result]);
+            
+        } catch (\Exception $e) {
+            return json(['code' => -1, 'msg' => '获取平台配置失败: ' . $e->getMessage()]);
+        }
+    }
+    
+    //批量获取平台运费配置
+    public function batch_get_platform_freight_configs(Request $request){
+        $params = $request->param();
+        $params['configs'] = json_decode($params['configs'],true);
+        
+        // 验证参数
+        if (empty($params['configs']) || !is_array($params['configs'])) {
+            return json(['code' => -1, 'msg' => '配置参数不能为空']);
+        }
+        
+        try {
+            $results = [];
+            // [0] => Array
+            //     (
+            //         [key] => 1_标准快递
+            //         [warehouse_id] => 28
+            //         [express_id] => 1
+            //         [product_type] => 标准快递
+            //         [index] => 0
+            //         [terminal_id] => 4
+            //     )
+            // dd($params['configs']);
+            foreach ($params['configs'] as $config) {
+                $express_id = 0;
+                if(isset($config['terminal_id'])){
+                    //直接发货
+                    $express_id = Db::name('centralize_warehouse_express')->where(['printer_id'=>intval($config['terminal_id']),'express_id'=>intval($config['express_id']),'express_type'=>trim($config['product_type'])])->value('id');
+                }else{
+                    //代发货
+                    $express_id = Db::name('centralize_warehouse_express')->where(['warehouse_id'=>intval($config['warehouse_id']),'express_id'=>intval($config['express_id']),'express_type'=>trim($config['product_type'])])->value('id');
+                }
+                
+                $where = [
+                    'warehouse_id' => intval($config['warehouse_id']),
+                    'express_id' => $express_id,
+                    'express_type' => trim($config['product_type'])
+                ];
+                
+                // 直接发货需要终端ID
+                if(isset($config['terminal_id'])){
+                    if (!empty($config['terminal_id'])) {
+                        $where['printer_id'] = intval($config['terminal_id']);
+                    }
+                }
+                
+                
+                $platformConfig = Db::name('centralize_freight_config')
+                    ->where($where)
+                    ->find();
+                
+                $result = [
+                    'config_key' => $config['key'],
+                    'exists' => false,
+                    'config_data' => null
+                ];
+                
+                if ($platformConfig) {
+                    $result['exists'] = true;
+                    $result['config_data'] = json_decode($platformConfig['config_data'], true);
+                    $result['config_data']['unit_name'] = Db::name('unit')->where(['code_value'=>$result['config_data']['unit'][0][0]])->value('code_name');
+                    $result['config_data']['currency_name'] = Db::name('centralize_currency')->where(['id'=>5])->value('currency_symbol_standard');
+                    $result['platform_config_id'] = $platformConfig['id'];
+                }
+                
+                $results[] = $result;
+            }
+            
+            return json(['code' => 0, 'data' => $results]);
+            
+        } catch (\Exception $e) {
+            return json(['code' => -1, 'msg' => '批量获取失败: ' . $e->getMessage()]);
+        }
+    }
+    
     // 保存运费配置
     public function save_freight_config(Request $request) {
         if (!$request->isAjax()) {
@@ -7634,21 +7762,25 @@ class Index extends Controller
         }
         
         // 验证运费配置是否存在
-        $freightConfigId = intval($data['freight_config_id']);
-        if ($freightConfigId <= 0) {
-            return json(['code' => -1, 'msg' => '运费配置ID无效']);
-        }
+        // $freightConfigId = intval($data['freight_config_id']);
+        $freightConfigId = Db::name('freight_config')
+            ->insertGetId([
+                'company_id' => $data['company_id'],
+                'warehouse_id' => $data['warehouse_id'],
+                'warehouse_type' => $data['warehouse_type'],
+                'config_data' => json_encode($data['freight_configs'], JSON_UNESCAPED_UNICODE),
+            ]);
         
-        $freightConfig = Db::name('freight_config')
-            ->where([
-                'id' => $freightConfigId,
-                'company_id' => $data['company_id']
-            ])
-            ->find();
+        // $freightConfig = Db::name('freight_config')
+        //     ->where([
+        //         'id' => $freightConfigId,
+        //         'company_id' => $data['company_id']
+        //     ])
+        //     ->find();
         
-        if (!$freightConfig) {
-            return json(['code' => -1, 'msg' => '运费配置不存在或不属于当前商家']);
-        }
+        // if (!$freightConfig) {
+        //     return json(['code' => -1, 'msg' => '运费配置不存在或不属于当前商家']);
+        // }
         
         Db::startTrans();
         try {
@@ -7672,7 +7804,7 @@ class Index extends Controller
                 'project_total_price' => $data['project_total'] ?? 0,
                 'freight_total_price' => $data['freight_total'] ?? 0,
                 'total_price' => $data['total_amount'] ?? 0,
-                'freight_config_id' => $freightConfigId, // 保存运费配置ID
+                'freight_config_id' => $freightConfigId, // 保存运费配置ID（没用了）
                 'status' => 1,
                 'createtime' => time(),
                 'updatetime' => time()
@@ -7681,15 +7813,17 @@ class Index extends Controller
             $procurementId = Db::name('website_procurement')->insertGetId($procurementData);
             
             // 2. 更新运费配置的采购单ID
+            $time = time();
             Db::name('freight_config')
                 ->where(['id' => $freightConfigId])
                 ->update([
                     'procurement_id' => $procurementId,
-                    'updatetime' => time()
+                    'createtime' => $time,
+                    'updatetime' => $time
                 ]);
             
             // 3. 如果是直接发货仓库，更新库存（这里修改成“代发”仓库也可以记录库存）
-            // if ($data['warehouse_type'] == 'direct') {
+            if ($data['warehouse_type'] == 'direct') {
                 foreach ($data['goods'] as $goodsItem) {
                     $this->updateWarehouseGoodsStock(
                         $data['company_id'],
@@ -7699,7 +7833,17 @@ class Index extends Controller
                         $goodsItem['quantity']
                     );
                 }
-            // }
+            }else{
+                foreach ($data['goods'] as $goodsItem) {
+                    $this->updateWarehouseGoodsStock(
+                        $data['company_id'],
+                        $data['warehouse_id'],
+                        $goodsItem['goods_id'],
+                        $goodsItem['sku_id'],
+                        99999
+                    );
+                }
+            }
             
             Db::commit();
             
