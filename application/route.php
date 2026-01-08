@@ -97,7 +97,6 @@ Route::any('index/get_warehouses', 'index/Index/get_warehouses');#企业网店-�
 Route::any('index/select_goods', 'index/Index/select_goods');#企业网店-供应管理-获取店铺商品
 Route::any('index/get_express_companies', 'index/Index/get_express_companies');#企业网店-供应管理-获取快递企业
 Route::any('index/get_express_products', 'index/Index/get_express_products');#企业网店-供应管理-获取快递下的产品
-Route::any('index/get_freight_config', 'index/Index/get_freight_config');#企业网店-供应管理-加载运费配置
 Route::any('index/get_goods', 'index/Index/get_goods');#企业网店-供应管理-获取商店所有商品
 Route::any('index/get_merchant_warehouse_terminals', 'index/Index/get_merchant_warehouse_terminals');#企业网店-供应管理-获取商家在仓库下的终端列表（直接发货仓库）
 Route::any('index/get_merchant_warehouse_expresses', 'index/Index/get_merchant_warehouse_expresses');#企业网店-供应管理-获取商家在仓库下的快递企业列表（代发货仓库）

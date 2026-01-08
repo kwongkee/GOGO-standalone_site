@@ -1546,6 +1546,54 @@
         </div>
     </div>
     
+    <!-- 运费配置查看模态框 -->
+    <div class="modal" id="viewFreightModal" style="display: none;">
+        <div class="modal-body" id="freightDetailContent">
+            <!-- 运费配置详情将动态加载到这里 -->
+        </div>
+    </div>
+    
+    <!-- 运费配置详情查看模态框 -->
+    <div class="modal" id="freightDetailModal" style="display: none;">
+        
+            <div class="modal-body">
+                <div class="layui-card">
+                    <div class="layui-card-header">基本信息</div>
+                    <div class="layui-card-body">
+                        <table class="layui-table">
+                            <tbody id="freightBasicInfo">
+                                <!-- 基本信息动态加载 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="layui-card" style="margin-top: 15px;">
+                    <div class="layui-card-header">配置详情</div>
+                    <div class="layui-card-body">
+                        <div id="freightConfigDetail">
+                            <!-- 配置详情动态加载 -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="layui-card" style="margin-top: 15px; border-color: #9b4de3;">
+                    <div class="layui-card-header" style="background: #f9f0ff; color: #9b4de3;">操作</div>
+                    <div class="layui-card-body">
+                        <div style="text-align: center;">
+                            <button type="button" class="layui-btn layui-btn-normal" onclick="editFreightConfig()">
+                                <i class="layui-icon">&#xe642;</i> 修改配置
+                            </button>
+                            <button type="button" class="layui-btn layui-btn-danger" onclick="deleteFreightConfig()" style="margin-left: 10px;">
+                                <i class="layui-icon">&#xe640;</i> 删除配置
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+    </div>
+    
     <!-- 单个产品运费配置表单（隐藏，用作模板） -->
     <div id="singleFreightConfigTemplate" style="display: none;">
         <div class="product-config-tab">
@@ -2652,266 +2700,19 @@ layui.use(['form', 'laydate', 'layer', 'table','element'], function(){
     //配置运费弹窗============================================end
 });
 
-//初始化操作============================================start
 var edit_id = <?php echo isset($edit_id) ? $edit_id : 0; ?>;
 var procurementData = <?php echo isset($procurement_data) ? json_encode($procurement_data, JSON_UNESCAPED_UNICODE) : 'null'; ?>;
 $(document).ready(function(){
     // 设置表单初始值
     if (edit_id > 0 && procurementData) {
         setTimeout(function() {
-            // 使用更稳定的初始化方式
-            initEditModeSimplified(procurementData);
+            // initEditMode(procurementData);
+            loadFreightConfigs();
         }, 500);
     }
     
     initFreightFormListeners();
 });
-
-// 新增：简化的编辑模式初始化函数
-function initEditModeSimplified(data) {
-    if (!data) return;
-    
-    console.log('初始化编辑模式，数据:', data);
-    
-    // 步骤1: 设置供应商
-    if (data.supplier_id) {
-        $('#supplier_id').val(data.supplier_id);
-        layui.form.render('select');
-    }
-    
-    // 步骤2: 设置仓库类型和仓库
-    if (data.warehouse_type) {
-        // 先设置仓库类型
-        setTimeout(function() {
-            $('input[name="warehouse_type"][value="' + data.warehouse_type + '"]').prop('checked', true);
-            layui.form.render('radio');
-            
-            // 触发仓库类型选择
-            warehouseType = data.warehouse_type;
-            
-            // 等待UI更新后设置仓库
-            setTimeout(function() {
-                if (data.warehouse_type === 'direct') {
-                    // 加载直接发货仓库
-                    loadDirectWarehouses(data.warehouse_id);
-                    
-                    //初始化已选终端+快递企业+快递产品
-                    selectedTerminals = data.selectedTerminals;
-                    selectedExpresses = data.selectedProxyExpresses;
-                    selectedProducts = data.selectedProxyProducts;
-                    
-                    setTimeout(function() {
-                        loadTerminalList(data.warehouse_id);
-                        // loadExpressList(selectedTerminals);
-                        // executeLoadProductList(selectedExpresses);
-                        // loadFreightConfigs();
-                        
-                        $('#directFreightConfig').show();
-                        $('#directFreightConfig .selector-box').show();
-                    }, 800);
-                } else {
-                    // 加载代发货仓库
-                    loadProxyWarehouses(data.warehouse_id);
-                    
-                    //初始化已选快递企业+快递产品
-                    selectedProxyExpresses = data.selectedProxyExpresses;
-                    selectedProxyProducts = data.selectedProxyProducts;
-                    
-                    // 加载代发货快递企业
-                    setTimeout(function() {
-                        loadProxyExpressList();
-                        loadProxyProductList(selectedProxyExpresses);
-                        // loadFreightConfigs();
-                        
-                        $('#proxyFreightConfig').show();
-                        $('#proxyFreightConfig .selector-box').show();
-                    }, 800);
-                    
-                    // 重置选择器
-                    $('#proxy_express').html('<option value="">请先选择仓库</option>');
-                    $('#proxy_product').html('<option value="">请先选择快递企业</option>');
-                    
-                    // 隐藏步骤5和6，修改步骤7文本
-                    $('.step-item[data-step="5"], .step-item[data-step="6"]').hide();
-                    $('.step-item[data-step="7"]').text('5. 代发确认');
-                }
-            }, 300);
-        }, 100);
-    }
-    
-    // 步骤3: 设置商品
-    if (data.goods_info && data.goods_info.length > 0) {
-        setTimeout(function() {
-            initEditModeGoods(data.goods_info);
-        }, 800);
-    }
-    
-    // 步骤4: 设置运费配置
-    if (data.freight_configs && data.freight_configs.length > 0) {
-        setTimeout(function() {
-            initEditModeFreightConfigs(data);
-        }, 1200);
-    }
-    
-    // 步骤5: 设置结算信息
-    if (data.payment_method !== undefined) {
-        setTimeout(function() {
-            $('#payment_method').val(data.payment_method);
-            $('#supplier_currency').val(data.supplier_currency || 5);
-            
-            // 设置收费项目
-            if (data.charge_items && data.charge_items.length > 0) {
-                initEditModeChargeItems(data.charge_items);
-            }
-            layui.form.render();
-        }, 1600);
-    }
-    
-    // 步骤6: 设置物流信息
-    if (data.delivery_id) {
-        setTimeout(function() {
-            initEditModeLogistics(data);
-            layui.form.render();
-        }, 2000);
-    }
-}
-
-// 初始化商品
-function initEditModeGoods(goodsList) {
-    selectedGoods = [];
-    $('#goodsTbody').empty();
-    
-    goodsList.forEach(function(goods) {
-        var price = parseFloat(goods.goods_price || goods.price || 0);
-        var quantity = parseInt(goods.goods_quantity || goods.quantity || 0);
-        var taxRate = parseFloat(goods.goods_tax || goods.tax_rate || 0);
-        
-        selectedGoods.push({
-            goods_id: goods.goods_id,
-            sku_id: goods.sku_id || 0,
-            goods_name: goods.goods_name || '商品',
-            sku_name: goods.sku_name || '规格',
-            price: price,
-            quantity: quantity,
-            tax_rate: taxRate,
-            subtotal: price * quantity * (1 + taxRate/100)
-        });
-        
-        // 添加到表格
-        addGoodsRow(goods.goods_id, goods.sku_id || 0, goods.goods_name || '商品', goods.sku_name || '规格', price, quantity, taxRate);
-    });
-    
-    calculateGoodsTotal();
-}
-
-// 初始化运费配置
-function initEditModeFreightConfigs(data) {
-    if (!data.freight_configs) return;
-    
-    // 清空现有配置
-    freightConfigs = {};
-    
-    // 处理每个运费配置
-    data.freight_configs[0].config_data.forEach(function(config) {
-        var key = config.express_id + '_' + config.product_type;
-        freightConfigs[key] = {
-            config_id: config.config_id,
-            config_data: config.config_data,
-            is_platform_config: config.is_platform_config,
-            confirmed: true
-        };
-        // 根据仓库类型添加到相应的选中数组
-        if (data.warehouse_type === 'direct') {
-            // 直接发货：需要添加到selectedProducts
-            if (!selectedProducts.some(p => p.key === key)) {
-                if(config.express_id>0){
-                    selectedProducts.push({
-                        key: key,
-                        express_id: config.express_id,
-                        product_type: config.product_type,
-                        express_name: config.express_name || '快递',
-                        terminal_ids: config.terminal_id
-                    });
-                }
-            }
-        } else {
-            // 代发货：需要添加到selectedProxyProducts
-            if (!selectedProxyProducts.some(p => p.key === key)) {
-                if(config.express_id>0){
-                    selectedProxyProducts.push({
-                        key: key,
-                        express_id: config.express_id,
-                        product_type: config.product_type,
-                        express_name: config.express_name || '快递'
-                    });
-                }
-            }
-        }
-    });
-    
-    // 更新UI状态
-    updateStep4ConfigStatus();
-}
-
-// 初始化收费项目
-function initEditModeChargeItems(chargeItemsList) {
-    chargeItems = [];
-    $('#chargeTbody').empty();
-    
-    chargeItemsList.forEach(function(item) {
-        var html = '<tr class="charge-item">' +
-            '<td><input type="text" class="layui-input charge-name" value="' + (item.name || '') + '" placeholder="请输入项目名称" lay-verify="required"></td>' +
-            '<td><input type="number" class="layui-input charge-price" value="' + (parseFloat(item.price || 0).toFixed(2)) + '" min="0" step="0.01" placeholder="单价" onchange="updateChargeSubtotal(this)"></td>' +
-            '<td><input type="number" class="layui-input charge-quantity" value="' + (item.quantity || 0) + '" min="1" placeholder="数量" onchange="updateChargeSubtotal(this)"></td>' +
-            '<td class="charge-subtotal">' + (parseFloat(item.price || 0) * parseInt(item.quantity || 0)).toFixed(2) + '</td>' +
-            '<td><button type="button" class="layui-btn layui-btn-xs layui-btn-danger" onclick="removeChargeItem(this)">删除</button></td>' +
-            '</tr>';
-        
-        $('#chargeTbody').append(html);
-        
-        // 添加到数组
-        chargeItems.push({
-            name: item.name || '',
-            price: parseFloat(item.price || 0),
-            quantity: parseInt(item.quantity || 0),
-            subtotal: parseFloat(item.price || 0) * parseInt(item.quantity || 0)
-        });
-    });
-    
-    updateProjectTotal();
-}
-
-// 初始化物流信息
-function initEditModeLogistics(data) {
-    if (data.delivery_id) {
-        loadDeliveryCompanies(data.delivery_id);
-    }
-    
-    if (data.delivery_method) {
-        loadDeliveryMethods(data.delivery_method);
-    }
-    
-    if (data.delivery_time) {
-        $('#delivery_time').val(data.delivery_time);
-    }
-    
-    if (data.delivery_no) {
-        $('#delivery_no').val(data.delivery_no);
-    }
-    
-    if (data.delivery_remark) {
-        $('#delivery_remark').val(data.delivery_remark);
-    }
-    
-    // 重新渲染日期选择器
-    layui.laydate.render({
-        elem: '#delivery_time',
-        type: 'datetime',
-        format: 'yyyy-MM-dd HH:mm:ss',
-        value: data.delivery_time || ''
-    });
-}
-//初始化操作============================================end
 
 //全选-运费配置=========================================start
 // 加载终端列表（复选框形式）
@@ -2956,7 +2757,6 @@ function loadTerminalList(warehouseId) {
                 
                 // 如果有选中的终端，加载快递企业
                 if (selectedTerminals.length > 0) {
-                    // loadExpressList(selectedTerminals+',');
                     loadExpressList(selectedTerminals.join(','));
                 }
             } else {
@@ -3013,7 +2813,6 @@ function loadExpressList(terminalIds) {
                 
                 // 如果有选中的快递企业，加载产品
                 if (selectedExpresses.length > 0) {
-                    // loadProductList(selectedExpresses+',');
                     loadProductList(selectedExpresses.join(','));
                 }
             } else {
@@ -3071,14 +2870,20 @@ function executeLoadProductList(expressIds) {
         success: function(res){
             $('#productLoading').hide();
             
+            console.log('原始响应数据:', JSON.stringify(res)); // 详细调试
+            
             if(res.code === 0) {
                 var html = '';
                 
                 // 检查数据结构
                 if (res.data && Array.isArray(res.data)) {
+                    console.log('产品数据是数组，长度:', res.data.length);
+                    
                     // 遍历所有产品
                     for (var i = 0; i < res.data.length; i++) {
                         var product = res.data[i];
+                        
+                        console.log('第' + i + '个产品:', product);
                         
                         // 确保product有必要的属性
                         if (!product.express_id || !product.typename) {
@@ -3115,16 +2920,19 @@ function executeLoadProductList(expressIds) {
                     }
                     
                     if (html === '') {
+                        console.log('生成了空HTML，res.data内容:', res.data);
                         html = '<div style="padding: 20px; text-align: center; color: #999;">没有可显示的产品</div>';
                     }
                     
                     $('#productSelector').show();
                     
                 } else {
+                    console.log('res.data不是数组或为空:', res.data);
                     html = '<div style="padding: 20px; text-align: center; color: #999;">暂无可用产品</div>';
                 }
                 
                 $('#productList').html(html);
+                console.log('最终HTML设置完成，元素数量:', $('#productList .selector-item').length);
                 
                 updateSelectedCount('product');
                 
@@ -3136,12 +2944,14 @@ function executeLoadProductList(expressIds) {
                 updateConfigSummary('direct');
                 
             } else {
+                console.log('API返回code不为0:', res);
                 $('#productList').html('<div style="padding: 20px; text-align: center; color: #999;">' + (res.msg || '加载失败') + '</div>');
                 $('#productSelector').show();
             }
         },
         error: function(xhr, status, error){
             $('#productLoading').hide();
+            console.log('AJAX错误:', status, error);
             
             if (status !== 'abort') {
                 $('#productList').html('<div style="padding: 20px; text-align: center; color: #999;">网络错误，加载失败</div>');
@@ -3191,7 +3001,6 @@ function toggleSelectItem(element, type) {
                         product_type: productType,
                         express_name: expressName,
                         terminal_ids: selectedTerminals.join(',')
-                        // terminal_ids: selectedTerminals+','
                     });
                 }
                 break;
@@ -3338,7 +3147,6 @@ function selectAll(type) {
                             product_type: productType,
                             express_name: expressName,
                             terminal_ids: selectedTerminals.join(',')
-                            // terminal_ids: selectedTerminals+','
                         });
                     }
                     break;
@@ -3547,6 +3355,8 @@ function configureFreightForSelectedProducts(warehouseType) {
                         }
                     }
                 });
+                
+                console.log('合并后的freightConfigs:', freightConfigs);
                 
                 // 显示弹窗
                 showBatchConfigModal(selectedItems, warehouseType);
@@ -3951,7 +3761,6 @@ function createConfigTabs(products, warehouseType) {
 // 创建单个配置表单
 function createSingleConfigForm(product, configData, warehouseType, index) {
     var configInfo = freightConfigs[product.key];
-    
     var isPlatformConfig = configInfo && configInfo.is_platform_config;
     
     // 创建基本的表单结构
@@ -4033,7 +3842,7 @@ function createSingleConfigForm(product, configData, warehouseType, index) {
     // 添加确认按钮（平台配置需要确认）
     html += '<div class="layui-form-item" style="margin-top: 20px; text-align: center;">' +
         '<div class="layui-input-block">';
-    
+
     if (isPlatformConfig) {
         html += '<button type="button" class="layui-btn layui-btn-primary confirm-platform-config-btn" ' +
             'data-config-key="' + product.key + '" ' +
@@ -4046,9 +3855,9 @@ function createSingleConfigForm(product, configData, warehouseType, index) {
             '<i class="layui-icon layui-icon-list"></i> 查看运费详细' +
             '</button>';
     } else {
-        // html += '<button type="button" class="layui-btn layui-btn-normal" onclick="saveSingleFreightConfig(this)">' +
-        //         '<i class="layui-icon layui-icon-ok"></i> 保存当前配置' +
-        //         '</button>';
+        html += '<button type="button" class="layui-btn layui-btn-normal" onclick="saveSingleFreightConfig(this)">' +
+                '<i class="layui-icon layui-icon-ok"></i> 保存当前配置' +
+                '</button>';
     }
     
     html += '</div></div></form></div></div>';
@@ -4093,6 +3902,8 @@ function saveSingleFreightConfig(button) {
     var formDataObj = {};
     var configKey = $form.data('key');
     var index = $form.data('index');
+    
+    console.log('保存配置，configKey:', configKey);
     
     // 将表单数据转换为对象
     $.each(formData, function() {
@@ -4167,6 +3978,8 @@ function saveSingleFreightConfig(button) {
                     confirmed: true
                 };
                 
+                console.log('配置保存成功，更新freightConfigs:', freightConfigs[configKey]);
+                
                 // 更新标签页图标
                 $('.tab-nav .tab-item[data-index="' + index + '"] .layui-icon')
                     .removeClass('layui-icon-form')
@@ -4219,11 +4032,11 @@ function updateStep4ConfigStatus() {
         if (currentWarehouseType === 'direct') {
             $('#directConfigStatus').text('已配置 ' + configCount + ' 个产品');
             $('#directConfigStatus').show();
-            $('#configureDirectBtn').show();
+            $('#configureDirectBtn').hide();
         } else {
             $('#proxyConfigStatus').text('已配置 ' + configCount + ' 个产品');
             $('#proxyConfigStatus').show();
-            $('#configureProxyBtn').show();
+            $('#configureProxyBtn').hide();
         }
     }
 }
@@ -4324,7 +4137,7 @@ function loadFreightConfigs() {
 }
 
 // 更新产品列表中的配置状态
-function updateProductListConfigStatus(configKey='') {
+function updateProductListConfigStatus() {
     // 解析configKey
     var parts = configKey.split('_');
     var expressId = parts[0];
@@ -4368,7 +4181,7 @@ function updateProductListConfigStatus(configKey='') {
 }
 
 // 更新代发货产品列表中的配置状态
-function updateProxyProductListConfigStatus(configKey='') {
+function updateProxyProductListConfigStatus() {
     // 解析configKey
     var parts = configKey.split('_');
     var expressId = parts[0];
@@ -4465,18 +4278,39 @@ function resetFreightSelections() {
 
 // 编辑配置
 function editConfig(configId) {
-    // 不再使用单产品配置，直接打开批量配置
-    layer.msg('请使用批量配置功能修改运费配置', {icon: 6});
-    
-    // 或者跳转到步骤4并打开批量配置
-    currentStep = 4;
-    $('.step-content').hide();
-    $('#step4').show();
-    
-    // 确保选择了仓库类型
-    if (warehouseType) {
-        configureFreightForSelectedProducts(warehouseType);
-    }
+    // 加载配置详情并显示在编辑模态框中
+    $.ajax({
+        url: '/?s=index/get_freight_config_detail',
+        type: 'GET',
+        data: {id: configId},
+        success: function(res){
+            if(res.code === 0) {
+                // 填充配置表单
+                fillFreightConfigForm(res.data.config_data);
+                
+                // 设置表单中的其他字段
+                $('#config_warehouse_type').val(res.data.warehouse_type);
+                $('#config_warehouse_id').val(res.data.warehouse_id);
+                $('#config_terminal_id').val(res.data.terminal_id);
+                $('#config_express_id').val(res.data.express_id);
+                $('#config_product_type').val(res.data.product_type);
+                $('#config_company_id').val(res.data.company_id);
+                
+                // 显示配置模态框
+                $('#freightConfigModal').show();
+                layui.layer.open({
+                    type: 1,
+                    title: '编辑运费配置',
+                    area: ['90%', '90%'],
+                    content: $('#freightConfigModal'),
+                    success: function() {
+                        layui.form.render(null, 'component-form-group');
+                        layui.element.render('collapse', 'component-form-group');
+                    }
+                });
+            }
+        }
+    });
 }
 
 // 删除配置
@@ -4594,9 +4428,7 @@ function executeLoadProxyProductList(expressIds) {
         window.currentProxyProductRequest.abort();
     }
     
-    if(edit_id>0){
-        expressIds = expressIds.join(',');
-    }
+    console.log('代发货产品请求参数 express_ids:', expressIds); // 调试信息
     
     window.currentProxyProductRequest = $.ajax({
         url: '/?s=index/get_express_products',
@@ -4607,13 +4439,20 @@ function executeLoadProxyProductList(expressIds) {
         success: function(res){
             $('#proxyProductLoading').hide();
             
+            console.log('代发货产品响应数据:', res); // 调试信息
+            
             if(res.code === 0) {
                 var html = '';
                 var expressIdsArray = expressIds.split(',');
                 
+                console.log('expressIdsArray:', expressIdsArray); // 调试信息
+                
                 if(res.data && res.data.length > 0) {
+                    console.log('代发货产品数据数量:', res.data.length); // 调试信息
+                    
                     // 直接遍历所有返回的产品数据
                     $.each(res.data, function(index, product){
+                        console.log('处理第' + index + '个产品:', product); // 调试信息
                         
                         // 确保产品有必要的属性
                         if (!product.express_id) {
@@ -4629,6 +4468,8 @@ function executeLoadProxyProductList(expressIds) {
                         var configStatus = freightConfigs[productKey] ? '已配置' : '未配置';
                         var expressName = product.express_name || '未知快递企业';
                         var productType = product.typename || '未知产品类型';
+                        
+                        console.log('产品键:', productKey, '是否已选中:', isSelected); // 调试信息
                         
                         html += '<div class="selector-item ' + (isSelected ? 'selected' : '') + '" ' +
                                 'data-express-id="' + product.express_id + '" ' +
@@ -4651,33 +4492,40 @@ function executeLoadProxyProductList(expressIds) {
                     });
                     
                     if (html === '') {
+                        console.log('生成的产品HTML为空'); // 调试信息
                         html = '<div style="padding: 20px; text-align: center; color: #999;">选中的快递企业暂无可用产品</div>';
                     } else {
+                        console.log('成功生成产品HTML'); // 调试信息
                         $('#proxyProductSelector').show();
                     }
                     
                 } else {
+                    console.log('API返回数据为空或不是数组'); // 调试信息
                     html = '<div style="padding: 20px; text-align: center; color: #999;">暂无可用产品</div>';
                 }
                 
                 $('#proxyProductList').html(html);
+                console.log('设置产品列表HTML完成，元素数量:', $('#proxyProductList .selector-item').length); // 调试信息
                 
                 updateSelectedCount('proxy_product');
                 
                 // 更新配置按钮状态
                 var selectedCount = selectedProxyProducts.length;
+                console.log('已选中的代发货产品数量:', selectedCount); // 调试信息
                 $('#configureProxyBtn').prop('disabled', selectedCount === 0);
                 
                 // 显示已配置的产品列表
                 updateConfigSummary('proxy');
                 
             } else {
+                console.log('API返回code不为0:', res.code, '消息:', res.msg); // 调试信息
                 $('#proxyProductList').html('<div style="padding: 20px; text-align: center; color: #999;">' + (res.msg || '加载失败') + '</div>');
                 $('#proxyProductSelector').show();
             }
         },
         error: function(xhr, status, error){
             $('#proxyProductLoading').hide();
+            console.log('代发货产品AJAX错误:', status, error, '响应:', xhr.responseText); // 调试信息
             
             if (status !== 'abort') {
                 $('#proxyProductList').html('<div style="padding: 20px; text-align: center; color: #999;">网络错误，加载失败</div>');
@@ -4971,6 +4819,60 @@ function initEditMode(data) {
     layui.layer.closeAll();
 }
 
+// 加载运费配置（编辑模式）
+function loadFreightConfigForEdit(data) {
+    if (!data.freight_config_id) return;
+    
+    $.ajax({
+        url: '/?s=index/get_freight_config_detail',
+        type: 'GET',
+        data: {id: data.freight_config_id},
+        success: function(res){
+            if(res.code === 0 && res.data) {
+                var config = res.data;
+                
+                // 设置快递企业和产品
+                if (data.warehouse_type === 'direct') {
+                    $('#direct_express').val(config.express_id);
+                    layui.form.render('select');
+                    
+                    // 加载快递产品
+                    loadExpressProducts(config.express_id, 'direct_product', function() {
+                        $('#direct_product').val(config.product_type);
+                        layui.form.render('select');
+                        
+                        // 显示配置按钮状态
+                        $('#directFreightConfigBtn').show();
+                        $('#directViewFreightBtn').show();
+                        $('#directConfigStatus').show();
+                        
+                        // 保存配置ID
+                        currentFreightConfigId = config.id;
+                        currentFreightConfig.config_id = config.id;
+                        currentFreightConfig.config_data = config.config_data;
+                    });
+                } else {
+                    $('#proxy_express').val(config.express_id);
+                    layui.form.render('select');
+                    
+                    loadExpressProducts(config.express_id, 'proxy_product', function() {
+                        $('#proxy_product').val(config.product_type);
+                        layui.form.render('select');
+                        
+                        $('#proxyFreightConfigBtn').show();
+                        $('#proxyViewFreightBtn').show();
+                        $('#proxyConfigStatus').show();
+                        
+                        currentFreightConfigId = config.id;
+                        currentFreightConfig.config_id = config.id;
+                        currentFreightConfig.config_data = config.config_data;
+                    });
+                }
+            }
+        }
+    });
+}
+
 // 步骤导航
 function nextStep(step) {
     // 验证当前步骤
@@ -5150,6 +5052,7 @@ function validatePlatformConfigsConfirmed() {
 // 验证步骤4的运费配置（新方案）
 function validateStep4FreightConfig() {
     if (!warehouseType) {
+        console.log('错误：未选择仓库类型');
         layer.msg('请先选择仓库类型', {icon: 2});
         return false;
     }
@@ -5158,6 +5061,9 @@ function validateStep4FreightConfig() {
     var selectedTerminalCount = 0;
     
     if (warehouseType === 'direct') {
+        console.log('选中的终端:', selectedTerminals);
+        console.log('选中的产品:', selectedProducts);
+        
         selectedItems = selectedProducts;
         selectedTerminalCount = selectedTerminals.length;
         
@@ -5171,6 +5077,8 @@ function validateStep4FreightConfig() {
             return false;
         }
     } else {
+        console.log('选中的产品:', selectedProxyProducts);
+        
         selectedItems = selectedProxyProducts;
         
         if (selectedItems.length === 0) {
@@ -5185,14 +5093,19 @@ function validateStep4FreightConfig() {
     var configuredCount = 0;
     
     selectedItems.forEach(function(item) {
+        console.log('检查产品:', item.key, '配置状态:', freightConfigs[item.key]);
+        
         if (!freightConfigs[item.key]) {
             // 产品未配置运费
+            console.log('产品未配置:', item.key);
             unconfiguredProducts.push(item.express_name + ' - ' + item.product_type);
         } else {
+            console.log('产品已配置:', item.key, '配置详情:', freightConfigs[item.key]);
             configuredCount++;
             
             // 检查平台配置是否已确认
             if (freightConfigs[item.key].is_platform_config && !freightConfigs[item.key].confirmed) {
+                console.log('平台配置未确认:', item.key);
                 unconfirmedPlatformConfigs.push(item.express_name + ' - ' + item.product_type);
             }
         }
@@ -5210,6 +5123,7 @@ function validateStep4FreightConfig() {
     }
     
     if (configuredCount === 0) {
+        console.log('错误：没有产品配置运费');
         layer.msg('请先配置运费', {icon: 2});
         return false;
     }
@@ -5235,6 +5149,8 @@ function validateStep4FreightConfig() {
         
         return false;
     }
+    
+    console.log('=== 步骤4验证通过 ===');
     
     // 验证通过，更新步骤状态
     updateStep4SuccessState();
@@ -5439,10 +5355,476 @@ function loadExpressCompanies(warehouseId, target) {
     });
 }
 
+// 显示运费配置模态框
+function showFreightConfig(type) {
+    if (edit_id > 0 && procurementData && procurementData.freight_config && procurementData.freight_config.config_data) {
+        currentFreightConfig = {
+            warehouse_type: procurementData.warehouse_type,
+            warehouse_id: procurementData.warehouse_id,
+            terminal_id: procurementData.terminal_id || 0,
+            express_id: procurementData.freight_config.express_id,
+            product_type: procurementData.freight_config.product_type,
+            company_id: getUrlParam('company_id'),
+            procurement_id: edit_id,
+            config_id: procurementData.freight_config_id,
+            config_data: procurementData.freight_config.config_data
+        };
+        
+        // 设置表单值
+        $('#config_warehouse_type').val(currentFreightConfig.warehouse_type);
+        $('#config_warehouse_id').val(currentFreightConfig.warehouse_id);
+        $('#config_terminal_id').val(currentFreightConfig.terminal_id);
+        $('#config_express_id').val(currentFreightConfig.express_id);
+        $('#config_product_type').val(currentFreightConfig.product_type);
+        $('#config_company_id').val(currentFreightConfig.company_id);
+        $('#procurement_id').val(currentFreightConfig.procurement_id);
+        
+        // 显示模态框
+        layui.layer.open({
+            type: 1,
+            title: '运费配置',
+            area: ['90%', '90%'],
+            content: $('#freightConfigModal'),
+            success: function(layero, index) {
+                // 确保表单已渲染
+                setTimeout(function() {
+                    layui.form.render(null, 'component-form-group');
+                    layui.element.render('collapse', 'component-form-group');
+                }, 300);
+            }
+        });
+        
+        return;
+    }
+    
+    if (type === 'direct') {
+        var terminalId = $('#direct_terminal').val();
+        var expressId = $('#direct_express').val();
+        var productType = $('#direct_product').val();
+        var warehouseId = $('#direct_warehouse_id').val();
+        
+        if (!terminalId || !expressId || !productType) {
+            layer.msg('请先选择终端、快递企业和产品');
+            return;
+        }
+        
+        currentFreightConfig = {
+            warehouse_type: 'direct',
+            warehouse_id: warehouseId,
+            terminal_id: terminalId,
+            express_id: expressId,
+            product_type: productType,
+            company_id: getUrlParam('company_id'),
+            procurement_id: edit_id > 0 ? edit_id : 0
+        };
+        
+    } else {
+        var expressId = $('#proxy_express').val();
+        var productType = $('#proxy_product').val();
+        var warehouseId = $('#proxy_warehouse_id').val();
+        
+        if (!expressId || !productType) {
+            layer.msg('请先选择快递企业和产品');
+            return;
+        }
+        
+        currentFreightConfig = {
+            warehouse_type: 'proxy',
+            warehouse_id: warehouseId,
+            terminal_id: 0,
+            express_id: expressId,
+            product_type: productType,
+            company_id: getUrlParam('company_id'),
+            procurement_id: edit_id > 0 ? edit_id : 0
+        };
+    }
+    
+    // 设置表单值
+    $('#config_warehouse_type').val(currentFreightConfig.warehouse_type);
+    $('#config_warehouse_id').val(currentFreightConfig.warehouse_id);
+    $('#config_terminal_id').val(currentFreightConfig.terminal_id);
+    $('#config_express_id').val(currentFreightConfig.express_id);
+    $('#config_product_type').val(currentFreightConfig.product_type);
+    $('#config_company_id').val(currentFreightConfig.company_id);
+    $('#procurement_id').val(currentFreightConfig.procurement_id);
+    
+    // 在显示模态框后，加载现有配置
+    // 先清空表单
+    $('#freightConfigForm')[0].reset();
+    
+    // 检查是否已有配置数据
+    if (currentFreightConfig.config_data && edit_id > 0) {
+        // 如果是编辑模式且有配置数据，直接填充
+        // fillFreightConfigForm(currentFreightConfig.config_data);
+    } else {
+        // 否则从服务器加载
+        loadExistingFreightConfig();
+    }
+    
+    // 显示模态框
+    layui.layer.open({
+        type: 1,
+        title: '运费配置',
+        area: ['90%', '90%'],
+        content: $('#freightConfigModal'),
+        success: function(layero, index) {
+            // 模态框打开成功后，重新渲染表单
+            setTimeout(function() {
+                layui.form.render(null, 'component-form-group');
+                layui.element.render('collapse', 'component-form-group');
+            }, 300);
+        }
+    });
+}
+
+// 加载现有运费配置
+function loadExistingFreightConfig() {
+    var params = {
+        company_id: currentFreightConfig.company_id,
+        warehouse_id: currentFreightConfig.warehouse_id,
+        express_id: currentFreightConfig.express_id,
+        product_type: currentFreightConfig.product_type,
+        warehouse_type: currentFreightConfig.warehouse_type,
+        terminal_id: currentFreightConfig.terminal_id
+    };
+    
+    // 如果是编辑模式且有采购单ID，添加采购单ID参数
+    if (edit_id > 0) {
+        params.procurement_id = edit_id;
+    }
+    
+    layui.layer.load(2);
+    
+    $.ajax({
+        url: '/?s=index/get_freight_config',
+        type: 'GET',
+        data: params,
+        dataType: 'json',
+        success: function(res){
+            layui.layer.closeAll('loading');
+            if(res.code === 0 && res.data && res.data.config_data) {
+                // 填充表单数据
+                fillFreightConfigForm(res.data.config_data);
+                currentFreightConfig.config_id = res.data.id;
+                currentFreightConfig.config_data = res.data.config_data;
+            } else {
+                // 如果没有找到配置，显示空白表单
+                console.log('没有找到现有的运费配置');
+            }
+        },
+        error: function(){
+            layui.layer.closeAll('loading');
+            console.log('加载运费配置失败');
+        }
+    });
+}
+
+// 填充运费配置表单
+function fillFreightConfigForm(configData) {
+    // console.log(configData);return false;
+    if (!configData) {
+        console.log('没有配置数据可填充');
+        return;
+    }
+    
+    var content = configData;
+    var form = document.getElementById('freightConfigForm');
+    
+    // 填充最低消费配置
+    if (content.mini_cost && content.mini_cost.length > 0) {
+        $('select[name="content[mini_cost][]"]').val(content.mini_cost[0]);
+        layui.form.render('select', 'component-form-group');
+        
+        if (content.mini_cost[0] == 1) {
+            $('.minicost_div').show();
+            $('input[name="content[mini_num][]"]').val(content.mini_num ? content.mini_num[0] : '');
+            $('select[name="content[minicost_unit][]"]').val(content.minicost_unit ? content.minicost_unit[0] : '');
+            layui.form.render('select', 'component-form-group');
+        }
+    }
+    
+    // 填充计费区间
+    if (content.qj1 && content.qj1.length > 0) {
+        // 首先清空现有的计费区间
+        $('.jifei_qujian .layui-colla-item:gt(0)').remove();
+        
+        content.qj1.forEach(function(qj1Value, qjIndex) {
+            if (qjIndex === 0) {
+                // 填充第一个区间
+                $('input[name="content[qj1][0][]"]').val(qj1Value);
+                $('select[name="content[qj2_method][0][]"]').val(content.qj2_method ? content.qj2_method[qjIndex] : '1');
+                $('input[name="content[qj2][0][]"]').val(content.qj2 ? content.qj2[qjIndex] : '');
+                $('select[name="content[unit][0][]"]').val(content.unit ? content.unit[qjIndex] : '');
+                $('input[name="content[jinjie][0][]"]').val(content.jinjie ? content.jinjie[qjIndex] : '');
+            } else {
+                // 需要动态添加区间并填充
+                // 这里简化处理，实际应该调用 add_qujian 函数来添加区间
+                console.log('需要添加第' + (qjIndex + 1) + '个区间');
+            }
+        });
+    }
+    
+    // 填充计费方式（只处理第一个区间第一个计费方式）
+    if (content.jf_method && content.jf_method[0] && content.jf_method[0][0]) {
+        var jfMethod = content.jf_method[0][0];
+        $('select[name="content[jf_method][0][0][]"]').val(jfMethod);
+        layui.form.render('select', 'component-form-group');
+        
+        // 根据计费方式显示不同的表单部分
+        if (jfMethod == 1) {
+            // 首续计费
+            $('.jf_div1').show();
+            $('.jf_div2').hide();
+            $('.jf_div3').hide();
+            
+            $('input[name="content[shouzhong][0][0][]"]').val(content.shouzhong && content.shouzhong[0] && content.shouzhong[0][0] ? content.shouzhong[0][0] : '');
+            $('input[name="content[shouzhong_money][0][0][]"]').val(content.shouzhong_money && content.shouzhong_money[0] && content.shouzhong_money[0][0] ? content.shouzhong_money[0][0] : '');
+            $('input[name="content[xuzhong][0][0][]"]').val(content.xuzhong && content.xuzhong[0] && content.xuzhong[0][0] ? content.xuzhong[0][0] : '');
+            $('input[name="content[xuzhong_money][0][0][]"]').val(content.xuzhong_money && content.xuzhong_money[0] && content.xuzhong_money[0][0] ? content.xuzhong_money[0][0] : '');
+        } else if (jfMethod == 2) {
+            // 按量计费
+            $('.jf_div1').hide();
+            $('.jf_div2').show();
+            $('.jf_div3').hide();
+            
+            $('input[name="content[anliang][0][0][]"]').val(content.anliang && content.anliang[0] && content.anliang[0][0] ? content.anliang[0][0] : '');
+            $('input[name="content[anliang_money][0][0][]"]').val(content.anliang_money && content.anliang_money[0] && content.anliang_money[0][0] ? content.anliang_money[0][0] : '');
+        } else if (jfMethod == 3) {
+            // 分段计费
+            $('.jf_div1').hide();
+            $('.jf_div2').hide();
+            $('.jf_div3').show();
+        }
+    }
+    
+    // 重新渲染折叠面板
+    layui.element.render('collapse', 'component-form-group');
+}
+
+// 更新运费配置状态
+function updateFreightConfigStatus(isConfigured) {
+    if (warehouseType === 'direct') {
+        if (isConfigured) {
+            $('#directFreightConfigBtn button').hide();
+            $('#directViewFreightBtn').show();
+            $('#directConfigStatus').show();
+        } else {
+            $('#directFreightConfigBtn button').show();
+            $('#directViewFreightBtn').hide();
+            $('#directConfigStatus').hide();
+        }
+    } else {
+        if (isConfigured) {
+            $('#proxyFreightConfigBtn button').hide();
+            $('#proxyViewFreightBtn').show();
+            $('#proxyConfigStatus').show();
+        } else {
+            $('#proxyFreightConfigBtn button').show();
+            $('#proxyViewFreightBtn').hide();
+            $('#proxyConfigStatus').hide();
+        }
+    }
+}
+
+// 渲染运费配置详情
+function renderFreightDetail(data) {
+    // 渲染基本信息
+    var basicHtml = '<tr><td>仓库：</td><td>' + (data.warehouse_info ? data.warehouse_info.warehouse_name : '未知') + '</td></tr>' +
+                   '<tr><td>仓库类型：</td><td>' + (data.warehouse_type === 'direct' ? '直接发货' : '代发货') + '</td></tr>';
+    
+    if (data.warehouse_type === 'direct' && data.terminal_id) {
+        basicHtml += '<tr><td>终端ID：</td><td>' + data.terminal_id + '</td></tr>';
+    }
+    
+    basicHtml += '<tr><td>快递企业：</td><td>' + (data.express_info ? data.express_info.name : '未知') + '</td></tr>' +
+                '<tr><td>产品类型：</td><td>' + data.product_type + '</td></tr>' +
+                '<tr><td>创建时间：</td><td>' + (data.createtime ? new Date(data.createtime * 1000).toLocaleString() : '未知') + '</td></tr>' +
+                '<tr><td>更新时间：</td><td>' + (data.updatetime ? new Date(data.updatetime * 1000).toLocaleString() : '未知') + '</td></tr>';
+    
+    $('#freightBasicInfo').html(basicHtml);
+    
+    // 渲染配置详情
+    var detailHtml = '';
+    if (data.config_data) {
+        var config = data.config_data;
+        
+        // 显示最低消费配置
+        if (config.mini_cost && config.mini_cost.length > 0) {
+            detailHtml += '<h4>最低消费配置：</h4>';
+            detailHtml += '<table class="layui-table">';
+            detailHtml += '<thead><tr><th>是否有最低消费</th><th>最低消费值</th><th>单位</th></tr></thead>';
+            detailHtml += '<tbody>';
+            
+            config.mini_cost.forEach(function(item, index) {
+                detailHtml += '<tr>';
+                detailHtml += '<td>' + (item == '1' ? '有最低' : '无最低') + '</td>';
+                detailHtml += '<td>' + (config.mini_num && config.mini_num[index] ? config.mini_num[index] : '-') + '</td>';
+                detailHtml += '<td>' + (config.minicost_unit && config.minicost_unit[index] ? config.minicost_unit[index] : '-') + '</td>';
+                detailHtml += '</tr>';
+            });
+            
+            detailHtml += '</tbody></table>';
+        }
+        
+        // 显示计费区间配置
+        if (config.qj1 && config.qj1.length > 0) {
+            detailHtml += '<h4 style="margin-top: 20px;">计费区间配置：</h4>';
+            detailHtml += '<table class="layui-table">';
+            detailHtml += '<thead><tr><th>区间</th><th>起始值</th><th>结束方式</th><th>结束值</th><th>计费进阶</th><th>单位</th></tr></thead>';
+            detailHtml += '<tbody>';
+            
+            config.qj1.forEach(function(item, index) {
+                detailHtml += '<tr>';
+                detailHtml += '<td>区间' + (index + 1) + '</td>';
+                detailHtml += '<td>' + item + '</td>';
+                detailHtml += '<td>' + (config.qj2_method && config.qj2_method[index] == '2' ? '以上' : '数值') + '</td>';
+                detailHtml += '<td>' + (config.qj2 && config.qj2[index] ? config.qj2[index] : '-') + '</td>';
+                detailHtml += '<td>' + (config.jinjie && config.jinjie[index] ? config.jinjie[index] : '-') + '</td>';
+                detailHtml += '<td>' + (config.unit && config.unit[index] ? config.unit[index] : '-') + '</td>';
+                detailHtml += '</tr>';
+            });
+            
+            detailHtml += '</tbody></table>';
+        }
+        
+        // 显示计费方式配置
+        if (config.jf_method && config.jf_method.length > 0) {
+            detailHtml += '<h4 style="margin-top: 20px;">计费方式配置：</h4>';
+            
+            // 这里可以根据需要显示更详细的计费方式信息
+            detailHtml += '<div class="layui-collapse" lay-accordion>';
+            
+            config.jf_method.forEach(function(methodArray, intervalIndex) {
+                if (methodArray && methodArray.length > 0) {
+                    methodArray.forEach(function(method, methodIndex) {
+                        detailHtml += '<div class="layui-colla-item">';
+                        detailHtml += '<div class="layui-colla-title">计费方式 ' + (methodIndex + 1) + '（区间' + (intervalIndex + 1) + '）</div>';
+                        detailHtml += '<div class="layui-colla-content">';
+                        
+                        if (method == '1') {
+                            detailHtml += '<p>类型：首续计费</p>';
+                            detailHtml += '<p>首重：' + (config.shouzhong && config.shouzhong[intervalIndex] && config.shouzhong[intervalIndex][methodIndex] ? config.shouzhong[intervalIndex][methodIndex] : '-') + '</p>';
+                            detailHtml += '<p>首重费用：' + (config.shouzhong_money && config.shouzhong_money[intervalIndex] && config.shouzhong_money[intervalIndex][methodIndex] ? config.shouzhong_money[intervalIndex][methodIndex] : '-') + '</p>';
+                        } else if (method == '2') {
+                            detailHtml += '<p>类型：按量计费</p>';
+                        } else if (method == '3') {
+                            detailHtml += '<p>类型：分段计费</p>';
+                        }
+                        
+                        detailHtml += '</div></div>';
+                    });
+                }
+            });
+            
+            detailHtml += '</div>';
+        }
+    } else {
+        detailHtml = '<p>暂无配置详情</p>';
+    }
+    
+    $('#freightConfigDetail').html(detailHtml);
+    
+    // 重新渲染折叠面板
+    layui.element.render('collapse');
+}
+
+// 关闭详情模态框
+function closeFreightDetail() {
+    $('#freightDetailModal').hide();
+    layui.layer.closeAll();
+}
+
 // 修改配置
 function editFreightConfig() {
     closeFreightDetail();
-    configureFreightForSelectedProducts(warehouseType);
+    showFreightConfig(warehouseType);
+}
+
+// 删除配置
+function deleteFreightConfig() {
+    if (!currentFreightConfig.config_id) {
+        layui.layer.msg('没有可删除的配置', {icon: 2});
+        return;
+    }
+    
+    layui.layer.confirm('确定要删除此运费配置吗？', function(index){
+        $.ajax({
+            url: '/?s=index/delete_freight_config',
+            type: 'POST',
+            data: {id: currentFreightConfig.config_id},
+            dataType: 'json',
+            success: function(res){
+                if(res.code === 0) {
+                    layui.layer.closeAll();
+                    layui.layer.msg('删除成功', {icon: 1});
+                    closeFreightDetail();
+                    
+                    // 重置状态
+                    currentFreightConfig.config_id = null;
+                    currentFreightConfig.config_data = null;
+                    updateFreightConfigStatus(false);
+                } else {
+                    layui.layer.msg(res.msg, {icon: 2});
+                }
+            },
+            error: function(){
+                layui.layer.msg('删除失败', {icon: 2});
+            }
+        });
+        layui.layer.close(index);
+    });
+}
+
+// 验证步骤4
+function validateStep4() {
+    var warehouseType = $('input[name="warehouse_type"]:checked').val();
+    
+    if (!warehouseType) {
+        layer.msg('请选择仓库类型');
+        return false;
+    }
+    
+    if (warehouseType === 'direct') {
+        // 检查是否选择了终端
+        if (selectedTerminals.length === 0) {
+            layer.msg('请至少选择一个终端');
+            return false;
+        }
+        
+        // 检查是否选择了产品
+        if (selectedProducts.length === 0) {
+            layer.msg('请至少选择一个产品');
+            return false;
+        }
+        
+        // 检查是否所有选中的产品都已配置运费
+        var unconfiguredProducts = selectedProducts.filter(function(item) {
+            return !freightConfigs[item.key];
+        });
+        
+        if (unconfiguredProducts.length > 0) {
+            layer.msg('还有 ' + unconfiguredProducts.length + ' 个产品未配置运费');
+            return false;
+        }
+        
+    } else {
+        // 代发货仓库
+        if (selectedProxyProducts.length === 0) {
+            layer.msg('请至少选择一个产品');
+            return false;
+        }
+        
+        var unconfiguredProducts = selectedProxyProducts.filter(function(item) {
+            return !freightConfigs[item.key];
+        });
+        
+        if (unconfiguredProducts.length > 0) {
+            layer.msg('还有 ' + unconfiguredProducts.length + ' 个产品未配置运费');
+            return false;
+        }
+    }
+    
+    return true;
 }
 //setp4:运费配置==========================================end
 
@@ -5512,16 +5894,14 @@ function addGoodsRow(goodsId, skuId, goodsName, skuName, price, quantity, taxRat
     
     //代发货仓库填写虚拟库存
     var warehouse_type = $('input[name="warehouse_type"]:checked').val();
-    var readonly = '';
     if(warehouse_type == 'proxy'){
-        readonly = 'readonly';
         quantity = 99999;
     }
     
     var html = '<tr id="' + rowId + '">' +
         '<td>' + goodsName + '<br><small style="color:#666;">' + skuName + '</small></td>' +
         '<td><input type="text" class="layui-input goods-code" value="" placeholder="规格编码" style="height:30px;padding:0 5px;"></td>' +
-        '<td><input type="number" class="layui-input goods-quantity" value="' + quantity + '" ' + readonly + ' min="1" onchange="updateGoodsSubtotal(\'' + rowId + '\')" style="height:30px;padding:0 5px;"></td>' +
+        '<td><input type="number" class="layui-input goods-quantity" value="' + quantity + '" min="1" onchange="updateGoodsSubtotal(\'' + rowId + '\')" style="height:30px;padding:0 5px;"></td>' +
         '<td><input type="number" class="layui-input goods-price" value="' + safePrice.toFixed(2) + '" min="0" step="0.01" onchange="updateGoodsSubtotal(\'' + rowId + '\')" style="height:30px;padding:0 5px;"></td>' +
         '<td><div style="position:relative;"><input type="number" class="layui-input goods-tax" value="' + taxRate + '" min="0" max="100" step="0.01" onchange="updateGoodsSubtotal(\'' + rowId + '\')" style="height:30px;padding:0 5px 0 5px;padding-right:20px;"><span style="position:absolute;right:8px;top:6px;color:#666;font-size:12px;">%</span></div></td>' +
         '<td class="goods-subtotal">' + subtotal.toFixed(2) + '</td>' +
@@ -5735,9 +6115,12 @@ function loadDeliveryCompanies(dc=0) {
                 }
                 $('#delivery_id').html(html);
                 layui.form.render('select');
+            } else {
+                console.log('加载物流企业失败:', res.msg);
             }
         },
         error: function(){
+            console.log('网络错误，加载物流企业失败');
         }
     });
 }
@@ -5843,7 +6226,6 @@ function submitProcurement() {
     }
     // 2. 收集所有数据
     var procurementData = {
-        edit_id:edit_id,
         company_id: getUrlParam('company_id'),
         company_type: getUrlParam('company_type'),
         supplier_id: $('#supplier_id').val(),
@@ -5867,6 +6249,8 @@ function submitProcurement() {
         freight_total: calculateFreightTotal(),
         total_amount: calculateTotalAmount()
     };
+    
+    console.log('提交数据:', procurementData);
     
     // 发送请求
     layui.layer.confirm('确认提交采购单吗？', function(index){
@@ -5970,6 +6354,8 @@ function validateFreightConfigsBeforeSubmit() {
         
         return false;
     }
+    
+    console.log('运费配置验证通过，已配置产品数:', configuredCount);
     return true;
 }
 
@@ -5987,39 +6373,19 @@ function collectFreightConfigsForSubmit() {
     
     selectedItems.forEach(function(item) {
         var config = freightConfigs[item.key];
-        
         if (config) {
-            if(edit_id>0){
-                var terminal_id2 = 0;
-                if(warehouseType === 'direct' && item.terminal_id){
-                    terminal_id2 = item.terminal_id;
-                }else{
-                    terminal_id2 = item.terminal_ids.split(',')[0];
-                }
-                var configData = {
-                    express_id: item.express_id,
-                    product_type: item.product_type,
-                    express_name: item.express_name,
-                    config_id: config.config_id || 0,
-                    config_data: config.config_data,
-                    is_platform_config: config.is_platform_config || false,
-                    confirmed: config.confirmed || false,
-                    // 直接发货需要终端ID
-                    terminal_id:  terminal_id2 || 0
-                };
-            }else{
-                var configData = {
-                    express_id: item.express_id,
-                    product_type: item.product_type,
-                    express_name: item.express_name,
-                    config_id: config.config_id || 0,
-                    config_data: config.config_data,
-                    is_platform_config: config.is_platform_config || false,
-                    confirmed: config.confirmed || false,
-                    // 直接发货需要终端ID
-                    terminal_id: warehouseType === 'direct' && item.terminal_ids ? item.terminal_ids.split(',')[0] : 0
-                };
-            }
+            var configData = {
+                express_id: item.express_id,
+                product_type: item.product_type,
+                express_name: item.express_name,
+                config_id: config.config_id || 0,
+                config_data: config.config_data,
+                is_platform_config: config.is_platform_config || false,
+                confirmed: config.confirmed || false,
+                // 直接发货需要终端ID
+                terminal_id: warehouseType === 'direct' && item.terminal_ids ? item.terminal_ids.split(',')[0] : 0
+            };
+            
             freightConfigsData.push(configData);
         }
     });
@@ -6063,14 +6429,10 @@ function loadConfirmationData() {
     // 商品清单
     var goodsHtml = '';
     selectedGoods.forEach(function(item){
-        var quantity = item.quantity;
-        if(warehouseType=='proxy'){
-            quantity = 99999;
-        }
         goodsHtml += '<tr>' +
             '<td>' + item.goods_name + '</td>' +
             '<td>' + item.sku_name + '</td>' +
-            '<td>' + quantity + '</td>' +
+            '<td>' + item.quantity + '</td>' +
             '<td>' + item.price.toFixed(2) + '</td>' +
             '<td>' + item.tax_rate + '%</td>' +
             '<td>' + item.subtotal.toFixed(2) + '</td>' +
@@ -6111,7 +6473,7 @@ function displayFreightConfigsInConfirmation() {
     
     // 如果有运费配置信息，添加到确认页面
     if (configuredCount > 0) {
-        var freightTableHtml = '<div class="layui-card freightyunfei" style="margin-top: 20px;">' +
+        var freightTableHtml = '<div class="layui-card" style="margin-top: 20px;">' +
             '<div class="layui-card-header">运费配置信息</div>' +
             '<div class="layui-card-body">' +
             '<table class="layui-table">' +
@@ -6129,10 +6491,8 @@ function displayFreightConfigsInConfirmation() {
             '</div>' +
             '</div>';
         
-        if($('.freightyunfei').length == 0){
-            // 插入到商品清单后面
-            $('#confirmGoodsList').closest('.layui-card').after(freightTableHtml);
-        }
+        // 插入到商品清单后面
+        $('#confirmGoodsList').closest('.layui-card').after(freightTableHtml);
     }
 }
 
@@ -6179,7 +6539,7 @@ function loadSuppliers() {
     });
 }
 
-function loadDirectWarehouses(selectedWarehouseId=0) {
+function loadDirectWarehouses() {
     $.ajax({
         url: '/?s=index/get_warehouses',
         data: {
@@ -6190,22 +6550,18 @@ function loadDirectWarehouses(selectedWarehouseId=0) {
             if(res.code === 0) {
                 var html = '<option value="">请选择...</option>';
                 res.data.forEach(function(warehouse){
-                    var selected = (warehouse.id == selectedWarehouseId) ? 'selected' : '';
-                    html += '<option value="' + warehouse.id + '" ' + selected + '>' + 
+                    html += '<option value="' + warehouse.id + '">' + 
                            warehouse.warehouse_name + 
                            '</option>';
                 });
                 $('#direct_warehouse_id').html(html);
                 layui.form.render('select');
-                
-                // 显示仓库选择区域
-                $('#directWarehouseList').show();
             }
         }
     });
 }
 
-function loadProxyWarehouses(selectedWarehouseId=0) {
+function loadProxyWarehouses() {
     $.ajax({
         url: '/?s=index/get_warehouses',
         data: {
@@ -6216,16 +6572,12 @@ function loadProxyWarehouses(selectedWarehouseId=0) {
             if(res.code === 0) {
                 var html = '<option value="">请选择...</option>';
                 res.data.forEach(function(warehouse){
-                    var selected = (warehouse.id == selectedWarehouseId) ? 'selected' : '';
-                    html += '<option value="' + warehouse.id + '" ' + selected + '>' + 
+                    html += '<option value="' + warehouse.id + '">' + 
                            warehouse.warehouse_name + 
                            '</option>';
                 });
                 $('#proxy_warehouse_id').html(html);
                 layui.form.render('select');
-                
-                // 显示仓库选择区域
-                $('#proxyWarehouseList').show();
             }
         }
     });
