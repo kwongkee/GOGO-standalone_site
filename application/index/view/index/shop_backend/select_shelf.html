@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <style>
+        .disf{display:flex;align-items:center;}
         html{height:100%;}
         :root {--primary: #8a2be2;--primary-dark: #6a1cb9;--primary-light: #9b4de3;--secondary: #bb86fc;--accent: #e6d7f5;--text: #333333;--text-light: #f8f8f8;--background: #f9f5fd;--card-bg: #ffffff;--gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));--gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary));--shadow: 0 10px 30px rgba(138, 43, 226, 0.15);--shadow-hover: 0 15px 35px rgba(138, 43, 226, 0.25);}
         * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
@@ -79,6 +80,389 @@
             .btn {padding: 10px 20px;font-size: 0.9rem;}
             /*.form-actions {flex-direction: column;}*/
         }
+        
+        /*运费区间样式start*/
+        .freight-detail-view .config-section {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 6px;
+            border-left: 4px solid #1890ff;
+        }
+        
+        .freight-detail-view .layui-colla-item {
+            margin-bottom: 10px;
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .freight-detail-view .layui-colla-title {
+            background: #f5f5f5;
+            padding: 12px 15px;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 1px solid #e8e8e8;
+            padding-left:35px;
+            line-height: 18px !important;
+        }
+        
+        .freight-detail-view .layui-colla-icon{top:10px;}
+        
+        .freight-detail-view .layui-colla-content {
+            padding: 15px;
+            background: #fff;
+        }
+        .freight-detail-view h4 {
+            margin: 0px 0 15px 0;
+            color: #333;
+            font-weight: bold;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1890ff;
+            font-size: 16px;
+        }
+        .freight-detail-view .disf {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .freight-detail-view .layui-table {
+            margin-top: 10px;
+            margin-bottom: 0;
+        }
+        
+        .freight-detail-view .layui-table th {
+            background: #f0f7ff;
+            font-weight: bold;
+            color: #1890ff;
+        }
+        
+        .freight-detail-view .layui-row {
+            margin-bottom: 15px;
+        }
+        
+        /* 美化信息卡片 */
+        .freight-detail-view .info-card {
+            background: white;
+            border: 1px solid #e8e8e8;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .freight-detail-view .info-card h5 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #1890ff;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 8px;
+        }
+        /*运费区间样式end*/
+        
+        /* 新增样式 */
+        .step-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: var(--background);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+        
+        .step-title {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+        }
+        
+        .step-title i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+        
+        .step-content {
+            display: none;
+        }
+        
+        .step-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .warehouse-list, .terminal-list, .express-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .warehouse-item, .terminal-item, .express-item {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .warehouse-item:hover, .terminal-item:hover, .express-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        .warehouse-item.selected, .terminal-item.selected, .express-item.selected {
+            border-color: var(--primary);
+            background: var(--accent);
+        }
+        
+        .warehouse-info, .terminal-info {
+            margin-top: 10px;
+        }
+        
+        .sku-stock {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .step-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .freight-standard {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .freight-detail {
+            margin-top: 15px;
+        }
+        
+        .freight-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .freight-row:last-child {
+            border-bottom: none;
+        }
+        
+        .multi-select .express-item {
+            position: relative;
+        }
+        
+        .multi-select .express-item input[type="checkbox"] {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        /* 优化导流标签页样式 */
+        .layui-tab-title {
+            background: var(--background);
+            border-radius: 8px 8px 0 0;
+            padding: 0 10px;
+        }
+        
+        .layui-tab-title li {
+            padding: 12px 25px;
+            border-radius: 5px 5px 0 0;
+            transition: all 0.3s ease;
+            margin-right: 5px;
+        }
+        
+        .layui-tab-title li:hover {
+            background: var(--accent);
+        }
+        
+        .layui-tab-title li.layui-this {
+            background: white;
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            font-weight: 600;
+        }
+        
+        .layui-tab-content {
+            background: white;
+            border-radius: 0 0 8px 8px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+        
+        .layui-table {
+            border: 1px solid #e6e6e6;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .layui-table thead th {
+            background: var(--accent);
+            color: var(--primary-dark);
+            font-weight: 600;
+            padding: 15px;
+        }
+        
+        .layui-table tbody td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .layui-table tbody tr:hover {
+            background: #f9f5fd;
+        }
+        
+        /* 关键词输入框样式优化 */
+        .keywords {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 10px 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .keywords:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(138, 43, 226, 0.1);
+        }
+        
+        /* 优化选中样式 */
+        .warehouse-item.selected,
+        .terminal-item.selected,
+        .express-item.selected,
+        .product-item.selected {
+            border-color: var(--primary) !important;
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.1), rgba(187, 134, 252, 0.1)) !important;
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.2) !important;
+            transform: translateY(-2px);
+        }
+        
+        /* 选中标记 */
+        .selected-check,
+        .selected-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--primary);
+            font-size: 20px;
+            display: none;
+        }
+        
+        .selected .selected-check,
+        .selected .selected-indicator {
+            display: block;
+            animation: bounceIn 0.5s ease;
+        }
+        
+        /* 选择框容器 */
+        .checkbox-container,
+        .radio-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        
+        .checkbox-container input[type="checkbox"],
+        .radio-container input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .checkbox-container label,
+        .radio-container label {
+            margin-left: 5px;
+            cursor: pointer;
+        }
+        
+        /* 动画效果 */
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        /* 仓库分组标题 */
+        .warehouse-section {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .warehouse-section h5 {
+            margin: 0 0 15px 0;
+            color: var(--primary-dark);
+            font-size: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        /* 网格布局优化 */
+        .express-grid,
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        /* 选择计数显示 */
+        .selection-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff4757;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        /* 步骤指示器 */
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .step-dot.active {
+            background: var(--primary);
+            transform: scale(1.2);
+        }
     </style>
     <link rel="stylesheet" href="layui/css/layui.css">
 </head>
@@ -103,8 +487,9 @@
                 <li class="">平台导流</li>
                 <li class="">自主商城</li>
                 <li class="">平台商城</li>
+                <li class="">物流设置</li>
             </ul>
-            <div class="layui-tab-content" style="min-height:400px;max-height: 400px;overflow-y:auto;">
+            <div class="layui-tab-content" style="overflow-y:auto;">
                 <div class="layui-tab-item layui-show">
                     <!--自主导流start-->
                     {if empty($list['my_guide'])}
@@ -209,71 +594,124 @@
                         </table>
                     {/if}
                 </div>
-            </div>
-        </div>
-        
-        {if $list['goods']['warehouse_form']==1}
-            <div class="layui-form-item">
-                <div class="layui-form-label">选择终端</div>
-                <div class="layui-input-block">
-                    <select name="printer_id" id="printer_id" lay-filter="printer_id" lay-search lay-verify="required">
-                        <option value="">请选择终端</option>
-                        {volist name="list.terminal" id="vo"}
-                        <option value="{$vo['id']}" {if $list['goods']['express_info']['printer_id']==$vo['id']}selected{/if}>{$vo['printer_name']}</option>
-                        {/volist}
-                    </select>
+                <div class="layui-tab-item">
+                    <div class="step-container">
+                        <!-- 步骤1: 支付方式选择 -->
+                        <div class="step-content active" id="step-payment">
+                            <div class="step-title">
+                                <i class="fas fa-money-bill-wave"></i>
+                                步骤1: 选择支付方式
+                            </div>
+                            <div class="form-group">
+                                <div class="payment-options">
+                                    <div class="layui-form-item">
+                                        <div class="layui-input-block">
+                                            <input type="radio" name="express_paytype" value="1" title="包邮（寄方月结）" lay-filter="paymentType">
+                                            <input type="radio" name="express_paytype" value="2" title="包邮（寄方付款）" lay-filter="paymentType">
+                                            <input type="radio" name="express_paytype" value="3" title="不包邮（收方到付）" lay-filter="paymentType">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="step-actions">
+                                <button type="button" class="btn btn-primary" onclick="nextStep('step-payment', 'step-warehouse')">下一步</button>
+                            </div>
+                        </div>
+                
+                        <!-- 步骤2: 仓库选择 -->
+                        <div class="step-content" id="step-warehouse">
+                            <div class="step-title">
+                                <i class="fas fa-warehouse"></i>
+                                步骤2: 选择上架仓库（可多选）
+                            </div>
+                            <div class="warehouse-list" id="warehouseList">
+                                <!-- 动态加载仓库列表 -->
+                                <div class="warehouse-item" data-warehouse-id="1">
+                                    <h4>Gogo国内集货仓</h4>
+                                    <div class="warehouse-info">
+                                        <div class="sku-stock">
+                                            <span>白色</span>
+                                            <span>库存: 10000</span>
+                                        </div>
+                                        <div class="sku-stock">
+                                            <span>黄色</span>
+                                            <span>库存: 10000</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="step-actions">
+                                <button type="button" class="btn btn-outline" onclick="prevStep('step-warehouse', 'step-payment')">上一步</button>
+                                <button type="button" class="btn btn-primary" onclick="nextStep('step-warehouse', 'step-terminal')">下一步</button>
+                            </div>
+                        </div>
+                
+                        <!-- 步骤3: 直发仓库终端选择 -->
+                        <div class="step-content direct-terminal" id="step-terminal">
+                            <div class="step-title">
+                                <i class="fas fa-print"></i>
+                                步骤3: 选择打印终端
+                            </div>
+                            <div class="terminal-list" id="terminalList">
+                                <!-- 动态加载终端列表 -->
+                            </div>
+                            <div class="step-actions">
+                                <button type="button" class="btn btn-outline" onclick="prevStep('step-terminal', 'step-warehouse')">上一步</button>
+                                <button type="button" class="btn btn-primary" onclick="nextStep('step-terminal', 'step-express')">下一步</button>
+                            </div>
+                        </div>
+                
+                        <!-- 步骤4: 快递企业选择 -->
+                        <div class="step-content" id="step-express">
+                            <div class="step-title">
+                                <i class="fas fa-shipping-fast"></i>
+                                步骤4: 选择快递企业
+                            </div>
+                            <div class="express-list" id="expressList">
+                                <!-- 动态加载快递企业 -->
+                            </div>
+                            <div class="step-actions">
+                                <button type="button" class="btn btn-outline" onclick="prevStep('step-express', 'step-terminal')">上一步</button>
+                                <button type="button" class="btn btn-primary" onclick="nextStep('step-express', 'step-product')">下一步</button>
+                            </div>
+                        </div>
+                
+                        <!-- 步骤5: 快递产品选择 -->
+                        <div class="step-content" id="step-product">
+                            <div class="step-title">
+                                <i class="fas fa-box"></i>
+                                步骤5: 选择快递产品
+                            </div>
+                            <div class="express-list" id="productList">
+                                <!-- 动态加载快递产品 -->
+                            </div>
+                            <div class="step-actions">
+                                <button type="button" class="btn btn-outline" onclick="prevStep('step-product', 'step-express')">上一步</button>
+                                <button type="button" class="btn btn-primary" onclick="nextStep('step-product', 'step-freight')">下一步</button>
+                            </div>
+                        </div>
+                
+                        <!-- 步骤6: 运费标准 -->
+                        <div class="step-content" id="step-freight">
+                            <div class="step-title">
+                                <i class="fas fa-truck-loading"></i>
+                                步骤6: 确认运费标准
+                            </div>
+                            <div class="freight-standard" id="freightInfo">
+                                <!-- 动态加载运费标准 -->
+                            </div>
+                            <div class="step-actions">
+                                <button type="button" class="btn btn-outline" onclick="prevStep('step-freight', 'step-product')">上一步</button>
+                                <button type="button" class="btn btn-primary" onclick="submitLogistics()">确认提交</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        
-            <!--显示终端下的快递面单信息（快递企业和快递产品类型）-->
-            <table class="layui-table express_table">
-                <thead>
-                    <th>快递名称</th>
-                    <th>快递产品</th>
-                    <th style="width:160px;">支付方式</th>
-                    <th>卖家备注</th>
-                    <th>操作</th>
-                </thead>
-                <tbody>
-                    {if !empty($list['goods']['express_info'])}
-                        {volist name="list['express']" key="key" id="vo1"}
-                            <tr>
-                                <td>{$vo1['name']}</td>
-                                <td>{$vo1['express_type']}</td>
-                                <td>
-                                    <select name="express_paytype[]" lay-verify="required">
-                                        {if isset($list['goods']['express_info']['express_info'][$key-1]['express_paytype'])}
-                                            <option value="1" {if $list['goods']['express_info']['express_info'][$key-1]['express_paytype']==1}selected{/if}>寄方月结</option>
-                                            <option value="2" {if $list['goods']['express_info']['express_info'][$key-1]['express_paytype']==2}selected{/if}>寄方付款</option>
-                                            <option value="3" {if $list['goods']['express_info']['express_info'][$key-1]['express_paytype']==3}selected{/if}>收方到付</option>
-                                        {else}
-                                            <option value="1">寄方月结</option>
-                                            <option value="2">寄方付款</option>
-                                            <option value="3">收方到付</option>
-                                        {/if}
-                                    </select>
-                                </td>
-                                <td>
-                                    <textarea class="layui-textarea" name="express_remark[]" placeholder="卖家发货备注信息">{if isset($list['goods']['express_info']['express_info'][$key-1]['express_paytype'])}{if $vo1['id']==$list['goods']['express_info']['express_info'][$key-1]['express_id']}{$list['goods']['express_info']['express_info'][$key-1]['express_remark']}{/if}{/if}</textarea>
-                                </td>
-                                <td>
-                                    {if isset($list['goods']['express_info']['express_info'][$key-1]['express_paytype'])}
-                                        <input type="checkbox" name="express_id[]" lay-skin="primary" value="{$list['goods']['express_info']['express_info'][$key-1]['express_id']}" title="选择" {if $vo1['id']==$list['goods']['express_info']['express_info'][$key-1]['express_id']}checked{/if}>
-                                    {else}
-                                        <input type="checkbox" name="express_id[]" lay-skin="primary" value="{$vo1['id']}" title="选择">
-                                    {/if}
-                                </td>
-                            </tr>
-                        {/volist}
-                    {/if}
-                </tbody>
-            </table>
-        {/if}
-        
+        </div>
     </div>
 
     <div class="form-actions">
-        <!--        <button type="button" class="btn btn-outline" id="cancelBtn" style="background:transparent;border: 2px solid var(&#45;&#45;primary);color: var(&#45;&#45;primary);">取消</button>-->
         <button type="submit" class="btn btn-primary" lay-submit lay-filter="component-form-rotate">{if empty($list['goods']['shelf_id'])}提交审核{else}立即提交{/if}</button>
     </div>
 </form>
@@ -282,75 +720,937 @@
 <script src="js/jquery-3.6.0.min.js"></script>
 <script src="layui/layui.js"></script>
 <script>
-    layui.use(['layer','form','laydate','upload','colorpicker','element'],function() {
-        var laydate = layui.laydate
-            ,layer = layui.layer
-            ,form = layui.form
-            ,$ = layui.jquery
-            ,upload = layui.upload
-            ,element = layui.element
-            ,colorpicker = layui.colorpicker;
+// 全局变量存储选择的数据
+let logisticsData = {
+    express_ids:'',           //终端下的快递企业
+    express_paytype: '',      // 寄放月结(包邮)/ 寄放付款(包邮) / collect(不包邮)
+    warehouseSelections: {},  //新的数据结构：按仓库存储选择
+    paymentMethod: '',        // 1(寄方月付) / 2(寄方付款) / 3(收方到付)
+    selectedWarehouses: [],   // 选中的仓库ID数组
+    selectedWarehouseType: null, // 全局变量记录已选仓库类型 1直接发货，2代发货
+    selectedTerminal: null,   // 选中的终端ID
+    selectedExpresses: [],    // 选中的快递企业
+    selectedProducts: [],     // 选中的快递产品
+    freightConfigs: []        // 运费配置
+};
 
-        //选择终端
-        form.on('select(printer_id)',function(data){
-            let val = data.value;
-            
-            $.ajax({
-                url:"/?s=index/get_terminal_express",
-                method:'post',
-                data:{terminal_id:val,'is_merchant':1},
-                dataType:'JSON',
-                success:function(res){
-                    let html = '';
-                    if(res.code==0 && res.data.length>0){
-                        
-                        //快递信息
-                        for(let i=0;i<res.data.length;i++){
-                            html += '<tr>\n'+
-                                    '<td>'+res.data[i].express_name+'</td>\n'+
-                                    '<td>'+res.data[i].express_type+'</td>\n'+
-                                    '<td>\n'+
-                                    '    <select name="express_paytype[]" lay-verify="required">\n'+
-                                    '           <option value="1">寄方月结</option>\n'+
-                                    '           <option value="2">寄方付款</option>\n'+
-                                    '           <option value="3">收方到付</option>\n'+
-                                    '    </select>\n'+
-                                    '</td>\n'+
-                                    '<td><textarea class="layui-textarea" name="express_remark[]" placeholder="卖家发货备注信息"></textarea></td>\n'+
-                                    '<td><input type="checkbox" name="express_id[]" lay-skin="primary" data-express_type_id="'+res.data[i].id+'" value="'+res.data[i].id+'" title="选择"></td>\n'+
-                                '</tr>';
-                        }
-                        
-                        $('.express_table').find('tbody').append(html);
-                        form.render(null,'component-form-rotate');
+layui.use(['layer','form','laydate','upload','colorpicker','element'],function() {
+    var laydate = layui.laydate
+        ,layer = layui.layer
+        ,form = layui.form
+        ,$ = layui.jquery
+        ,upload = layui.upload
+        ,element = layui.element
+        ,colorpicker = layui.colorpicker;
+        
+    // 支付方式选择
+    form.on('radio(paymentType)', function(data) {
+        logisticsData.express_paytype = data.value;
+    });
+    
+    //选择终端
+    form.on('select(printer_id)',function(data){
+        let val = data.value;
+        
+        $.ajax({
+            url:"/?s=index/get_terminal_express",
+            method:'post',
+            data:{terminal_id:val,'is_merchant':1},
+            dataType:'JSON',
+            success:function(res){
+                let html = '';
+                if(res.code==0 && res.data.length>0){
+                    
+                    //快递信息
+                    for(let i=0;i<res.data.length;i++){
+                        html += '<tr>\n'+
+                                '<td>'+res.data[i].express_name+'</td>\n'+
+                                '<td>'+res.data[i].express_type+'</td>\n'+
+                                '<td>\n'+
+                                '    <select name="express_paytype[]" lay-verify="required">\n'+
+                                '           <option value="1">寄方月结</option>\n'+
+                                '           <option value="2">寄方付款</option>\n'+
+                                '           <option value="3">收方到付</option>\n'+
+                                '    </select>\n'+
+                                '</td>\n'+
+                                '<td><textarea class="layui-textarea" name="express_remark[]" placeholder="卖家发货备注信息"></textarea></td>\n'+
+                                '<td><input type="checkbox" name="express_id[]" lay-skin="primary" data-express_type_id="'+res.data[i].id+'" value="'+res.data[i].id+'" title="选择"></td>\n'+
+                            '</tr>';
                     }
+                    
+                    $('.express_table').find('tbody').append(html);
+                    form.render(null,'component-form-rotate');
                 }
-            });
-        });
-
-        form.on('submit(component-form-rotate)', function(data){
-            layer.load();
-            $.ajax({
-                url:"/?s=index/select_shelf",
-                method:'post',
-                data:data.field,
-                dataType:'JSON',
-                success:function(res){
-                    layer.closeAll('loading');
-                    layer.msg(res.msg,{time:3000}, function () {
-                        if(res.code == 0)
-                        {
-                            window.history.back(-1);
-                        }
-                    });
-                },
-                error:function (data) {
-                    layer.msg('系统错误',{time:2000});
-                }
-            });
-            return false;
+            }
         });
     });
 
+    form.on('submit(component-form-rotate)', function(data){
+        layer.load();
+        $.ajax({
+            url:"/?s=index/select_shelf",
+            method:'post',
+            data:data.field,
+            dataType:'JSON',
+            success:function(res){
+                layer.closeAll('loading');
+                layer.msg(res.msg,{time:3000}, function () {
+                    if(res.code == 0)
+                    {
+                        window.history.back(-1);
+                    }
+                });
+            },
+            error:function (data) {
+                layer.msg('系统错误',{time:2000});
+            }
+        });
+        return false;
+    });
+});
+
+// 步骤切换函数
+function nextStep(currentId, nextId) {
+    // 验证当前步骤数据
+    if (!validateStep(currentId)) {
+        layer.msg('请完成当前步骤的配置', {icon: 2});
+        return;
+    }
+    
+    // 切换到下一步
+    $('#' + currentId).removeClass('active');
+    
+    // 特殊处理：代发货仓库跳过终端步骤
+    if (currentId === 'step-warehouse' && logisticsData.selectedWarehouseType == 2) {
+        if (nextId === 'step-terminal') {
+            // 跳过终端步骤，直接进入快递步骤
+            loadExpressListForProxy();
+            $('#step-express').addClass('active');
+            return;
+        }
+    }
+    
+    // 正常流程
+    $('#' + nextId).addClass('active');
+    
+    // 加载下一步的数据
+    loadStepData(nextId);
+}
+
+function prevStep(currentId, prevId) {
+    $('#' + currentId).removeClass('active');
+    
+    // 特殊处理：如果是从快递步骤回退，且是代发货仓库
+    if (currentId === 'step-express' && logisticsData.selectedWarehouseType == 2) {
+        // 代发货仓库没有终端步骤，直接回退到仓库步骤
+        $('#step-warehouse').addClass('active');
+    } else {
+        $('#' + prevId).addClass('active');
+    }
+}
+
+// 步骤验证
+function validateStep(stepId) {
+    switch(stepId) {
+        case 'step-payment':
+            return logisticsData.express_paytype !== '';
+        case 'step-warehouse':
+            return logisticsData.selectedWarehouses.length > 0;
+        case 'step-terminal':
+            // 如果是代发货仓库，跳过终端验证
+            if (logisticsData.selectedWarehouseType == 2) {
+                return true;
+            }
+            
+            // 直接发货仓库：检查每个仓库是否都选择了终端
+            let allWarehousesHaveTerminal = true;
+            
+            for (let warehouseId of logisticsData.selectedWarehouses) {
+                const selection = logisticsData.warehouseSelections[warehouseId];
+                // 只有直接发货仓库才需要检查终端
+                if (selection.warehouseType === 'direct' && !selection.selectedTerminal) {
+                    allWarehousesHaveTerminal = false;
+                    break;
+                }
+            }
+            
+            return allWarehousesHaveTerminal;
+        case 'step-express':
+            // 检查是否选择了快递企业
+            if (logisticsData.selectedWarehouseType == 2) {
+                // 代发货：检查每个仓库的快递选择
+                for (let warehouseId of logisticsData.selectedWarehouses) {
+                    const selection = logisticsData.warehouseSelections[warehouseId];
+                    // 包邮情况下，每个代发货仓库需要一个快递
+                    if (logisticsData.express_paytype == 1 || logisticsData.express_paytype == 2) {
+                        if (selection.selectedExpresses.length === 0) {
+                            return false;
+                        }
+                    } 
+                    // 不包邮情况下，至少一个代发货仓库有快递选择
+                    else if (logisticsData.express_paytype == 3) {
+                        if (selection.selectedExpresses.length === 0) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            } else {
+                // 直接发货：检查每个仓库的快递选择
+                for (let warehouseId of logisticsData.selectedWarehouses) {
+                    const selection = logisticsData.warehouseSelections[warehouseId];
+                    // 包邮情况下，每个仓库需要一个快递
+                    if (logisticsData.express_paytype == 1 || logisticsData.express_paytype == 2) {
+                        if (selection.selectedExpresses.length === 0) {
+                            return false;
+                        }
+                    } 
+                    // 不包邮情况下，至少一个仓库有快递选择
+                    else if (logisticsData.express_paytype == 3) {
+                        if (selection.selectedExpresses.length === 0) {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+        case 'step-product':
+            // 检查是否选择了快递产品
+            for (let warehouseId of logisticsData.selectedWarehouses) {
+                const selection = logisticsData.warehouseSelections[warehouseId];
+                // 包邮情况下，每个选择都需要一个产品
+                if (logisticsData.express_paytype == 1 || logisticsData.express_paytype == 2) {
+                    if (selection.selectedProducts.length === 0) {
+                        return false;
+                    }
+                } 
+                // 不包邮情况下，至少一个选择有产品
+                else if (logisticsData.express_paytype == 3) {
+                    if (selection.selectedProducts.length === 0) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        case 'step-freight':
+            return true; // 运费步骤默认通过验证
+        default:
+            return true;
+    }
+}
+
+// 加载步骤数据
+function loadStepData(stepId) {
+    switch(stepId) {
+        case 'step-warehouse':
+            loadWarehouseList();
+            break;
+        case 'step-terminal':
+            // 只有直接发货仓库才加载终端列表
+            if (logisticsData.selectedWarehouseType == 1) {
+                loadTerminalList();
+            }
+            break;
+        case 'step-express':
+            // 根据仓库类型加载不同的快递列表
+            if (logisticsData.selectedWarehouseType == 2) {
+                loadExpressListForProxy();
+            } else {
+                loadExpressList();
+            }
+            break;
+        case 'step-product':
+            loadProductList();
+            break;
+        case 'step-freight':
+            loadFreightConfig();
+            break;
+    }
+}
+
+// 加载仓库列表
+function loadWarehouseList() {
+    $.ajax({
+        url: '/?s=index/get_goods_warehouses',
+        method: 'POST',
+        data: {
+            goods_id: $('input[name="id"]').val(),
+            company_id: $('input[name="company_id"]').val()
+        },
+        success: function(res) {
+            if (res.code === 0) {
+                let html = '';
+                res.data.forEach(warehouse => {
+                    html += `
+                    <div class="warehouse-item" data-warehouse-id="${warehouse.id}" data-warehouse-type="${warehouse.warehouse_form}" data-warehouse-name="${warehouse.name}">
+                        <h4>${warehouse.name}</h4>
+                        <div class="warehouse-info">
+                    `;
+                    
+                    // 添加SKU库存信息
+                    warehouse.skus.forEach(sku => {
+                        html += `
+                        <div class="sku-stock">
+                            <span>${sku.spec_name}</span>
+                            <span>库存: ${sku.num}</span>
+                        </div>`;
+                    });
+                    
+                    html += `</div></div>`;
+                });
+                
+                $('#warehouseList').html(html);
+                
+                // 绑定仓库选择事件
+                $('.warehouse-item').click(function() {
+                    const warehouseId = $(this).data('warehouse-id');
+                    const warehouseType = $(this).data('warehouse-type');
+                    const warehouseName = $(this).data('warehouse-name');
+                    const index = logisticsData.selectedWarehouses.indexOf(warehouseId);
+                    
+                    
+                    // 检查仓库类型一致性
+                    if (logisticsData.selectedWarehouses.length > 0 && 
+                        warehouseType !== logisticsData.selectedWarehouseType) {
+                        layer.msg('只能选择同一种类型的仓库上架产品', {icon: 2});
+                        return;
+                    }
+                    
+                    if (index === -1) {
+                        // 首次选择时记录类型
+                        if (logisticsData.selectedWarehouses.length === 0) {
+                            logisticsData.selectedWarehouseType = warehouseType;
+                        }
+                        
+                        logisticsData.selectedWarehouses.push(warehouseId);
+                        logisticsData.warehouseSelections[warehouseId] = {
+                            warehouseId: warehouseId,
+                            warehouseType: warehouseType,
+                            warehouseName: warehouseName,// 仓库名称
+                            terminalName: '',        // 终端名称
+                            express_ids: '',         // 采购单下的仓库终端默认已选的快递企业
+                            selectedTerminal: null,  // 为每个仓库存储终端选择
+                            selectedExpresses: [],   // 为每个仓库存储快递选择
+                            selectedProducts: []     // 为每个仓库存储产品选择
+                        };
+                        $(this).addClass('selected');
+                        
+                        // 添加选中标记
+                        $(this).append('<div class="selected-check"><i class="fas fa-check-circle"></i></div>');
+                    } else {
+                        // 取消选择
+                        logisticsData.selectedWarehouses.splice(index, 1);
+                        delete logisticsData.warehouseSelections[warehouseId];
+                        
+                        $(this).removeClass('selected');
+                        $(this).find('.selected-check').remove();
+                        
+                        // 如果没有选中任何仓库，清空类型记录
+                        if (logisticsData.selectedWarehouses.length === 0) {
+                            logisticsData.selectedWarehouseType = null;
+                        }
+                    }
+                });
+            }
+        }
+    });
+}
+
+// 加载终端列表
+function loadTerminalList() {
+    $.ajax({
+        url: '/?s=index/get_warehouse_terminals',
+        method: 'POST',
+        data: {
+            warehouse_ids: logisticsData.selectedWarehouses.join(','),
+            company_id: $('input[name="company_id"]').val(),
+            goods_id: $('input[name="id"]').val(),
+        },
+        success: function(res) {
+            if (res.code === 0) {
+                let html = '';
+                
+                res.data.forEach(terminal => {
+                    html += `
+                    <div class="terminal-item" 
+                         data-terminal-id="${terminal.id}" 
+                         data-warehouse-id="${terminal.warehouse_id}"
+                         data-express_ids="${terminal.express_ids}"
+                         data-terminal-name="${terminal.printer_name}">
+                        <div class="selection-header">
+                            <h4>终端名称：${terminal.printer_name}</h4>
+                            <span class="warehouse-label">仓库名称：${terminal.warehouse_name}</span>
+                        </div>
+                        <div class="terminal-info">
+                            <p>类型: ${terminal.type_name}</p>
+                            <p>关联快递: ${terminal.express_count}家</p>
+                        </div>
+                        <div class="selected-indicator">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>`;
+                });
+
+                
+                $('#terminalList').html(html);
+                
+                // 包邮模式：每个仓库只能选一个终端
+                $('.terminal-item').click(function() {
+                    const warehouseId = $(this).data('warehouse-id');
+                    const terminalId = $(this).data('terminal-id');
+                    
+                    // 存储到对应仓库的选择中
+                    const selection = logisticsData.warehouseSelections[warehouseId];
+                    console.log(selection,warehouseId,444);
+                    if (selection) {
+                        selection.selectedTerminal = terminalId;
+                        selection.express_ids = $(this).data('express_ids');
+                        selection.terminalName = $(this).data('terminal-name');
+                    }
+                    
+                    // 更新UI：取消同仓库其他终端的选择，选中当前终端
+                    $(`.terminal-item[data-warehouse-id="${warehouseId}"]`).removeClass('selected');
+                    $(`.terminal-item[data-warehouse-id="${warehouseId}"] .selected-indicator`).hide();
+                    
+                    $(this).addClass('selected');
+                    $(this).find('.selected-indicator').show();
+                });
+            }
+        }
+    });
+}
+
+// 加载快递企业列表
+function loadExpressList() {
+    // 获取所有仓库的选择
+    const selections = Object.values(logisticsData.warehouseSelections);
+    const expressIds = selections.map(s => s.expressIds).join(',');
+    
+    $.ajax({
+        url: '/?s=index/get_terminal_expresses',
+        method: 'POST',
+        data: {
+            selections: JSON.stringify(logisticsData.warehouseSelections),
+            payment_type: logisticsData.express_paytype
+        },
+        success: function(res) {
+            if (res.code === 0) {
+                let html = '';
+                
+                // 分组显示：按仓库->终端分组
+                Object.keys(logisticsData.warehouseSelections).forEach(warehouseId => {
+                    const selection = logisticsData.warehouseSelections[warehouseId];
+                    console.log(selection,warehouseId,5555);
+                    
+                    html += `<div class="warehouse-section">
+                        <h5>${selection.warehouseName} - ${selection.terminalName}</h5>
+                        <div class="express-grid">`;
+                    
+                    res.data.forEach(express => {
+                        // express.warehouse_id == warehouseId && 
+                        if (express.terminal_id == selection.selectedTerminal) {
+                            
+                            html += `
+                            <div class="express-item multi-select" 
+                                 data-express-id="${express.id}"
+                                 data-warehouse-id="${warehouseId}">
+                                <h4>${express.name}</h4>
+                                <p>代码: ${express.code}</p>
+                                <p>支持类型: ${express.typename}</p>
+                                <div class="checkbox-container">
+                                    <input type="checkbox" class="express-checkbox" 
+                                           data-express-id="${express.id}"
+                                           data-warehouse-id="${warehouseId}">
+                                    <label>选择</label>
+                                </div>
+                            </div>`;
+                        }
+                    });
+                    
+                    html += `</div></div>`;
+                });
+                
+                $('#expressList').html(html);
+                
+                // 绑定复选框事件
+                $('.express-checkbox').change(function() {
+                    const expressId = $(this).data('express-id');
+                    const warehouseId = $(this).data('warehouse-id');
+                    
+                    if (!logisticsData.warehouseSelections[warehouseId].expresses) {
+                        logisticsData.warehouseSelections[warehouseId].expresses = [];
+                    }
+                    
+                    if (this.checked) {
+                        logisticsData.warehouseSelections[warehouseId].expresses.push(expressId);
+                        $(this).closest('.express-item').addClass('selected');
+                    } else {
+                        const index = logisticsData.warehouseSelections[warehouseId].expresses.indexOf(expressId);
+                        if (index > -1) {
+                            logisticsData.warehouseSelections[warehouseId].expresses.splice(index, 1);
+                        }
+                        $(this).closest('.express-item').removeClass('selected');
+                    }
+                });
+            }
+        }
+    });
+}
+
+// 代发货仓库的直接选择
+function loadExpressListForProxy() {
+    $.ajax({
+        url: '/?s=index/get_proxy_warehouse_expresses',
+        method: 'POST',
+        data: {
+            warehouse_ids: logisticsData.selectedWarehouses.join(','),
+            company_id: $('input[name="company_id"]').val(),
+            payment_type: logisticsData.express_paytype
+        },
+        success: function(res) {
+            if (res.code === 0) {
+                let html = '';
+                const isMultiSelect = logisticsData.express_paytype == 3; // 不包邮可多选
+                
+                res.data.forEach(express => {
+                    html += `
+                    <div class="express-item ${isMultiSelect ? 'multi-select' : ''}" 
+                         data-express-id="${express.id}"
+                         data-warehouse-id="${express.warehouse_id}">
+                        <h4>${express.name}</h4>
+                        <p>代码: ${express.code}</p>
+                        <p>类型: ${express.typename}</p>
+                        ${isMultiSelect ? '<input type="checkbox" class="express-checkbox">' : ''}
+                    </div>`;
+                });
+                
+                $('#expressList').html(html);
+                
+                // 绑定快递选择事件
+                if (isMultiSelect) {
+                    // 不包邮模式：多选
+                    $('.express-checkbox').change(function() {
+                        const expressId = $(this).closest('.express-item').data('express-id');
+                        const warehouseId = $(this).closest('.express-item').data('warehouse-id');
+                        const selection = logisticsData.warehouseSelections[warehouseId];
+                        
+                        if (this.checked) {
+                            if (selection && !selection.selectedExpresses.includes(expressId)) {
+                                selection.selectedExpresses.push(expressId);
+                            }
+                            $(this).closest('.express-item').addClass('selected');
+                        } else {
+                            if (selection) {
+                                const index = selection.selectedExpresses.indexOf(expressId);
+                                if (index > -1) {
+                                    selection.selectedExpresses.splice(index, 1);
+                                }
+                            }
+                            $(this).closest('.express-item').removeClass('selected');
+                        }
+                    });
+                } else {
+                    // 包邮模式：单选（每个仓库选一个快递）
+                    $('.express-item').click(function() {
+                        const warehouseId = $(this).data('warehouse-id');
+                        const expressId = $(this).data('express-id');
+                        const selection = logisticsData.warehouseSelections[warehouseId];
+                        
+                        if (selection) {
+                            // 清空该仓库之前的快递选择
+                            selection.selectedExpresses = [expressId];
+                            
+                            // 更新UI：取消同仓库其他快递的选择
+                            $(`.express-item[data-warehouse-id="${warehouseId}"]`).removeClass('selected');
+                            
+                            // 选中当前快递
+                            $(this).addClass('selected');
+                        }
+                    });
+                }
+            }
+        }
+    });
+}
+
+// 加载快递产品列表
+function loadProductList() {
+    $.ajax({
+        url: '/?s=index/get_shelf_express_products',
+        method: 'POST',
+        data: {
+            express_ids: logisticsData.selectedExpresses.join(','),
+            terminal_id: logisticsData.selectedTerminal
+        },
+        success: function(res) {
+            if (res.code === 0) {
+                let html = '';
+                const isMultiSelect = logisticsData.express_paytype == 3; // 不包邮可多选
+                
+                res.data.forEach(product => {
+                    html += `
+                    <div class="express-item ${isMultiSelect ? 'multi-select' : ''}" 
+                         data-product-id="${product.id}"
+                         data-express-type="${product.express_type}">
+                        <h4>${product.express_type}</h4>
+                        <p>快递: ${product.express_name}</p>
+                        <p>产品ID: ${product.id}</p>
+                        ${isMultiSelect ? '<input type="checkbox" class="product-checkbox">' : ''}
+                    </div>`;
+                });
+                
+                $('#productList').html(html);
+                
+                // 绑定产品选择事件
+                if (isMultiSelect) {
+                    // 不包邮模式：多选
+                    $('.product-checkbox').change(function() {
+                        const productId = $(this).closest('.express-item').data('product-id');
+                        const expressType = $(this).closest('.express-item').data('express-type');
+                        const index = logisticsData.selectedProducts.findIndex(p => p.id === productId);
+                        
+                        if (this.checked && index === -1) {
+                            logisticsData.selectedProducts.push({
+                                id: productId,
+                                express_type: expressType
+                            });
+                            $(this).closest('.express-item').addClass('selected');
+                        } else if (!this.checked && index !== -1) {
+                            logisticsData.selectedProducts.splice(index, 1);
+                            $(this).closest('.express-item').removeClass('selected');
+                        }
+                    });
+                } else {
+                    // 包邮模式：单选
+                    $('.express-item').click(function() {
+                        $('.express-item').removeClass('selected');
+                        $(this).addClass('selected');
+                        
+                        logisticsData.selectedProducts = [{
+                            id: $(this).data('product-id'),
+                            express_type: $(this).data('express-type')
+                        }];
+                    });
+                }
+            }
+        }
+    });
+}
+
+// 加载运费配置
+function loadFreightConfig() {
+    $.ajax({
+        url: '/?s=index/get_shelf_freight_configs',
+        method: 'POST',
+        data: {
+            product_ids: logisticsData.selectedProducts.map(p => p.id).join(','),
+            warehouse_ids: logisticsData.selectedWarehouses.join(','),
+            terminal_id: logisticsData.selectedTerminal
+        },
+        success: function(res) {
+            if (res.code === 0) {
+                
+                
+                let html = '';
+                
+                res.data.forEach(config => {
+                    let name = `【${config.express_name} - ${config.express_type}】运费标准详情`;
+                    html += createFreightDetailHtml(name,config.config_data);
+                    html += '<hr>';
+                    // html += `
+                    // <div class="freight-detail">
+                    //     <div><h3>${config.express_name}</h3> - <h5>${config.express_type}</h5></div>
+                    //     <div class="freight-row">
+                    //         <span>最低收费:</span>
+                    //         <span>${config.mini_cost || 0}元</span>
+                    //     </div>
+                    //     <div class="freight-row">
+                    //         <span>首重:</span>
+                    //         <span>${config.shouzhong_money || 0}元/${config.unit_name || 'kg'}</span>
+                    //     </div>
+                    //     <div class="freight-row">
+                    //         <span>续重:</span>
+                    //         <span>${config.xuzhong_money || 0}元/${config.unit_name || 'kg'}</span>
+                    //     </div>
+                    //     <div class="freight-row">
+                    //         <span>按量计费:</span>
+                    //         <span>${config.anliang_money || 0}元</span>
+                    //     </div>
+                    // </div>
+                    // <hr>`;
+                });
+                
+                $('#freightInfo').html(html);
+                layui.element.render('collapse');
+            }
+        }
+    });
+}
+
+//渲染运费
+// 创建运费详情HTML
+function createFreightDetailHtml(name,configData) {
+    var html = '';
+    
+    // 基本信息标题
+    html += '<div class="freight-detail-view">';
+    html += '<h4 style="color: #1890ff; border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 20px;">';
+    html += '<i class="layui-icon layui-icon-template-1"></i> '+name;
+    html += '</h4>';
+    
+    // 最低消费配置
+    if (configData.mini_cost && configData.mini_cost.length > 0) {
+        html += '<div class="config-section">';
+        html += '<h4><i class="layui-icon layui-icon-rmb"></i> 最低消费配置</h4>';
+        html += '<table class="layui-table">';
+        html += '<thead><tr><th>是否有最低消费</th><th>最低消费值</th><th>单位</th></tr></thead>';
+        html += '<tbody>';
+        
+        configData.mini_cost.forEach(function(cost, index) {
+            var costText = cost == '1' ? '有最低消费' : '无最低消费';
+            var minNum = configData.mini_num && configData.mini_num[index] ? configData.mini_num[index] : '-';
+            var unit = configData.minicost_unit;
+            
+            html += '<tr>';
+            html += '<td>' + costText + '</td>';
+            html += '<td>' + minNum + '</td>';
+            html += '<td>' + unit + '</td>';
+            html += '</tr>';
+        });
+        
+        html += '</tbody></table></div>';
+    }
+    
+    // 计费区间配置
+    if (configData.qj1 && configData.qj1.length > 0) {
+        html += '<div class="config-section">';
+        html += '<h4><i class="layui-icon layui-icon-chart-screen"></i> 计费区间配置</h4>';
+        html += '<div class="layui-collapse" lay-accordion>';
+        
+        configData.qj1[0].forEach(function(qj1Value, index) {
+            var unitValue = configData.unit;
+            var unitName = configData.unit;
+            
+            var qj2Method = configData.qj2_method && configData.qj2_method[0] && configData.qj2_method[0][index] || '1';
+            var qj2Value = configData.qj2 && configData.qj2[0] && configData.qj2[0][index] || '';
+            var jinjie = configData.jinjie && configData.jinjie[0] && configData.jinjie[0][index] || '';
+            
+            html += '<div class="layui-colla-item">';
+            html += '<div class="layui-colla-title">';
+            html += '<i class="layui-icon layui-icon-location"></i> 计费区间 ' + (index + 1);
+            html += '</div>';
+            html += '<div class="layui-colla-content">';
+            html += '<div class="disf" style="margin-bottom: 10px;">';
+            html += '<div style="min-width: 100px; font-weight: bold;">起始值：</div>';
+            html += '<div>' + qj1Value + ' ' + unitName + '</div>';
+            html += '</div>';
+            
+            html += '<div class="disf" style="margin-bottom: 10px;">';
+            html += '<div style="min-width: 100px; font-weight: bold;">结束方式：</div>';
+            html += '<div>' + (qj2Method == '2' ? '以上' : '数值') + '</div>';
+            html += '</div>';
+            
+            if (qj2Method == '1' && qj2Value) {
+                html += '<div class="disf" style="margin-bottom: 10px;">';
+                html += '<div style="min-width: 100px; font-weight: bold;">结束值：</div>';
+                html += '<div>' + qj2Value + ' ' + unitName + '</div>';
+                html += '</div>';
+            }
+            
+            if (jinjie) {
+                html += '<div class="disf">';
+                html += '<div style="min-width: 100px; font-weight: bold;">计费进阶：</div>';
+                html += '<div>' + jinjie + ' ' + unitName + '</div>';
+                html += '</div>';
+            }
+            
+            html += '</div></div>';
+        });
+        
+        html += '</div></div>';
+    }
+    
+    // 计费方式配置
+    if (configData.jf_method && configData.jf_method.length > 0) {
+        html += '<div class="config-section">';
+        html += '<h4><i class="layui-icon layui-icon-cart"></i> 计费方式配置</h4>';
+        html += '<div class="layui-collapse" lay-accordion>';
+        
+        configData.jf_method[0].forEach(function(methodArray, qjIndex) {
+            if (methodArray && methodArray.length > 0) {
+                methodArray.forEach(function(method, methodIndex) {
+                    html += '<div class="layui-colla-item">';
+                    html += '<div class="layui-colla-title">';
+                    html += '<i class="layui-icon layui-icon-dollar"></i> 计费方式 ' + (methodIndex + 1) + '（区间' + (qjIndex + 1) + '）';
+                    html += '</div>';
+                    html += '<div class="layui-colla-content">';
+                    
+                    // 根据计费方式类型显示不同内容
+                    if (method == '1') {
+                        html += '<div style="margin-bottom: 15px;">';
+                        html += '<div style="font-weight: bold; color: #1890ff; margin-bottom: 5px;">首续计费</div>';
+                        
+                        var shouzhong = configData.shouzhong && configData.shouzhong[0] && configData.shouzhong[0][qjIndex] && configData.shouzhong[0][qjIndex][methodIndex];
+                        var shouzhongMoney = configData.shouzhong_money && configData.shouzhong_money[0] && configData.shouzhong_money[0][qjIndex] && configData.shouzhong_money[0][qjIndex][methodIndex];
+                        var xuzhong = configData.xuzhong && configData.xuzhong[0] && configData.xuzhong[0][qjIndex] && configData.xuzhong[0][qjIndex][methodIndex];
+                        var xuzhongMoney = configData.xuzhong_money && configData.xuzhong_money[0] && configData.xuzhong_money[0][qjIndex] && configData.xuzhong_money[0][qjIndex][methodIndex];
+                        var currency = configData.currency && configData.currency[0] && configData.currency[0][qjIndex] && configData.currency[0][qjIndex][methodIndex];
+                        var currencyName = configData.currency_name || getCurrencyName(currency) || '元';
+                        
+                        if (shouzhong && shouzhongMoney) {
+                            html += '<div class="disf" style="margin-bottom: 5px;">';
+                            html += '<div style="min-width: 80px;">首重：</div>';
+                            html += '<div>' + shouzhong + ' ' + configData.unit_name + ' = ' + shouzhongMoney + ' ' + currencyName + '</div>';
+                            html += '</div>';
+                        }
+                        
+                        if (xuzhong && xuzhongMoney) {
+                            html += '<div class="disf">';
+                            html += '<div style="min-width: 80px;">续重：</div>';
+                            html += '<div>' + xuzhong + ' ' + configData.unit_name + ' = ' + xuzhongMoney + ' ' + currencyName + '</div>';
+                            html += '</div>';
+                        }
+                        
+                        html += '</div>';
+                        
+                    } else if (method == '2') {
+                        html += '<div style="margin-bottom: 15px;">';
+                        html += '<div style="font-weight: bold; color: #1890ff; margin-bottom: 5px;">按量计费</div>';
+                        
+                        var anliang = configData.anliang && configData.anliang[0] && configData.anliang[0][qjIndex] && configData.anliang[0][qjIndex][methodIndex];
+                        var anliangMoney = configData.anliang_money && configData.anliang_money[0] && configData.anliang_money[0][qjIndex] && configData.anliang_money[0][qjIndex][methodIndex];
+                        var currency = configData.currency && configData.currency[0] && configData.currency[0][qjIndex] && configData.currency[0][qjIndex][methodIndex];
+                        var currencyName = configData.currency_name || getCurrencyName(currency) || '元';
+                        
+                        if (anliang && anliangMoney) {
+                            html += '<div class="disf">';
+                            html += '<div style="min-width: 80px;">单价：</div>';
+                            html += '<div>' + anliangMoney + ' ' + currencyName + ' / ' + anliang + ' ' + configData.unit_name + '</div>';
+                            html += '</div>';
+                        }
+                        
+                        html += '</div>';
+                        
+                    } else if (method == '3') {
+                        html += '<div style="margin-bottom: 15px;">';
+                        html += '<div style="font-weight: bold; color: #1890ff; margin-bottom: 5px;">分段计费</div>';
+                        
+                        // 显示分段计费详情
+                        if (configData.fenduan_num1 && configData.fenduan_num1[0] && configData.fenduan_num1[0][qjIndex] && configData.fenduan_num1[0][qjIndex][methodIndex]) {
+                            configData.fenduan_num1[0][qjIndex][methodIndex].forEach(function(fdNum1, fdIndex) {
+                                var fdMethod = configData.fenduan_method && configData.fenduan_method[0] && configData.fenduan_method[0][qjIndex] && configData.fenduan_method[0][qjIndex][methodIndex] && configData.fenduan_method[0][qjIndex][methodIndex][fdIndex];
+                                var fdNum2 = configData.fenduan_num2 && configData.fenduan_num2[0] && configData.fenduan_num2[0][qjIndex] && configData.fenduan_num2[0][qjIndex][methodIndex] && configData.fenduan_num2[0][qjIndex][methodIndex][fdIndex];
+                                var fdMoney = configData.fenduan_money && configData.fenduan_money[0] && configData.fenduan_money[0][qjIndex] && configData.fenduan_money[0][qjIndex][methodIndex] && configData.fenduan_money[0][qjIndex][methodIndex][fdIndex];
+                                var fdCurrency = configData.currency && configData.currency[0] && configData.currency[0][qjIndex] && configData.currency[0][qjIndex][methodIndex] && configData.currency[0][qjIndex][methodIndex][fdIndex];
+                                var currencyName = configData.currency_name || getCurrencyName(fdCurrency) || '元';
+                                
+                                html += '<div style="background: #f8f9fa; padding: 10px; border-radius: 4px; margin-bottom: 5px;">';
+                                html += '<div>分段 ' + (fdIndex + 1) + '</div>';
+                                html += '<div class="disf">';
+                                html += '<div>起始：' + fdNum1 + ' ' + configData.unit_name + '</div>';
+                                html += '<div style="margin: 0 10px;">至</div>';
+                                html += '<div>' + (fdMethod == '2' ? '以上' : fdNum2 + ' ' + configData.unit_name) + '</div>';
+                                if (fdMoney) {
+                                    html += '<div style="margin-left: 20px;">费用：' + fdMoney + ' ' + currencyName + '</div>';
+                                }
+                                html += '</div>';
+                                html += '</div>';
+                            });
+                        } else {
+                            html += '<div style="color: #999; font-style: italic;">无分段计费详情</div>';
+                        }
+                        
+                        html += '</div>';
+                    }
+                    
+                    html += '</div></div>';
+                });
+            }
+        });
+        
+        html += '</div></div>';
+    }
+    console.log(configData);
+    // 币种和单位信息
+    html += '<div class="config-section">';
+    html += '<h4><i class="layui-icon layui-icon-set"></i> 其他信息</h4>';
+    html += '<div class="layui-row">';
+    html += '<div class="layui-col-md-6">';
+    html += '<div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">';
+    html += '<div style="font-weight: bold; margin-bottom: 5px;">单位：</div>';
+    html += '<div>' + (configData.unit_name || '未设置') + '</div>';
+    html += '</div>';
+    html += '</div>';
+    html += '<div class="layui-col-md-6">';
+    html += '<div style="padding: 10px; background: #f8f9fa; border-radius: 4px;">';
+    html += '<div style="font-weight: bold; margin-bottom: 5px;">币种：</div>';
+    html += '<div>' + (configData.currency_name || '未设置') + '</div>';
+    html += '</div>';
+    html += '</div>';
+    html += '</div>';
+    html += '</div>';
+    
+    html += '</div>'; // 结束 freight-detail-view
+    
+    return html;
+}
+
+// 辅助函数：获取单位名称
+function getUnitName(unitCode) {
+    // 这里根据您的实际单位数据返回名称
+    // 暂时返回代码本身
+    return unitCode;
+}
+
+// 辅助函数：获取币种名称
+function getCurrencyName(currencyCode) {
+    // 这里根据您的实际币种数据返回名称
+    // 暂时返回代码本身
+    return currencyCode;
+}
+
+// 提交物流配置
+function submitLogistics() {
+    // 收集所有数据
+    const formData = {
+        pa: 2,
+        company_id: $('input[name="company_id"]').val(),
+        company_type: $('input[name="company_type"]').val(),
+        id: $('input[name="id"]').val(),
+        type: $('input[name="type"]').val(),
+        payment_type: logisticsData.express_paytype,
+        payment_method: logisticsData.paymentMethod,
+        warehouses: logisticsData.selectedWarehouses,
+        terminal_id: logisticsData.selectedTerminal,
+        expresses: logisticsData.selectedExpresses,
+        products: logisticsData.selectedProducts,
+        // 原有的导流关键词数据
+        guide: {},
+        keywords: {}
+    };
+    
+    // 收集导流关键词
+    $('.keywords').each(function() {
+        const name = $(this).attr('name');
+        const value = $(this).val();
+        // 解析字段名，填充到formData
+    });
+    
+    // 提交表单
+    $.ajax({
+        url: '/?s=index/select_shelf',
+        method: 'POST',
+        data: formData,
+        success: function(res) {
+            if (res.code === 0) {
+                layer.msg('提交成功', {icon: 1}, function() {
+                    window.history.back(-1);
+                });
+            } else {
+                layer.msg(res.msg, {icon: 2});
+            }
+        }
+    });
+}
 </script>
 </html>

@@ -145,7 +145,15 @@ Route::any('index/get_goods_param', 'index/Index/get_goods_param');#企业网店
 Route::any('index/spec_arrange', 'index/Index/spec_arrange');#企业网店-上架管理-整理规格
 Route::any('index/shelf_manage', 'index/Index/shelf_manage');#企业网店-上架管理-管理上架
 Route::any('index/del_shelf', 'index/Index/del_shelf');#企业网店-上架管理-下架商品
+
 Route::any('index/select_shelf', 'index/Index/select_shelf');#企业网店-上架管理-选择上架
+Route::any('index/get_goods_warehouses', 'index/Index/get_goods_warehouses');#企业网店-上架管理-选择上架-获取商品仓库库存
+Route::any('index/get_warehouse_terminals', 'index/Index/get_warehouse_terminals');#企业网店-上架管理-选择上架-获取仓库终端
+Route::any('index/get_terminal_expresses', 'index/Index/get_terminal_expresses');#企业网店-上架管理-选择上架-获取终端快递企业
+Route::any('index/get_shelf_express_products', 'index/Index/get_shelf_express_products');#企业网店-上架管理-选择上架-获取快递产品
+Route::any('index/get_shelf_freight_configs', 'index/Index/get_shelf_freight_configs');#企业网店-上架管理-选择上架-获取产品运费标准
+Route::any('index/get_proxy_warehouse_expresses', 'index/Index/get_proxy_warehouse_expresses');#企业网店-上架管理-选择上架-获取代发货仓库的快递企业
+
 Route::any('index/sure_shelf', 'index/Index/sure_shelf');#企业网店-上架管理-确认上架（废弃了）
 Route::any('index/save_next_merchant', 'index/Index/save_next_merchant');#企业网店-交易管理-配置下游
 Route::any('index/member_manage', 'index/Index/member_manage');#企业网店-买家管理-信息管理

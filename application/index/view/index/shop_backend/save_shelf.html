@@ -281,6 +281,8 @@
                                             <th>成本价</th>
                                             <th>上架数量</th>
                                             <th>报警值</th>
+                                            <th>产品体积(cm)</th>
+                                            <th>产品重量(kg)</th>
                                         </thead>
                                         <tbody>
                                         <tr>
@@ -351,6 +353,12 @@
                                                     <div class="layu-input" style="white-space: nowrap;">触发报警</div>
                                                 </div>
                                             </td>
+                                            <td>
+                                                <input type="text" class="layui-input" name="nospecs[volume]" placeholder="请输入：长*宽*高">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="layui-input" name="nospecs[weight]" placeholder="请输入重量">
+                                            </td>
                                         </tr>
                                         </tbody>
                                     </table>
@@ -369,6 +377,8 @@
                                         <th>成本价</th>
                                         <th>上架数量</th>
                                         <th>报警值</th>
+                                        <th>产品体积(cm)</th>
+                                        <th>产品重量(kg)</th>
                                         </thead>
                                         <tbody class="tbody">
 
@@ -2891,6 +2901,12 @@
                             '                                                                <div class="layu-input" style="white-space: nowrap;">触发报警</div>\n' +
                             '                                                            </div>\n' +
                             '                                                        </td>\n' +
+                            '                                                        <td>\n'+
+                            '                                                            <input type="text" class="layui-input w100" name="havespecs[volume][]" placeholder="请输入：长*宽*高" value="'+res.data['goods']['havespecs'][i]['volume']+'">\n'+
+                            '                                                        </td>\n'+
+                            '                                                        <td>\n'+
+                            '                                                           <input type="text" class="layui-input w100" name="havespecs[weight][]" placeholder="请输入重量" value="'+res.data['goods']['havespecs'][i]['weight']+'">\n'+
+                            '                                                        </td>\n'+
                             '                                                    </tr>';
 
                         $('.have_specs_div').find('.layui-table').find('.tbody').html(spec_table_html);
@@ -2910,6 +2926,8 @@
                 $('input[name="nospecs[shelf_number]"]').val(res.data['goods']['nospecs']['sku_info']['shelf_number']);
                 $('select[name="nospecs[warn_type]"]').val(res.data['goods']['nospecs']['sku_info']['warn_type']);
                 $('input[name="nospecs[warn_number]"]').val(res.data['goods']['nospecs']['sku_info']['warn_number']);
+                $('input[name="nospecs[volumn]"]').val(res.data['goods']['nospecs']['sku_info']['volumn']);
+                $('input[name="nospecs[weight]"]').val(res.data['goods']['nospecs']['sku_info']['weight']);
 
                 let spec_table_html = '          <input type="hidden" name="is_edit" value="1">\n'+
                     '                            <input type="hidden" name="sku_id" value="'+res.data['goods']['sku_id']+'">\n';
@@ -5102,6 +5120,12 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
             '                                                                <div class="layu-input" style="white-space: nowrap;">触发报警</div>\n' +
             '                                                            </div>\n' +
             '                                                        </td>\n' +
+            '                                                        <td>\n'+
+            '                                                            <input type="text" class="layui-input w100" name="havespecs[volumn]['+tr_num+']" placeholder="请输入：长*宽*高" value="">\n'+
+            '                                                        </td>\n'+
+            '                                                        <td>\n'+
+            '                                                            <input type="text" class="layui-input w100" name="havespecs[weight]['+tr_num+']" placeholder="请输入重量" value="">\n'+
+            '                                                        </td>\n'+
             '                                                    </tr>';
 
         $('.have_specs_div').find('.layui-table').find('.tbody').append(html);
