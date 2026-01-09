@@ -220,6 +220,19 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">商品类型</label>
+                            <div class="layui-input-block">
+                                <div class="disf">
+                                    <div class="goods_type">
+                                        <select name="goods_type" id="goods_type">
+                                            <option value="0">单品实时打包</option>
+                                            <option value="1">套餐预先打包</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="info_div">
                         <div class="layui-form-item">
@@ -2738,7 +2751,12 @@
             $('.currency_div').find('.other_currency').html(other_currency_html);
             $('.currency_div').find('.other_currency').hide();
             //计价币种=============================================================end
-
+            
+            //商品类型=============================================================start
+            $('#goods_type').val(res.data.goods.goods_type);
+            $('#goods_type').attr('disabled','disabled');
+            //商品类型=============================================================end
+            
             //商品型号=============================================================start
             if(res.data['goods']['have_specs']==1){
                 //有规格
