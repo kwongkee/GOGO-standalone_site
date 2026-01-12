@@ -194,9 +194,12 @@
         
         .warehouse-list, .terminal-list, .express-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
             gap: 15px;
             margin: 20px 0;
+        }
+        .express-list{
+            grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
         }
         
         .warehouse-item, .terminal-item, .express-item {
@@ -1000,6 +1003,64 @@
                             </div>
                             <div class="step-actions">
                                 <button type="button" class="btn btn-outline" onclick="prevStep('step-freight', 'step-product')">上一步</button>
+                                {if $list['goods']['goods_type']==1}
+                                    <!--组合商品-->
+                                    <button type="button" class="btn btn-primary" onclick="nextStep('step-freight', 'step-combo-product')">下一步</button>
+                                {/if}
+                            </div>
+                        </div>
+                        
+                        <!-- 步骤7: 确认套餐内容 -->
+                        <div class="step-content" id="step-combo-product">
+                            <div class="step-title">
+                                <i class="fas fa-truck-loading"></i>
+                                步骤7: 确认套餐内容
+                            </div>
+                            <div class="freight-standard" id="combo-productInfo">
+                                <!-- 动态加载运费标准 -->
+                                <div class="form-group">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">套餐名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="new_goodsname" class="layui-input" value="{$list['goods']['goods_name']}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <table class="layui-table" id="pre_packaged_list" border="0">
+                                    <thead>
+                                        <th>关联产品</th>
+                                        <th>数量</th>
+                                    </thead>
+                                    <tbody>
+                                        {if $list['goods']['goods_type']==1}
+                                            {volist name="list['goods']['connect_goods']" id="vo"}
+                                                <tr>
+                                                    <td>
+                                                       <div style="font-weight:600;font-size:14px;">{$vo['goodsname']}</div> 
+                                                       <div style="font-size:13px;">{$vo['skuname']}</div>
+                                                       <div style="font-size:12px;" class="sku-stock_{$vo['connect_gid']}_{$vo['connect_skuid']}"></div>
+                                                    </td>
+                                                    <td class="disf">
+                                                        <input type="number" name="connect_num[]" value="" />
+                                                        <input type="text" name="unitname[]" value="{$vo['unitname']}" style="display:none;"/>
+                                                        <div class="unitname">{$vo['unitname']}</div>
+                                                    </td>
+                                                </tr>
+                                            {/volist}
+                                        {/if}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td>套餐份数</td>
+                                            <td>
+                                                <input type="number" name="sum_num" value="" />
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <div class="step-actions">
+                                <button type="button" class="btn btn-outline" onclick="prevStep('step-combo-product', 'step-freight')">上一步</button>
                             </div>
                         </div>
                     </div>
@@ -1257,6 +1318,8 @@ function validateStep(stepId) {
             // return allValid;
         case 'step-freight':
             return true; // 运费步骤默认通过验证
+        case 'step-combo-product':
+            return true; // 组合商品
         default:
             return true;
     }
@@ -1286,6 +1349,9 @@ function loadStepData(stepId) {
             break;
         case 'step-freight':
             loadFreightConfig();
+            break;
+        case 'step-combo-product':
+            loadComboProduct();
             break;
     }
 }
@@ -2329,6 +2395,30 @@ function loadFreightConfig() {
     loadFreightConfigsBatch(freightRequests);
 }
 
+// 自定义套餐清单（当是上架商品时）
+function loadComboProduct(){
+    //获取当前所选仓库下的商品其可打包库存
+    layer.load();
+    $.ajax({
+        url: '/?s=index/select_shelf',
+        method: 'POST',
+        data: {'pa':3,'wid':logisticsData.selectedWarehouses.join(','),'id':"{$gid}",'company_id':"{$company_id}",'company_type':"{$company_type}",'type':"{$type}"},
+        dataType: 'JSON',
+        success: function(res) {
+            layer.closeAll('loading');
+            if (res.code === 0 && res.data.length>0) {
+                for(let i=0;i<res.data.length;i++){
+                    $('#pre_packaged_list').find('.sku-stock_'+res.data[i].connect_gid+'_'+res.data[i].connect_skuid).text('可用库存：'+res.data[i].num);
+                }
+            }
+        },
+        error: function() {
+            layer.closeAll('loading');
+            layer.msg('系统错误，请稍后重试', {icon: 2});
+        }
+    });
+}
+
 function loadFreightConfigsBatch(freightRequests) {
     // 这里可以根据实际情况决定是批量查询还是逐个查询
     // 假设我们逐个查询以简化逻辑
@@ -2724,8 +2814,24 @@ function collectAllData() {
             warehouseSelections: logisticsData.warehouseSelections,
             expressSelections: logisticsData.expressSelections,
             productSelections: logisticsData.productSelections
+        },
+        // 组合商品数据
+        combo_product:{
+            new_goodsname: $('input[name="new_goodsname"]').val(),
+            connect_num: [],
+            unitname: [],
+            sum_num: $('input[name="sum_num"]').val()
         }
     };
+    
+    if("{$list['goods']['goods_type']}"==1){
+        $('input[name^="connect_num"]').each(function() {
+            formData.combo_product.connect_num.push($(this).val());
+        });
+        $('input[name^="unitname"]').each(function() {
+            formData.combo_product.unitname.push($(this).val());
+        });
+    }
     
     // 收集导流关键词数据
     $('input[name^="guide[my_guide]"]').each(function() {

@@ -58,12 +58,14 @@
                      onerror="this.src='/static/images/no-image.png'">
                 <div class="goods-info">
                     <div class="goods-name">{$product.goods_name}</div>
-                    {if condition="$product.variants and count($product.variants) gt 0"}
-                    <div class="goods-price">{$product.goods_currency} {$product.variants.0.goods_price|default='0.00'}</div>
-                    <div class="goods-stock">库存: {$product.variants.0.goods_number|default=0}</div>
-                    {else /}
-                    <div class="goods-price">{$product.goods_currency} 0.00</div>
-                    <div class="goods-stock">库存: 0</div>
+                    {if $warehouse_id>0}
+                        {if condition="$product.variants and count($product.variants) gt 0"}
+                        <div class="goods-price">{$product.goods_currency} {$product.variants.0.goods_price|default='0.00'}</div>
+                        <div class="goods-stock">库存: {$product.variants.0.goods_number|default=0}</div>
+                        {else /}
+                        <div class="goods-price">{$product.goods_currency} 0.00</div>
+                        <div class="goods-stock">库存: 0</div>
+                        {/if}
                     {/if}
                 </div>
             </div>
@@ -84,7 +86,9 @@
                            lay-skin="primary">
                     <div class="variant-name">{$variant.spec_names}</div>
                     <div class="variant-price">{$product.goods_currency} {$variant.goods_price|default='0.00'}</div>
+                    {if $warehouse_id>0}
                     <div class="goods-stock">{$variant.goods_number|default=0}</div>
+                    {/if}
                 </div>
                 {/volist}
             </div>
