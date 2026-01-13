@@ -6042,123 +6042,131 @@ class Index extends Controller
                 #==记录物流设置
                 $res = '';
                 $g = Db::connect($this->config)->name('goods_merchant')->where(['id'=>$gid,'type'=>$type])->find();
-                if($g['goods_type']==1){
-                    if(empty($dat['combo_product']['new_goodsname'])){
-                        return json(['code'=>-1,'msg'=>'请输入套餐名称']);
-                    }
-                    
-                    foreach($dat['combo_product']['connect_num'] as $k=>$v){
-                        if(empty($v)){
-                            return json(['code'=>-1,'msg'=>'请输入套餐产品数量']);
+                #如果商品物流信息为空和要修改物流信息
+                if(empty($g['express_info']) || $dat['is_editexp']==1){
+                    #组合商品
+                    if($g['goods_type']==1){
+                        if(empty($dat['combo_product']['new_goodsname'])){
+                            return json(['code'=>-1,'msg'=>'请输入套餐名称']);
                         }
-                    }
-                    
-                    if(empty($dat['combo_product']['sum_num'])){
-                        return json(['code'=>-1,'msg'=>'请输入套餐份数']);
-                    }
-                    
-                    $g['connect_goods'] = json_decode($g['connect_goods'],true);
-                }
-                #1、记录上架的信息
-                #1.1、包邮：一个产品最终只选一个仓库一个终端一个快递一个快递产品
-                #1.2、不包邮：一个产品最终只选一个仓库一个终端N个快递N个快递产品
-                $warehouse_id = 0;
-                $warehouse_type = 1;//1直发，2代发
-                $warehouse_name = '';
-                $terminal_id = 0;//平台终端id
-                foreach($dat['logistics']['warehouseSelections'] as $k=>$v){
-                    $warehouse_id = $v['warehouseId'];
-                    $warehouse_type = $v['warehouseType'];
-                    $warehouse_name = Db::name('centralize_warehouse_list')->where(['id'=>$v['warehouseId']])->value('warehouse_name');
-                    $terminal_id = $v['selectedTerminal'];
-                }
-                Db::connect($this->config)->name('goods_merchant')->where(['id'=>$gid,'type'=>$type])->update([
-                    'is_baoyou'=>intval($dat['logistics']['express_paytype']),
-                    'wid'=>$warehouse_id
-                ]);
-                
-                $express_info = [];
-                if(isset($dat['logistics']['productSelections'])){
-                    $express_arr = [];
-                    foreach($dat['logistics']['productSelections'] as $k=>$v){
-                        if(intval($dat['logistics']['express_paytype'])==1 || intval($dat['logistics']['express_paytype'])==2){
-                            #包邮
-                            array_push($express_arr,[
-                                'express_productid'=>intval($v['productIds'][0]),
-                                'express_remark'=>'',
-                                'express_id'=>intval($v['expressId'])
-                            ]);
-                        }elseif(intval($dat['logistics']['express_paytype'])==3){
-                            #不包邮
-                            array_push($express_arr,[
-                                'express_productid'=>implode(',',$v['productIds']),
-                                'express_remark'=>'',
-                                'express_id'=>intval($v['expressId'])
-                            ]);
-                        }
-                    }
-                    
-                    $express_info = json_encode([
-                        'printer_id'=>intval($terminal_id),//商家配置的打印机id
-                        'express_info'=>$express_arr
-                    ],true);
-                    
-                    Db::connect($this->config)->name('goods_merchant')->where(['id'=>$gid,'type'=>$type])->update(['express_info'=>$express_info]);
-                }
-                
-                $express_paytypename = '包邮';
-                if(intval($dat['logistics']['express_paytype']) == 3){
-                    $express_paytypename = '不包邮';
-                }
-                $dabao_typename = '次日打包';#单品实时打包，显示“次日打包”
-                $gname = $g['goods_name'];
-                if($g['goods_type']==1){
-                    #单品实时打包，显示“次日打包”
-                    $dabao_typename = '即日打包';
-                    
-                    $gname = trim($dat['combo_product']['new_goodsname']);
-                    $combo_ids = '';#预打包id
-                    #生成打包清单
-                    foreach($dat['combo_product']['connect_num'] as $k=>$v){
-                        $ishave = Db::name('website_warehouse_combo_goodsnum')->where(['company_id'=>$company_id,'warehouse_id'=>$warehouse_id,'goods_id'=>$gid,'pre_goods_id'=>$g['connect_goods'][$k]['connect_gid'],'pre_sku_id'=>$g['connect_goods'][$k]['connect_skuid']])->find();
                         
-                        if(empty($ishave)){
-                            $cg_id = Db::name('website_warehouse_combo_goodsnum')->insertGetId(['company_id'=>$company_id,'warehouse_id'=>$warehouse_id,'goods_name'=>$gname,'goods_id'=>$gid,'pre_goods_id'=>$g['connect_goods'][$k]['connect_gid'],'pre_sku_id'=>$g['connect_goods'][$k]['connect_skuid'],'num'=>intval($v),'unitname'=>$dat['combo_product']['unitname'][$k],'sum_num'=>intval($dat['combo_product']['sum_num'])]);
-                            $combo_ids .= $cg_id .',';
-                        }else{
-                            $combo_ids .= $ishave['id'] .',';
-                            $num = 0;
-                            if($ishave['status']==1){
-                                #补充组合商品库存
-                                $num = intval($v) + $ishave['num'];
-                            }else{
-                                $num = intval($v);
+                        foreach($dat['combo_product']['connect_num'] as $k=>$v){
+                            if(empty($v)){
+                                return json(['code'=>-1,'msg'=>'请输入套餐产品数量']);
                             }
-                            Db::name('website_warehouse_combo_goodsnum')->where(['id'=>$ishave['id']])->update([
-                                'num'=>$num,
-                                'status'=>0
-                            ]);
                         }
+                        
+                        if(empty($dat['combo_product']['sum_num'])){
+                            return json(['code'=>-1,'msg'=>'请输入套餐份数']);
+                        }
+                        
+                        $g['connect_goods'] = json_decode($g['connect_goods'],true);
                     }
                     
-                    //下发《预打包清单》电邮给仓库
-                    $post = ['combo_id'=>rtrim($combo_ids,',')];
-                    httpRequest('https://shop.gogo198.cn/collect_website/public/?s=api/func/combo_goods_to_email', $post);
-                }
-                $goods_name = '['.$warehouse_name.'] ['.$express_paytypename.'] ['.$dabao_typename.'] '.$gname;
-                $shelf_id=0;
-                if(empty($g['shelf_id'])){
-                    #同步（新增）平台商品库
-                    $g = Db::connect($this->config)->name('goods_merchant')->where(['id'=>$gid,'type'=>$type])->find();
-                    $shelf_id=$this->sync_goods($g,$company_id,$gid,$express_info,$goods_name);
-                }else{
-                    #同步（修改）平台商品库
-                    Db::connect($this->config)->name('goods')->where(['goods_id'=>$g['shelf_id']])->update([
-                        'express_info'=>$express_info,
-                        'goods_name'=>$goods_name
+                    #1、记录上架的信息
+                    #1.1、包邮：一个产品最终只选一个仓库一个终端一个快递一个快递产品
+                    #1.2、不包邮：一个产品最终只选一个仓库一个终端N个快递N个快递产品
+                    $warehouse_id = 0;
+                    $warehouse_type = 1;//1直发，2代发
+                    $warehouse_name = '';
+                    $terminal_id = 0;//平台终端id
+                    foreach($dat['logistics']['warehouseSelections'] as $k=>$v){
+                        $warehouse_id = $v['warehouseId'];
+                        $warehouse_type = $v['warehouseType'];
+                        $warehouse_name = Db::name('centralize_warehouse_list')->where(['id'=>$v['warehouseId']])->value('warehouse_name');
+                        $terminal_id = $v['selectedTerminal'];
+                    }
+                    Db::connect($this->config)->name('goods_merchant')->where(['id'=>$gid,'type'=>$type])->update([
+                        'is_baoyou'=>intval($dat['logistics']['express_paytype']),
+                        'wid'=>$warehouse_id
                     ]);
                     
-                    $shelf_id=$g['shelf_id'];
+                    $express_info = [];
+                    if(isset($dat['logistics']['productSelections'])){
+                        $express_arr = [];
+                        foreach($dat['logistics']['productSelections'] as $k=>$v){
+                            if(intval($dat['logistics']['express_paytype'])==1 || intval($dat['logistics']['express_paytype'])==2){
+                                #包邮
+                                array_push($express_arr,[
+                                    'express_productid'=>intval($v['productIds'][0]),
+                                    'express_remark'=>'',
+                                    'express_id'=>intval($v['expressId'])
+                                ]);
+                            }elseif(intval($dat['logistics']['express_paytype'])==3){
+                                #不包邮
+                                array_push($express_arr,[
+                                    'express_productid'=>implode(',',$v['productIds']),
+                                    'express_remark'=>'',
+                                    'express_id'=>intval($v['expressId'])
+                                ]);
+                            }
+                        }
+                        
+                        $express_info = json_encode([
+                            'printer_id'=>intval($terminal_id),//商家配置的打印机id
+                            'express_info'=>$express_arr
+                        ],true);
+                        
+                        Db::connect($this->config)->name('goods_merchant')->where(['id'=>$gid,'type'=>$type])->update(['express_info'=>$express_info]);
+                    }
+                    
+                    $express_paytypename = '包邮';
+                    if(intval($dat['logistics']['express_paytype']) == 3){
+                        $express_paytypename = '不包邮';
+                    }
+                    $dabao_typename = '次日打包';#单品实时打包，显示“次日打包”
+                    $gname = $g['goods_name'];
+                    if($g['goods_type']==1){
+                        #单品实时打包，显示“次日打包”
+                        $dabao_typename = '即日打包';
+                        
+                        $gname = trim($dat['combo_product']['new_goodsname']);
+                        $combo_ids = '';#预打包id
+                        #生成打包清单
+                        foreach($dat['combo_product']['connect_num'] as $k=>$v){
+                            $ishave = Db::name('website_warehouse_combo_goodsnum')->where(['company_id'=>$company_id,'warehouse_id'=>$warehouse_id,'goods_id'=>$gid,'pre_goods_id'=>$g['connect_goods'][$k]['connect_gid'],'pre_sku_id'=>$g['connect_goods'][$k]['connect_skuid']])->find();
+                            
+                            if(empty($ishave)){
+                                $cg_id = Db::name('website_warehouse_combo_goodsnum')->insertGetId(['company_id'=>$company_id,'warehouse_id'=>$warehouse_id,'goods_name'=>$gname,'goods_id'=>$gid,'pre_goods_id'=>$g['connect_goods'][$k]['connect_gid'],'pre_sku_id'=>$g['connect_goods'][$k]['connect_skuid'],'num'=>intval($v),'unitname'=>$dat['combo_product']['unitname'][$k],'sum_num'=>intval($dat['combo_product']['sum_num'])]);
+                                $combo_ids .= $cg_id .',';
+                            }else{
+                                $combo_ids .= $ishave['id'] .',';
+                                $num = 0;
+                                if($ishave['status']==1){
+                                    #补充组合商品库存
+                                    $num = intval($v) + $ishave['num'];
+                                }else{
+                                    $num = intval($v);
+                                }
+                                Db::name('website_warehouse_combo_goodsnum')->where(['id'=>$ishave['id']])->update([
+                                    'num'=>$num,
+                                    'status'=>0
+                                ]);
+                            }
+                        }
+                        
+                        //下发《预打包清单》电邮给仓库
+                        $post = ['combo_id'=>rtrim($combo_ids,',')];
+                        httpRequest('https://shop.gogo198.cn/collect_website/public/?s=api/func/combo_goods_to_email', $post);
+                    }
+                    $goods_name = '['.$warehouse_name.'] ['.$express_paytypename.'] ['.$dabao_typename.'] '.$gname;
+                    $shelf_id=0;
+                    if(empty($g['shelf_id'])){
+                        #同步（新增）平台商品库
+                        $g = Db::connect($this->config)->name('goods_merchant')->where(['id'=>$gid,'type'=>$type])->find();
+                        $shelf_id=$this->sync_goods($g,$company_id,$gid,$express_info,$goods_name);
+                    }else{
+                        #同步（修改）平台商品库
+                        Db::connect($this->config)->name('goods_merchant')->where(['id'=>$gid,'type'=>$type])->update(['goods_name'=>$goods_name]);
+                        Db::connect($this->config)->name('goods')->where(['goods_id'=>$g['shelf_id']])->update([
+                            'express_info'=>$express_info,
+                            'goods_name'=>$goods_name,
+                            'is_baoyou'=>intval($dat['logistics']['express_paytype']),
+                            'wid'=>$warehouse_id
+                        ]);
+                        
+                        $shelf_id=$g['shelf_id'];
+                    }
                 }
                 
                 #==自主导流
@@ -6261,9 +6269,10 @@ class Index extends Controller
                     $list['goods']['connect_goods'][$k]['num'] = Db::name('website_warehouse_goodsnum')->where(['warehouse_id'=>$wid[0],'goods_id'=>$v['connect_gid'],'sku_id'=>$v['connect_skuid']])->value('num');
                     
                     #还需要减去“预打包数量”、“已购买待发货（未打印面单）”
-                    $combo_goods_num = Db::name('website_warehouse_combo_goodsnum')->where(['warehouse_id'=>$wid[0],'goods_id'=>$gid,'pre_goods_id'=>$v['connect_gid'],'pre_sku_id'=>$v['connect_skuid']])->value('num');
-                    if($combo_goods_num>0){
-                        $list['goods']['connect_goods'][$k]['num'] -= $combo_goods_num;
+                    $combo_goods_num = Db::name('website_warehouse_combo_goodsnum')->where(['warehouse_id'=>$wid[0],'goods_id'=>$gid,'pre_goods_id'=>$v['connect_gid'],'pre_sku_id'=>$v['connect_skuid']])->field('num,sum_num')->find();
+                    if($combo_goods_num['sum_num']>0){
+                        #可售库存-(剩余套餐份数*当前商品规格的套餐打包数量)
+                        $list['goods']['connect_goods'][$k]['num'] = $list['goods']['connect_goods'][$k]['num'] - ($combo_goods_num['num'] * $combo_goods_num['sum_num']);
                     }
                     
                     #获取商品及其规格
@@ -6313,37 +6322,19 @@ class Index extends Controller
                 }
             }
             
-            #查看采购管理
             if(!empty($list['goods']['express_info'])){
                 $list['goods']['express_info'] = json_decode($list['goods']['express_info'],true);
-                
+                #上架仓库
+                $list['goods']['warehouse_info'] = Db::name('centralize_warehouse_list')->where(['id'=>$list['goods']['wid']])->find();
+                #上架终端
+                $list['goods']['terminal_info'] = Db::name('centralize_warehouse_printer')->where(['id'=>$list['goods']['express_info']['printer_id']])->find();
+                #上架快递企业&产品
                 foreach($list['goods']['express_info']['express_info'] as $k=>$v){
-                    $list['goods']['express_info']['express_info'][$k]['express'] = Db::name('centralize_warehouse_express')->alias('a')->join('centralize_express_product b','b.id = a.express_id','left')->where(['a.id'=>$v['express_id']])->field('a.*,b.name')->find();
-                    $list['goods']['express_info']['express_info'][$k]['express_type'] = Db::name('centralize_warehouse_express')->where(['id'=>$v['express_id']])->field('express_type')->find()['express_type'];
-                }
-                
-                if($list['goods']['express_info']['printer_id']>0){
-                    #获取商家已选终端下的已选快递（但不是商品所选的快递）
-                    $terminal_express = Db::name('centralize_warehouse_merchant_printer')->where(['id'=>$list['goods']['express_info']['printer_id']])->find();
-                    
-                    $list['express'] = Db::name('centralize_warehouse_express')->whereRaw('id in ('.$terminal_express['express_id'].')')->select();
-                    
-                    foreach($list['express'] as $k=>$v){
-                        $list['express'][$k]['name'] = Db::name('centralize_express_product')->where(['id'=>$v['express_id']])->field('name')->find()['name'];
-                    }
+                    $list['goods']['express_info']['express_info'][$k]['einfo'] = Db::name('centralize_warehouse_express')->where(['id'=>$v['express_id']])->find();
+                    $list['goods']['express_info']['express_info'][$k]['einfo']['ename'] = Db::name('centralize_express_product')->where(['id'=>$v['express_id']])->value('name');
                 }
             }
-            // dd($list['express']);
-            
-            #获取商品仓库类型
-            $warehouse_merchant = Db::name('centralize_warehouse_merchant')->where(['id'=>$list['goods']['wid']])->find();
-            $list['goods']['warehouse_form'] = Db::name('centralize_warehouse_list')->where(['id'=>$warehouse_merchant['warehouse_id']])->field('warehouse_form')->find()['warehouse_form'];
-            
-            #获取终端
-            $list['terminal'] = Db::name('centralize_warehouse_merchant_printer')->where(['company_id'=>$company_id,'wm_id'=>$list['goods']['wid']])->select();
-            foreach($list['terminal'] as $k=>$v){
-                $list['terminal'][$k]['printer_name'] = Db::name('centralize_warehouse_printer')->where(['id'=>$v['printer_id']])->field('name')->find()['name'];
-            }
+            // dd($list['goods']);
             
             #自主导流
             $list['my_guide'] = Db::name('website_navbar')->where(['company_id'=>$company_id,'company_type'=>0])->order('id','asc')->select();
@@ -6367,7 +6358,7 @@ class Index extends Controller
             foreach($list['platform_shop'] as $k=>$v){
                 $list['platform_shop'][$k]['my_keywords']=Db::connect($this->config)->name('goods_shelf')->where(['gid_merch'=>$gid,'type'=>4,'guide_id'=>$v['id']])->find()['keywords'];
             }
-
+            
             return view('index/shop_backend/select_shelf',compact('company_id','company_type','list','gid','type'));
         }
     }
@@ -9181,7 +9172,7 @@ class Index extends Controller
 
             $date = date('Y-m-d H:i:s',time());
             foreach($sku as $k=>$v){
-                $skuid=Db::connect($this->config)->name('goods_sku')->insertGetId([
+                $skuid = Db::connect($this->config)->name('goods_sku')->insertGetId([
                     'goods_id'=>$shelf_id,
                     'spec_ids'=>$v['spec_ids'],
                     'spec_vids'=>$v['spec_vids'],

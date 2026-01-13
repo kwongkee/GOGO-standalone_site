@@ -32,6 +32,8 @@
         .btn-outline:hover {background: var(--primary);color: white;transform: translateY(-3px);box-shadow: var(--shadow);}
         .btn-primary {background: var(--gradient);color: white;border: 2px solid transparent;}
         .btn-primary:hover {background: transparent;border-color: var(--primary);color: var(--primary);transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-normal {background:#009688;color: white;border: 2px solid transparent;}
+        .btn-normal:hover {background: transparent;border-color: #009688;color: #009688;transform: translateY(-3px);box-shadow: var(--shadow);}
 
         /* 表单样式 */
         .form-section {margin-bottom: 30px;}
@@ -896,7 +898,63 @@
                     {/if}
                 </div>
                 <div class="layui-tab-item">
-                    <div class="step-container">
+                    <div class="view_container" style="display:{if !empty($list['goods']['express_info'])}block{else}none{/if};">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">支付方式</label>
+                            <div class="layui-input-block" style="line-height:36px;">
+                                {if $list['goods']['is_baoyou']==1}
+                                包邮（寄方月结）
+                                {elseif($list['goods']['is_baoyou']==2)}
+                                包邮（寄方付款）
+                                {elseif($list['goods']['is_baoyou']==3)}
+                                不包邮（收方到付）
+                                {/if}
+                            </div>
+                        </div>
+                        {if isset($list['goods']['warehouse_info']['warehouse_name'])}
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">上架仓库</label>
+                                <div class="layui-input-block" style="line-height:36px;">
+                                    {$list['goods']['warehouse_info']['warehouse_name']}
+                                </div>
+                            </div>
+                            {if $list['goods']['warehouse_info']['warehouse_form']==1}
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">上架终端</label>
+                                <div class="layui-input-block" style="line-height:36px;">
+                                    {$list['goods']['terminal_info']['name']}
+                                </div>
+                            </div>
+                            {/if}
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">快递企业</label>
+                                <div class="layui-input-block">
+                                    <table class="layui-table" style="width: 100%;">
+                                        <thead>
+                                            <th>企业名称</th>
+                                            <th>企业产品</th>
+                                        </thead>
+                                        <tbody>
+                                        {volist name="list['goods']['express_info']['express_info']" id="vo"}
+                                        <tr>
+                                            <td>
+                                                {$vo['einfo']['ename']}
+                                            </td>
+                                            <td>
+                                                {$vo['einfo']['express_type']}
+                                            </td>
+                                        </tr>
+                                        {/volist}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="disf" style="display:flex;align-items:center;justify-content:center;">
+                                <button type="button" class="btn btn-normal" onclick="edit_express()">修改物流</button>
+                            </div>
+                        {/if}
+                    </div>
+                    <div class="step-container" style="display:{if !empty($list['goods']['express_info'])}none{else}block{/if};">
                         <!-- 步骤1: 支付方式选择 -->
                         <div class="step-content active" id="step-payment">
                             <div class="step-title">
@@ -1100,6 +1158,8 @@ let logisticsData = {
 let totalWarehouses = 0;
 let loadedWarehouses = 0;
 
+//已上架商品对物流设置进行修改
+let is_editexp = 0;
 layui.use(['layer','form','laydate','upload','colorpicker','element'],function() {
     var laydate = layui.laydate
         ,layer = layui.layer
@@ -1119,6 +1179,13 @@ layui.use(['layer','form','laydate','upload','colorpicker','element'],function()
         unifiedSubmit();
     });
 });
+
+//已上架的商品需要修改物流配置
+function edit_express(){
+    $('.view_container').hide();
+    $('.step-container').show();
+    is_editexp = 1;
+}
 
 // 步骤切换函数
 function nextStep(currentId, nextId) {
@@ -2683,11 +2750,20 @@ function getCurrencyName(currencyCode) {
 // 统一提交函数
 function unifiedSubmit() {
     // 验证物流设置是否完成
-    if (!validateLogisticsComplete()) {
-        layer.msg('请完成物流设置', {icon: 2});
-        return false;
-    }
-    
+    {if !empty($list['goods']['express_info'])}
+        if(is_editexp==1){
+            //修改物流配置
+            if (!validateLogisticsComplete()) {
+                layer.msg('请完成物流设置', {icon: 2});
+                return false;
+            }
+        }
+    {else}
+        if (!validateLogisticsComplete()) {
+            layer.msg('请完成物流设置', {icon: 2});
+            return false;
+        }
+    {/if}
     // 收集所有数据
     const formData = collectAllData();
     
@@ -2821,7 +2897,8 @@ function collectAllData() {
             connect_num: [],
             unitname: [],
             sum_num: $('input[name="sum_num"]').val()
-        }
+        },
+        is_editexp:is_editexp
     };
     
     if("{$list['goods']['goods_type']}"==1){
