@@ -177,6 +177,7 @@
         
         {if $order['status']==1 && $order['is_daifa']==1 && $order['is_printer']==0}
             <!--不是代发，自发仓库-->
+            {if 1>2}
             <div class="info_div">
                 <input type="text" name="printer_id" id="printer_id" value="{$list['express_infos']['printer_id']}" style="display:none;"/>
                 <div class="layui-form-item direct_ship">
@@ -193,7 +194,7 @@
                     </div>
                 </div>
             </div>
-            
+            {/if}
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary" lay-submit lay-filter="component-form-element2">立即保存</button>
             </div>

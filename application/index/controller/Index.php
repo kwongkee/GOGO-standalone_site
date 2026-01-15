@@ -10824,7 +10824,7 @@ class Index extends Controller
 
         $order = Db::name('website_order_list')->where(['id'=>$id])->find();
         $order['content'] = json_decode($order['content'],true);
-
+        
         if(isset($dat['pa'])){
             
             $time = time();
@@ -11247,27 +11247,27 @@ class Index extends Controller
                 if(empty($express_infos)){
                     $list['express_company'] = Db::name('centralize_express_product')->select();
                 }else{
-                    #获取该商品支持的快递终端
+                    #获取用户所选的该商品的快递终端
                     
                     #商品所属打印机
                     $merchant_printer = Db::name('centralize_warehouse_merchant_printer')->where(['id'=>$express_infos['printer_id']])->find();
                     // $printer = Db::name('centralize_warehouse_printer')->where(['id'=>$merchant_printer['printer_id']])->find();
-                    
-                    foreach($express_infos['express_info'] as $k=>$v){
-                        if(!empty($v['express_id'])){
+                    // dd($express_infos);
+                    // foreach($express_infos['express_info'] as $k=>$v){
+                    //     if(!empty($v['express_id'])){
                             
-                            $true_express = Db::name('centralize_warehouse_express')->where(['id'=>$v['express_id']])->field('express_id,express_type')->find();
-                            #快递名称
-                            $express_infos['express_info'][$k]['express_name'] = Db::name('centralize_express_product')->where(['id'=>$true_express['express_id']])->field('name')->find()['name'];
-                            #快递产品
-                            $express_infos['express_info'][$k]['express_typename'] = $true_express['express_type'];
+                    //         $true_express = Db::name('centralize_warehouse_express')->where(['id'=>$v['express_id']])->field('express_id,express_type')->find();
+                    //         #快递名称
+                    //         $express_infos['express_info'][$k]['express_name'] = Db::name('centralize_express_product')->where(['id'=>$true_express['express_id']])->field('name')->find()['name'];
+                    //         #快递产品
+                    //         $express_infos['express_info'][$k]['express_typename'] = $true_express['express_type'];
     
-                            #支付方式
-                            $paytype = ['1'=>'寄方月结','2'=>'寄方付款','3'=>'收方到付'];
-                            $express_infos['express_info'][$k]['express_payname'] = $paytype[$v['express_paytype']];
-                        }
-                    }
-                    $list['express_infos'] = $express_infos;
+                    //         #支付方式
+                    //         $paytype = ['1'=>'寄方月结','2'=>'寄方付款','3'=>'收方到付'];
+                    //         $express_infos['express_info'][$k]['express_payname'] = $paytype[$v['express_paytype']];
+                    //     }
+                    // }
+                    // $list['express_infos'] = $express_infos;
                     // dd($express_infos);
                 }
             }
