@@ -1847,12 +1847,14 @@ class Index extends Controller
     #代发仓库的快递列表
     public function express_list(Request $request){
         $dat = input();
+        $id = isset($dat['id'])?intval($dat['id']):0;
         $company_id = intval($dat['company_id']);
         $company_type = intval($dat['company_type']);#0商城，1官网
         $warehouse_id = intval($dat['warehouse_id']);#商家仓库表id
         $mechant_warehouse = Db::name('centralize_warehouse_merchant')->where(['company_id'=>$company_id,'id'=>$warehouse_id])->find();
         
         if($request->isAjax()){
+            
             $express_id = implode(',',$dat['express_id']);
             
             $ishave = Db::name('centralize_warehouse_merchant_printer')->where(['company_id'=>$company_id,'wm_id'=>$warehouse_id,'printer_id'=>0])->find();
@@ -1875,6 +1877,7 @@ class Index extends Controller
             #企业商城-仓库地址-仓库快递企业
             $list = Db::name('centralize_warehouse_express')->where(['printer_id'=>0,'warehouse_id'=>$mechant_warehouse['warehouse_id']])->order('id desc')->select();
             $data = Db::name('centralize_warehouse_merchant_printer')->where(['company_id'=>$company_id,'wm_id'=>$warehouse_id,'printer_id'=>0])->find();
+            
             if(!empty($data)){
                 $data['express_id'] = explode(',',$data['express_id']);
             }
@@ -1882,7 +1885,7 @@ class Index extends Controller
                 $express = Db::name('centralize_express_product')->where(['id'=>$item['express_id']])->value('name');
                 $item['express_name'] = $express;
             }
-    
+            
             return view('index/shop_backend/express_list',compact('company_type','company_id','list','warehouse_id','data'));
         }
     }
@@ -10826,7 +10829,7 @@ class Index extends Controller
         $order['content'] = json_decode($order['content'],true);
         
         if(isset($dat['pa'])){
-            
+            dd($dat);
             $time = time();
             $user = Db::name('website_user')->where(['id'=>$order['user_id']])->find();
             $system = Db::name('centralize_system_notice')->where(['uid'=>0])->find();
@@ -10835,7 +10838,7 @@ class Index extends Controller
             #查询订单信息
             $order = Db::name('website_order_list')->where(['id'=>$id])->find();
             if($order['is_daifa']==1 && $order['status']==1 && $order['is_printer']==0){
-                #不是代发和已付款未打印
+                #不是代发和已付款未打印（废弃）
                 // $printer_info = Db::name('centralize_warehouse_express')->where(['id'=>intval($dat['direct_ship']['express_id'])])->find();
                 $post = ['order_id'=>$id,'warehouse_express_id'=>$dat['direct_ship']['express_id'],'company_id'=>$company_id];
                 $res = httpRequest('https://shop.gogo198.cn/collect_website/public/?s=/api/func/print_order',$post);
@@ -10853,7 +10856,71 @@ class Index extends Controller
                 }else{
                     return json(['code'=>-1,'msg'=>$res['message']]);
                 }
-            }else{
+            }
+            elseif($order['is_daifa']==2 && $order['status']==1 && $order['is_package']==0){
+                #代发仓库订单（已付款待打包）
+                if($dat['accept_type']==1){
+                    #接受采购
+                    if($dat['send_type']==1){
+                        #发货方式-自主发货
+                        if(empty($dat['daifa_express_no'])){
+                            return json(['code'=>-1,'msg'=>'请输入运单编号']);
+                        }
+                        $res = Db::name('website_order_list')->where(['id'=>$id])->update([
+                            'accept_type'=>$dat['accept_type'],
+                            'is_package'=>1,
+                            'daifa_express_info'=>json_encode([
+                                'express_id'=>intval($dat['daifa_express_id']),
+                                'express_no'=>trim($dat['daifa_express_no'])
+                            ],true)
+                        ]);
+                    }
+                    elseif($dat['send_type']==2){
+                        #发货方式-他人发货
+                        if($dat['notice_type']==1 && $dat['notice_type']==2 && empty($dat['notice_number'])){
+                            return json(['code'=>-1,'msg'=>'请输入通知号码']);
+                        }
+                        $res = Db::name('website_order_list')->where(['id'=>$id])->update([
+                            'accept_type'=>$dat['accept_type'],
+                            'is_package'=>1,
+                            'daifa_other_info'=>json_encode([
+                                'notice_type'=>intval($dat['notice_type']),
+                                'notice_number'=>trim($dat['notice_number'])
+                            ],true)
+                        ]);
+                        
+                        if($res && ($dat['notice_type']==1 || $dat['notice_type']==2)){
+                            //“短信/邮箱”通知他人发货
+                            $post_data = json_encode(['notice_type'=>intval($dat['notice_type']),'number'=>trim($dat['notice_number']),'title'=>'你有待发货订单','msg'=>'请点击链接进行发货：https://www.gogo198.net/?s=index/other_delivery&order_id='.$id],true);
+                            $gogo_id = httpRequest2('https://shop.gogo198.cn/collect_website/public/?s=api/getgoods/notice_user',$post_data,array(
+                                'Content-Type: application/json; charset=utf-8',
+                                'Content-Length:' . strlen($post_data),
+                                'Cache-Control: no-cache',
+                                'Pragma: no-cache'
+                            ));
+                        }
+                    }
+                }
+                elseif($data['accept_type']==2){
+                    #拒绝采购
+                    $res = Db::name('website_order_list')->where(['id'=>$id])->update(['status'=>-3]);
+                    if($res){
+                        $order = Db::name('website_order_list')->where(['id'=>$id])->find();
+                        #通知管理员
+                        common_notice([
+                            'openid'=>$manage_openid,
+                            'phone'=>'',
+                            'email'=>''
+                        ],[
+                            'msg'=>'订单['.$order['ordersn'].']已申请取消退订，点击链接查看：https://www.gogo198.net/?s=shop/audit',
+                            'opera'=>'买手取消退订',
+                            'url'=>'https://www.gogo198.net/?s=shop/audit'
+                        ]);
+                        return json(['code'=>0,'msg'=>'退订成功！']);
+                    }
+                }
+            }
+            else{
                 if(isset($dat['status'])){
                     if($dat['status']==1){
                         #有货（无修改），通知总后台
@@ -10946,7 +11013,6 @@ class Index extends Controller
                 }
                 elseif(isset($dat['delivery_type'])){
                     #已采购，保存发货信息
-    
                     if($dat['delivery_type']==1){
                         #直邮发货
                         if(empty($dat['direct_ship']['express_id']) || empty($dat['direct_ship']['express_no']) || empty($dat['direct_ship']['address']) || empty($dat['direct_ship']['postal']) || empty($dat['direct_ship']['user_name']) || empty($dat['direct_ship']['area_mobile']) || empty($dat['direct_ship']['mobile'])){
@@ -11215,7 +11281,7 @@ class Index extends Controller
                 }
             }
             
-            $order['status_name'] = $this->get_statusname($order['status']);
+            $order['status_name'] = $this->getOrderStatusName($order);
             
             $express = Db::name('centralize_diycountry_content')->where(['pid'=>6])->select();
             $unit = Db::name('unit')->select();
@@ -11223,11 +11289,13 @@ class Index extends Controller
             $package = Db::name('packing_type')->select();
 //            $value = json_encode($this->menu2(2),true);
             $brand = Db::name('centralize_diycountry_content')->where(['pid'=>8])->select();
+            
             #订购清单信息
             foreach($order['content']['goods_info'] as $k=>$v){
                 $order['content']['goods_info'][$k]['goods_info'] = Db::connect($this->config)->name('goods')->where(['goods_id'=>$v['good_id']])->find();
                 foreach($v['sku_info'] as $k2=>$v2){
                     $order['content']['goods_info'][$k]['sku_info'][$k2]['sku_info'] =  Db::connect($this->config)->name('goods_sku')->where(['sku_id'=>$v2['sku_id']])->find();
+                    $order['content']['goods_info'][$k]['sku_info'][$k2]['currency_name'] = Db::name('centralize_currency')->where(['id'=>$v2['currency']])->value('currency_symbol_standard');
                 }
             }
             $goods = $order['content']['goods_info'];
@@ -11281,6 +11349,18 @@ class Index extends Controller
                     #获取下游
                     $list['under_merchant'] = Db::name('website_user_company')->whereRaw('FIND_IN_SET('.$company_id.',pids)')->where(['status'=>0])->select();
                 }
+                
+                #获取该订单所选的快递企业
+                if($order['freight_id']>0){
+                    #不包邮
+                    $order['selected_express_info'] = Db::name('centralize_freight_config')
+                        ->alias('cfc')
+                        ->join('centralize_warehouse_express cwe','cwe.id = cfc.express_id')
+                        ->join('centralize_express_product cep','cep.id = cwe.express_id')
+                        ->where(['cfc.id'=>$order['freight_id']])
+                        ->field(['cep.id','cep.name','cfc.express_type'])
+                        ->find();
+                }
             }
 
             if($order['accept_type']==2 && $order['is_daifa']==2){
@@ -11305,7 +11385,7 @@ class Index extends Controller
                 #物品属性
                 $list['value'] = json_encode($this->valuemenu2(2),true);
             }
-            // dd($list['express_infos']);
+            
             return view('index/shop_backend/porder_detail',compact('order','address','goods','id','express','unit','currency','package','value','brand','company_id','company_type','list'));
         }
     }
@@ -11842,7 +11922,7 @@ class Index extends Controller
                 ->select();
 
             foreach ($rows as &$item) {
-                $item['status_name'] = $this->get_statusname($item['status']);
+                $item['status_name'] = $this->getOrderStatusName($item);
                 $item['createtime'] = date('Y-m-d H:i:s', $item['createtime']);
             }
 
@@ -11850,6 +11930,114 @@ class Index extends Controller
         }else{
 
             return view('index/shop_backend/order_manage',compact('company_id','company_type','uid'));
+        }
+    }
+    
+    public function getOrderStatusName($data){
+        if($data['is_daifa']==1){
+            #直发仓库订单
+            switch ($data['status']){
+                case 0:
+                    return '待付款';
+                    break;
+                case 1:
+                    if($data['is_printer']==0){
+                        return '已付款待打面单';
+                    }elseif($data['is_printer']==1 && $data['is_package']==0){
+                        return '已打面单待打包';
+                    }elseif($data['is_printer']==1 && $data['is_package']==1){
+                        return '已打包待发货';
+                    }
+                    break;
+                case 2:
+                    return '已发货';
+                    break;
+                case 8:
+                    return '待评价';
+                    break;
+                case 9:
+                    return '已完成';
+                    break;
+                case -15:
+                    return '申请退款';
+                    break;
+                case -16:
+                    return '拒绝退款';
+                    break;
+                case -17:
+                    return '已退款';
+                    break;
+                default:
+                    return '';
+            }
+        }
+        elseif($data['is_daifa']==2){
+            #代发仓库订单
+            switch ($data['status']){
+                case -2:
+                    return '待确认';
+                    break;
+                case -3:
+                    return '申请取消订购';
+                    break;
+                case -4:
+                    return '已取消';
+                    break;
+                case -5:
+                    return '申请退货';
+                    break;
+                case -6:
+                    return '已退货';
+                    break;
+                case -7:
+                    return '申请换货';
+                    break;
+                case -8:
+                    return '已换货';
+                    break;
+                case -9:
+                    return '有货（无修改）';
+                    break;
+                case -10:
+                    return '有货（有修改）';
+                    break;
+                case -11:
+                    return '无货';
+                    break;
+                case -12:
+                    return '拒绝订购';
+                    break;
+                case 0:
+                    return '待付款';
+                    break;
+                case 1:
+                    if($data['is_package']==0){
+                        return '已付款待打包';
+                    }elseif($data['is_printer']==1 && $data['is_package']==1){
+                        return '已打包待发货';
+                    }
+                    break;
+                case 2:
+                    return '已发货';
+                    break;
+                case 8:
+                    return '待评价';
+                    break;
+                case 9:
+                    return '已完成';
+                    break;
+                case -15:
+                    return '申请退款';
+                    break;
+                case -16:
+                    return '拒绝退款';
+                    break;
+                case -17:
+                    return '已退款';
+                    break;
+                default:
+                    return '';
+            }
         }
     }
 

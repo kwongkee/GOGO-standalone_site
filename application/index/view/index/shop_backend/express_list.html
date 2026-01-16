@@ -86,6 +86,7 @@
     </div>
 </div>
 <form id="siteForm" class="layui-form" action="" method="post" lay-filter="component-form-menu" style="padding:10px;margin-bottom:0px;">
+    <input type="hidden" name="id" value="{$data['id']}">
     <input type="hidden" name="company_id" value="{$company_id}">
     <input type="hidden" name="company_type" value="{$company_type}">
     <input type="hidden" name="warehouse_id" value="{$warehouse_id}">
@@ -98,21 +99,15 @@
             <th>操作</th>
         </thead>
         <tbody>
-            
-                {volist name="list" id="vo"}
-                    <tr>
-                        <td>{$vo.express_name}</td>
-                        <td>{$vo.express_type}</td>
-                        <td>
-                            {if !empty($data)}
-                                <input type="checkbox" name="express_id[]" lay-skin="primary" value="{$vo.id}" {if in_array($vo.id,$data.express_id)}checked{/if} title="选择">
-                            {else}
-                                <input type="checkbox" name="express_id[]" lay-skin="primary" value="{$vo.id}" title="选择">
-                            {/if}
-                        </td>
-                    </tr>
-                {/volist}
-            
+            {volist name="list" id="vo"}
+                <tr>
+                    <td>{$vo.express_name}</td>
+                    <td>{$vo.express_type}</td>
+                    <td>
+                        <input type="checkbox" name="express_id[]" lay-skin="primary" value="{$vo.id}" {if in_array($vo.id,$data.express_id)}checked{/if} title="选择">
+                    </td>
+                </tr>
+            {/volist}
         </tbody>
     </table>
 

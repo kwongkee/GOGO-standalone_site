@@ -38,24 +38,17 @@
         .form-title {font-size: 1.3rem;margin-bottom: 20px;color: var(--primary-dark);display: flex;align-items: center}
         .form-title i {margin-right: 10px;}
         .form-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));gap: 20px;}
-        .form-group {margin-bottom: 20px;}
-        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
-        .form-group input,
-        .form-group select,
-        .form-group textarea {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;}
+        
         .form-group input:focus,
         .form-group select:focus,
         .form-group textarea:focus {border-color: var(--primary);outline: none;}
         .form-group textarea {min-height: 120px;resize: vertical;}
-        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
-
 
         .form-group {margin-bottom: 20px;}
         .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
         .form-group input,
-        .form-group select {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}
-        .form-group input:focus,
-        .form-group select:focus {border-color: var(--primary);outline: none;}
+        .form-group select,
+        .form-group textarea {width: 100%;padding: 5px 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}
         .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
 
         .disf{display: flex;align-items: center;}
@@ -132,7 +125,7 @@
                                 <td class="ltd" width="25%">{$vo['goods_info']['goods_name']}</td>
                                 <td class="ltd" width="25%">{$vo2['sku_info']['spec_names']}</td>
                                 <td class="ltd" width="20%">{$vo2['goods_num']}</td>
-                                <td class="ltd" width="20%">{$vo2['price']}</td>
+                                <td class="ltd" width="20%">{$vo2['currency_name']} {$vo2['price']}</td>
                                 {if $order['status']==-2 || $order['accept_type']==1}
                                     <td class="ltd" width="10%">
                                         <div class="layui-btn layui-btn-warm layui-btn-xs" onclick="edit_sku({$vo['good_id']},{$goods_key},{$k},{$vo2['sku_id']},{$vo2['cart_id']})">修改</div>
@@ -147,6 +140,18 @@
                     </tbody>
                 </table>
 
+                <div class="layui-form-item">
+                    <div class="layui-form-label">订单状态</div>
+                    <div class="layui-input-block disf" style="line-height:36px;">
+                        <div style="margin-right:0px;">{$order['status_name']}</div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-form-label">订单运费</div>
+                    <div class="layui-input-block disf" style="line-height:36px;">
+                        <div style="margin-right:0px;">CNY {$order['freight_money']}</div>
+                    </div>
+                </div>
                 <div class="layui-form-item">
                     <div class="layui-form-label">合计</div>
                     <div class="layui-input-block disf" style="line-height:36px;">
@@ -175,33 +180,8 @@
             </div>
         </fieldset>
         
-        {if $order['status']==1 && $order['is_daifa']==1 && $order['is_printer']==0}
-            <!--不是代发，自发仓库-->
-            {if 1>2}
-            <div class="info_div">
-                <input type="text" name="printer_id" id="printer_id" value="{$list['express_infos']['printer_id']}" style="display:none;"/>
-                <div class="layui-form-item direct_ship">
-                    <div class="layui-form-label">选择快递</div>
-                    <div class="layui-input-block inline">
-                        <select name="direct_ship[express_id]" lay-search>
-                            <option value="">请选择</option>
-                            {volist name="list['express_infos']['express_info']" id="v"}
-                                {if isset($v['express_name'])}
-                                <option value="{$v['express_id']}">快递名称：【{$v['express_name']}】,快递产品：【{$v['express_typename']}】，支付方式：【{$v['express_payname']}】</option>
-                                {/if}
-                            {/volist}
-                        </select>
-                    </div>
-                </div>
-            </div>
-            {/if}
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary" lay-submit lay-filter="component-form-element2">立即保存</button>
-            </div>
-        {/if}
-        
         {if ($order['status']==-2 && $order['type']==0 && $order['issend']==0) || $order['accept_type']==1}
-            <!--待确认-->
+            <!--平台分流，待确认-->
             <div class="layui-form-item">
                 <div class="layui-form-label">{if $order['accept_type']==1}采购状态{else}订购状态{/if}</div>
                 <div class="layui-input-block inline">
@@ -234,14 +214,64 @@
             <!--已付款，待采购-->
             <div class="info_div">
                 <div class="layui-form-item">
-                    <div class="layui-form-label">接受采购</div>
+                    <div class="layui-form-label">选择采购</div>
                     <div class="layui-input-block">
                         <select name="accept_type" id="accept_type" lay-verify="required" lay-filter="accept_type">
-                            <option value="1">接受</option>
-                            <option value="2">退订</option>
+                            <option value="">请选择采购方式</option>
+                            <option value="1">接受采购</option>
+                            <option value="2">退订采购</option>
                         </select>
                     </div>
                 </div>
+                <!--代发的商品需要卖家选择“自主发货”或者“他人发货”-->
+                <div class="layui-form-item send_method" style="display:none;">
+                    <div class="layui-form-label">选择发货</div>
+                    <div class="layui-input-block">
+                        <select name="send_type" id="send_type" lay-verify="required" lay-filter="send_type">
+                            <option value="">请选择发货方式</option>
+                            <option value="1">自主发货</option>
+                            <option value="2">他人发货</option>
+                        </select>
+                    </div>
+                </div>
+                <!--自主发货-->
+                <div class="self_delivery" style="display:none;">
+                    <div class="layui-form-item">
+                        <div class="layui-form-label">快递信息</div>
+                        <div class="layui-input-block" style="line-height:38px;">
+                            <input name="daifa_express_id" value="{$order['selected_express_info']['id']}" style="display:none;">
+                            <div class="disf">{$order['selected_express_info']['name']}-{$order['selected_express_info']['express_type']}</div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-form-label">运单编号</div>
+                        <div class="layui-input-block inline">
+                            <input name="daifa_express_no" value="" placeholder="请输入运单编号">
+                        </div>
+                    </div>
+                </div>
+                <!--他人发货-->
+                <div class="other_delivery" style="display:none;">
+                    <div class="layui-form-item">
+                        <div class="layui-form-label">通知方式</div>
+                        <div class="layui-input-block">
+                            <div class="disf">
+                                <div class="select_div">
+                                    <select name="notice_type" id="notice_type" lay-verify="required" lay-filter="notice_type">
+                                        <option value="1">邮箱</option>
+                                        <option value="2">短信</option>
+                                        <option value="3">二维码</option>
+                                    </select>
+                                </div>
+                                <input type="text" name="notice_number" id="notice_number" class="layui-input notice_number" value="" placeholder="请输入通知号码" />
+                                <div class="code_img" style="display:none;">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
                 {if $list['have_under']>0}
                     <input type="hidden" name="have_under" value="{$list['have_under']}">
                     <div class="layui-form-item data_origin_belong">
@@ -266,7 +296,7 @@
             </div>
         {/if}
 
-        {if $order['accept_type']==2 && $order['status']==1 && $order['is_daifa']==2}
+        {if $order['accept_type']==2 && $order['status']==1 && $order['is_daifa']==2 && 1>2}
             <!--代发订单-->
             <div class="info_div">
                 <div class="layui-form-item">
@@ -630,9 +660,52 @@
             let val = data.value;
 
             if(val==1){
-                $('.data_origin_belong').show();
+                //同意采购
+                // $('.data_origin_belong').show();
+                
+                $('.send_method').show();
+                $('.self_delivery,.other_delivery').hide();
             }else if(val==2){
-                $('.data_origin_belong').hide();
+                //拒绝采购
+                // $('.data_origin_belong').hide();
+                
+                $('.send_method,.self_delivery,.other_delivery').hide();
+            }
+        });
+        
+        //发货方式
+        form.on('select(send_type)',function(data){
+            let val = data.value;
+            
+            if(val==1){
+                //自主发货
+                $('.self_delivery').show();
+                $('.other_delivery').hide();
+            }
+            else if(val==2){
+                //他人发货
+                $('.self_delivery').hide();
+                $('.other_delivery').show();
+            }
+        });
+        
+        //通知方式
+        form.on('select(notice_type)',function(data){
+            let val = data.value;
+            
+            if(val==1 || val==2){
+                //邮箱&短信
+                $('.notice_number').show();
+                $('.code_img').hide();
+                
+            }
+            else if(val==3){
+                //二维码
+                $('.notice_number').hide();
+                $('.code_img').show();
+                
+                //ajax请求链接的二维码
+                
             }
         });
 
