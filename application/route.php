@@ -144,9 +144,11 @@ Route::any('index/get_goods_info', 'index/Index/get_goods_info');#企业网店-�
 Route::any('index/get_goods_param', 'index/Index/get_goods_param');#企业网店-上架管理-获取最近商品参数信息
 Route::any('index/spec_arrange', 'index/Index/spec_arrange');#企业网店-上架管理-整理规格
 Route::any('index/shelf_manage', 'index/Index/shelf_manage');#企业网店-上架管理-管理上架
-Route::any('index/del_shelf', 'index/Index/del_shelf');#企业网店-上架管理-下架商品
+Route::any('index/del_shelf', 'index/Index/del_shelf');#企业网店-上架管理-下架线上商城商品
+Route::any('index/del_shelf_xianxia', 'index/Index/del_shelf_xianxia');#企业网店-上架管理-下架线下店铺商品
 
 Route::any('index/select_shelf', 'index/Index/select_shelf');#企业网店-上架管理-选择上架
+Route::any('index/select_shelf_xianxia', 'index/Index/select_shelf_xianxia');#企业网店-上架管理-选择上架（线下店铺上架）
 Route::any('index/get_goods_warehouses', 'index/Index/get_goods_warehouses');#企业网店-上架管理-选择上架-获取商品仓库库存
 Route::any('index/get_warehouse_terminals', 'index/Index/get_warehouse_terminals');#企业网店-上架管理-选择上架-获取仓库终端
 Route::any('index/get_terminal_expresses', 'index/Index/get_terminal_expresses');#企业网店-上架管理-选择上架-获取终端快递企业
@@ -206,6 +208,8 @@ Route::any('index/sorder_detail', 'index/Index/sorder_detail');#企业网店-交
 Route::any('index/porder_manage', 'index/Index/porder_manage');#企业网店-交易管理-订购管理
 Route::any('index/cancel_porder', 'index/Index/cancel_porder');#企业网店-交易管理-拒绝订购
 Route::any('index/porder_detail', 'index/Index/porder_detail');#企业网店-交易管理-订购详情
+Route::any('index/other_delivery', 'index/Index/other_delivery');#企业网店-交易管理-订购详情-他人发货
+Route::any('index/generate_order_code', 'index/Index/generate_order_code');#企业网店-交易管理-订购详情-生成订单二维码
 Route::any('index/value_introduce', 'index/Index/value_introduce');#企业网店-交易管理-属性详情
 Route::any('index/porder_edit', 'index/Index/porder_edit');#企业网店-交易管理-订购单修改
 Route::any('index/order_manage', 'index/Index/order_manage');#企业网店-交易管理-支付单管理

@@ -259,7 +259,7 @@ function generate_code($name,$url,$folder){
     //直接输出图片到浏览器
     Header("Content-type: image/png");
 
-    $qrcode = str_replace('/www/wwwroot/default/company/dedcms/new1_web/public','https://www.gogo198.net',$filename);
+    $qrcode = str_replace('/www/wwwroot/website.gogo198.net/public','https://dtc.gogo198.net',$filename);
     return $qrcode;
 }
 

@@ -1383,7 +1383,7 @@
                         </div>
                         
                         <!-- 选择快递企业 -->
-                        <div class="layui-form-item">
+                        <div class="layui-form-item kuaidiqiye">
                             <label class="layui-form-label">选择快递企业</label>
                             <div class="layui-input-block">
                                 <div class="selector-box" id="expressSelector" style="display: none;">
@@ -1407,7 +1407,7 @@
                         </div>
                         
                         <!-- 选择快递产品 -->
-                        <div class="layui-form-item">
+                        <div class="layui-form-item kuaidichanpin">
                             <label class="layui-form-label">选择快递产品</label>
                             <div class="layui-input-block">
                                 <div class="selector-box" id="productSelector" style="display: none;">
@@ -1431,7 +1431,7 @@
                         </div>
                         
                         <!-- 配置按钮 -->
-                        <div class="layui-form-item">
+                        <div class="layui-form-item yunfeipeizhi">
                             <div class="layui-input-block">
                                 <button type="button" class="layui-btn layui-btn-normal" onclick="configureFreightForSelectedProducts('direct')" id="configureDirectBtn" disabled>
                                     <i class="layui-icon">&#xe642;</i> 配置选中的产品运费
@@ -2018,6 +2018,8 @@ var selectedProxyProducts = [];  // 代发货选中的产品
 var freightConfigs = {}; // 存储所有运费配置 {productKey: configData}
 var currentWarehouseType = '';   // 当前仓库类型
 var currentWarehouseId = 0;      // 当前仓库ID
+var is_xianxia = 0;         //0线上，1线下
+let terminal_id = 0;       //线下终端
 
 // 添加防抖变量
 var loadProductListTimeout = null;
@@ -2811,44 +2813,63 @@ function initEditModeFreightConfigs(data) {
     // 清空现有配置
     freightConfigs = {};
     
-    // 处理每个运费配置
-    data.freight_configs[0].config_data.forEach(function(config) {
-        var key = config.express_id + '_' + config.product_type;
-        freightConfigs[key] = {
-            config_id: config.config_id,
-            config_data: config.config_data,
-            is_platform_config: config.is_platform_config,
-            confirmed: true
-        };
-        // 根据仓库类型添加到相应的选中数组
-        if (data.warehouse_type === 'direct') {
-            // 直接发货：需要添加到selectedProducts
-            if (!selectedProducts.some(p => p.key === key)) {
-                if(config.express_id>0){
-                    selectedProducts.push({
-                        key: key,
-                        express_id: config.express_id,
-                        product_type: config.product_type,
-                        express_name: config.express_name || '快递',
-                        terminal_ids: config.terminal_id
-                    });
-                }
-            }
-        } else {
-            // 代发货：需要添加到selectedProxyProducts
-            if (!selectedProxyProducts.some(p => p.key === key)) {
-                if(config.express_id>0){
-                    selectedProxyProducts.push({
-                        key: key,
-                        express_id: config.express_id,
-                        product_type: config.product_type,
-                        express_name: config.express_name || '快递'
-                    });
-                }
-            }
-        }
-    });
+    // if(data.is_xianxia==1){
+    //     //线下店铺
+    //     console.log(data.freight_configs[0].config_data.terminal_id,33444);
+    //     selectedTerminals = [data.freight_configs[0].config_data.terminal_id.toString()];
+    // }
     
+    
+    if(!Array.isArray(data.freight_configs[0].config_data)){
+        //只包含一个线下终端
+        selectedTerminals = [data.freight_configs[0].config_data.terminal_id.toString()];
+    }else{
+        //包含其他终端
+        // 处理每个运费配置
+        data.freight_configs[0].config_data.forEach(function(config) {
+            if(typeof(config.express_id) == 'undefined'){
+                
+                selectedTerminals.push(config.terminal_id.toString());
+                console.log(selectedTerminals,config.terminal_id,444);
+            }else{
+                var key = config.express_id + '_' + config.product_type;
+                freightConfigs[key] = {
+                    config_id: config.config_id,
+                    config_data: config.config_data,
+                    is_platform_config: config.is_platform_config,
+                    confirmed: true
+                };
+                // 根据仓库类型添加到相应的选中数组
+                if (data.warehouse_type === 'direct') {
+                    // 直接发货：需要添加到selectedProducts
+                    if (!selectedProducts.some(p => p.key === key)) {
+                        if(config.express_id>0){
+                            selectedProducts.push({
+                                key: key,
+                                express_id: config.express_id,
+                                product_type: config.product_type,
+                                express_name: config.express_name || '快递',
+                                terminal_ids: config.terminal_id
+                            });
+                        }
+                    }
+                } else {
+                    // 代发货：需要添加到selectedProxyProducts
+                    if (!selectedProxyProducts.some(p => p.key === key)) {
+                        if(config.express_id>0){
+                            selectedProxyProducts.push({
+                                key: key,
+                                express_id: config.express_id,
+                                product_type: config.product_type,
+                                express_name: config.express_name || '快递'
+                            });
+                        }
+                    }
+                }
+            }
+        });
+    }
+        
     // 更新UI状态
     updateStep4ConfigStatus();
 }
@@ -2936,7 +2957,8 @@ function loadTerminalList(warehouseId) {
                 if(res.data && res.data.length > 0) {
                     $.each(res.data, function(index, terminal){
                         var isSelected = selectedTerminals.includes(terminal.id.toString());
-                        html += '<div class="selector-item ' + (isSelected ? 'selected' : '') + '" data-id="' + terminal.id + '" onclick="toggleSelectItem(this, \'terminal\')">' +
+                        
+                        html += '<div class="selector-item ' + (isSelected ? 'selected' : '') + '" data-id="' + terminal.id + '" data-order_type="'+terminal.order_type+'" onclick="toggleSelectItem(this, \'terminal\')">' +
                                 '<div class="checkbox">' +
                                 '<input type="checkbox" style="display: none;" ' + (isSelected ? 'checked' : '') + '>' +
                                 '<i class="layui-icon ' + (isSelected ? 'layui-icon-ok-circle' : 'layui-icon-circle') + '" style="color: ' + (isSelected ? '#1890ff' : '#ccc') + ';"></i>' +
@@ -3005,8 +3027,13 @@ function loadExpressList(terminalIds) {
                                 '</div>';
                     });
                     $('#expressSelector').show();
+                    $('.kuaidiqiye,.kuaidichanpin,.yunfeipeizhi').show();
+                    is_xianxia = 0;
                 } else {
                     html = '<div style="padding: 20px; text-align: center; color: #999;">暂无可用快递企业</div>';
+                    $('.kuaidiqiye,.kuaidichanpin,.yunfeipeizhi').hide();
+                    is_xianxia = 1;
+                    terminal_id = terminalIds;
                 }
                 $('#expressList').html(html);
                 updateSelectedCount('express');
@@ -5166,14 +5193,14 @@ function validateStep4FreightConfig() {
             return false;
         }
         
-        if (selectedItems.length === 0) {
+        if (selectedItems.length === 0 && is_xianxia==0) {
             layer.msg('请至少选择一个快递产品', {icon: 2});
             return false;
         }
     } else {
         selectedItems = selectedProxyProducts;
         
-        if (selectedItems.length === 0) {
+        if (selectedItems.length === 0 && is_xianxia==0) {
             layer.msg('请至少选择一个快递产品', {icon: 2});
             return false;
         }
@@ -5209,7 +5236,7 @@ function validateStep4FreightConfig() {
         return false;
     }
     
-    if (configuredCount === 0) {
+    if (configuredCount === 0 && is_xianxia == 0) {
         layer.msg('请先配置运费', {icon: 2});
         return false;
     }
@@ -5841,6 +5868,14 @@ function submitProcurement() {
     if (!validateFreightConfigsBeforeSubmit()) {
         return;
     }
+    //判断当前有无线下终端
+    for(let i=0;i<$('#terminalList').find('.selected').length;i++){
+        if($('#terminalList').find('.selected').eq(i).attr('data-order_type') == 1){
+            is_xianxia = 1;
+            terminal_id = $('#terminalList').find('.selected').eq(i).attr('data-id');
+        }
+    }
+    
     // 2. 收集所有数据
     var procurementData = {
         edit_id:edit_id,
@@ -5865,7 +5900,9 @@ function submitProcurement() {
         goods_total: parseFloat($('#goodsTotalAmount').text()),
         project_total: parseFloat($('#projectTotalAmount').text()),
         freight_total: calculateFreightTotal(),
-        total_amount: calculateTotalAmount()
+        total_amount: calculateTotalAmount(),
+        is_xianxia: is_xianxia,
+        terminal_id: terminal_id
     };
     
     // 发送请求
@@ -5911,7 +5948,7 @@ function validateFreightConfigsBeforeSubmit() {
         selectedItems = selectedProxyProducts;
     }
     
-    if (selectedItems.length === 0) {
+    if (selectedItems.length === 0 && is_xianxia==0) {
         layer.msg('请至少选择一个快递产品', {icon: 2});
         return false;
     }
@@ -5940,7 +5977,7 @@ function validateFreightConfigsBeforeSubmit() {
         return false;
     }
     
-    if (configuredCount === 0) {
+    if (configuredCount === 0 && is_xianxia == 0) {
         layer.msg('请先配置运费', {icon: 2});
         return false;
     }
@@ -5984,10 +6021,9 @@ function collectFreightConfigsForSubmit() {
     } else {
         selectedItems = selectedProxyProducts;
     }
-    
+ 
     selectedItems.forEach(function(item) {
         var config = freightConfigs[item.key];
-        
         if (config) {
             if(edit_id>0){
                 var terminal_id2 = 0;

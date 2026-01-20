@@ -120,6 +120,17 @@
                     {/if}  
                 </div>
             </div>
+            
+            <div class="layui-form-item">
+                <div class="layui-form-label">订单类别</div>
+                <div class="layui-input-block" style="line-height:36px;">
+                    {if $data['printer_info']['order_type']==0}
+                        仓库面单（线上）
+                    {elseif($data['printer_info']['order_type']==1)}
+                        店铺订单（线下）
+                    {/if}  
+                </div>
+            </div>
         {/if}
     </div>
     
@@ -131,7 +142,7 @@
             <th>操作</th>
         </thead>
         <tbody>
-            {if $id>0}
+            {if $id>0 && !empty($data['express_id'])}
                 {volist name="data.express_list" id="vo"}
                     <tr>
                         <td>{$vo.express_name}</td>

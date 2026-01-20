@@ -705,7 +705,24 @@
                 $('.code_img').show();
                 
                 //ajax请求链接的二维码
-                
+                $.ajax({
+                    url:"/?s=index/generate_order_code",
+                    method:'post',
+                    data:{'id':"{$id}"},
+                    dataType:'JSON',
+                    success:function(res){
+                        layer.closeAll('loading');
+                        // layer.msg(res.msg,{time:2000}, function () {
+                            if(res.code == 0)
+                            {
+                                $('.code_img').html('<img src="'+res.img+'" style="width:100px;height:100px;">');
+                            }
+                        // });
+                    },
+                    error:function (data) {
+                        layer.msg('系统错误',{time:2000});
+                    }
+                });
             }
         });
 

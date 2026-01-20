@@ -1751,28 +1751,35 @@ class Index extends Controller
         $id = isset($dat['id'])?intval($dat['id']):0;
         $warehouse_id = isset($dat['warehouse_id'])?intval($dat['warehouse_id']):0;//商家的仓库id
         $warehouse_merchant = Db::name('centralize_warehouse_merchant')->where(['id'=>$warehouse_id])->find();
+        $printer_id = isset($dat['printer_id'])?intval($dat['printer_id']):0;
         
         if($request->isAjax()){
             #1、判断有无添加相同打印机
             if($id==0){
-                $ishave = Db::name('centralize_warehouse_merchant_printer')->where(['printer_id'=>intval($dat['printer_id']),'company_id'=>$company_id])->find();
+                $ishave = Db::name('centralize_warehouse_merchant_printer')->where(['printer_id'=>$printer_id,'company_id'=>$company_id])->find();
                 if(!empty($ishave)){
                     return json(['code'=>-1,'msg'=>'你已添加此终端，无需重复添加']);
                 }    
             }
             
-            #2、查看有无添加终端快递
-            if(!isset($dat['express_id'])){
-                return json(['code'=>-1,'msg'=>'请选择至少一个快递及其产品']);
-            }
+            $printer = Db::name('centralize_warehouse_printer')->where(['id'=>$printer_id])->find();
             
-            $express_id = implode(',',$dat['express_id']);
+            $express_id = '';
+            if($printer['order_type'] == 0){
+                #仓库面单（线上）
+                #2、查看有无添加终端快递
+                if(!isset($dat['express_id'])){
+                    return json(['code'=>-1,'msg'=>'请选择至少一个快递及其产品']);
+                }
+                
+                $express_id = implode(',',$dat['express_id']);
+            }
             
             if(empty($id)){
                 Db::name('centralize_warehouse_merchant_printer')->insert([
                     'company_id'=>$company_id,
                     'wm_id'=>$warehouse_id,
-                    'printer_id'=>intval($dat['printer_id']),
+                    'printer_id'=>$printer_id,
                     'express_id'=>$express_id
                 ]);
             }else{
@@ -1786,13 +1793,15 @@ class Index extends Controller
             $data = ['printer_id'=>'','express_id'=>'','express_list'=>[]];
             if($id>0){
                 $data = Db::name('centralize_warehouse_merchant_printer')->where(['id'=>$id])->find();
-                $data['express_id'] = explode(',',$data['express_id']);
-                $data['printer_info'] = Db::name('centralize_warehouse_printer')->where(['id'=>$data['printer_id']])->field('name,type')->find();
-                
-                $data['express_list'] = Db::name('centralize_warehouse_express')->where(['printer_id'=>$data['printer_id']])->select();
-                foreach($data['express_list'] as $k=>$v){
-                    $data['express_list'][$k]['express_name'] = Db::name('centralize_express_product')->where(['id'=>$v['express_id']])->field('name')->find()['name'];
+                if(!empty($data['express_id'])){
+                    $data['express_id'] = explode(',',$data['express_id']);
+                    $data['express_list'] = Db::name('centralize_warehouse_express')->where(['printer_id'=>$data['printer_id']])->select();
+                    foreach($data['express_list'] as $k=>$v){
+                        $data['express_list'][$k]['express_name'] = Db::name('centralize_express_product')->where(['id'=>$v['express_id']])->field('name')->find()['name'];
+                    }
                 }
+                
+                $data['printer_info'] = Db::name('centralize_warehouse_printer')->where(['id'=>$data['printer_id']])->field('name,type,order_type')->find();
             }
             
             #仓库的所有打印机
@@ -5781,7 +5790,7 @@ class Index extends Controller
             #商品促销======
             $list['goods']['activity_info'] = explode(",",$list['goods']['activity_info']);
         }
-
+        
         #商品详情======
         ##制造企业
         if(!empty($list['goods']['manufacture'])){
@@ -5805,6 +5814,9 @@ class Index extends Controller
                 $list['goods']['manufacture']['area6_name'] = Db::name('centralize_adminstrative_area')->where(['id'=>$list['goods']['manufacture']['area6']])->find()['code_name'];
             }
         }
+        else{
+            $list['goods']['manufacture'] = ['company_name'=>'','country'=>'','area1'=>'','area2'=>'','area3'=>'','area4'=>'','area5'=>'','area6'=>'','address'=>'','connect_type'=>'','connect_info'=>'','product_license'=>'','product_standard'=>''];
+        }
         ##销售企业
         if(!empty($list['goods']['sales'])){
             $list['goods']['sales'] = json_decode($list['goods']['sales'],true);
@@ -5826,6 +5838,8 @@ class Index extends Controller
             if(isset($list['goods']['sales']['area6'])){
                 $list['goods']['sales']['area6_name'] = Db::name('centralize_adminstrative_area')->where(['id'=>$list['goods']['sales']['area6']])->find()['code_name'];
             }
+        }else{
+            $list['goods']['sales'] = ['company_name'=>'','country'=>'','area1'=>'','area2'=>'','area3'=>'','area4'=>'','area5'=>'','area6'=>'','address'=>'','connect_type'=>'','connect_info'=>'','product_license'=>''];
         }
         ##外贸企业
         if(!empty($list['goods']['foreign'])){
@@ -5848,20 +5862,28 @@ class Index extends Controller
             if(isset($list['goods']['foreign']['area6'])){
                 $list['goods']['foreign']['area6_name'] = Db::name('centralize_adminstrative_area')->where(['id'=>$list['goods']['foreign']['area6']])->find()['code_name'];
             }
+        }else{
+            $list['goods']['foreign'] = ['company_name'=>'','country'=>'','area1'=>'','area2'=>'','area3'=>'','area4'=>'','area5'=>'','area6'=>'','address'=>'','connect_type'=>'','connect_info'=>'','product_type'=>'','product_license'=>''];
         }
         ##有效期限
         if(!empty($list['goods']['effective'])){
             $list['goods']['effective'] = json_decode($list['goods']['effective'],true);
+        }else{
+            $list['goods']['effective'] = ['type'=>'','type2'=>'','fixed_day'=>'','interval_day'=>'','valid_period'=>'','valid_unit'=>''];
         }
         ##贮存条件
         if(!empty($list['goods']['store'])){
             $list['goods']['store'] = json_decode($list['goods']['store'],true);
+        }else{
+            $list['goods']['store'] = ['temperature_condition'=>'','humidity_condition'=>'','humidity_x'=>'','humidity_y'=>'','light_condition'=>'','packing_condition'=>'','store_condition'=>'','special_condition'=>''];
         }
         ##产品包装
         if(!empty($list['goods']['packing'])){
             $list['goods']['packing'] = json_decode($list['goods']['packing'],true);
             $list['container'] = Db::name('packing_category')->where(['pid'=>$list['goods']['packing']['method'],'type'=>1])->select();
             $list['material'] = Db::name('packing_category')->where(['pid'=>$list['goods']['packing']['method'],'type'=>2])->select();
+        }else{
+            $list['goods']['packing'] = ['type'=>'','method'=>'','packing_container'=>'','packing_material'=>'','no_pack'=>'','packing_condition'=>'','store_condition'=>'','special_condition'=>''];
         }
         ##商品参数
         if(!empty($list['goods']['spec_info'])){
@@ -5895,6 +5917,9 @@ class Index extends Controller
             return json(['code'=>-1,'msg'=>'最新无新增商品参数']);
         }else{
             $infos = json_decode($info[0]['spec_info'],true);
+            if(empty($infos)){
+                return json(['code'=>-1,'msg'=>'最新无新增商品参数']);
+            }
             return json(['code'=>0,'msg'=>'获取成功','datas'=>$infos]);
         }
     }
@@ -5977,6 +6002,11 @@ class Index extends Controller
                 elseif($item['goods_status']==-1 && !empty($item['goods_reasons'])){
                     $item['status_name'] = '拒绝上架（原因：'.$item['goods_reasons'].'）';
                 }
+                
+                $item['xianxia_status_name'] = '待上架';
+                if($item['is_shelf_xianxia']>0){
+                    $item['xianxia_status_name'] = '已上架';
+                }
             }
 
             return json(['code'=>0,'count'=>$count,'data'=>$rows]);
@@ -5985,7 +6015,7 @@ class Index extends Controller
         }
     }
 
-    #下架商品
+    #下架线上商城商品
     public function del_shelf(Request $request){
         $dat = input();
 
@@ -6013,9 +6043,20 @@ class Index extends Controller
             return json(['code'=>0,'msg'=>'下架成功！']);
         }
     }
+    
+    #下架线下店铺商品
+    public function del_shelf_xianxia(Request $request){
+        $dat = input();
+
+        $id = intval($dat['id']);
+        $res = Db::connect($this->config)->name('goods_merchant')->where(['id'=>$id])->update(['is_shelf_xianxia'=>0]);
+        if($res){
+            return json(['code'=>0,'msg'=>'下架成功！']);
+        }
+    }
 
     #管理上架=================================================start
-    #管理上架
+    #管理上架（线上商城）
     public function select_shelf(Request $request){
         $dat = input();
         $company_id = intval($dat['company_id']);
@@ -6365,6 +6406,57 @@ class Index extends Controller
             return view('index/shop_backend/select_shelf',compact('company_id','company_type','list','gid','type'));
         }
     }
+    #管理上架（线下店铺选仓库、选终端）
+    public function select_shelf_xianxia(Request $request){
+        $dat = input();
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);#0商城，1官网
+        $gid = intval($dat['id']);
+        $type = isset($dat['type'])?intval($dat['type']):0;//0商品，1赠品
+
+        if($request->isAjax()){
+            if($dat['pa']==1){
+                //获取仓库下的终端
+                $data = Db::name('website_procurement')
+                    ->where(['company_id'=>$company_id,'company_type'=>$company_type,'warehouse_id'=>intval($dat['wid'])])
+                    ->where('goods_info', 'like', '%"goods_id":"' . $gid . '"%')
+                    ->order('id desc')
+                    ->find();
+                $printer = Db::name('centralize_warehouse_printer')->where(['id'=>$data['xianxia_terminal_id']])->find();
+                
+                return json(['code'=>0,'data'=>$printer]);
+            }
+            elseif($dat['pa']==2){
+                //提交上架
+                $res = Db::connect($this->config)->name('goods_merchant')->where(['id'=>$gid,'cid'=>$company_id])->update([
+                    'is_shelf_xianxia'=>1,
+                    'xianxia_warehouse_id'=>intval($dat['warehouse_id']),
+                    'xianxia_terminal_id'=>intval($dat['terminal_id']),
+                ]);
+                if($res){
+                    return json(['code'=>0,'msg'=>'上架成功']);
+                }
+            }
+        }else{
+            #获取商品
+            $list['goods'] = Db::connect($this->config)->name('goods_merchant')->where(['id'=>$gid,'type'=>$type])->find();
+            if($list['goods']['xianxia_terminal_id']>0){
+                $list['goods']['printer_info'] = Db::name('centralize_warehouse_printer')->where(['id'=>$list['goods']['xianxia_terminal_id']])->find();
+            }
+            #获取商品库存信息
+            $warehouses = Db::name('website_warehouse_goodsnum')
+                ->alias('n')
+                ->join('centralize_warehouse_list w', 'w.id = n.warehouse_id')
+                ->where('n.goods_id', $gid)
+                ->where('n.company_id', $company_id)
+                ->field('w.id, w.warehouse_name as name, n.sku_id, n.num, w.warehouse_form')
+                ->group('w.id')
+                ->select();
+            
+            return view('index/shop_backend/select_shelf_xianxia',compact('company_id','company_type','type','gid','list','warehouses'));
+        }
+    }
+    
     //获取该商品当前存在的仓库
     public function get_goods_warehouses(Request $request) {
         $goods_id = input('goods_id');
@@ -7368,37 +7460,40 @@ class Index extends Controller
                     if($procurement['warehouse_type']=='proxy'){
                         //代发货-企业
                         foreach($config['config_data'] as $k=>$v){
-                            $expressId = Db::name('centralize_warehouse_express')->where(['warehouse_id'=>$procurement['warehouse_id'],'printer_id'=>0,'express_id'=>$v['express_id'],'express_type'=>$v['product_type']])->value('id');
-                            $express_id .= $expressId.',';
-                            if(!empty($v['product_type']) && $v['express_id']>0){
-                                array_push($product_key,[
-                                    'key'=>$v['express_id'].'_'.$v['product_type'],
-                                    'express_id'=>$v['express_id'],
-                                    'product_type'=>$v['product_type'],
-                                    'express_name'=>$v['express_name']
-                                ]);
+                            if(isset($v['express_id'])){
+                                $expressId = Db::name('centralize_warehouse_express')->where(['warehouse_id'=>$procurement['warehouse_id'],'printer_id'=>0,'express_id'=>$v['express_id'],'express_type'=>$v['product_type']])->value('id');
+                                $express_id .= $expressId.',';
+                                if(!empty($v['product_type']) && $v['express_id']>0){
+                                    array_push($product_key,[
+                                        'key'=>$v['express_id'].'_'.$v['product_type'],
+                                        'express_id'=>$v['express_id'],
+                                        'product_type'=>$v['product_type'],
+                                        'express_name'=>$v['express_name']
+                                    ]);
+                                }
                             }
                         }
                     }else{
-                        
                         //直接发货-企业
                         foreach($config['config_data'] as $k=>$v){
-                            $expressId = Db::name('centralize_warehouse_express')->where(['printer_id'=>$v['terminal_id'],'express_id'=>$v['express_id'],'express_type'=>$v['product_type']])->value('id');
-                            $express_id .= $expressId.',';
-                            if(empty($terminal_id)){
-                                $terminal_id .= $v['terminal_id'].',';
-                            }elseif(strpos($terminal_id,$v['terminal_id'])){
-                                $terminal_id .= $v['terminal_id'].',';
-                            }
-                            
-                            if(!empty($v['product_type']) && $v['express_id']>0){
-                                array_push($product_key,[
-                                    'key'=>$v['express_id'].'_'.$v['product_type'],
-                                    'express_id'=>$v['express_id'],
-                                    'product_type'=>$v['product_type'],
-                                    'express_name'=>$v['express_name'],
-                                    'terminal_id'=>$v['terminal_id']
-                                ]);
+                            if(isset($v['express_id'])){
+                                $expressId = Db::name('centralize_warehouse_express')->where(['printer_id'=>$v['terminal_id'],'express_id'=>$v['express_id'],'express_type'=>$v['product_type']])->value('id');
+                                $express_id .= $expressId.',';
+                                if(empty($terminal_id)){
+                                    $terminal_id .= $v['terminal_id'].',';
+                                }elseif(strpos($terminal_id,$v['terminal_id'])){
+                                    $terminal_id .= $v['terminal_id'].',';
+                                }
+                                
+                                if(!empty($v['product_type']) && $v['express_id']>0){
+                                    array_push($product_key,[
+                                        'key'=>$v['express_id'].'_'.$v['product_type'],
+                                        'express_id'=>$v['express_id'],
+                                        'product_type'=>$v['product_type'],
+                                        'express_name'=>$v['express_name'],
+                                        'terminal_id'=>$v['terminal_id']
+                                    ]);
+                                }
                             }
                         }
                     }
@@ -7647,7 +7742,7 @@ class Index extends Controller
                     'wmpr.company_id' => $company_id,
                     'pr.warehouse_id' => $warehouse_id
                 ])
-                ->field('pr.id, pr.name')
+                ->field('pr.id, pr.name,pr.order_type')
                 ->select();
             
             return json(['code' => 0, 'data' => $terminals ?: []]);
@@ -8409,7 +8504,7 @@ class Index extends Controller
         }
         
         $data = $request->post();
-        
+        // dd($data);
         // 验证数据
         $validate = new Validate([
             'company_id' => 'require|number',
@@ -8424,17 +8519,32 @@ class Index extends Controller
             return json(['code' => -1, 'msg' => $validate->getError()]);
         }
         
+        $freight_configs = [];
+        
+        if(isset($data['freight_configs'])){
+            #线上商城
+            if($data['is_xianxia']==1){
+                array_push($data['freight_configs'],['terminal_id'=>intval($data['terminal_id'])]);
+            }
+            $freight_configs = json_encode($data['freight_configs'], JSON_UNESCAPED_UNICODE);
+        }else{
+            if($data['is_xianxia']==1){
+                #线下店铺
+                $freight_configs = json_encode(['terminal_id'=>intval($data['terminal_id'])], JSON_UNESCAPED_UNICODE);
+            }
+        }
+        
         // 验证运费配置是否存在
         $procurementDatas = Db::name('website_procurement')->where(['id'=>intval($data['edit_id'])])->find();
         if(!empty($procurementDatas)){
-            Db::name('freight_config')->where(['id'=>$procurementDatas['freight_config_id']])->update(['config_data'=>json_encode($data['freight_configs'], JSON_UNESCAPED_UNICODE),'updatetime' => time()]);
+            Db::name('freight_config')->where(['id'=>$procurementDatas['freight_config_id']])->update(['config_data'=>$freight_configs,'updatetime' => time()]);
         }else{
             $freightConfigId = Db::name('freight_config')
             ->insertGetId([
                 'company_id' => $data['company_id'],
                 'warehouse_id' => $data['warehouse_id'],
                 'warehouse_type' => $data['warehouse_type'],
-                'config_data' => json_encode($data['freight_configs'], JSON_UNESCAPED_UNICODE),
+                'config_data' => $freight_configs,
             ]);
         }
         
@@ -8448,6 +8558,8 @@ class Index extends Controller
                     'warehouse_type' => $data['warehouse_type'],
                     'warehouse_id' => $data['warehouse_id'],
                     'payment_method' => $data['payment_method'] ?? 0,
+                    'is_xianxia' => intval($data['is_xianxia']),
+                    'xianxia_terminal_id' => intval($data['terminal_id']),
                     'supplier_currency' => $data['supplier_currency'] ?? 5,
                     'delivery_time' => $data['delivery_time'] ?? '',
                     'delivery_id' => $data['delivery_id'] ?? 0,
@@ -8503,6 +8615,8 @@ class Index extends Controller
                     'supplier_id' => $data['supplier_id'],
                     'warehouse_type' => $data['warehouse_type'],
                     'warehouse_id' => $data['warehouse_id'],
+                    'is_xianxia' => intval($data['is_xianxia']),
+                    'xianxia_terminal_id' => intval($data['terminal_id']),
                     'payment_method' => $data['payment_method'] ?? 0,
                     'supplier_currency' => $data['supplier_currency'] ?? 5,
                     'delivery_time' => $data['delivery_time'] ?? '',
@@ -10829,7 +10943,7 @@ class Index extends Controller
         $order['content'] = json_decode($order['content'],true);
         
         if(isset($dat['pa'])){
-            dd($dat);
+            // dd($dat);
             $time = time();
             $user = Db::name('website_user')->where(['id'=>$order['user_id']])->find();
             $system = Db::name('centralize_system_notice')->where(['uid'=>0])->find();
@@ -10880,24 +10994,28 @@ class Index extends Controller
                         if($dat['notice_type']==1 && $dat['notice_type']==2 && empty($dat['notice_number'])){
                             return json(['code'=>-1,'msg'=>'请输入通知号码']);
                         }
-                        $res = Db::name('website_order_list')->where(['id'=>$id])->update([
-                            'accept_type'=>$dat['accept_type'],
-                            'is_package'=>1,
-                            'daifa_other_info'=>json_encode([
-                                'notice_type'=>intval($dat['notice_type']),
-                                'notice_number'=>trim($dat['notice_number'])
-                            ],true)
-                        ]);
-                        
-                        if($res && ($dat['notice_type']==1 || $dat['notice_type']==2)){
-                            //“短信/邮箱”通知他人发货
-                            $post_data = json_encode(['notice_type'=>intval($dat['notice_type']),'number'=>trim($dat['notice_number']),'title'=>'你有待发货订单','msg'=>'请点击链接进行发货：https://www.gogo198.net/?s=index/other_delivery&order_id='.$id],true);
-                            $gogo_id = httpRequest2('https://shop.gogo198.cn/collect_website/public/?s=api/getgoods/notice_user',$post_data,array(
-                                'Content-Type: application/json; charset=utf-8',
-                                'Content-Length:' . strlen($post_data),
-                                'Cache-Control: no-cache',
-                                'Pragma: no-cache'
-                            ));
+                        if($dat['notice_type']==1 || $dat['notice_type']==2){
+                            $res = Db::name('website_order_list')->where(['id'=>$id])->update([
+                                'accept_type'=>$dat['accept_type'],
+                                'is_package'=>1,
+                                'daifa_other_info'=>json_encode([
+                                    'notice_type'=>intval($dat['notice_type']),
+                                    'notice_number'=>trim($dat['notice_number'])
+                                ],true)
+                            ]);
+                            
+                            if($res && ($dat['notice_type']==1 || $dat['notice_type']==2)){
+                                //“短信/邮箱”通知他人发货
+                                $post_data = json_encode(['notice_type'=>intval($dat['notice_type']),'number'=>trim($dat['notice_number']),'title'=>'你有待发货订单','msg'=>'请点击链接进行发货：https://dtc.gogo198.net/?s=index/other_delivery&order_id='.$id],true);
+                                $gogo_id = httpRequest2('https://shop.gogo198.cn/collect_website/public/?s=api/getgoods/notice_user',$post_data,array(
+                                    'Content-Type: application/json; charset=utf-8',
+                                    'Content-Length:' . strlen($post_data),
+                                    'Cache-Control: no-cache',
+                                    'Pragma: no-cache'
+                                ));
+                            }
+                        }else{
+                            return json(['code'=>0,'msg'=>'二维码通知方式无需保存']);
                         }
                     }
                 }
@@ -11387,6 +11505,125 @@ class Index extends Controller
             }
             
             return view('index/shop_backend/porder_detail',compact('order','address','goods','id','express','unit','currency','package','value','brand','company_id','company_type','list'));
+        }
+    }
+    
+    #生成订单二维码
+    public function generate_order_code(Request $request){
+        $dat = input();
+        $id = intval($dat['id']);
+        $time = time();
+        
+        #生成报价二维码
+        $folder = $_SERVER['DOCUMENT_ROOT'].'/qrcode/share_order/';
+        $name = 'order_'.$id;
+        $img = generate_code($name,'https://dtc.gogo198.net/?s=index/other_delivery&order_id='.$id,$folder);
+        return json(['code'=>0,'img'=>$img.'?v='.$time,'msg'=>'生成二维码成功']);
+    }
+
+    #通知他人发货
+    public function other_delivery(Request $request){
+        $dat = input();
+        $id = intval($dat['order_id']);
+        // $company_id = intval($dat['company_id']);
+        // $company_type = intval($dat['company_type']);#0商城，1官网
+
+        $order = Db::name('website_order_list')->where(['id'=>$id])->find();
+        $order['content'] = json_decode($order['content'],true);
+        
+        if(isset($dat['pa'])){
+            if(empty($dat['daifa_express_no'])){
+                return json(['code'=>-1,'msg'=>'请输入运单编号']);
+            }
+            $res = Db::name('website_order_list')->where(['id'=>$id])->update([
+                'accept_type'=>1,
+                'is_package'=>1,
+                'daifa_express_info'=>json_encode([
+                    'express_id'=>intval($dat['daifa_express_id']),
+                    'express_no'=>trim($dat['daifa_express_no'])
+                ],true)
+            ]);
+            if($res){
+                return json(['code'=>0,'msg'=>'确认打包成功']);
+            }
+        }else{
+            if(!empty($order['edit_address'])){
+                $address = json_decode($order['edit_address'],true);
+            }
+            else {
+                #收货信息
+                if(isset($order['content']['address_id'])){
+                    $address = Db::name('centralize_user_address')->where(['id' => $order['content']['address_id']])->find();
+                    $address['postal'] = $address['postal_code'];
+                    
+                    $country = Db::name('centralize_diycountry_content')->where(['id' => $address['country_id']])->find();#国
+                    $province = $city = $area_info = $area_info2 = $area_info3 = $area_info4 = '';
+                    
+                    if($address['have_postal_code']==1){
+                        #有邮政编码
+                        $province = $address['pre_address'];
+                    }
+                    elseif($address['have_postal_code']==2){
+                        #无邮政编码
+                        if($address['province']>0){
+                            $province = Db::name('centralize_country_areas')->where(['id'=>$address['province']])->field('name')->find()['name'];
+                        }
+                        if($address['city']>0){
+                            $city = Db::name('centralize_country_areas')->where(['id'=>$address['city']])->field('name')->find()['name'];
+                        }
+                        if($address['area']>0){
+                            $area_info = Db::name('centralize_country_areas')->where(['id'=>$address['area']])->field('name')->find()['name'];
+                        }
+                        if($address['area2']>0){
+                            $area_info2 = Db::name('centralize_country_areas')->where(['id'=>$address['area2']])->field('name')->find()['name'];
+                        }
+                        if($address['area3']>0){
+                            $area_info3 = Db::name('centralize_country_areas')->where(['id'=>$address['area3']])->field('name')->find()['name'];
+                        }
+                        if($address['area4']>0){
+                            $area_info4 = Db::name('centralize_country_areas')->where(['id'=>$address['area4']])->field('name')->find()['name'];
+                        }
+                    }
+                    
+                    $address['address2'] = json_decode($address['address2'], true);
+                    $address2 = '';
+                    if (!empty($address['address2'])) {
+                        foreach ($address['address2'] as $k => $v) {
+                            $address2 .= '/'.$v;
+                        }
+                    }
+
+                    $address['address'] = $country['param2'] . $province . $city . $area_info . $area_info2 . $area_info3 . $area_info4 . $address['address1'] . $address2;
+                }else{
+                    $address['postal'] = '';
+                    $address['address2'] = '';
+                    $address['address'] = '';
+                }
+            }
+            
+            #订购清单信息
+            foreach($order['content']['goods_info'] as $k=>$v){
+                $order['content']['goods_info'][$k]['goods_info'] = Db::connect($this->config)->name('goods')->where(['goods_id'=>$v['good_id']])->find();
+                foreach($v['sku_info'] as $k2=>$v2){
+                    $order['content']['goods_info'][$k]['sku_info'][$k2]['sku_info'] =  Db::connect($this->config)->name('goods_sku')->where(['sku_id'=>$v2['sku_id']])->find();
+                    $order['content']['goods_info'][$k]['sku_info'][$k2]['currency_name'] = Db::name('centralize_currency')->where(['id'=>$v2['currency']])->value('currency_symbol_standard');
+                }
+            }
+            $goods = $order['content']['goods_info'];
+            
+            #获取该订单所选的快递企业
+            if($order['freight_id']>0){
+                #不包邮
+                $order['selected_express_info'] = Db::name('centralize_freight_config')
+                    ->alias('cfc')
+                    ->join('centralize_warehouse_express cwe','cwe.id = cfc.express_id')
+                    ->join('centralize_express_product cep','cep.id = cwe.express_id')
+                    ->where(['cfc.id'=>$order['freight_id']])
+                    ->field(['cep.id','cep.name','cfc.express_type'])
+                    ->find();
+            }
+            
+            return view('index/shop_backend/other_delivery',compact('order','address','goods','id'));
         }
     }
 

@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>独立站平台 - website.gogo198.net</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        .disf{display:flex;align-items:center;}
+        html{height:100%;}
+        :root {--primary: #8a2be2;--primary-dark: #6a1cb9;--primary-light: #9b4de3;--secondary: #bb86fc;--accent: #e6d7f5;--text: #333333;--text-light: #f8f8f8;--background: #f9f5fd;--card-bg: #ffffff;--gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));--gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary));--shadow: 0 10px 30px rgba(138, 43, 226, 0.15);--shadow-hover: 0 15px 35px rgba(138, 43, 226, 0.25);}
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        body {color: var(--text);line-height: 1.6;overflow-x: hidden;}
+        h1, h2, h3, h4, h5, h6 {font-family: 'Montserrat', sans-serif;font-weight: 700;}
+
+        /* 导航栏样式 */
+        header {background: rgba(255, 255, 255, 0.95);color: var(--text);padding: 15px 0;box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);position: sticky;top: 0;z-index: 1000;backdrop-filter: blur(10px);}
+        nav {display: flex;justify-content: space-between;align-items: center;position: relative;}
+        .logo {font-size: 1.8rem;font-weight: 700;display: flex;align-items: center;background: var(--gradient);-webkit-background-clip: text;background-clip: text;color: transparent;z-index: 1001;}
+        .logo i {margin-right: 10px;color: var(--primary);}
+        .nav-links {display: flex;list-style: none;}
+        .nav-links li {margin-left: 25px;position: relative;}
+        .nav-links a {color: var(--text);text-decoration: none;font-weight: 500;transition: all 0.3s ease;padding: 8px 12px;border-radius: 4px;position: relative;display: flex;align-items: center;}
+        .nav-links a::after {content: '';position: absolute;bottom: 0;left: 50%;width: 0;height: 2px;background: var(--gradient);transition: all 0.3s ease;transform: translateX(-50%);}
+        .nav-links a:hover {color: var(--primary);}
+        .nav-links a:hover::after {width: 80%;}
+        .auth-buttons {display: flex;align-items: center;}
+        .btn {padding: 12px 25px;border-radius: 50px;text-decoration: none;font-weight: 600;transition: all 0.3s ease;cursor: pointer;display: inline-block;text-align: center;border: none;font-family: 'Montserrat', sans-serif;}
+        .btn-outline {border: 2px solid var(--primary);color: var(--primary);background: transparent;margin-right: 15px;}
+        .btn-outline:hover {background: var(--primary);color: white;transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-primary {background: var(--gradient);color: white;border: 2px solid transparent;}
+        .btn-primary:hover {background: transparent;border-color: var(--primary);color: var(--primary);transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-normal {background:#009688;color: white;border: 2px solid transparent;}
+        .btn-normal:hover {background: transparent;border-color: #009688;color: #009688;transform: translateY(-3px);box-shadow: var(--shadow);}
+
+        /* 表单样式 */
+        .form-section {margin-bottom: 30px;}
+        .form-title {font-size: 1.3rem;margin-bottom: 20px;color: var(--primary-dark);display: flex;align-items: center}
+        .form-title i {margin-right: 10px;}
+        .form-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));gap: 20px;}
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select,
+        .form-group textarea {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;}
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {border-color: var(--primary);outline: none;}
+        .form-group textarea {min-height: 60px;resize: vertical;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
+
+
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}
+        .form-group input:focus,
+        .form-group select:focus {border-color: var(--primary);outline: none;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
+
+        .layui-form-label{width:90px !important;}
+        .disf{display: flex;align-items: center;}
+        xm-select:hover{border-color:var(--primary) !important;}
+        .xm-option.selected,.xm-label-block{background:var(--primary) !important;}
+
+        /*返回按钮*/
+        .backDiv{padding: 5px 5px 5px 20px;border-bottom: 1px solid #d9d9d9;}
+        .backDiv .backBox{display: flex;align-items: center;cursor: pointer;}
+        .backDiv .back_icon{font-size: 18px;color: #333;margin-right: 10px;position: relative;}
+        .backDiv .back_icon:before{content:'';position:absolute;width:9px;height:9px;border-left:2px solid #000;border-top:2px solid #000;transform:rotate(-45deg);margin-right:5px;top:-7px;}
+        .backDiv .back_text{font-size: 16px;color: #333;font-weight: 500;margin-left: 5px;}
+        
+        /* 动画 */
+        @keyframes fadeIn {
+            from {opacity: 0;transform: translateY(10px);}
+            to {opacity: 1;transform: translateY(0);}
+        }
+
+        @media (max-width: 576px) {
+            .btn {padding: 10px 20px;font-size: 0.9rem;}
+            /*.form-actions {flex-direction: column;}*/
+        }
+        
+        /*运费区间样式start*/
+        .freight-detail-view .config-section {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 6px;
+            border-left: 4px solid #1890ff;
+        }
+        
+        .freight-detail-view .layui-colla-item {
+            margin-bottom: 10px;
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .freight-detail-view .layui-colla-title {
+            background: #f5f5f5;
+            padding: 12px 15px;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 1px solid #e8e8e8;
+            padding-left:35px;
+            line-height: 18px !important;
+        }
+        
+        .freight-detail-view .layui-colla-icon{top:10px;}
+        
+        .freight-detail-view .layui-colla-content {
+            padding: 15px;
+            background: #fff;
+        }
+        .freight-detail-view h4 {
+            margin: 0px 0 15px 0;
+            color: #333;
+            font-weight: bold;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1890ff;
+            font-size: 16px;
+        }
+        .freight-detail-view .disf {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .freight-detail-view .layui-table {
+            margin-top: 10px;
+            margin-bottom: 0;
+        }
+        
+        .freight-detail-view .layui-table th {
+            background: #f0f7ff;
+            font-weight: bold;
+            color: #1890ff;
+        }
+        
+        .freight-detail-view .layui-row {
+            margin-bottom: 15px;
+        }
+        
+        /* 美化信息卡片 */
+        .freight-detail-view .info-card {
+            background: white;
+            border: 1px solid #e8e8e8;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .freight-detail-view .info-card h5 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #1890ff;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 8px;
+        }
+        /*运费区间样式end*/
+        
+        /* 新增样式 */
+        .step-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: var(--background);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+        }
+        
+        .step-title {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+        }
+        
+        .step-title i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+        
+        .step-content {
+            display: none;
+        }
+        
+        .step-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .warehouse-list, .terminal-list, .express-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .express-list{
+            grid-template-columns: repeat(auto-fill, minmax(600px, 1fr));
+        }
+        
+        .warehouse-item, .terminal-item, .express-item {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .warehouse-item:hover, .terminal-item:hover, .express-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        .warehouse-item.selected, .terminal-item.selected, .express-item.selected {
+            border-color: var(--primary);
+            background: var(--accent);
+        }
+        
+        .warehouse-info, .terminal-info {
+            margin-top: 10px;
+        }
+        
+        .sku-stock {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .step-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .freight-standard {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .freight-detail {
+            margin-top: 15px;
+        }
+        
+        .freight-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .freight-row:last-child {
+            border-bottom: none;
+        }
+        
+        .multi-select .express-item {
+            position: relative;
+        }
+        
+        .multi-select .express-item input[type="checkbox"] {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        /* 优化导流标签页样式 */
+        .layui-tab-title {
+            background: var(--background);
+            border-radius: 8px 8px 0 0;
+            padding: 0 10px;
+        }
+        
+        .layui-tab-title li {
+            padding: 12px 25px;
+            border-radius: 5px 5px 0 0;
+            transition: all 0.3s ease;
+            margin-right: 5px;
+        }
+        
+        .layui-tab-title li:hover {
+            background: var(--accent);
+        }
+        
+        .layui-tab-title li.layui-this {
+            background: white;
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            font-weight: 600;
+        }
+        
+        .layui-tab-content {
+            background: white;
+            border-radius: 0 0 8px 8px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+        }
+        
+        .layui-table {
+            border: 1px solid #e6e6e6;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .layui-table thead th {
+            background: var(--accent);
+            color: var(--primary-dark);
+            font-weight: 600;
+            padding: 15px;
+        }
+        
+        .layui-table tbody td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .layui-table tbody tr:hover {
+            background: #f9f5fd;
+        }
+        
+        /* 关键词输入框样式优化 */
+        .keywords {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 10px 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .keywords:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(138, 43, 226, 0.1);
+        }
+        
+        /* 优化选中样式 */
+        .warehouse-item.selected,
+        .terminal-item.selected,
+        .express-item.selected,
+        .product-item.selected {
+            border-color: var(--primary) !important;
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.1), rgba(187, 134, 252, 0.1)) !important;
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.2) !important;
+            transform: translateY(-2px);
+        }
+        
+        /* 选中标记 */
+        .selected-check,
+        .selected-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: var(--primary);
+            font-size: 20px;
+            display: none;
+        }
+        
+        .selected .selected-check,
+        .selected .selected-indicator {
+            display: block;
+            animation: bounceIn 0.5s ease;
+        }
+        
+        /* 选择框容器 */
+        .checkbox-container,
+        .radio-container {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        
+        .checkbox-container input[type="checkbox"],
+        .radio-container input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .checkbox-container label,
+        .radio-container label {
+            margin-left: 5px;
+            cursor: pointer;
+        }
+        
+        /* 动画效果 */
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        /* 仓库分组标题 */
+        .warehouse-section {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .warehouse-section h5 {
+            margin: 0 0 15px 0;
+            color: var(--primary-dark);
+            font-size: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        /* 网格布局优化 */
+        .express-grid,
+        .product-grid {
+            display: grid;
+            gap: 15px;
+        }
+        
+        /* 选择计数显示 */
+        .selection-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff4757;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        /* 步骤指示器 */
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .step-dot.active {
+            background: var(--primary);
+            transform: scale(1.2);
+        }
+        
+        /* 快递选择区域样式 */
+        .warehouse-express-section,
+        .proxy-express-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+        
+        .warehouse-express-section:hover,
+        .proxy-express-section:hover {
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.1);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--accent);
+        }
+        
+        .section-header h5 {
+            margin: 0;
+            color: var(--primary-dark);
+            font-size: 16px;
+        }
+        
+        .section-header h5 i {
+            margin: 0 8px;
+            color: var(--primary);
+        }
+        
+        .section-status {
+            font-size: 14px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            background: white;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .section-status .text-success {
+            color: #52c41a;
+        }
+        
+        .express-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .express-item {
+            /*position: relative;*/
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width:100%;
+            box-sizing: border-box;
+        }
+        
+        .express-item:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .express-item.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.05), rgba(187, 134, 252, 0.05));
+            box-shadow: 0 5px 20px rgba(138, 43, 226, 0.15);
+        }
+        
+        .express-info h6 {
+            margin: 0 0 8px 0;
+            color: var(--primary-dark);
+            font-size: 15px;
+        }
+        
+        .express-info p {
+            margin: 4px 0;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .express-info i {
+            margin-right: 5px;
+            color: var(--primary-light);
+        }
+        
+        .selection-control {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 2;
+        }
+        
+        /* 多选复选框样式 */
+        .product-checkbox {
+            display: none;
+        }
+        
+        /* 复选框样式 */
+        .checkbox-label {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            
+        }
+        
+        .product-item.selected .checkbox-label{
+            background: var(--primary-dark);
+            border: solid var(--primary-dark);
+        }
+        
+        .checkbox-label:after {
+            content: '';
+            position: absolute;
+            top: 0px;
+            left: 4px;
+            width: 6px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+            opacity: 1;
+        }
+        
+        .express-checkbox:checked + .checkbox-label {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .express-checkbox:checked + .checkbox-label:after {
+            content: '';
+            position: absolute;
+            top: 0px;
+            left: 4px;
+            width: 6px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        
+        .express-checkbox {
+            display: none;
+        }
+        
+        /* 单选指示器样式 */
+        .radio-indicator {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ddd;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .radio-indicator .inner-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+        
+        .express-item.selected .radio-indicator {
+            border-color: var(--primary);
+        }
+        
+        .express-item.selected .radio-indicator:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+        
+        .selection-hint {
+            font-size: 13px;
+            color: #888;
+            text-align: center;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        
+        .loading-state {
+            text-align: center;
+            padding: 40px;
+            grid-column: 1 / -1;
+        }
+        
+        .loading-state .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .express-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .section-status {
+                margin-top: 10px;
+            }
+        }
+        
+        /* 产品选择区域样式 */
+        .product-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+        
+        .product-section:hover {
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.1);
+        }
+        
+        .product-grid {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .product-item {
+            position: relative;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+        
+        .product-item:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .product-item.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.05), rgba(187, 134, 252, 0.05));
+            box-shadow: 0 5px 20px rgba(138, 43, 226, 0.15);
+        }
+        
+        .product-info h6 {
+            margin: 0 0 8px 0;
+            color: var(--primary-dark);
+            font-size: 15px;
+        }
+        
+        .product-info p {
+            margin: 4px 0;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .product-info i {
+            margin-right: 5px;
+            color: var(--primary-light);
+        }
+    </style>
+    <link rel="stylesheet" href="layui/css/layui.css">
+</head>
+<body>
+<div class="backDiv">
+    <div class="backBox" onclick="javascript:window.history.back(-1);">
+        <div class="back_icon"></div>
+        <div class="back_text">返回</div>
+    </div>
+</div>
+<form class="layui-form" id="siteForm" action="" method="post" lay-filter="component-form-rotate" style="padding:0px;">
+    <input type="hidden" name="company_id" value="{$company_id}">
+    <input type="hidden" name="company_type" value="{$company_type}">
+    <input type="hidden" name="id" value="{$gid}">
+    <input type="hidden" name="type" value="{$type}">
+    <input type="hidden" name="pa" value="2">
+
+    <div class="form-group" style="padding:0px;">
+        <div class="layui-tab layui-tab-card">
+            <div class="layui-tab-content">
+               <div class="layui-form-item">
+                    <div class="layui-form-label">选择仓库</div>
+                    <div class="layui-input-block">
+                        <select name="warehouse_id" id="warehouse_id" lay-filter="warehouse_id" lay-verify="required">
+                            <option value="">请选择仓库</option>
+                            {volist name="warehouses" id="vo"}
+                            <option value="{$vo['id']}" {if $list['goods']['xianxia_warehouse_id']==$vo['id']}selected{/if}>{$vo['name']}</option>
+                            {/volist}
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-form-label">选择终端</div>
+                    <div class="layui-input-block">
+                        <select name="terminal_id" id="terminal_id" lay-filter="terminal_id" lay-verify="required">
+                            <option value="">请选择终端</option>
+                            {if $list['goods']['xianxia_terminal_id']>0}
+                            <option value="{$list['goods']['printer_info']['id']}" selected>{$list['goods']['printer_info']['name']}</option>
+                            {/if}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="button" class="btn btn-primary" id="finalSubmitBtn">{if $list['goods']['xianxia_terminal_id']>0}修改{else}提交{/if}上架</button>
+    </div>
+</form>
+
+</body>
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+
+layui.use(['layer','form','laydate','upload','element'],function() {
+    var laydate = layui.laydate
+        ,layer = layui.layer
+        ,form = layui.form
+        ,$ = layui.jquery
+        ,upload = layui.upload
+        ,element = layui.element;
+        
+    // 支付方式选择
+    form.on('select(warehouse_id)', function(data) {
+        let val = data.value;
+        $.ajax({
+            url: '/?s=index/select_shelf_xianxia',
+            method: 'POST',
+            data: {
+                pa:1,
+                id: $('input[name="id"]').val(),
+                company_id: $('input[name="company_id"]').val(),
+                company_type: $('input[name="company_type"]').val(),
+                type: $('input[name="type"]').val(),
+                wid:val
+            },
+            success: function(res) {
+                if(res.code==0){
+                    if(res.data == ''){
+                        layer.msg('暂无终端选择');return false;
+                    }else{
+                        let html = '<option value="">请选择终端</option>\n'+
+                                   '<option value="'+res.data.id+'">'+res.data.name+'</option>';
+                        $('#terminal_id').html(html);
+                        
+                        form.render(null,'component-form-rotate');
+                    }
+                }
+            }
+        });
+    });
+    
+    // 绑定新的提交按钮点击事件
+    $('#finalSubmitBtn').click(function() {
+        unifiedSubmit();
+    });
+});
+
+// 统一提交函数
+function unifiedSubmit() {
+    
+    // 显示加载状态
+    layer.load(2);
+
+    let formData = {'warehouse_id':$('#warehouse_id').val(),'terminal_id':$('#terminal_id').val(),'pa':2,'id': $('input[name="id"]').val(),'company_id': $('input[name="company_id"]').val(),'company_type': $('input[name="company_type"]').val(),'type': $('input[name="type"]').val()};
+    // 提交数据
+    $.ajax({
+        url: '/?s=index/select_shelf_xianxia',
+        method: 'POST',
+        data: formData,
+        dataType: 'JSON',
+        success: function(res) {
+            layer.closeAll('loading');
+            if (res.code === 0) {
+                layer.msg('提交成功', {icon: 1}, function() {
+                    window.history.back(-1);
+                });
+            } else {
+                layer.msg(res.msg || '提交失败', {icon: 2});
+            }
+        },
+        error: function() {
+            layer.closeAll('loading');
+            layer.msg('系统错误，请稍后重试', {icon: 2});
+        }
+    });
+}
+</script>
+</html>

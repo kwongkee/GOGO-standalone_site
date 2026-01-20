@@ -386,7 +386,7 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <input type="text" class="layui-input" name="nospecs[volume]" placeholder="请输入：长*宽*高">
+                                                <input type="text" class="layui-input" name="nospecs[volume]" placeholder="长*宽*高">
                                             </td>
                                             <td>
                                                 <input type="text" class="layui-input" name="nospecs[weight]" placeholder="请输入重量">
@@ -3055,7 +3055,7 @@
                             '                                                            </div>\n' +
                             '                                                        </td>\n' +
                             '                                                        <td>\n'+
-                            '                                                            <input type="text" class="layui-input w100" name="havespecs[volume][]" placeholder="请输入：长*宽*高" value="'+res.data['goods']['havespecs'][i]['volume']+'">\n'+
+                            '                                                            <input type="text" class="layui-input w100" name="havespecs[volume][]" placeholder="长*宽*高" value="'+res.data['goods']['havespecs'][i]['volume']+'">\n'+
                             '                                                        </td>\n'+
                             '                                                        <td>\n'+
                             '                                                           <input type="text" class="layui-input w100" name="havespecs[weight][]" placeholder="请输入重量" value="'+res.data['goods']['havespecs'][i]['weight']+'">\n'+
@@ -4004,26 +4004,30 @@
 
     //商品详情=============================================================start
     //==制造企业
-    if(res.data['goods']['manufacture']!=null && res.data['goods']['manufacture']!=''){
+    // if(res.data['goods']['manufacture']!=null && res.data['goods']['manufacture']!=''){
         let spec_html = '';
         spec_html+='<tbody class="manufacture_tbody">\n' +
             '                                                <tr>\n' +
             '                                                    <td rowspan="5">制造企业</td>\n';
-        if(typeof(res.data['goods']['manufacture']['company_name']) != 'undefined') {
             spec_html += '                                         <td>\n' +
                 '                                                        <input type="text" class="layui-input" placeholder="企业名称" value="企业名称" readonly>\n' +
                 '                                                    </td>\n'+
-                '                                                    <td>\n' +
-                '                                                        <input type="text" class="layui-input" name="manufacture[company_name]" placeholder="参数描述" value="' + res.data['goods']['manufacture']['company_name'] + '">\n' +
-                '                                                    </td>\n' +
+                '                                                    <td>\n';
+                
+                if(typeof(res.data['goods']['manufacture']['company_name']) != 'undefined'){
+                spec_html += '                                       <input type="text" class="layui-input" name="manufacture[company_name]" placeholder="参数描述" value="' + res.data['goods']['manufacture']['company_name'] + '">\n';    
+                }else{
+                spec_html += '                                       <input type="text" class="layui-input" name="manufacture[company_name]" placeholder="参数描述" value="">\n';
+                }
+                
+                spec_html += '                                       </td>\n' +
                 '                                                    <td>\n' +
                 '                                                        <div class="disf">\n' +
                 '                                                            <div class="layui-btn layui-btn-md layui-btn-danger" onclick="spec_del(this,0)">-</div>\n' +
                 '                                                        </div>\n' +
                 '                                                    </td>\n';
-        }
         spec_html+='                                      </tr>\n';
-        if(typeof(res.data['goods']['manufacture']['country']) != 'undefined') {
+        // if(typeof(res.data['goods']['manufacture']['country']) != 'undefined') {
             spec_html+='                                     <tr>\n' +
                 '                                                    <td>\n' +
                 '                                                        <input type="text" class="layui-input" placeholder="注册地址" value="注册地址" readonly>\n' +
@@ -4034,37 +4038,56 @@
                 '                                                                <select name="manufacture[country]" lay-search lay-filter="manufacture_country">\n' +
                 '                                                                    <option value="">请选择</option>\n';
             {volist name="type['country']" id="vo"}
-            if(res.data['goods']['manufacture']['country']=="{$vo['id']}"){
-                spec_html+='                                                                <option value="{$vo['id']}" selected>{$vo['param2']}</option>\n';
-            }
-            else{
-                spec_html+='                                                                <option value="{$vo['id']}">{$vo['param2']}</option>\n';
-            }
+                if(typeof(res.data['goods']['manufacture']['country']) != 'undefined'){
+                    if(res.data['goods']['manufacture']['country']=="{$vo['id']}"){
+                        spec_html+='                                                                <option value="{$vo['id']}" selected>{$vo['param2']}</option>\n';
+                    }else{
+                        spec_html+='                                                                <option value="{$vo['id']}">{$vo['param2']}</option>\n';
+                    }
+                }else{
+                    spec_html+='                                                                <option value="{$vo['id']}">{$vo['param2']}</option>\n';
+                }
             {/volist}
                 spec_html+='                                                     </select>\n' +
                     '                                                            </div>\n' +
                     '                                                            <div class="manufacture_area disf">\n';
-                if(typeof(res.data['goods']['manufacture']['area1']) != 'undefined') {
+                if(res.data['goods']['manufacture']['area1'] != '') {
+                    if(typeof(res.data['goods']['manufacture']['area1']) != 'undefined'){
                     spec_html+='<div class="area1"><select name="manufacture[area1]"><option value="'+res.data['goods']['manufacture']['area1']+'">'+res.data['goods']['manufacture']['area1_name']+'</option></select></div>';
+                    }
                 }
-                if(typeof(res.data['goods']['manufacture']['area2']) != 'undefined') {
+                if(res.data['goods']['manufacture']['area2'] != '') {
+                    if(typeof(res.data['goods']['manufacture']['area2']) != 'undefined'){
                     spec_html+='<div class="area2"><select name="manufacture[area2]"><option value="'+res.data['goods']['manufacture']['area2']+'">'+res.data['goods']['manufacture']['area2_name']+'</option></select></div>';
+                    }
                 }
-                if(typeof(res.data['goods']['manufacture']['area3']) != 'undefined') {
+                if(res.data['goods']['manufacture']['area3'] != '') {
+                    if(typeof(res.data['goods']['manufacture']['area3']) != 'undefined'){
                     spec_html+='<div class="area3"><select name="manufacture[area3]"><option value="'+res.data['goods']['manufacture']['area3']+'">'+res.data['goods']['manufacture']['area3_name']+'</option></select></div>';
+                    }
                 }
-                if(typeof(res.data['goods']['manufacture']['area4']) != 'undefined') {
+                if(res.data['goods']['manufacture']['area4'] != '') {
+                    if(typeof(res.data['goods']['manufacture']['area4']) != 'undefined'){
                     spec_html+='<div class="area4"><select name="manufacture[area4]"><option value="'+res.data['goods']['manufacture']['area4']+'">'+res.data['goods']['manufacture']['area4_name']+'</option></select></div>';
+                    }
                 }
-                if(typeof(res.data['goods']['manufacture']['area5']) != 'undefined') {
+                if(res.data['goods']['manufacture']['area5'] != '') {
+                    if(typeof(res.data['goods']['manufacture']['area5']) != 'undefined'){
                     spec_html+='<div class="area5"><select name="manufacture[area5]"><option value="'+res.data['goods']['manufacture']['area5']+'">'+res.data['goods']['manufacture']['area5_name']+'</option></select></div>';
+                    }
                 }
-                if(typeof(res.data['goods']['manufacture']['area6']) != 'undefined') {
+                if(res.data['goods']['manufacture']['area6'] != '') {
+                    if(typeof(res.data['goods']['manufacture']['area6']) != 'undefined'){
                     spec_html+='<div class="area6"><select name="manufacture[area6]"><option value="'+res.data['goods']['manufacture']['area6']+'">'+res.data['goods']['manufacture']['area6_name']+'</option></select></div>';
+                    }
                 }
-                spec_html+='                                                 </div>\n' +
-                    '                                                            <input type="text" class="layui-input" name="manufacture[address]" placeholder="具体地址" value="'+res.data['goods']['manufacture']['address']+'">\n' +
-                    '                                                        </div>\n' +
+                spec_html+='                                                 </div>\n';
+                if(typeof(res.data['goods']['manufacture']['address']) != 'undefined') {
+                    spec_html+='                                             <input type="text" class="layui-input" name="manufacture[address]" placeholder="具体地址" value="'+res.data['goods']['manufacture']['address']+'">\n';
+                }else{
+                    spec_html+='                                             <input type="text" class="layui-input" name="manufacture[address]" placeholder="具体地址" value="">\n';
+                }
+                    spec_html+='                                              </div>\n' +
                     '                                                    </td>\n' +
                     '                                                    <td>\n' +
                     '                                                        <div class="disf">\n' +
@@ -4072,8 +4095,8 @@
                     '                                                        </div>\n' +
                     '                                                    </td>\n' +
                     '                                                </tr>\n';
-            }
-    if(typeof(res.data['goods']['manufacture']['connect_type']) != 'undefined') {
+            // }
+    // if(typeof(res.data['goods']['manufacture']['connect_type']) != 'undefined') {
         spec_html += '                                         <tr>\n' +
             '                                                    <td>\n' +
             '                                                        <select name="manufacture[connect_type]">\n';
@@ -4094,73 +4117,89 @@
         }
         spec_html += '                                                  </select>\n' +
             '                                                    </td>\n' +
-            '                                                    <td>\n' +
-            '                                                        <input type="text" class="layui-input" name="manufacture[connect_info]" placeholder="参数描述" value="' + res.data['goods']['manufacture']['connect_info'] + '">\n' +
-            '                                                    </td>\n' +
+            '                                                    <td>\n';
+            if(typeof(res.data['goods']['manufacture']['connect_info']) != 'undefined') {
+                spec_html += '                                       <input type="text" class="layui-input" name="manufacture[connect_info]" placeholder="参数描述" value="' + res.data['goods']['manufacture']['connect_info'] + '">\n';
+            }else{
+                spec_html += '                                       <input type="text" class="layui-input" name="manufacture[connect_info]" placeholder="参数描述" value="">\n';
+            }
+            spec_html += '                                       </td>\n' +
             '                                                    <td>\n' +
             '                                                        <div class="disf">\n' +
             '                                                            <div class="layui-btn layui-btn-md layui-btn-danger" onclick="spec_del(this)">-</div>\n' +
             '                                                        </div>\n' +
             '                                                    </td>\n' +
             '                                                </tr>\n';
-    }
-    if(typeof(res.data['goods']['manufacture']['product_license']) != 'undefined') {
+    // }
+    // if(typeof(res.data['goods']['manufacture']['product_license']) != 'undefined') {
         spec_html += '                                       <tr>\n' +
             '                                                    <td>\n' +
             '                                                        <input type="text" class="layui-input" placeholder="生产许可" value="生产许可" readonly>\n' +
             '                                                    </td>\n' +
-            '                                                    <td>\n' +
-            '                                                        <input type="text" class="layui-input" name="manufacture[product_license]" placeholder="参数描述" value="'+res.data['goods']['manufacture']['product_license']+'">\n' +
-            '                                                    </td>\n' +
+            '                                                    <td>\n';
+            if(typeof(res.data['goods']['manufacture']['product_license']) != 'undefined') {
+                spec_html += '                                       <input type="text" class="layui-input" name="manufacture[product_license]" placeholder="参数描述" value="'+res.data['goods']['manufacture']['product_license']+'">\n';
+            }else{
+                spec_html += '                                       <input type="text" class="layui-input" name="manufacture[product_license]" placeholder="参数描述" value="">\n';
+            }
+            spec_html += '                                       </td>\n' +
             '                                                    <td>\n' +
             '                                                        <div class="disf">\n' +
             '                                                            <div class="layui-btn layui-btn-md layui-btn-danger" onclick="spec_del(this)">-</div>\n' +
             '                                                        </div>\n' +
             '                                                    </td>\n' +
             '                                                </tr>\n';
-    }
-    if(typeof(res.data['goods']['manufacture']['product_standard']) != 'undefined') {
+    // }
+    // if(typeof(res.data['goods']['manufacture']['product_standard']) != 'undefined') {
         spec_html+='                                     <tr>\n' +
             '                                                    <td>\n' +
             '                                                        <input type="text" class="layui-input" placeholder="生产标准" value="生产标准" readonly>\n' +
             '                                                    </td>\n' +
-            '                                                    <td>\n' +
-            '                                                        <input type="text" class="layui-input" name="manufacture[product_standard]" placeholder="参数描述" value="'+res.data['goods']['manufacture']['product_standard']+'">\n' +
-            '                                                    </td>\n' +
+            '                                                    <td>\n';
+            if(typeof(res.data['goods']['manufacture']['product_standard']) != 'undefined') {
+                spec_html+='                                         <input type="text" class="layui-input" name="manufacture[product_standard]" placeholder="参数描述" value="'+res.data['goods']['manufacture']['product_standard']+'">\n';
+            }else{
+                spec_html+='                                         <input type="text" class="layui-input" name="manufacture[product_standard]" placeholder="参数描述" value="">\n';
+            }
+            spec_html+='                                         </td>\n' +
             '                                                    <td>\n' +
             '                                                        <div class="disf">\n' +
             '                                                            <div class="layui-btn layui-btn-md layui-btn-danger" onclick="spec_del(this)">-</div>\n' +
             '                                                        </div>\n' +
             '                                                    </td>\n' +
             '                                                </tr>\n';
-    }
+    // }
     spec_html+='                                 </tbody>';
 
     $('.spec_table').find('.normal_tbody').remove();
     $('.spec_table').find('.manufacture_tbody').remove();
-    $('.spec_table').append(spec_html);
-}
+    // $('.spec_table').append(spec_html);
+// }
 //==销售企业
-if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
-    let spec_html = '';
+// if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
+    // let spec_html = '';
     spec_html+='<tbody class="sale_tbody">\n' +
         '                                                <tr>\n' +
         '                                                    <td rowspan="4">销售企业</td>\n';
-    if(typeof(res.data['goods']['sales']['company_name']) != 'undefined') {
+    // if(typeof(res.data['goods']['sales']['company_name']) != 'undefined') {
         spec_html+='                                         <td>\n' +
             '                                                        <input type="text" class="layui-input" placeholder="企业名称" value="企业名称" readonly>\n' +
             '                                                    </td>\n' +
-            '                                                    <td>\n' +
-            '                                                        <input type="text" class="layui-input" name="sales[company_name]" placeholder="参数描述" value="'+res.data['goods']['sales']['company_name']+'">\n' +
-            '                                                    </td>\n' +
+            '                                                    <td>\n';
+            if(typeof(res.data['goods']['sales']['company_name']) != 'undefined') {
+                spec_html+='                                         <input type="text" class="layui-input" name="sales[company_name]" placeholder="参数描述" value="'+res.data['goods']['sales']['company_name']+'">\n';
+            }else{
+                spec_html+='                                         <input type="text" class="layui-input" name="sales[company_name]" placeholder="参数描述" value="">\n';
+            }
+            spec_html+='                                         </td>\n' +
             '                                                    <td>\n' +
             '                                                        <div class="disf">\n' +
             '                                                            <div class="layui-btn layui-btn-md layui-btn-danger" onclick="spec_del(this,0)">-</div>\n' +
             '                                                        </div>\n' +
             '                                                    </td>\n';
-    }
+    // }
     spec_html+='                                     </tr>\n';
-    if(typeof(res.data['goods']['sales']['country']) != 'undefined') {
+    // if(typeof(res.data['goods']['sales']['country']) != 'undefined') {
         spec_html+='                                     <tr>\n' +
             '                                                    <td>\n' +
             '                                                        <input type="text" class="layui-input" placeholder="注册地址" value="注册地址" readonly>\n' +
@@ -4181,27 +4220,43 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
             spec_html+='                                                     </select>\n' +
                 '                                                            </div>\n' +
                 '                                                            <div class="sales_area disf">\n';
-            if(typeof(res.data['goods']['sales']['area1']) != 'undefined') {
+            if(res.data['goods']['sales']['area1'] != '') {
+                if(typeof(res.data['goods']['sales']['area1']) != 'undefined'){
                 spec_html+='<div class="area1"><select name="sales[area1]"><option value="'+res.data['goods']['sales']['area1']+'">'+res.data['goods']['sales']['area1_name']+'</option></select></div>';
+                }
             }
-            if(typeof(res.data['goods']['sales']['area2']) != 'undefined') {
+            if(res.data['goods']['sales']['area2'] != '') {
+                if(typeof(res.data['goods']['sales']['area2']) != 'undefined'){
                 spec_html+='<div class="area2"><select name="sales[area2]"><option value="'+res.data['goods']['sales']['area2']+'">'+res.data['goods']['sales']['area2_name']+'</option></select></div>';
+                }
             }
-            if(typeof(res.data['goods']['sales']['area3']) != 'undefined') {
+            if(res.data['goods']['sales']['area3'] != '') {
+                if(typeof(res.data['goods']['sales']['area3']) != 'undefined'){
                 spec_html+='<div class="area3"><select name="sales[area3]"><option value="'+res.data['goods']['sales']['area3']+'">'+res.data['goods']['sales']['area3_name']+'</option></select></div>';
+                }
             }
-            if(typeof(res.data['goods']['sales']['area4']) != 'undefined') {
+            if(res.data['goods']['sales']['area4'] != '') {
+                if(typeof(res.data['goods']['sales']['area4']) != 'undefined'){
                 spec_html+='<div class="area4"><select name="sales[area4]"><option value="'+res.data['goods']['sales']['area4']+'">'+res.data['goods']['sales']['area4_name']+'</option></select></div>';
+                }
             }
-            if(typeof(res.data['goods']['sales']['area5']) != 'undefined') {
+            if(res.data['goods']['sales']['area5'] != '') {
+                if(typeof(res.data['goods']['sales']['area5']) != 'undefined'){
                 spec_html+='<div class="area5"><select name="sales[area5]"><option value="'+res.data['goods']['sales']['area5']+'">'+res.data['goods']['sales']['area5_name']+'</option></select></div>';
+                }
             }
-            if(typeof(res.data['goods']['sales']['area6']) != 'undefined') {
+            if(res.data['goods']['sales']['area6'] != '') {
+                if(typeof(res.data['goods']['sales']['area6']) != 'undefined'){
                 spec_html+='<div class="area6"><select name="sales[area6]"><option value="'+res.data['goods']['sales']['area6']+'">'+res.data['goods']['sales']['area6_name']+'</option></select></div>';
+                }
             }
-            spec_html+='                                                 </div>\n' +
-                '                                                            <input type="text" class="layui-input" name="sales[address]" placeholder="具体地址" value="'+res.data['goods']['sales']['address']+'">\n' +
-                '                                                        </div>\n' +
+            spec_html+='                                                 </div>\n';
+            if(typeof(res.data['goods']['sales']['address']) != 'undefined') {
+                spec_html+='                                                  <input type="text" class="layui-input" name="sales[address]" placeholder="具体地址" value="'+res.data['goods']['sales']['address']+'">\n';
+            }else{
+                spec_html+='                                                  <input type="text" class="layui-input" name="sales[address]" placeholder="具体地址" value="">\n';
+            }
+                spec_html+='                                              </div>\n' +
                 '                                                    </td>\n' +
                 '                                                    <td>\n' +
                 '                                                        <div class="disf">\n' +
@@ -4209,8 +4264,8 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
                 '                                                        </div>\n' +
                 '                                                    </td>\n' +
                 '                                                </tr>\n';
-        }
-        if(typeof(res.data['goods']['sales']['connect_type']) != 'undefined') {
+        // }
+        // if(typeof(res.data['goods']['sales']['connect_type']) != 'undefined') {
             spec_html+='                                     <tr>\n' +
                 '                                                    <td>\n' +
                 '                                                        <select name="sales[connect_type]">\n';
@@ -4231,58 +4286,70 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
             }
             spec_html+='                                             </select>\n' +
                 '                                                    </td>\n' +
-                '                                                    <td>\n' +
-                '                                                        <input type="text" class="layui-input" name="sales[connect_info]" placeholder="参数描述" value="'+res.data['goods']['sales']['connect_info']+'">\n' +
-                '                                                    </td>\n' +
+                '                                                    <td>\n';
+                if(typeof(res.data['goods']['sales']['connect_info']) != 'undefined') {
+                    spec_html+='                                         <input type="text" class="layui-input" name="sales[connect_info]" placeholder="参数描述" value="'+res.data['goods']['sales']['connect_info']+'">\n';
+                }else{
+                    spec_html+='                                         <input type="text" class="layui-input" name="sales[connect_info]" placeholder="参数描述" value="">\n';
+                }
+                spec_html+='                                         </td>\n' +
                 '                                                    <td>\n' +
                 '                                                        <div class="disf">\n' +
                 '                                                            <div class="layui-btn layui-btn-md layui-btn-danger" onclick="spec_del(this)">-</div>\n' +
                 '                                                        </div>\n' +
                 '                                                    </td>\n' +
                 '                                                </tr>\n';
-        }
-        if(typeof(res.data['goods']['sales']['product_license']) != 'undefined') {
+        // }
+        // if(typeof(res.data['goods']['sales']['product_license']) != 'undefined') {
             spec_html += '                                     <tr>\n' +
                 '                                                    <td>\n' +
                 '                                                        <input type="text" class="layui-input" placeholder="销售许可" value="销售许可" readonly>\n' +
                 '                                                    </td>\n' +
-                '                                                    <td>\n' +
-                '                                                        <input type="text" class="layui-input" name="sales[product_license]" placeholder="参数描述" value="'+res.data['goods']['sales']['product_license']+'">\n' +
-                '                                                    </td>\n' +
+                '                                                    <td>\n';
+                if(typeof(res.data['goods']['sales']['product_license']) != 'undefined') {
+                    spec_html += '                                        <input type="text" class="layui-input" name="sales[product_license]" placeholder="参数描述" value="'+res.data['goods']['sales']['product_license']+'">\n';
+                }else{
+                    spec_html += '                                        <input type="text" class="layui-input" name="sales[product_license]" placeholder="参数描述" value="">\n';
+                }
+                spec_html += '                                       </td>\n' +
                 '                                                    <td>\n' +
                 '                                                        <div class="disf">\n' +
                 '                                                            <div class="layui-btn layui-btn-md layui-btn-danger" onclick="spec_del(this)">-</div>\n' +
                 '                                                        </div>\n' +
                 '                                                    </td>\n' +
                 '                                                </tr>\n';
-        }
+        // }
         spec_html += '                                    </tbody>';
 
-        $('.spec_table').find('.normal_tbody').remove();
+        // $('.spec_table').find('.normal_tbody').remove();
         $('.spec_table').find('.sale_tbody').remove();
-        $('.spec_table').append(spec_html);
-    }
+        // $('.spec_table').append(spec_html);
+    // }
     //==外贸企业
-    if(res.data['goods']['foreign']!=null && res.data['goods']['foreign']!='') {
-        let spec_html = '';
+    // if(res.data['goods']['foreign']!=null && res.data['goods']['foreign']!='') {
+        // let spec_html = '';
         spec_html+='<tbody class="foreign_tbody">\n' +
             '                                                <tr>\n' +
             '                                                    <td rowspan="4">外贸企业</td>\n';
-        if(typeof(res.data['goods']['foreign']['company_name']) != 'undefined') {
+        // if(typeof(res.data['goods']['foreign']['company_name']) != 'undefined') {
             spec_html+='                                         <td>\n' +
                 '                                                        <input type="text" class="layui-input" placeholder="企业名称" value="企业名称" readonly>\n' +
                 '                                                    </td>\n' +
-                '                                                    <td>\n' +
-                '                                                        <input type="text" class="layui-input" name="foreign[company_name]" placeholder="参数描述" value="'+res.data['goods']['foreign']['company_name']+'">\n' +
-                '                                                    </td>\n' +
+                '                                                    <td>\n';
+                if(typeof(res.data['goods']['foreign']['company_name']) != 'undefined') {
+                    spec_html+='                                          <input type="text" class="layui-input" name="foreign[company_name]" placeholder="参数描述" value="'+res.data['goods']['foreign']['company_name']+'">\n';
+                }else{
+                    spec_html+='                                              <input type="text" class="layui-input" name="foreign[company_name]" placeholder="参数描述" value="">\n';
+                }
+                spec_html+='                                         </td>\n' +
                 '                                                    <td>\n' +
                 '                                                        <div class="disf">\n' +
                 '                                                            <div class="layui-btn layui-btn-md layui-btn-danger" onclick="spec_del(this,0)">-</div>\n' +
                 '                                                        </div>\n' +
                 '                                                    </td>\n';
-        }
+        // }
         spec_html+='                                     </tr>\n';
-        if(typeof(res.data['goods']['foreign']['country']) != 'undefined') {
+        // if(typeof(res.data['goods']['foreign']['country']) != 'undefined') {
             spec_html+='                                     <tr>\n' +
                 '                                                    <td>\n' +
                 '                                                        <input type="text" class="layui-input" placeholder="注册地址" value="注册地址" readonly>\n' +
@@ -4303,27 +4370,43 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
                 spec_html+='                                                     </select>\n' +
                     '                                                            </div>\n' +
                     '                                                            <div class="foreign_area disf">\n';
-                if(typeof(res.data['goods']['foreign']['area1']) != 'undefined') {
+                if(res.data['goods']['foreign']['area1'] != '') {
+                    if(typeof(res.data['goods']['foreign']['area1']) != 'undefined'){
                     spec_html+='<div class="area1"><select name="foreign[area1]"><option value="'+res.data['goods']['foreign']['area1']+'">'+res.data['goods']['foreign']['area1_name']+'</option></select></div>';
+                    }
                 }
-                if(typeof(res.data['goods']['foreign']['area2']) != 'undefined') {
+                if(res.data['goods']['foreign']['area2'] != '') {
+                    if(typeof(res.data['goods']['foreign']['area2']) != 'undefined'){
                     spec_html+='<div class="area2"><select name="foreign[area2]"><option value="'+res.data['goods']['foreign']['area2']+'">'+res.data['goods']['foreign']['area2_name']+'</option></select></div>';
+                    }
                 }
-                if(typeof(res.data['goods']['foreign']['area3']) != 'undefined') {
+                if(res.data['goods']['foreign']['area3'] != '') {
+                    if(typeof(res.data['goods']['foreign']['area3']) != 'undefined'){
                     spec_html+='<div class="area3"><select name="foreign[area3]"><option value="'+res.data['goods']['foreign']['area3']+'">'+res.data['goods']['foreign']['area3_name']+'</option></select></div>';
+                    }
                 }
-                if(typeof(res.data['goods']['foreign']['area4']) != 'undefined') {
+                if(res.data['goods']['foreign']['area4'] != '') {
+                    if(typeof(res.data['goods']['foreign']['area4']) != 'undefined'){
                     spec_html+='<div class="area4"><select name="foreign[area4]"><option value="'+res.data['goods']['foreign']['area4']+'">'+res.data['goods']['foreign']['area4_name']+'</option></select></div>';
+                    }
                 }
-                if(typeof(res.data['goods']['foreign']['area5']) != 'undefined') {
+                if(res.data['goods']['foreign']['area5'] != '') {
+                    if(typeof(res.data['goods']['foreign']['area5']) != 'undefined'){
                     spec_html+='<div class="area5"><select name="foreign[area5]"><option value="'+res.data['goods']['foreign']['area5']+'">'+res.data['goods']['foreign']['area5_name']+'</option></select></div>';
+                    }
                 }
-                if(typeof(res.data['goods']['foreign']['area6']) != 'undefined') {
+                if(res.data['goods']['foreign']['area6'] != '') {
+                    if(typeof(res.data['goods']['foreign']['area6']) != 'undefined'){
                     spec_html+='<div class="area6"><select name="foreign[area6]"><option value="'+res.data['goods']['foreign']['area6']+'">'+res.data['goods']['foreign']['area6_name']+'</option></select></div>';
+                    }
                 }
-                spec_html+='                                                 </div>\n' +
-                    '                                                            <input type="text" class="layui-input" name="foreign[address]" placeholder="具体地址" value="'+res.data['goods']['foreign']['address']+'">\n' +
-                    '                                                        </div>\n' +
+                spec_html+='                                                 </div>\n';
+                if(typeof(res.data['goods']['foreign']['address']) != 'undefined') {
+                    spec_html+='                                             <input type="text" class="layui-input" name="foreign[address]" placeholder="具体地址" value="'+res.data['goods']['foreign']['address']+'">\n';
+                }else{
+                    spec_html+='                                             <input type="text" class="layui-input" name="foreign[address]" placeholder="具体地址" value="">\n';
+                }
+                    spec_html+='                                             </div>\n' +
                     '                                                    </td>\n' +
                     '                                                    <td>\n' +
                     '                                                        <div class="disf">\n' +
@@ -4331,8 +4414,8 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
                     '                                                        </div>\n' +
                     '                                                    </td>\n' +
                     '                                                </tr>\n';
-            }
-            if(typeof(res.data['goods']['foreign']['connect_type']) != 'undefined') {
+            // }
+            // if(typeof(res.data['goods']['foreign']['connect_type']) != 'undefined') {
                 spec_html += '                                         <tr>\n' +
                     '                                                    <td>\n' +
                     '                                                        <select name="foreign[connect_type]">\n';
@@ -4353,17 +4436,21 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
                 }
                 spec_html += '                                                        </select>\n' +
                     '                                                    </td>\n' +
-                    '                                                    <td>\n' +
-                    '                                                        <input type="text" class="layui-input" name="foreign[connect_info]" placeholder="参数描述" value="' + res.data['goods']['foreign']['connect_info'] + '">\n' +
-                    '                                                    </td>\n' +
+                    '                                                    <td>\n';
+                    if(typeof(res.data['goods']['foreign']['connect_info']) != 'undefined') {
+                        spec_html += '                                        <input type="text" class="layui-input" name="foreign[connect_info]" placeholder="参数描述" value="' + res.data['goods']['foreign']['connect_info'] + '">\n';
+                    }else{
+                        spec_html += '                                        <input type="text" class="layui-input" name="foreign[connect_info]" placeholder="参数描述" value="">\n';
+                    }
+                    spec_html += '                                       </td>\n' +
                     '                                                    <td>\n' +
                     '                                                        <div class="disf">\n' +
                     '                                                            <div class="layui-btn layui-btn-md layui-btn-danger" onclick="spec_del(this)">-</div>\n' +
                     '                                                        </div>\n' +
                     '                                                    </td>\n' +
                     '                                                </tr>\n';
-            }
-            if(typeof(res.data['goods']['foreign']['product_type']) != 'undefined') {
+            // }
+            // if(typeof(res.data['goods']['foreign']['product_type']) != 'undefined') {
                 spec_html += '                                     <tr>\n' +
                     '                                                    <td>\n' +
                     '                                                        <select name="foreign[product_type]">\n';
@@ -4384,29 +4471,33 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
                 }
                 spec_html += '                                              </select>\n' +
                     '                                                    </td>\n' +
-                    '                                                    <td>\n' +
-                    '                                                        <input type="text" class="layui-input" name="foreign[product_license]" placeholder="许可编号" value="' + res.data['goods']['foreign']['product_license'] + '">\n' +
-                    '                                                    </td>\n' +
+                    '                                                    <td>\n';
+                    if(typeof(res.data['goods']['foreign']['product_license']) != 'undefined') {
+                        spec_html += '                                       <input type="text" class="layui-input" name="foreign[product_license]" placeholder="许可编号" value="' + res.data['goods']['foreign']['product_license'] + '">\n';
+                    }else{
+                        spec_html += '                                       <input type="text" class="layui-input" name="foreign[product_license]" placeholder="许可编号" value="">\n';
+                    }
+                    spec_html += '                                       </td>\n' +
                     '                                                    <td>\n' +
                     '                                                        <div class="disf">\n' +
                     '                                                            <div class="layui-btn layui-btn-md layui-btn-danger" onclick="spec_del(this)">-</div>\n' +
                     '                                                        </div>\n' +
                     '                                                    </td>\n' +
                     '                                                </tr>\n';
-            }
+            // }
             spec_html+='                                            </tbody>';
 
-            $('.spec_table').find('.normal_tbody').remove();
+            // $('.spec_table').find('.normal_tbody').remove();
             $('.spec_table').find('.foreign_tbody').remove();
-            $('.spec_table').append(spec_html);
-        }
+            // $('.spec_table').append(spec_html);
+        // }
         //==有效期限
-        if(res.data['goods']['effective']!=null && res.data['goods']['effective']!='') {
-            let spec_html = '';
+        // if(res.data['goods']['effective']!=null && res.data['goods']['effective']!='') {
+            // let spec_html = '';
             spec_html+='<tbody class="effective_tbody">\n' +
                 '                                                <tr>\n' +
                 '                                                    <td rowspan="2">有效期限</td>\n';
-            if(typeof(res.data['goods']['effective']['type']) != 'undefined') {
+            // if(typeof(res.data['goods']['effective']['type']) != 'undefined') {
                 spec_html += '                                         <td>\n' +
                     '                                                        <div class="disf">\n' +
                     '                                                            <div class="layui-form-mid layui-word-aux">生产日期：</div>\n' +
@@ -4456,33 +4547,45 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
                 else{
                     spec_html+='                                         <div class="effective_fixed_day" style="display: none;">\n';
                 }
-                spec_html+='                                                  <input type="text" class="layui-input" id="fixed_day" name="effective[fixed_day]" placeholder="年/月/日" value="'+res.data['goods']['effective']['fixed_day']+'">\n' +
-                    '                                                        </div>\n';
+                if(typeof(res.data['goods']['effective']['fixed_day']) != 'undefined') {
+                    spec_html+='                                             <input type="text" class="layui-input" id="fixed_day" name="effective[fixed_day]" placeholder="年/月/日" value="'+res.data['goods']['effective']['fixed_day']+'">\n';
+                }else{
+                    spec_html+='                                             <input type="text" class="layui-input" id="fixed_day" name="effective[fixed_day]" placeholder="年/月/日" value="">\n';
+                }
+                    spec_html+='                                         </div>\n';
                 if(res.data['goods']['effective']['type2']==2 && res.data['goods']['effective']['type']==2) {
                     spec_html += '                                         <div class="effective_interval_day" style="display: block;">\n';
                 }
                 else{
                     spec_html += '                                         <div class="effective_interval_day" style="display: none;">\n';
                 }
-                spec_html+='                                                    <input type="text" class="layui-input" id="interval_day" name="effective[interval_day]" placeholder="年/月/日" value="'+res.data['goods']['effective']['interval_day']+'">\n' +
-                    '                                                        </div>\n' +
+                if(typeof(res.data['goods']['effective']['interval_day']) != 'undefined') {
+                    spec_html+='                                                <input type="text" class="layui-input" id="interval_day" name="effective[interval_day]" placeholder="年/月/日" value="'+res.data['goods']['effective']['interval_day']+'">\n';
+                }else{
+                    spec_html+='                                                <input type="text" class="layui-input" id="interval_day" name="effective[interval_day]" placeholder="年/月/日" value="">\n';
+                }
+                    spec_html+='                                            </div>\n' +
                     '                                                    </td>\n' +
                     '                                                    <td>\n' +
                     '                                                        <div class="disf">\n' +
                     '                                                            <div class="layui-btn layui-btn-md layui-btn-danger" onclick="spec_del(this,0)">-</div>\n' +
                     '                                                        </div>\n' +
                     '                                                    </td>\n';
-            }
+            // }
             spec_html+='                                         </tr>\n';
-            if(typeof(res.data['goods']['effective']['valid_period']) != 'undefined') {
+            // if(typeof(res.data['goods']['effective']['valid_period']) != 'undefined') {
                 spec_html += '                                     <tr>\n' +
                     '                                                    <td>\n' +
                     '                                                        <input type="text" class="layui-input" placeholder="有效期限" value="有效期限" readonly>\n' +
                     '                                                    </td>\n' +
                     '                                                    <td>\n' +
-                    '                                                        <div class="disf">\n' +
-                    '                                                            <input type="number" class="layui-input" name="effective[valid_period]" placeholder="期限数值" value="'+res.data['goods']['effective']['valid_period']+'">\n' +
-                    '                                                            <div class="valid_unit">\n' +
+                    '                                                        <div class="disf">\n';
+                    if(typeof(res.data['goods']['effective']['valid_period']) != 'undefined') {
+                        spec_html += '                                          <input type="number" class="layui-input" name="effective[valid_period]" placeholder="期限数值" value="'+res.data['goods']['effective']['valid_period']+'">\n';
+                    }else{
+                        spec_html += '                                          <input type="number" class="layui-input" name="effective[valid_period]" placeholder="期限数值" value="">\n';
+                    }
+                    spec_html += '                                              <div class="valid_unit">\n' +
                     '                                                                <select name="effective[valid_unit]">\n';
                 if(res.data['goods']['effective']['valid_unit']=='年') {
                     spec_html += '                                         <option value="年" selected>年</option>\n';
@@ -4524,20 +4627,20 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
                     '                                                        </div>\n' +
                     '                                                    </td>\n' +
                     '                                                </tr>\n';
-            }
+            // }
             spec_html+='                                            </tbody>';
 
-            $('.spec_table').find('.normal_tbody').remove();
+            // $('.spec_table').find('.normal_tbody').remove();
             $('.spec_table').find('.effective_tbody').remove();
-            $('.spec_table').append(spec_html);
-        }
+            // $('.spec_table').append(spec_html);
+        // }
         //==贮存条件
-        if(res.data['goods']['store']!=null && res.data['goods']['store']!='') {
-            let spec_html = '';
+        // if(res.data['goods']['store']!=null && res.data['goods']['store']!='') {
+            // let spec_html = '';
             spec_html+='<tbody class="store_tbody">\n' +
                 '                                                <tr>\n' +
                 '                                                    <td rowspan="6">贮存条件</td>\n';
-            if(typeof(res.data['goods']['store']['temperature_condition']) != 'undefined') {
+            // if(typeof(res.data['goods']['store']['temperature_condition']) != 'undefined') {
                 spec_html+='                                         <td>\n' +
                     '                                                        <input type="text" class="layui-input" placeholder="温度条件" value="温度条件" readonly>\n' +
                     '                                                    </td>\n' +
@@ -4571,9 +4674,9 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
                     '                                                            <div class="layui-btn layui-btn-md layui-btn-danger" onclick="spec_del(this,0)">-</div>\n' +
                     '                                                        </div>\n' +
                     '                                                    </td>\n';
-            }
+            // }
             spec_html+='                                     </tr>\n';
-            if(typeof(res.data['goods']['store']['humidity_condition']) != 'undefined') {
+            // if(typeof(res.data['goods']['store']['humidity_condition']) != 'undefined') {
                 spec_html += '                                     <tr>\n' +
                     '                                                    <td>\n' +
                     '                                                        <input type="text" class="layui-input" placeholder="湿度条件" value="湿度条件" readonly>\n' +
@@ -4621,8 +4724,8 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
                     '                                                        </div>\n' +
                     '                                                    </td>\n' +
                     '                                                </tr>\n';
-            }
-            if(typeof(res.data['goods']['store']['light_condition']) != 'undefined') {
+            // }
+            // if(typeof(res.data['goods']['store']['light_condition']) != 'undefined') {
                 spec_html += '                                         <tr>\n' +
                     '                                                    <td>\n' +
                     '                                                        <input type="text" class="layui-input" placeholder="光照条件" value="光照条件" readonly>\n' +
@@ -4648,8 +4751,8 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
                     '                                                        </div>\n' +
                     '                                                    </td>\n' +
                     '                                                </tr>\n';
-            }
-            if(typeof(res.data['goods']['store']['packing_condition']) != 'undefined') {
+            // }
+            // if(typeof(res.data['goods']['store']['packing_condition']) != 'undefined') {
                 spec_html+='                                     <tr>\n' +
                     '                                                    <td>\n' +
                     '                                                        <input type="text" class="layui-input" placeholder="包装条件" value="包装条件" readonly>\n' +
@@ -4675,8 +4778,8 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
                     '                                                        </div>\n' +
                     '                                                    </td>\n' +
                     '                                                </tr>\n';
-            }
-            if(typeof(res.data['goods']['store']['store_condition']) != 'undefined') {
+            // }
+            // if(typeof(res.data['goods']['store']['store_condition']) != 'undefined') {
                 spec_html+='                                     <tr>\n' +
                     '                                                    <td>\n' +
                     '                                                        <input type="text" class="layui-input" placeholder="储存环境" value="储存环境" readonly>\n' +
@@ -4702,8 +4805,8 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
                     '                                                        </div>\n' +
                     '                                                    </td>\n' +
                     '                                                </tr>\n';
-            }
-            if(typeof(res.data['goods']['store']['special_condition']) != 'undefined') {
+            // }
+            // if(typeof(res.data['goods']['store']['special_condition']) != 'undefined') {
                 spec_html+='                                     <tr>\n' +
                     '                                                    <td>\n' +
                     '                                                        <input type="text" class="layui-input" placeholder="特殊要求" value="特殊要求" readonly>\n' +
@@ -4729,15 +4832,15 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
                     '                                                        </div>\n' +
                     '                                                    </td>\n' +
                     '                                                </tr>\n';
-            }
+            // }
             spec_html+='                                 </tbody>';
-            $('.spec_table').find('.normal_tbody').remove();
+            // $('.spec_table').find('.normal_tbody').remove();
             $('.spec_table').find('.store_tbody').remove();
-            $('.spec_table').append(spec_html);
-        }
+            // $('.spec_table').append(spec_html);
+        // }
         //==产品包装
-        if(res.data['goods']['packing']!=null && res.data['goods']['packing']!='') {
-            let spec_html = '';
+        // if(res.data['goods']['packing']!=null && res.data['goods']['packing']!='') {
+            // let spec_html = '';
             spec_html += '<tbody class="packing_tbody">\n' +
                 '                                                <tr>\n' +
                 '                                                    <td>产品包装</td>\n' +
@@ -4782,12 +4885,14 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
                     '                                                                     <div class="packing_container">\n' +
                     '                                                                          <select name="packing[packing_container]" lay-search>\n'+
                     '                                                                                  <option value="">请选择</option>';
-                for(let i=0;i<res.data['container'].length;i++) {
-                    if(res.data['container'][i].id==res.data['goods']['packing']['packing_container']){
-                        spec_html += '                                                                 <option value="' + res.data['container'][i].id + '" selected>' + res.data['container'][i].name + '</option>\n';
-                    }
-                    else{
-                        spec_html += '                                                                 <option value="' + res.data['container'][i].id + '">' + res.data['container'][i].name + '</option>\n';
+                if(res.data['container']!=null && res.data['container']!=''){
+                    for(let i=0;i<res.data['container'].length;i++) {
+                        if(res.data['container'][i].id==res.data['goods']['packing']['packing_container']){
+                            spec_html += '                                                                 <option value="' + res.data['container'][i].id + '" selected>' + res.data['container'][i].name + '</option>\n';
+                        }
+                        else{
+                            spec_html += '                                                                 <option value="' + res.data['container'][i].id + '">' + res.data['container'][i].name + '</option>\n';
+                        }
                     }
                 }
                 spec_html+='                                                                   </select>\n' +
@@ -4797,12 +4902,14 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
                     '                                                                          <div class="packing_container">\n' +
                     '                                                                               <select name="packing[packing_material]" lay-search>\n'+
                     '                                                                                       <option value="">请选择</option>';
-                for(let i=0;i<res.data['material'].length;i++) {
-                    if(res.data['material'][i].id==res.data['goods']['packing']['packing_material']){
-                        spec_html += '                                                                 <option value="' + res.data['material'][i].id + '" selected>' + res.data['material'][i].name + '</option>\n';
-                    }
-                    else{
-                        spec_html += '                                                                 <option value="' + res.data['material'][i].id + '">' + res.data['material'][i].name + '</option>\n';
+                if(res.data['material']!=null && res.data['material']!=''){
+                    for(let i=0;i<res.data['material'].length;i++) {
+                        if(res.data['material'][i].id==res.data['goods']['packing']['packing_material']){
+                            spec_html += '                                                                 <option value="' + res.data['material'][i].id + '" selected>' + res.data['material'][i].name + '</option>\n';
+                        }
+                        else{
+                            spec_html += '                                                                 <option value="' + res.data['material'][i].id + '">' + res.data['material'][i].name + '</option>\n';
+                        }
                     }
                 }
                 spec_html+='                                                                         </select>\n' +
@@ -4838,10 +4945,10 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
                     '                                                </tr>\n' +
                     '                                            </tbody>';
 
-                $('.spec_table').find('.normal_tbody').remove();
+                // $('.spec_table').find('.normal_tbody').remove();
                 $('.spec_table').find('.packing_tbody').remove();
                 $('.spec_table').append(spec_html);
-            }
+            // }
             //==自定义参数
             if(res.data['goods']['spec_info']!==null && res.data['goods']['spec_info']!=''){
                 let spec_html = '<tbody class="spec_info">\n';
@@ -5274,7 +5381,7 @@ if(res.data['goods']['sales']!=null && res.data['goods']['sales']!='') {
             '                                                            </div>\n' +
             '                                                        </td>\n' +
             '                                                        <td>\n'+
-            '                                                            <input type="text" class="layui-input w100" name="havespecs[volume]['+tr_num+']" placeholder="请输入：长*宽*高" value="">\n'+
+            '                                                            <input type="text" class="layui-input w100" name="havespecs[volume]['+tr_num+']" placeholder="长*宽*高" value="">\n'+
             '                                                        </td>\n'+
             '                                                        <td>\n'+
             '                                                            <input type="text" class="layui-input w100" name="havespecs[weight]['+tr_num+']" placeholder="请输入重量" value="">\n'+
