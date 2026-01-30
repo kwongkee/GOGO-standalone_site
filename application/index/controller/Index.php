@@ -468,6 +468,8 @@ class Index extends Controller
         $data = input();
         $cid = isset($data['cid'])?base64_decode($data['cid']):0;
         $mid = isset($data['mid'])?base64_decode($data['mid']):0;
+        // $cid = 32;
+        // $mid = 79;
         
         if($mid>0){
             $account = Db::name('website_user')->where(['id'=>$mid])->find();
@@ -490,6 +492,7 @@ class Index extends Controller
             #获取已配置的logo和浏览器标志
             $website_basic = Db::name('website_basic')->where(['company_id'=>$cid,'company_type'=>1])->find();
             $web_company = Db::name('website_user_company')->where(['id'=>$cid])->find();
+            $website_basic['user'] = Db::name('website_user')->where(['id'=>$mid])->find();
             $website_basic['company_info'] = $web_company;
             
             $list = [];
@@ -794,7 +797,7 @@ class Index extends Controller
         $website['website_canonical'] = $this->website_canonical;
         $website['website_og'] = $this->website_og;
         
-        $website_basic = ['slogo'=>'','logo'=>'','company_info'=>['id'=>0,'company'=>'','webList'=>'']];
+        $website_basic = ['name'=>['zh'=>''],'desc'=>['zh'=>''],'slogo'=>'','logo'=>'','company_info'=>['id'=>0,'company'=>'','webList'=>'']];
         if($company_id>0){
             #企业网站-基本&页头页脚配置
             $model = new WebsiteBasic();
@@ -815,7 +818,7 @@ class Index extends Controller
             }
             $website_basic['company_info']['webList'] = $list;
         }
-
+        
         return view('index/website/website_official',compact('company','company_info','user','company_id','rotate','website_basic','tab','website_index','website_discovery','website'));
     }
 
@@ -9009,7 +9012,11 @@ class Index extends Controller
         }
         elseif($type==1){
             # 获取商家已上架商品
-            $goods = Db::connect($this->config)->name('goods')->where(['shop_id'=>$company_id,'goods_status'=>1])->field(['goods_id','goods_name','shop_id','goods_number','goods_image'])->order('goods_id desc')->select();
+            $goods = Db::connect($this->config)->name('goods_merchant')->where(['cid'=>$company_id,'is_shelf_xianxia'=>1])->field(['id as goods_id','goods_name','cid as shop_id','goods_image'])->order('goods_id desc')->select();
+            foreach($goods as $k=>$v){
+                $shelf_numnber = Db::connect($this->config)->name('goods_sku_merchant')->where(['goods_id'=>$v['goods_id']])->sum('shelf_number');
+                $goods[$k]['goods_number'] = $shelf_numnber;
+            }
     
             return json(['code'=>0,'data'=>$goods]);
         }
@@ -10075,13 +10082,15 @@ class Index extends Controller
                 $data['shop_goods'] = json_decode($data['shop_goods'],true);
                 $data['goods_info'] = [];
                 foreach($data['shop_goods'] as $k=>$v){
-                    $goods_info = Db::connect($this->config)->name('goods')->where(['goods_id'=>$v])->field('goods_id,goods_image,goods_name')->find();
+                    $goods_info = Db::connect($this->config)->name('goods_merchant')->where(['id'=>$v])->field('id as goods_id,goods_image,goods_name')->find();
                     array_push($data['goods_info'],$goods_info);
                 }
             }
             
-            $condition = json_encode([['id'=>1,'name'=>'分享被查看'],['id'=>2,'name'=>'分享被加购'],['id'=>3,'name'=>'分享被转发'],['id'=>4,'name'=>'分享被评论'],['id'=>5,'name'=>'分享被点赞']],true);
-            $operation = json_encode([['id'=>1,'name'=>'详情'],['id'=>2,'name'=>'加购'],['id'=>3,'name'=>'转发'],['id'=>4,'name'=>'评论'],['id'=>5,'name'=>'点赞']],true);
+            // $condition = json_encode([['id'=>1,'name'=>'分享被查看'],['id'=>2,'name'=>'分享被加购'],['id'=>3,'name'=>'分享被转发'],['id'=>4,'name'=>'分享被评论'],['id'=>5,'name'=>'分享被点赞']],true);
+            // $operation = json_encode([['id'=>1,'name'=>'详情'],['id'=>2,'name'=>'加购'],['id'=>3,'name'=>'转发'],['id'=>4,'name'=>'评论'],['id'=>5,'name'=>'点赞']],true);
+            $condition = json_encode([['id'=>1,'name'=>'分享被查看']],true);
+            $operation = json_encode([['id'=>3,'name'=>'转发']],true);
             
             $shops = Db::name('website_campaign_shop')->where(['company_id'=>$company_id,'company_type'=>$company_type])->select();
             

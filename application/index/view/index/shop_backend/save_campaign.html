@@ -195,7 +195,7 @@
                     {volist name="data.goods_info" id="goods"}
                         <tr id="goods_row_{$goods.goods_id}" data-goods-id="{$goods.goods_id}">
                             <td>
-                                <span style="font-weight: 600;">{$goods.goods_name}</span>
+                                <span style="font-weight: 600;"><img src="{$goods.goods_image}" style="width:40px;height:40px;margin-right:3px;">{$goods.goods_name}</span>
                             </td>
                             <td><input type="hidden" name="shop_goods[]" value="{$goods.goods_id}"><div class="trush" onclick="del_goods(this)"><i class="fas fa-trash"></i></div></td>
                         </tr>

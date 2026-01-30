@@ -202,15 +202,15 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="siteName">网站名称</label>
-                                <input type="text" id="siteName" name="name[zh]" placeholder="请输入网站名称" value="{$website_basic['name']['zh']}">
+                                <input type="text" id="siteName" name="name[zh]" placeholder="请输入网站名称" value="<?php echo isset($website_basic['name']['zh'])?$website_basic['name']['zh']:'';?>">
                             </div>
                             <div class="form-group">
                                 <label for="siteDesc">网站描述</label>
-                                <input type="text" id="siteDesc" name="desc[zh]" placeholder="请输入网站描述" value="{$website_basic['desc']['zh']}">
+                                <input type="text" id="siteDesc" name="desc[zh]" placeholder="请输入网站描述" value="<?php echo isset($website_basic['desc']['zh'])?$website_basic['desc']['zh']:'';?>">
                             </div>
                             <div class="form-group">
                                 <label for="siteKeywords">网站关键词</label>
-                                <input type="text" id="siteKeywords" name="keywords[zh]" placeholder="请输入网站关键词" value="{$website_basic['keywords']['zh']}">
+                                <input type="text" id="siteKeywords" name="keywords[zh]" placeholder="请输入网站关键词" value="<?php echo isset($website_basic['keywords']['zh'])?$website_basic['keywords']['zh']:'';?>">
                             </div>
                             <div class="form-group">
                                 <label for="logo_file-upload">网站Logo(像素：155*65)</label>
@@ -259,11 +259,11 @@
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="mobile">企业电话</label>
-                                <input type="text" id="mobile" name="mobile" placeholder="请输入企业电话" value="{$website_basic['mobile']}">
+                                <input type="text" id="mobile" name="mobile" placeholder="请输入企业电话" value="<?php echo isset($website_basic['mobile'])?$website_basic['mobile']:'';?>">
                             </div>
                             <div class="form-group">
                                 <label for="companyEmail">企业邮箱</label>
-                                <input type="email" id="companyEmail" name="email" placeholder="请输入企业邮箱" value="{$website_basic['email']}">
+                                <input type="email" id="companyEmail" name="email" placeholder="请输入企业邮箱" value="<?php echo isset($website_basic['email'])?$website_basic['email']:'';?>">
                             </div>
                         </div>
                     </div>
@@ -286,27 +286,27 @@
                             <div class="form-group">
                                 <label for="color_head">页头背景色</label>
                                 <div id="color_head"></div>
-                                <input type="hidden" name="color_head" value="{$website_basic['color_head']}">
+                                <input type="hidden" name="color_head" value="<?php echo isset($website_basic['color_head'])?$website_basic['color_head']:'';?>">
                             </div>
                             <div class="form-group">
                                 <label for="color">主题色</label>
                                 <div id="color"></div>
-                                <input type="hidden" name="color" value="{$website_basic['color']}">
+                                <input type="hidden" name="color" value="<?php echo isset($website_basic['color'])?$website_basic['color']:'';?>">
                             </div>
                             <div class="form-group">
                                 <label for="color_inner">背景色</label>
                                 <div id="color_inner"></div>
-                                <input type="hidden" name="color_inner" value="{$website_basic['color_inner']}">
+                                <input type="hidden" name="color_inner" value="<?php echo isset($website_basic['color_inner'])?$website_basic['color_inner']:'';?>">
                             </div>
                             <div class="form-group">
                                 <label for="color_word">文字色</label>
                                 <div id="color_word"></div>
-                                <input type="hidden" name="color_word" value="{$website_basic['color_word']}">
+                                <input type="hidden" name="color_word" value="<?php echo isset($website_basic['color_word'])?$website_basic['color_word']:'';?>">
                             </div>
                             <div class="form-group">
                                 <label for="color_adorn">点缀色</label>
                                 <div id="color_adorn"></div>
-                                <input type="hidden" name="color_adorn" value="{$website_basic['color_adorn']}">
+                                <input type="hidden" name="color_adorn" value="<?php echo isset($website_basic['color_adorn'])?$website_basic['color_adorn']:'';?>">
                             </div>
                         </div>
                     </div>

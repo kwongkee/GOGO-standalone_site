@@ -13,7 +13,7 @@
     .enterprise-item {padding: 15px;border-radius: 10px;margin-bottom: 10px;cursor: pointer;transition: all 0.3s ease; /*border: 2px solid transparent;*/border:2px solid var(--accent);}
     .enterprise-item:hover {background: var(--accent);}
     .enterprise-item.active {background: var(--accent);border-color: var(--primary);}
-    .enterprise-name {font-weight: 600;margin-bottom: 5px;}
+    .enterprise-name {font-weight: 600;margin-bottom: 5px;text-align:center;}
     .enterprise-desc {font-size: 0.9rem;color: #666;}
     .add-enterprise {display: flex;align-items: center;justify-content: center;padding: 15px;border: 2px dashed var(--primary-light);border-radius: 10px;color: var(--primary);font-weight: 600;cursor: pointer;transition: all 0.3s ease;}
     .add-enterprise:hover {background: var(--accent);border-color: var(--primary);}
@@ -94,7 +94,7 @@
 
 <!-- 主内容区域 -->
 <div class="container main-content">
-    <h1>企业站点管理平台</h1>
+    <h1>站点管理</h1>
     <p>注册一个账号，关联多家企业，为每家企业创建独立站点</p>
 
     <div class="dashboard">
@@ -309,11 +309,15 @@
                 layer.msg(res.msg, {time: 2000}, function () {
                     if (res.code == 0) {
                         //修改网站logo、浏览器图标
-                        if(res.website_basic != ''){
-                            $('link[rel="icon"]').attr('href', res.website_basic.slogo);
-                            $('.logo img').attr('src', res.website_basic.logo);
-                            $('.logo span').html(res.list.company);
-                            $('.already_login .nav-item .nav-link .default_name').html(res.list.company);
+                        
+                        if(res.website_basic != null){
+                            if(res.website_basic != ''){
+                                $('link[rel="icon"]').attr('href', res.website_basic.slogo);
+                                $('.logo img').attr('src', res.website_basic.logo);
+                                // res.list.company
+                                $('.logo span').html('管理中心');
+                                $('.already_login .nav-item .nav-link .default_name').html(res.list.company);
+                            }
                         }
                         
                         var html2 = '';

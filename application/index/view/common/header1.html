@@ -52,7 +52,7 @@
         .main-nav {display: flex;justify-content: space-between;align-items: center;padding: 15px 20px;height:75px;}
         .logo {display: flex;align-items: center;gap: 15px;transition: var(--transition);}
         .logo:hover {transform: translateY(-3px);}
-        .logo img {height: 55px;width:130px;border-radius: 12px;box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);margin-top: -6px;}
+        .logo img {height: 55px;width:140px;border-radius: 12px;box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);margin-top: -5px;}
         .logo h1 {color: var(--dark-color);font-size: 26px;font-weight: 700;background: linear-gradient(90deg, var(--primary-color), var(--primary-light));-webkit-background-clip: text;background-clip: text;color: transparent;}
         .nav-links {display: flex;list-style: none;gap: 30px;margin-bottom:0 !important;color:{$website['color_word']};}
         .nav-links a {color: var(--dark-color);text-decoration: none;font-weight: 600;padding: 8px 0;position: relative;transition: var(--transition);display: flex;align-items: center;gap: 8px;}
@@ -65,15 +65,15 @@
         .btn:hover::before {opacity: 1;}
         .btn-primary {background: white;color: var(--primary-color);box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25);}
         .btn-primary:hover {transform: translateY(-4px);box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);color: white;}
-        .btn-outline {background: transparent;color: var(--dark-color);border: 2px solid var(--primary-color);}
+        .btn-outline {background: {$website['color_word']};color: var(--dark-color);border: 2px solid var(--primary-color);}
         .btn-outline:hover {color: white;border-color: transparent;}
 
         /* 主菜单样式 start*/
         header .navbar{background:unset;min-height: unset;}
         .navbar .nav-list {display: flex;align-items: center;list-style: none;}
         .nav-item {margin: 0 18px; /* 主菜单间距 */position: relative; /* 子菜单定位基准 */}
-        .nav-link {text-decoration: none;font-size: 16px;padding: 10px 0;display: block;transition: color 0.3s ease; color:{$website['color_word']};/* 颜色过渡 */}
-        .nav-link:hover {color: var(--primary-color); /* hover时蓝色 */}
+        .nav-link {text-decoration: none;font-size: 18px;font-weight:800;padding: 10px 0;display: block;transition: color 0.3s ease; color:{$website['color_word']};/* 颜色过渡 */}
+        .nav-link:hover {color:{$website['color_word']};}
 
         /* 二级子菜单样式 */
         .submenu {position: absolute;top: 100%; /* 位于主菜单正下方 */left: 0;background: #fff;border-radius: 8px; /* 圆角 */box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1); /* 深阴影区分层级 */padding: 12px 0;min-width: fit-content;display: none; /* 默认隐藏 */z-index: 10;border:2px solid {$website['color']};}
@@ -131,7 +131,7 @@
 <div id="wrapper" class="home-page">
     <!-- 菜单栏开始 -->
     <header style="background:{$website['color_head']};">
-        <div class="top-bar">
+        <div class="top-bar" style="display:none;">
             <div class="contact-info">
                 <a href="tel:{$website['tel']}"><i class="fas fa-phone"></i> {$website['tel']}</a>
                 <a href="mailto:{$website['email']}"><i class="fas fa-envelope"></i> {$website['email']}</a>
@@ -150,7 +150,7 @@
                     {volist name="menu" id="vo"}
                         {if !empty($vo.childMenu)}
                             <li class="nav-item has-sub">
-                                <a href="#" class="nav-link f18">{$vo.name}</a>
+                                <a href="#" class="nav-link f20">{$vo.name}</a>
                                 <ul class="submenu">
                                     {volist name="vo.childMenu" id="vo2"}
                                         {if !empty($vo2.childMenu)}
@@ -182,18 +182,18 @@
                             </li>
                         {else}
                             {if $vo.go_other==1}
-                                <li class="nav-item"><a href="{$vo.other_link}" class="nav-link f18" target="_blank">{$vo.name}</a></li>
+                                <li class="nav-item"><a href="{$vo.other_link}" class="nav-link f20" target="_blank">{$vo.name}</a></li>
                             {elseif($vo.go_other==2)}
-                                <li class="nav-item"><a href="/?s=index/detail&company_id={$company_id}&company_type={$company_type}&id={$vo.other_navbar}" class="nav-link f18" target="_blank">{$vo.name}</a></li>
+                                <li class="nav-item"><a href="/?s=index/detail&company_id={$company_id}&company_type={$company_type}&id={$vo.other_navbar}" class="nav-link f20" target="_blank">{$vo.name}</a></li>
                             {else}
-                                <li class="nav-item"><a href="/?s=index/detail&company_id={$company_id}&company_type={$company_type}&id={$vo.id}" class="nav-link f18" target="_blank">{$vo.name}</a></li>
+                                <li class="nav-item"><a href="/?s=index/detail&company_id={$company_id}&company_type={$company_type}&id={$vo.id}" class="nav-link f20" target="_blank">{$vo.name}</a></li>
                             {/if}
                         {/if}
                     {/volist}
 
                     {if(!empty(session('account')))}
                         <li class="nav-item has-sub">
-                            <a href="#" class="nav-link f18">GoFriend</a>
+                            <a href="#" class="nav-link f20">GoFriend</a>
                             <ul class="submenu">
                                 <li class="subitem"><a href="//dtc.gogo198.net/admin?cid=<?php echo base64_encode($company_id);?>" target="_blank" class="sublink f16">商家后台</a></li>
                                 {if !empty($ishave_website)}
