@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>线上支付显示配置系统</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .peizhi_div{display:none;}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('https://shop.gogo198.cn/attachment/images/3/2021/01/cXWtGBJCnTvIGQ5PGEfP7IpI1Zgtag.jpeg');
+            color: #333;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #4CAF50 0%, #2E7D32 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .system-status h3 {
+            color: #495057;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .status-info > div {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-size: 1.1em;
+        }
+
+        .status-info span {
+            font-weight: bold;
+        }
+
+        .status-on {
+            color: #4CAF50;
+        }
+
+        .status-off {
+            color: #f44336;
+        }
+
+        .current-default {
+            display: block;
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .config-panel {
+            margin: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .config-header {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .config-header h2 {
+            margin: 0;
+        }
+
+        .config-tabs {
+            display: flex;
+            background: #f1f3f4;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            color: #666;
+            transition: all 0.3s;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .tab:last-child {
+            border-right: none;
+        }
+
+        .tab:hover {
+            background: #e8eaed;
+        }
+
+        .tab.active {
+            background: white;
+            color: #2196F3;
+            border-bottom: 3px solid #2196F3;
+            margin-bottom: -2px;
+        }
+
+        .config-content {
+            padding: 10px;
+        }
+
+        .config-section {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .config-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .description {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #2196F3;
+        }
+
+        .description p {
+            margin: 10px 0;
+        }
+
+        .time-display {
+            font-family: monospace;
+            font-size: 1.2em;
+            color: #2196F3;
+            font-weight: bold;
+        }
+
+        .config-form {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-group input[type="datetime-local"],
+        .form-group input[type="number"],
+        .form-group input[type="range"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input[type="range"] { padding: 0; }
+
+        .form-group input:focus {
+            border-color: #2196F3;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+
+        .help-text {
+            display: block;
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .time-preview,
+        .preview,
+        .probability-indicator {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .range-value {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2196F3;
+            margin: 10px 0;
+        }
+
+        .config-actions {
+            padding: 25px;
+            background: #f8f9fa;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 120px;
+        }
+
+        .btn-primary {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1976D2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+        }
+
+        .btn-danger{
+            background: #ff2222;
+            color: #fff;
+        }
+
+        .btn-normal{
+            color:#fff;
+            background: #d2b30b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+        }
+
+        .log-container h4 {
+            margin-bottom: 15px;
+            color: #495057;
+        }
+
+        .log-entry {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border-left: 4px solid;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        footer {
+            background: #343a40;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                margin: 0px;
+                border-radius: 15px;
+            }
+
+            header {
+                padding: 20px;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .config-tabs {
+                /*flex-direction: column;*/
+            }
+
+            .config-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+    <style>
+        .status_name{padding:20px;box-sizing: border-box;border-bottom:1px solid #444444;}
+        .status_btn{margin-top:20px;}
+        .status_btn button{margin-bottom:10px;}
+    </style>
+</head>
+<body>
+<!--<a href="https://qr.shouqianba.com/20051201002009494485">跳转</a>-->
+<div class="container">
+    <div class="status_name">
+        <div class="status_info">此刻“在线支付”状态是：{if $is_show_online_pay==0}<span style="color:#ff2222;font-weight:800;">正在隐藏<span>{/if}{if $is_show_online_pay==1}<span style="color:#4CAF50;font-weight:800;">正在显示</span>{/if}</div>
+        <div class="status_btn">
+            {if $is_show_online_pay==1}
+                <!--正在显示-->
+                <button id="hideConfig" class="btn btn-danger hideConfig">强制关闭显示</button>
+                <button id="show_peizhi" class="btn btn-primary show_peizhi">更改显示配置</button>
+            {/if}
+
+            {if $is_show_online_pay==0}
+                <!--正在隐藏-->
+                <button id="show_peizhi" class="btn btn-primary show_peizhi">配置显示</button>
+            {/if}
+        </div>
+    </div>
+
+    <div class="config-panel peizhi_div">
+        <div class="config-header">
+            <h2>显示类型配置</h2>
+        </div>
+
+        <div class="config-tabs">
+            <div class="tab active" data-type="manual">手动显示</div>
+            <div class="tab" data-type="interval">间隔显示</div>
+            <div class="tab" data-type="random">随机显示</div>
+        </div>
+
+        <div class="config-content">
+            <!-- 手动显示配置 -->
+            <div id="manual-config" class="config-section active">
+                <div class="description">
+                    <p>在指定的时间范围内显示线上支付选项。</p>
+                </div>
+                <div class="config-form">
+                    <div class="form-group">
+                        <label for="currentDateTime">当前时间:</label>
+                        <p style="margin-bottom:10px;"><span id="currentDateManual" class="time-display"><?php echo date('Y-m-d');?></span>&nbsp;<span id="currentTimeManual" class="time-display"></span></p>
+                        {if !empty($info['manual_start_time'])}
+                        <span class="current-default">上次保存时间: {$info['manual_start_time']}</span>
+                        {/if}
+                    </div>
+                    <div class="form-group">
+                        <label for="manualEndDateTime">结束时间:</label>
+                        <input type="datetime-local" id="manualEndDateTime" step="1" value="{if !empty($info['manual_end_time'])}{$info['manual_end_time']}{/if}">
+                        {if !empty($info['manual_end_time'])}
+                        <span class="current-default">上次保存时间: {$info['manual_end_time']}</span>
+                        {/if}
+                        <span class="help-text">请选择当天或之后的日期和时间，当天的时间不能早于当前时间</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 间隔显示配置 -->
+            <div id="interval-config" class="config-section">
+                <div class="description">
+                    <p>每 X 次扫码支付中显示 Y 次线上支付。</p>
+                </div>
+                <div class="config-form">
+                    <div class="form-group">
+                        <label for="intervalX">扫码支付次数 (X):</label>
+                        <input type="number" id="intervalX" min="1" max="100" value="{$info['interval_x']}">
+                        <span class="help-text">每 X 次扫码支付为一个周期</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="intervalY">线上支付显示次数 (Y):</label>
+                        <input type="number" id="intervalY" min="1" max="100" value="1" readonly>
+                        <span class="help-text">每个周期显示 1 次线上支付</span>
+                    </div>
+                    <div class="preview">
+                        <div>配置: 每 <span id="previewX">{$info['interval_x']}</span> 次扫码支付显示 <span id="previewY">1</span> 次线上支付</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 随机显示配置 -->
+            <div id="random-config" class="config-section">
+                <div class="description">
+                    <p>按照指定概率显示线上支付。</p>
+                </div>
+                <div class="config-form">
+                    <div class="form-group">
+                        <label for="randomProbability">显示概率 (%):</label>
+                        <input type="range" id="randomProbability" min="0" max="100" value="{$info['random_probability']}">
+                        <div class="range-value">
+                            <span id="probabilityValue">{$info['random_probability']}</span>%
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="config-actions">
+            <button id="saveConfig" class="btn btn-primary">保存配置</button>
+<!--            <button id="clearConfig" class="btn btn-danger">清空配置（显示微信支付）</button>-->
+<!--            <button id="hideConfig" class="btn btn-normal hideConfig">强制隐藏（隐藏微信支付）{if $info['is_hide']==1}√{/if}</button>-->
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // 全局变量
+        let currentConfig = {};
+        let currentDisplayType = 'manual';
+        let manualEndDateTimePicker = null;
+
+        $('.show_peizhi').click(function(){
+           $('.peizhi_div').show();
+        });
+
+        // 初始化函数
+        function init() {
+            updateCurrentTime();
+            setInterval(updateCurrentTime, 1000);
+            setupEventListeners();
+            setupDateTimePicker();
+            loadSavedConfig();
+        }
+
+        // 更新当前时间
+        function updateCurrentTime() {
+            const now = new Date();
+            const dateString = now.toLocaleDateString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            }).replace(/\//g, '-');
+
+            const timeString = now.toLocaleTimeString('zh-CN', {
+                hour12: false,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+
+            $('#currentDateManual').text(dateString);
+            $('#currentTimeManual').text(timeString);
+
+            // 更新datetime-local输入框的min属性
+            updateDateTimeMinValue();
+
+            // 检查手动显示状态
+            checkManualDisplayStatus();
+        }
+
+        // 设置datetime-local输入框的最小值
+        function updateDateTimeMinValue() {
+            const now = new Date();
+            // 获取当前时间的ISO字符串，并去掉毫秒部分
+            const minDateTime = now.toISOString().slice(0, 16);
+            $('#manualEndDateTime').attr('min', minDateTime);
+        }
+
+        // 设置日期时间选择器
+        function setupDateTimePicker() {
+            const now = new Date();
+            // 设置默认值为当前时间+1小时
+            now.setHours(now.getHours() + 1);
+            const defaultDateTime = now.toISOString().slice(0, 16);
+            console.log(4,defaultDateTime);
+            {if !empty($info['manual_end_time'])}
+                $('#manualEndDateTime').val("{$info['manual_end_time']}");
+            {else}
+                $('#manualEndDateTime').val(defaultDateTime);
+            {/if}
+
+            // 初始显示
+            updateManualEndTimeDisplay();
+        }
+
+        // 更新手动结束时间显示
+        function updateManualEndTimeDisplay() {
+            const endDateTime = $('#manualEndDateTime').val();
+
+            if (endDateTime) {
+                const date = new Date(endDateTime);
+                const dateString = date.toLocaleDateString('zh-CN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit'
+                }).replace(/\//g, '-');
+
+                const timeString = date.toLocaleTimeString('zh-CN', {
+                    hour12: false,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+
+                $('#manualEndTimeDisplay').text(`${dateString} ${timeString}`);
+            } else {
+                $('#manualEndTimeDisplay').text('未设置');
+            }
+
+            // 检查状态
+            checkManualDisplayStatus();
+        }
+
+        // 检查手动显示状态
+        function checkManualDisplayStatus() {
+            const endDateTime = $('#manualEndDateTime').val();
+            if (!endDateTime) {
+                $('#manualStatus').text('未设置').removeClass('status-on status-off');
+                return;
+            }
+
+            const now = new Date();
+            const endTime = new Date(endDateTime);
+
+            if (now <= endTime) {
+                const timeDiff = endTime - now;
+                const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+                const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+
+                $('#manualStatus')
+                    .text(`在线 (剩余: ${hours}小时${minutes}分钟)`)
+                    .removeClass('status-off')
+                    .addClass('status-on');
+            } else {
+                $('#manualStatus')
+                    .text('已过期')
+                    .removeClass('status-on')
+                    .addClass('status-off');
+            }
+        }
+
+        // 加载保存的配置
+        function loadSavedConfig() {
+            try {
+                const savedConfig = localStorage.getItem('paymentDisplayConfig');
+                if (savedConfig) {
+                    currentConfig = JSON.parse(savedConfig);
+                    currentDisplayType = currentConfig.display_type || 'manual';
+                    // updateUIFromConfig();
+                    log('已加载保存的配置', 'success');
+                } else {
+                    log('未找到保存的配置，使用默认配置', 'info');
+                }
+            } catch (e) {
+                log('加载配置时出错: ' + e.message, 'error');
+            }
+        }
+
+        // 更新UI根据配置
+        function updateUIFromConfig() {
+            // 更新激活类型
+            $('#activeTypeLabel').text(getDisplayTypeName(currentDisplayType));
+
+            // 更新标签页
+            $('.tab').removeClass('active');
+            $(`.tab[data-type="${currentDisplayType}"]`).addClass('active');
+
+            // 更新配置内容
+            $('.config-section').removeClass('active');
+            $(`#${currentDisplayType}-config`).addClass('active');
+
+            // 更新各个配置字段
+            if (currentConfig.manual_end_datetime) {
+                console.log(1);
+                $('#manualEndDateTime').val(currentConfig.manual_end_datetime);
+                updateManualEndTimeDisplay();
+            }
+
+            if (currentConfig.interval_x) {
+                $('#intervalX').val(currentConfig.interval_x);
+            }
+
+            if (currentConfig.interval_y) {
+                $('#intervalY').val(currentConfig.interval_y);
+            }
+            updateIntervalPreview();
+
+            if (currentConfig.random_probability) {
+                $('#randomProbability').val(currentConfig.random_probability);
+                $('#probabilityValue').text(currentConfig.random_probability);
+            }
+        }
+
+        // 获取显示类型名称
+        function getDisplayTypeName(type) {
+            const names = {
+                manual: '手动显示',
+                interval: '间隔显示',
+                random: '随机显示'
+            };
+            return names[type] || type;
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 标签页切换
+            $('.tab').on('click', function() {
+                const type = $(this).data('type');
+                switchTab(type);
+            });
+
+            // 手动显示配置更新
+            $('#manualEndDateTime').on('change', function() {
+                validateDateTimeInput();
+                updateManualEndTimeDisplay();
+            });
+
+            // 间隔显示配置更新
+            $('#intervalX, #intervalY').on('input', updateIntervalPreview);
+
+            // 随机显示配置更新
+            $('#randomProbability').on('input', function() {
+                $('#probabilityValue').text(this.value);
+            });
+
+            // 保存配置按钮
+            $('#saveConfig').on('click', saveConfig);
+
+            //清空配置
+            $('#clearConfig').on('click', clearConfig);
+
+            //强制隐藏
+            $('#hideConfig').on('click',hideConfig);
+
+            // 测试配置按钮
+            $('#testCurrentConfig').on('click', testCurrentConfig);
+        }
+
+        // 验证日期时间输入
+        function validateDateTimeInput() {
+            const endDateTime = $('#manualEndDateTime').val();
+            if (!endDateTime) return true;
+
+            const now = new Date();
+            const endTime = new Date(endDateTime);
+
+            // 检查日期是否在今天或之后
+            const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            const selectedDate = new Date(endTime.getFullYear(), endTime.getMonth(), endTime.getDate());
+
+            if (selectedDate < today) {
+                alert('结束日期不能早于今天！');
+                // 重置为当前时间+1小时
+                const defaultTime = new Date();
+                defaultTime.setHours(defaultTime.getHours() + 1);
+                console.log(2);
+                $('#manualEndDateTime').val(defaultTime.toISOString().slice(0, 16));
+                updateManualEndTimeDisplay();
+                return false;
+            }
+
+            // 如果是今天，检查时间是否早于当前时间
+            if (selectedDate.getTime() === today.getTime() && endTime <= now) {
+                alert('今天的结束时间不能早于当前时间！');
+                // 重置为当前时间+1小时
+                const defaultTime = new Date();
+                defaultTime.setHours(defaultTime.getHours() + 1);
+                console.log(3);
+                $('#manualEndDateTime').val(defaultTime.toISOString().slice(0, 16));
+                updateManualEndTimeDisplay();
+                return false;
+            }
+
+            return true;
+        }
+
+        // 切换标签页
+        function switchTab(type) {
+            currentDisplayType = type;
+            $('.tab').removeClass('active');
+            $(`.tab[data-type="${type}"]`).addClass('active');
+            $('.config-section').removeClass('active');
+            $(`#${type}-config`).addClass('active');
+            log(`切换到${getDisplayTypeName(type)}配置`, 'info');
+        }
+
+        // 更新间隔显示预览
+        function updateIntervalPreview() {
+            const x = parseInt($('#intervalX').val()) || 10;
+            const y = parseInt($('#intervalY').val()) || 1;
+
+            $('#previewX').text(x);
+            $('#previewY').text(y);
+
+            const frequency = y / x * 100;
+            $('#intervalFrequency').text(frequency.toFixed(1) + '%');
+        }
+
+        // 保存配置
+        function saveConfig() {
+            // 验证手动显示的日期时间
+            if (currentDisplayType === 'manual' && !validateDateTimeInput()) {
+                return;
+            }
+
+            const configData = {
+                display_type: currentDisplayType,
+                manual_end_datetime: $('#manualEndDateTime').val(),
+                interval_x: parseInt($('#intervalX').val()) || 0,
+                interval_y: parseInt($('#intervalY').val()) || 1,
+                random_probability: parseInt($('#randomProbability').val()) || 0,
+                saved_at: new Date().toISOString()
+            };
+
+            try {
+                localStorage.setItem('paymentDisplayConfig', JSON.stringify(configData));
+                currentConfig = configData;
+
+                $.ajax({
+                    url:"/?s=gather/paymentdisplay",
+                    method:'post',
+                    data:{'pa':1,'config':currentConfig},
+                    dataType:'JSON',
+                    success:function(res){
+                       alert(res.msg);
+                        if(res.code == 0)
+                        {
+                            window.location.reload();
+                        }
+
+                    },
+                    error:function (data) {
+                        layer.msg('系统错误',{time:2000});
+                    }
+                });
+
+                // // 显示保存成功消息
+                // alert('配置已成功保存！');
+            } catch (e) {
+                log('保存配置失败: ' + e.message, 'error');
+                alert('保存配置失败，请重试！');
+            }
+        }
+
+        //清空配置
+        function clearConfig(){
+            if(confirm('确认清空配置吗？')){
+                $.ajax({
+                    url:"/?s=gather/paymentdisplay",
+                    method:'post',
+                    data:{'pa':2},
+                    dataType:'JSON',
+                    success:function(res){
+                        alert(res.msg);
+                        if(res.code == 0)
+                        {
+                            window.location.reload();
+                        }
+
+                    },
+                    error:function (data) {
+                        layer.msg('系统错误',{time:2000});
+                    }
+                });
+            }
+        }
+
+        //隐藏配置
+        function hideConfig(){
+            if(confirm('确认强制隐藏微信支付吗？')){
+                $.ajax({
+                    url:"/?s=gather/paymentdisplay",
+                    method:'post',
+                    data:{'pa':3},
+                    dataType:'JSON',
+                    success:function(res){
+                        alert(res.msg);
+                        if(res.code == 0)
+                        {
+                            window.location.reload();
+                        }
+
+                    },
+                    error:function (data) {
+                        layer.msg('系统错误',{time:2000});
+                    }
+                });
+            }
+        }
+
+        // 检查手动显示
+        function checkManualDisplay() {
+            const endDateTime = currentConfig.manual_end_datetime;
+            if (!endDateTime) {
+                return false;
+            }
+
+            const now = new Date();
+            const endTime = new Date(endDateTime);
+
+            return now <= endTime;
+        }
+
+        // 检查间隔显示
+        function checkIntervalDisplay() {
+            const x = currentConfig.interval_x || 10;
+            const y = currentConfig.interval_y || 1;
+
+            // 这里我们模拟一个计数器来测试
+            const testCount = Math.floor(Math.random() * x) + 1;
+
+            // 在每个周期内，前y次显示
+            return testCount <= y;
+        }
+
+        // 检查随机显示
+        function checkRandomDisplay() {
+            const probability = currentConfig.random_probability || 50;
+            const random = Math.random() * 100;
+            return random < probability;
+        }
+
+        // 测试当前配置
+        function testCurrentConfig() {
+            let shouldDisplay = false;
+            let testResult = '';
+
+            switch (currentDisplayType) {
+                case 'manual':
+                    shouldDisplay = checkManualDisplay();
+                    const endTime = currentConfig.manual_end_datetime ?
+                        new Date(currentConfig.manual_end_datetime).toLocaleString('zh-CN') : '未设置';
+                    testResult = `手动显示配置: 结束时间 ${endTime}，当前时间 ${new Date().toLocaleString('zh-CN')}`;
+                    break;
+                case 'interval':
+                    shouldDisplay = checkIntervalDisplay();
+                    const x = currentConfig.interval_x || 10;
+                    const y = currentConfig.interval_y || 1;
+                    testResult = `间隔显示配置: 每 ${x} 次扫码支付显示 ${y} 次线上支付`;
+                    break;
+                case 'random':
+                    shouldDisplay = checkRandomDisplay();
+                    const probability = currentConfig.random_probability || 50;
+                    testResult = `随机显示配置: ${probability}% 的显示概率`;
+                    break;
+                default:
+                    testResult = '未知配置类型';
+            }
+
+            const resultText = shouldDisplay ? '应该显示线上支付' : '不应该显示线上支付';
+            log(`测试${getDisplayTypeName(currentDisplayType)}配置: ${testResult}，结果: ${resultText}`,
+                shouldDisplay ? 'success' : 'info');
+
+            // 显示测试结果
+            alert(`配置测试结果:\n${testResult}\n${resultText}`);
+        }
+
+        // 日志函数
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString('zh-CN', { hour12: false });
+            const logClass = type === 'success' ? 'log-success' :
+                type === 'error' ? 'log-error' :
+                    type === 'warning' ? 'log-warning' : 'log-info';
+
+            const logEntry = `
+                <div class="log-entry ${logClass}">
+                    [${timestamp}] ${message}
+                </div>
+            `;
+
+            $('#logMessages').prepend(logEntry);
+
+            // 限制日志数量
+            const logs = $('#logMessages .log-entry');
+            if (logs.length > 20) {
+                logs.last().remove();
+            }
+        }
+
+        // 初始化系统
+        init();
+    });
+</script>
+</body>
+</html>

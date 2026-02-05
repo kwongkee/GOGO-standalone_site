@@ -468,8 +468,8 @@ class Index extends Controller
         $data = input();
         $cid = isset($data['cid'])?base64_decode($data['cid']):0;
         $mid = isset($data['mid'])?base64_decode($data['mid']):0;
-        // $cid = 32;
-        // $mid = 79;
+        // $cid = 33;
+        // $mid = 87;
         
         if($mid>0){
             $account = Db::name('website_user')->where(['id'=>$mid])->find();
@@ -477,6 +477,26 @@ class Index extends Controller
         }
 
         $company = Db::name('website_user_company')->where(['user_id'=>session('account.id'),'status'=>0])->select();
+        if(empty($company)){
+            $company = Db::name('centralize_manage_person')
+            ->alias('cmp')
+            ->join('website_user_company wuc','wuc.id = cmp.company_id','left')
+            ->where(['cmp.gogo_id'=>session('account.id'),'cmp.status'=>1])
+            ->field('wuc.*')
+            ->select();
+        }else{
+            $companys = Db::name('centralize_manage_person')
+                ->alias('cmp')
+                ->join('website_user_company wuc','wuc.id = cmp.company_id','left')
+                ->where(['cmp.gogo_id'=>session('account.id'),'cmp.status'=>1])
+                ->field('wuc.*')
+                ->select();
+            
+            $company = array_merge($company,$companys);
+            
+            $temp = array_column($company, null, 'company');
+            $company = array_values($temp);
+        }
         $mid = session('account.id');
 
         #独立站菜单
@@ -1892,7 +1912,10 @@ class Index extends Controller
             
             if(!empty($data)){
                 $data['express_id'] = explode(',',$data['express_id']);
+            }else{
+                $data = ['express_id'=>[],'id'=>0];
             }
+            
             foreach ($list as &$item) {
                 $express = Db::name('centralize_express_product')->where(['id'=>$item['express_id']])->value('name');
                 $item['express_name'] = $express;
@@ -14492,7 +14515,7 @@ class Index extends Controller
                 $res = Db::name('centralize_manage_level')->where(['id'=>$id])->update([
                     'name'=>trim($dat['name']),
                     'desc'=>trim($dat['desc']),
-                    'authList'=>$dat['authList'],
+                    'authList'=>isset($dat['authList'])?$dat['authList']:'',
                     'distribution_auth'=>intval($dat['distribution_auth']),
                     'data'=>json_encode($dat['data'],true),
                     'connect'=>json_encode($dat['connect'],true),
@@ -14503,7 +14526,7 @@ class Index extends Controller
                     'company_id'=>$company_id,
                     'name'=>trim($dat['name']),
                     'desc'=>trim($dat['desc']),
-                    'authList'=>$dat['authList'],
+                    'authList'=>isset($dat['authList'])?$dat['authList']:'',
                     'distribution_auth'=>intval($dat['distribution_auth']),
                     'data'=>json_encode($dat['data'],true),
                     'connect'=>json_encode($dat['connect'],true),
@@ -14612,7 +14635,7 @@ class Index extends Controller
                 }
                 $email = trim($dat['email']);
             }
-
+            
             if($id>0){
                 $res = Db::name('centralize_manage_person')->where(['id'=>$id])->update([
                     'name'=>trim($dat['name']),
@@ -14659,7 +14682,7 @@ class Index extends Controller
                 }else{
                     $gogo_id = $isHaveUser['id'];
                 }
-
+                
                 $res = Db::name('centralize_manage_person')->insertGetId([
                     'name'=>trim($dat['name']),
                     'type'=>intval($dat['type']),
@@ -14681,14 +14704,14 @@ class Index extends Controller
                 /*查询当前企业的管理员角色*/
                 $type = Db::name('centralize_manage_person')->where(['company_id'=>$company_id,'pid'=>0])->field('role_id')->find()['role_id'];
 
-                $company = Db::name('website_user_company')->where(['company_id'=>$company_id])->find();
+                $company = Db::name('website_user_company')->where(['id'=>$company_id])->find();
                 //通知
                 if($dat['type']==1){
                     #1.1、手机,发送链接去手机打开注册
                     $post_data = [
                         'country_code'=>$dat['country_code'],
                         'mobiles'=>trim($dat['tel']),
-                        'content'=>'您好！'.$manage_person['name'].'已为您注册['.$company['company_name'].']的企业人员。请点击链接进行认证：https://rte.gogo198.cn/?s=main/staff_reg&id='.base64_encode($res).' 【GOGO】',
+                        'content'=>'您好！'.$manage_person['name'].'已为您注册['.$company['company'].']的企业人员。请点击链接进行认证：https://rte.gogo198.cn/?s=main/staff_reg&id='.base64_encode($res).' 【GOGO】',
                     ];
 
                     $post_data = json_encode($post_data,true);

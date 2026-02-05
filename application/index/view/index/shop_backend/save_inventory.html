@@ -249,7 +249,7 @@
 
     {if $data['have_specs']==1}
         <!--有规格-->
-        <div class="have_specs_div">
+        <div class="have_specs_div" style="display:none;">
             <table class="layui-table">
                 <thead>
                 <th>型号</th>
@@ -272,7 +272,7 @@
         </div>
     {elseif($data['have_specs']==2)}
         <!--无规格-->
-        <div class="no_specs_div">
+        <div class="no_specs_div" style="display:none;">
             <table class="layui-table">
                 <thead>
                 <th>货号</th>

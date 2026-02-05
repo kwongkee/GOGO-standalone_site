@@ -257,4 +257,80 @@ class Gather
             }
         }
     }
+    
+    public function paymentdisplay(Request $request){
+        $dat = input();
+        $pa = !empty($dat['pa'])?trim($dat['pa']):0;
+        
+        if($pa==1){
+            //保存配置
+            $manual_end_time = explode('T',$dat['config']['manual_end_datetime']);
+            $manual_end_time = strtotime($manual_end_time[0].' '.$manual_end_time[1]);
+            $now_time = time();
+            if($dat['config']['display_type'] == 'manual'){
+                if($manual_end_time<$now_time){
+                    return json(['code'=>-1,'msg'=>'结束时间不能早于当前时间']);
+                }
+            }
+    
+            $res = Db::name('miniprogram_payment_display')->where(['id'=>1])->update(['display_type'=>$dat['config']['display_type'],'manual_start_time'=>$now_time,'manual_end_time'=>$manual_end_time,'interval_x'=>intval($dat['config']['interval_x']),'interval_y'=>intval($dat['config']['interval_y']),'random_probability'=>intval($dat['config']['random_probability']),'is_hide'=>0]);
+    
+            if($res){
+                return json(['code'=>0,'msg'=>'成功保存配置！']);
+            }
+        }
+        elseif($pa==2){
+            //清空配置
+    
+            $res = Db::name('miniprogram_payment_display')->where(['id'=>1])->update(['display_type'=>'','manual_start_time'=>'','manual_end_time'=>'','interval_x'=>0,'interval_y'=>0,'random_probability'=>0,'is_hide'=>0]);
+    
+            if($res){
+                return json(['code'=>0,'msg'=>'成功清空配置！']);
+            }
+        }
+        elseif($pa==3){
+            //强制隐藏
+            $res = Db::name('miniprogram_payment_display')->where(['id'=>1])->update(['display_type'=>'','manual_start_time'=>'','manual_end_time'=>'','interval_x'=>0,'interval_y'=>0,'random_probability'=>0,'is_hide'=>1]);
+    
+            if($res){
+                return json(['code'=>0,'msg'=>'成功隐藏！']);
+            }
+        }
+    
+        $info = Db::name('miniprogram_payment_display')->where(['id'=>1])->find();
+        
+        $is_show_online_pay = 0;//0不显示，1显示
+        $time = time();
+    
+        if($info['manual_start_time']<$time && $info['manual_end_time']>$time){
+            #手动显示
+            $is_show_online_pay = 1;
+        }
+        elseif($info['interval_x']>0 && $info['interval_y']>0){
+            #间隔显示
+            $is_show_online_pay = 1;
+        }
+        elseif($info['random_probability']>0){
+            #随机显示
+            $is_show_online_pay = 1;
+        }
+        else{
+            if(empty($info['manual_start_time']) && empty($info['manual_end_time']) && empty($info['interval_x']) && empty($info['interval_y']) && empty($info['random_probability'])){
+                //没有任何配置
+                $is_show_online_pay = 1;
+            }
+        }
+    
+        if($info['is_hide']==1) {
+            #强制隐藏
+            $is_show_online_pay = 0;
+        }
+        
+        if(!empty($info['manual_start_time']) && !empty($info['manual_end_time'])){
+            $info['manual_start_time'] = date('Y-m-d H:i:s',$info['manual_start_time']);
+            $info['manual_end_time'] = date('Y-m-d H:i:s',$info['manual_end_time']);
+        }
+        
+        return view('/gather/paymentdisplay', compact('is_show_online_pay','info'));
+    }
 }
