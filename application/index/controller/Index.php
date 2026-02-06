@@ -6020,7 +6020,12 @@ class Index extends Controller
                 if($item['goods_status']==0){
                     $item['status_name'] = '待提交审核';
                 }elseif($item['goods_status']==1){
-                    $item['status_name'] = '已上架';
+                    $goods_status = Db::connect($this->config)->name('goods')->where(['goods_id'=>$item['shelf_id']])->value('goods_status');
+                    if($goods_status==0){
+                        $item['status_name'] = '已提交待审核';
+                    }elseif($goods_status==1){
+                        $item['status_name'] = '已上架';
+                    }
                 }
                 elseif($item['goods_status']==-1){
                     $item['status_name'] = '已下架';
@@ -15403,9 +15408,8 @@ class Index extends Controller
         #栏目
         #$menu = $this->menu();
         $menu =  $this->company_menu($company_id,$company_type);
-        
         $data['content'] = str_replace('src="https://shop.gogo198.cn','src="',json_decode($data['content'],true)[session('lang')]);
-        $data['content'] = str_replace('src="','src="https://admin.gogo198.cn',$data['content']);
+        // $data['content'] = str_replace('src="','src="https://admin.gogo198.cn',$data['content']);
         $data['content'] = str_replace('src="https://admin.gogo198.cnhttps','src="https',$data['content']);
         $data['content'] = str_replace('src="https://admin.gogo198.cnhttp','src="http',$data['content']);
         $data['url_this'] = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER["REQUEST_URI"];
