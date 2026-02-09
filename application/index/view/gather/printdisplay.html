@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>面单打印显示配置系统</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style type="text/css" media="all">
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('https://shop.gogo198.cn/attachment/images/3/2021/01/cXWtGBJCnTvIGQ5PGEfP7IpI1Zgtag.jpeg');
+            color: #333;
+            min-height: 100vh;
+            padding: 10px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 120px;
+        }
+
+        .btn-primary {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1976D2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+        }
+        
+        .status_name{padding:20px;box-sizing: border-box;border-bottom:1px solid #444444;}
+        .status_btn{margin-top:20px;text-align: center;}
+        .status_btn button{margin-bottom:0px;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="status_name">
+            <div class="status_info">此刻“面单打印”状态是：{if $info['open']==0}<span style="color:#ff2222;font-weight:800;">正在关闭<span>{/if}{if $info['open']==1}<span style="color:#4CAF50;font-weight:800;">正在开启</span>{/if}</div>
+            <div class="status_btn">
+                <button id="show_peizhi" class="btn btn-primary show_peizhi" onclick="show_peizhi()">切换配置</button>
+            </div>
+        </div>
+    </div>
+    
+<script>
+    // $(function(){
+    //   $('#show_peizhi').on('click',show_peizhi);
+       
+       function show_peizhi(){
+            let msg = "{if $info['open']==0}开启{/if}{if $info['open']==1}关闭{/if}";
+            
+            if(confirm('确认'+msg+'面单打印功能吗？')){
+                $.ajax({
+                    url:"/?s=gather/printdisplay",
+                    method:'post',
+                    data:{'pa':1},
+                    dataType:'JSON',
+                    success:function(res){
+                        alert(res.msg);
+                        if(res.code == 0)
+                        {
+                            window.location.reload();
+                        }
+    
+                    },
+                    error:function (data) {
+                        console.log(data);
+                    }
+                });
+            }
+        }
+    // });
+    
+    
+</script>
+</body>
+</html>

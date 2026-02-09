@@ -258,6 +258,7 @@ class Gather
         }
     }
     
+    #在线支付显示
     public function paymentdisplay(Request $request){
         $dat = input();
         $pa = !empty($dat['pa'])?trim($dat['pa']):0;
@@ -332,5 +333,26 @@ class Gather
         }
         
         return view('/gather/paymentdisplay', compact('is_show_online_pay','info'));
+    }
+    
+    #面单打印显示
+    public function printdisplay(Request $request){
+        $dat = input();
+        $pa = !empty($dat['pa'])?trim($dat['pa']):0;
+    
+        $info = Db::name('miniprogram_print_display')->where(['id'=>1,'type'=>0])->find();
+        
+        if($pa==1){
+            //保存配置
+            $open = $info['open']==0?1:0;
+            $res = Db::name('miniprogram_print_display')->where(['id'=>1])->update(['open'=>$open]);
+    
+            if($res){
+                return json(['code'=>0,'msg'=>'成功保存配置！']);
+            }
+        }
+        
+        
+        return view('/gather/printdisplay', compact('info'));
     }
 }
