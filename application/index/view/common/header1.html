@@ -107,7 +107,7 @@
             .hamburger.active span:nth-child(3) {transform: rotate(-45deg) translate(5px, -5px);}
 
             /* 移动端主菜单样式（全屏显示） */
-            .navbar.mobile-active {display: block;position: absolute;top: 65px; /* 位于导航栏下方 */left: 0;width: 100%;background: #fff;box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);padding: 10px 0;}
+            .navbar.mobile-active {display: block;position: absolute;top: 65px; /* 位于导航栏下方 */left: 0;width: 100%;background: {$website['color']};box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);padding: 10px 0;}
             .navbar.mobile-active .nav-list {flex-direction: column; /* 垂直排列 */align-items: flex-start;padding: 0 20px;}
             .navbar.mobile-active .nav-item {margin: 10px 0;width: 100%;}
 
@@ -220,6 +220,6 @@
     <!-- 菜单栏结束 -->
 
     <!--谷歌翻译SCRIPT-->
-    <div class="gtranslate_wrapper"></div>
+    <div class="gtranslate_wrapper" style="display:none;"></div>
     <script>window.gtranslateSettings = {"default_language":"zh-CN","native_language_names":true,"url_structure":"sub_directory","languages":["zh-CN","ja","fy","zh-TW","ms","en","ko","ru","de"],"wrapper_selector":".gtranslate_wrapper","switcher_horizontal_position":"right","switcher_vertical_position":"top"}</script>
     <script src="https://cdn.gtranslate.net/widgets/latest/float.js" defer></script>

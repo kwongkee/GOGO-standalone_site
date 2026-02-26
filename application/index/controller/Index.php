@@ -769,13 +769,14 @@ class Index extends Controller
         $dat = input();
 //        $typ = intval($dat['typ']);//企业类型，0商城，1网站
         $typ = 1;
+        
         $company_id = intval($dat['company_id']);
         if (empty($company_id) || !is_numeric($company_id)) {
             return $this->error('无效的公司ID');
         }
         
         $company = Db::name('website_user_company')->where(['user_id'=>session('account.id'),'status'=>0])->select();
-        $tab = isset($dat['tab'])?trim($dat['tab']):'website-config';
+        $tab = isset($dat['tab'])?trim($dat['tab']):'website-config';#跳转菜单
 
         $company_info = Db::name('website_user_company')->where(['id'=>$company_id])->find();
         if(empty($company_info['domain_name'])){
@@ -16416,6 +16417,7 @@ class Index extends Controller
     public function change_account(Request $request){
         $dat = input();
         $account = session('account');
+        
         $company_id = isset($dat['company_id'])?intval($dat['company_id']):0;
         $company_type = isset($dat['company_type'])?intval($dat['company_type']):0;
         session('company',null);
@@ -16423,10 +16425,10 @@ class Index extends Controller
 
         sleep(1);
 
-        if(!empty($account['auth0_info'])){
+        if(!empty($account['auth0_info']) && $account['auth0_info'] <> "\"Bad Request\""){
             header('Location: https://gogo198.us.auth0.com/v2/logout?client_id=3LuZWceTu0CTzV5z4VBXfDWMaEE3yIVF&returnTo=https://www.gogo198.net'.urlencode('/?s=api/protected_resource&redirect_url=//dtc.gogo198.net/?s=index/customer_login&company_id='.$company_id.'&company_type='.$company_type));exit;
         }
-
+        
         header('Location:/?s=index/customer_login&company_id='.$company_id.'&company_type='.$company_type);exit;
     }
     
