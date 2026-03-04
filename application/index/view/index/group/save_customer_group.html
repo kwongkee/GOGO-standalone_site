@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>独立站平台 - website.gogo198.net</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="layui/css/layui.css">
+
+    <style>
+        :root {--primary: #8a2be2;--primary-dark: #6a1cb9;--primary-light: #9b4de3;--secondary: #bb86fc;--accent: #e6d7f5;--text: #333333;--text-light: #f8f8f8;--background: #f9f5fd;--card-bg: #ffffff;--gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));--gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary));--shadow: 0 10px 30px rgba(138, 43, 226, 0.15);--shadow-hover: 0 15px 35px rgba(138, 43, 226, 0.25);}
+        * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        body {color: var(--text);line-height: 1.6;overflow-x: hidden;}
+        
+        /* 主内容区域 */
+        .main-content {padding: 40px 0;min-height: calc(100vh - 200px);}
+        .dashboard {margin-top: 30px;}
+    
+        /* 侧边栏样式 */
+        .sidebar {background: var(--card-bg);border-radius: 20px;padding: 30px;box-shadow: var(--shadow);height: fit-content;}
+        .sidebar-title {font-size: 1.5rem;margin-bottom: 25px;color: var(--primary);display: flex;align-items: center;}
+        .sidebar-title i {margin-right: 10px;}
+        .enterprise-list {list-style: none;margin-bottom: 30px;}
+        .enterprise-item {padding: 15px;border-radius: 10px;margin-bottom: 10px;cursor: pointer;transition: all 0.3s ease;border: 2px solid var(--accent);}
+        .enterprise-item:hover {background: var(--accent);}
+        .enterprise-item.active {background: var(--accent);border-color: var(--primary);}
+        .enterprise-name {font-weight: 600;margin-bottom: 5px;}
+        .enterprise-desc {font-size: 0.9rem;color: #666;}
+        .add-enterprise {display: flex;align-items: center;justify-content: center;padding: 15px;border: 2px dashed var(--primary-light);border-radius: 10px;color: var(--primary);font-weight: 600;cursor: pointer;transition: all 0.3s ease;}
+        .add-enterprise:hover {background: var(--accent);border-color: var(--primary);background: var(--accent);border-color: var(--primary);}
+        .add-enterprise i {margin-right: 10px;}
+    
+        /* 网站管理区域 */
+        .website-management {background: var(--card-bg);border-radius: 20px;padding: 30px;box-shadow: var(--shadow);}
+        .management-header {display: flex;justify-content: space-between;align-items: center;margin-bottom: 30px;padding-bottom: 20px;border-bottom: 2px solid var(--accent);}
+        .management-title {font-size: 1.8rem;color: var(--primary);}
+        .site-url {color: var(--primary);font-weight: 500;display: flex;align-items: center;background: var(--accent);padding: 8px 15px;border-radius: 8px;}
+        .site-url i {margin-right: 8px;}
+    
+        /* 选项卡样式 */
+        .tabs {display: flex;margin-bottom: 30px;border-bottom: 2px solid var(--accent);}
+        .tab {padding: 12px 25px;cursor: pointer;font-weight: 600;color: var(--text);transition: all 0.3s ease;position: relative;}
+        .tab:hover {color: var(--primary);}
+        .tab.active {color: var(--primary);}
+        .tab.active::after {content: '';position: absolute;bottom: -2px;left: 0;width: 100%;height: 3px;background: var(--gradient);border-radius: 3px;}
+        .tab-content {display: none;}
+        .tab-content.active {display: block;animation: fadeIn 0.5s ease;}
+    
+        /* 表单样式 */
+        .form-section {margin-bottom: 30px;}
+        .form-title {font-size: 1.3rem;margin-bottom: 20px;color: var(--primary-dark);display: flex;align-items: center}
+        .form-title i {margin-right: 10px;}
+        .form-grid {display: grid;grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));gap: 20px;}
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select,
+        .form-group textarea {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;}
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {border-color: var(--primary);outline: none;}
+        .form-group textarea {min-height: 120px;resize: vertical;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 30px;padding-top: 20px;border-top: 2px solid var(--accent);}
+    
+    
+        .btn{background:var(--primary-light);color: white;border: none;}
+        .btn-warning{background:#f8ac59;color:#fff;border:none;}
+        .btn-edit {background: var(--primary-light);color: white;border: none;}
+        .btn-edit:hover {background: var(--primary);}
+        .btn-delete {background: transparent;color: #ff4757;border: 2px solid #ff4757;}
+        .btn-delete:hover {background: #ff4757;color: white;}
+        .add-channel {display: flex;align-items: center;justify-content: center;padding: 15px;border: 2px dashed var(--primary-light);border-radius: 10px;color: var(--primary);font-weight: 600;cursor: pointer;transition: all 0.3s ease;margin-top: 20px;}
+        .add-channel:hover {background: var(--accent);border-color: var(--primary);}
+        .add-channel i {margin-right: 10px;}
+    
+        /* 模态框样式 */
+        .modal {display: none;position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.5);backdrop-filter: blur(5px);z-index: 2000;align-items: center;justify-content: center;}
+        .modal-content {background: white;border-radius: 20px;padding: 30px;width: 90%;max-width: 500px;box-shadow: var(--shadow-hover);position: relative;}
+        .close-modal {position: absolute;top: 20px;right: 20px;font-size: 1.5rem;color: #999;cursor: pointer;transition: color 0.3s ease;}
+        .close-modal:hover {color: var(--primary);}
+        .modal-title {font-size: 1.5rem;margin-bottom: 20px;color: var(--primary);}
+        .form-group {margin-bottom: 20px;}
+        .form-group label {display: block;margin-bottom: 8px;font-weight: 600;color: var(--primary-dark);}
+        .form-group input,
+        .form-group select {width: 100%;padding: 15px;border: 2px solid #e0e0e0;border-radius: 10px;font-size: 1rem;transition: border-color 0.3s ease;border-top-left-radius: 0;border-bottom-left-radius: 0;}
+        .form-group input:focus,
+        .form-group select:focus {border-color: var(--primary);outline: none;}
+        .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
+    
+        /*自定义颜色配置*/
+        .layui-colorpicker.layui-colorpicker-lg{line-height: 24px;}
+        .layui-colorpicker, .layui-colorpicker-trigger-span{border-color:#777;}
+        .layui-colorpicker-main-input .layui-btn-container .layui-btn {margin: 0 0 0 5px;}
+        .layui-form-label{width:100px;}
+        .layui-btn:hover{background:var(--primary);opacity:1;}
+        /* 动画 */
+        @keyframes fadeIn {
+            from {opacity: 0;transform: translateY(10px);}
+            to {opacity: 1;transform: translateY(0);}
+        }
+    
+        /* 响应式设计 */
+        @media (max-width: 992px) {
+            .dashboard {grid-template-columns: 1fr;}
+            .sidebar {order: 2;}
+            .website-management {order: 1;}
+            .nav-links {display: none;}
+            .mobile-menu-btn {display: block;}
+            .tabs {flex-wrap: wrap;}
+            .tab {flex: 1;min-width: 120px;text-align: center;}
+            .form-grid {grid-template-columns: 1fr;}
+        }
+    
+        @media (max-width: 768px) {
+            .management-header {flex-direction: column;align-items: flex-start;gap: 15px;}
+            .channel-item {flex-direction: column;align-items: flex-start;gap: 15px;}
+            .channel-actions {width: 100%;justify-content: flex-end;}
+            .member-table {display: block;overflow-x: auto;}
+        }
+    
+        @media (max-width: 576px) {
+            .btn {padding: 10px 20px;font-size: 0.9rem;}
+            .logo {font-size: 1.5rem;}
+            .form-actions {flex-direction: column;}
+        }
+    
+        /* 移动菜单按钮 */
+        .mobile-menu-btn {display: none;background: none;border: none;font-size: 1.5rem;color: var(--primary);cursor: pointer;}
+    
+        @media (max-width: 992px) {
+            .mobile-menu-btn {display: block;}
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-group" style="padding:0px;">
+        <form class="layui-form" action="" lay-filter="component-form-group">
+            <input type="hidden" name="company_id" value="{$company_id}">
+            <input type="hidden" name="company_type" value="{$company_type}">
+            <div class="layui-form-item">
+                <div class="layui-form-label">群组名称</div>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" lay-verify="required" name="name" value="{$group['name']}" placeholder="请输入群组名称">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label">客服人员</div>
+                <div class="layui-input-block">
+                    <div id="staff_ids" class="xm-select-demo"></div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label">工作时间</div>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" lay-verify="required" name="worktime" value="{$group['worktime']}" placeholder="请输入工作时间">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn btn btn-primary" lay-submit lay-filter="component-form-group">立即提交</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+
+<script src="js/jquery-3.6.0.min.js"></script>
+<script src="layui/layui.js"></script>
+<script src="./layui/xm-select.js"></script>
+
+<script>
+
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+        treetable: 'treetable-lay/treetable'
+    }).use(['index', 'form','upload','table', 'colorpicker','treetable'], function() {
+        var $ = layui.$
+            , admin = layui.admin
+            , element = layui.element
+            , layer = layui.layer
+            , form = layui.form
+            , colorpicker = layui.colorpicker
+            , upload = layui.upload
+            , table = layui.table
+            , treetable = layui.treetable;
+            
+        //内容配置
+        let content_id = xmSelect.render({
+            el: '#staff_ids',
+            autoRow: true, //自动换行
+            filterable: true, //可搜索
+            searchTips: '请搜索',
+            radio: false,
+            name: "staff_ids",
+            model: {
+                icon: 'hidden',//是否展示复选框或者单选框图标 show, hidden:变换背景色  ！！这句话是重点，不然会变成父节点也有单选框！！
+                label: {
+                    type: 'block',
+                    block: {
+                        //最大显示数量, 0:不限制
+                        showCount: 1,
+                        //是否显示删除图标
+                        showIcon: true,
+                    }
+                },
+            },
+            prop:{
+                name: 'name',
+                value: 'id',
+            },
+            tree: {
+                show: true, //用树显示
+                showFolderIcon: true, //是否显示节点前的三角图标
+                expandedKeys: false, //默认全部展开
+                showLine: true, //显示渐近线
+                indent: 20, //间距
+                strict: false, //重点！！设置成非严格父子模式，这样父节点被禁用，子节点依然可以点击
+                clickCheck: true,
+                vaguaSearch:0,//关闭模糊搜索
+            },
+            toolbar: {
+                show: false, //显示工具条
+                list: ['ALL', 'REVERSE', 'CLEAR']
+            },
+            height: '300px', //最大下拉框高度
+            data: {$staffs},
+            initValue:[{$group['staff_ids']}]
+        });
+        
+        //群组配置
+        form.on('submit(component-form-group)', function(data){
+            layer.load();
+            $.ajax({
+                url:"/?s=index/save_customer_group",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.closeAll('loading');
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            // let currentUrl = new URL(window.location.href);
+                            // currentUrl.searchParams.set('tab', 'group');
+                            // window.history.pushState({}, '', currentUrl.toString());
+
+                            window.location.reload();
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
+</script>

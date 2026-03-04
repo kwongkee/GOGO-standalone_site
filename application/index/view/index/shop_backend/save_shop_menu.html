@@ -58,6 +58,13 @@
             /*.form-actions {flex-direction: column;}*/
         }
 
+        /*返回按钮*/
+        .backDiv{padding: 5px 5px 5px 20px;border-bottom: 1px solid #d9d9d9;}
+        .backDiv .backBox{display: flex;align-items: center;cursor: pointer;}
+        .backDiv .back_icon{font-size: 18px;color: #333;margin-right: 10px;position: relative;}
+        .backDiv .back_icon:before{content:'';position:absolute;width:9px;height:9px;border-left:2px solid #000;border-top:2px solid #000;transform:rotate(-45deg);margin-right:5px;top:-7px;}
+        .backDiv .back_text{font-size: 16px;color: #333;font-weight: 500;margin-left: 5px;}
+
         /*自定义颜色配置*/
         .layui-colorpicker.layui-colorpicker-lg,.layui-colorpicker-trigger-i.layui-icon-close{line-height: 24px;}
         .layui-colorpicker, .layui-colorpicker-trigger-span{border-color:#777;}
@@ -72,6 +79,12 @@
     <script type="text/javascript" src="cklein/plugins/ueditor/lang/zh-cn/zh-cn.js"></script>
 </head>
 <body>
+<div class="backDiv">
+    <div class="backBox" onclick="javascript:window.history.back(-1);">
+        <div class="back_icon"></div>
+        <div class="back_text">返回</div>
+    </div>
+</div>
 <form id="siteForm" class="layui-form" action="" method="post" lay-filter="component-form-menu" style="padding:10px;margin-bottom:300px;">
     <input type="hidden" name="company_id" value="{$company_id}">
     <input type="hidden" name="company_type" value="{$company_type}">
@@ -96,11 +109,11 @@
             <select name="type" id="type" lay-filter="type">
                 <option value="0" {if $data['type']==0}selected{/if}>下级卡片</option>
                 <option value="1" {if $data['type']==1}selected{/if}>详情内容</option>
-                <option value="2" {if $data['type']==2}selected{/if}>跳转其它</option>
+                <!--<option value="2" {if $data['type']==2}selected{/if}>跳转其它</option>-->
             </select>
         </div>
     </div>
-    <div class="layui-form-item peitu" style="display:{if $data['type']==1}block{else}none{/if};">
+    <div class="layui-form-item peitu">
         <div class="layui-form-label">配图格式</div>
         <div class="layui-input-block">
             <select name="format" id="format" lay-filter="format">
@@ -278,7 +291,7 @@
     </div>
 
     <div class="form-actions">
-        <button type="button" class="btn btn-outline" id="cancelBtnMenu" style="background:transparent;border: 2px solid var(--primary);color: var(--primary);">取消</button>
+        <button type="button" class="btn btn-outline" id="cancelBtnMenu" style="background:transparent;border: 2px solid var(--primary);color: var(--primary);display:none;">取消</button>
         <button type="submit" class="btn btn-primary" lay-submit lay-filter="component-form-menu">立即保存</button>
     </div>
 </form>
@@ -287,12 +300,12 @@
 <script src="layui/layui.js"></script>
 <script>
     layui.use(['layer','form','laydate','upload','colorpicker'],function() {
-        laydate = layui.laydate;
-        layer = layui.layer;
-        var form = layui.form;
-        $ = layui.jquery;
-        var upload = layui.upload;
-        var colorpicker = layui.colorpicker;
+        var laydate = layui.laydate
+        ,layer = layui.layer
+        ,form = layui.form
+        ,$ = layui.jquery
+        ,upload = layui.upload
+        ,colorpicker = layui.colorpicker;
 
         let ue = UE.getEditor('content', {
             initialFrameHeight: 400,
@@ -314,43 +327,43 @@
 
 
         {if !empty($data['color'])}
-        colorpicker.render({
-            elem:'#color',
-            alpha:true,
-            size:'lg',
-            predefine:true,
-            color:'{$data["color"]}',
-            done:function(color){
-                $('input[name="color"]').val(color);
-            }
-        });
-        colorpicker.render({
-            elem:'#word_color',
-            alpha:true,
-            size:'lg',
-            predefine:true,
-            color:'{$data["word_color"]}',
-            done:function(color){
-                $('input[name="word_color"]').val(color);
-            }
-        });
+            colorpicker.render({
+                elem:'#color',
+                alpha:true,
+                size:'lg',
+                predefine:true,
+                color:'{$data["color"]}',
+                done:function(color){
+                    $('input[name="color"]').val(color);
+                }
+            });
+            colorpicker.render({
+                elem:'#word_color',
+                alpha:true,
+                size:'lg',
+                predefine:true,
+                color:'{$data["word_color"]}',
+                done:function(color){
+                    $('input[name="word_color"]').val(color);
+                }
+            });
         {else}
-        colorpicker.render({
-            elem:'#color',
-            alpha:true,
-            size:'lg',
-            done:function(color){
-                $('input[name="color"]').val(color);
-            }
-        });
-        colorpicker.render({
-            elem:'#word_color',
-            alpha:true,
-            size:'lg',
-            done:function(color){
-                $('input[name="word_color"]').val(color);
-            }
-        });
+            colorpicker.render({
+                elem:'#color',
+                alpha:true,
+                size:'lg',
+                done:function(color){
+                    $('input[name="color"]').val(color);
+                }
+            });
+            colorpicker.render({
+                elem:'#word_color',
+                alpha:true,
+                size:'lg',
+                done:function(color){
+                    $('input[name="word_color"]').val(color);
+                }
+            });
         {/if}
 
         //配图格式
@@ -455,7 +468,7 @@
                             // let currentUrl = new URL(parent.location.href);
                             // currentUrl.searchParams.set('tab', 'shop_head_menu');
                             // parent.history.pushState({}, '', currentUrl.toString());
-                            parent.location.reload();
+                            window.history.back(-1);
                         }
                     });
                 },

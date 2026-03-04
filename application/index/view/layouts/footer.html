@@ -324,132 +324,132 @@
 
     //头部滚动内容
     {if isset($data['websites']['rotate_info'])}
-    {if !empty($data['websites']['rotate_info'])}
-    if(IsPhone()){
-        new Swiper ('#mobileNewsBox-container', {
-            loop: true, // 循环模式选项
-            direction:'vertical',
-            autoplay: {
-                delay:15000,
-            },
-            // 如果需要分页器
-            // pagination: {
-            //     el: '.swiper-pagination',
-            // },
-        });
-    }
-
-    {foreach name="data['websites']['rotate_info']['content_id']" key="k" id="v"}
-    {if $v==1}
-    <!--新闻内容-->
-    //新闻轮播
-    var newsSwiper = new Swiper('.news', {
-        direction:'vertical',
-        loop: true, // 循环模式选项
-        autoplay: {
-            delay:5000
-        },
-        spaceBetween: 1,
-        // 如果需要分页器
-        // pagination: {
-        //     el: '.swiper-pagination',
-        // },
-    });
-    {elseif($v==2)}
-    <!--时间内容-->
-    $('.city-select').chosen();
-    var auto_time = '';
-    $(function(){
-        //获取北京时间
-        auto_time = setInterval(function getTime(){
-            // 创建一个 Date 对象
-            var date = new Date();
-
-            // 使用 toLocaleString() 方法将 Date 对象转换为所需的格式
-            var formatted_date = date.toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-            formatted_date = formatted_date.split(', ');
-            $('.beijing-time .beijing_sec').html(formatted_date[1]);
-        },1000);
-
-        if(IsPhone()){
-            $('.contentBox').css({'-webkit-transform':'translate(-50%, -0.2%)'});
-            $('.wapNavContent').show();
-            $('.mobile_news_box').show();
-            $('.pcNavContent').hide();
-        }else{
-            if (isMicrosoftEdge()) {
-                $('.contentBox').css({'-webkit-transform':'translate(-50%, 0.2%)'});
+        {if !empty($data['websites']['rotate_info'])}
+            if(IsPhone()){
+                new Swiper ('#mobileNewsBox-container', {
+                    loop: true, // 循环模式选项
+                    direction:'vertical',
+                    autoplay: {
+                        delay:15000,
+                    },
+                    // 如果需要分页器
+                    // pagination: {
+                    //     el: '.swiper-pagination',
+                    // },
+                });
             }
-        }
-    });
 
-    //获取城市时间
-    function selectCity(t){
-        let val = $(t).val();
+            {foreach name="data['websites']['rotate_info']['content_id']" key="k" id="v"}
+                {if $v==1}
+                    <!--新闻内容-->
+                    //新闻轮播
+                    var newsSwiper = new Swiper('.news', {
+                        direction:'vertical',
+                        loop: true, // 循环模式选项
+                        autoplay: {
+                            delay:5000
+                        },
+                        spaceBetween: 1,
+                        // 如果需要分页器
+                        // pagination: {
+                        //     el: '.swiper-pagination',
+                        // },
+                    });
+                {elseif($v==2)}
+                    <!--时间内容-->
+                    $('.city-select').chosen();
+                    var auto_time = '';
+                    $(function(){
+                        //获取北京时间
+                        auto_time = setInterval(function getTime(){
+                            // 创建一个 Date 对象
+                            var date = new Date();
+                
+                            // 使用 toLocaleString() 方法将 Date 对象转换为所需的格式
+                            var formatted_date = date.toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+                            formatted_date = formatted_date.split(', ');
+                            $('.beijing-time .beijing_sec').html(formatted_date[1]);
+                        },1000);
+                
+                        if(IsPhone()){
+                            $('.contentBox').css({'-webkit-transform':'translate(-50%, -0.2%)'});
+                            $('.wapNavContent').show();
+                            $('.mobile_news_box').show();
+                            $('.pcNavContent').hide();
+                        }else{
+                            if (isMicrosoftEdge()) {
+                                $('.contentBox').css({'-webkit-transform':'translate(-50%, 0.2%)'});
+                            }
+                        }
+                    });
 
-        $.post('//shop.gogo198.cn/collect_website/public/?s=api/getgoods/get_worldcity_time', {'city':val}, function(data) {
-            // setInterval(function getWorldTime(){
-            formatTime(data.data.result.datetime_1);
-            // }, 1000);
-        }, 'json');
-    }
+                    //获取城市时间
+                    function selectCity(t){
+                        let val = $(t).val();
+                
+                        $.post('//shop.gogo198.cn/collect_website/public/?s=api/getgoods/get_worldcity_time', {'city':val}, function(data) {
+                            // setInterval(function getWorldTime(){
+                            formatTime(data.data.result.datetime_1);
+                            // }, 1000);
+                        }, 'json');
+                    }
 
-    function formatTime(times='') {
-        clearInterval(auto_time);
-
-        const time = new Date(times);
-
-        function update() {
-            // 更新时间
-            const hours = time.getHours().toString().padStart(2, '0');
-            const minutes = time.getMinutes().toString().padStart(2, '0');
-            const seconds = time.getSeconds().toString().padStart(2, '0');
-            $('.beijing-time .beijing_sec').html(`${hours}:${minutes}:${seconds}`);
-
-            // 更新日期
-            const year = time.getFullYear();
-            const month = (time.getMonth() + 1).toString().padStart(2, '0');
-            const day = time.getDate().toString().padStart(2, '0');
-            $('.beijing-time .beijing_date').html(`${year}/${month}/${day}`);
-
-            // 递增秒数，模拟时间流逝
-            time.setSeconds(time.getSeconds() + 1);
-        }
-        // 首次更新时间和日期
-        update();
-
-        // 每秒更新时间和日期
-        auto_time = setInterval(update, 1000);
-    }
-    {elseif($v==3)}
-    <!--汇率内容-->
-
-    if(IsPhone()){
-        //汇率
-        var mrate_swiper = new Swiper ('.mrate_swiper', {
-            loop: true,
-            direction:'vertical',
-            spaceBetween:0,
-            autoplay:{
-                delay:5000,
-                disableOnInteraction:false,
-            },
-        });
-    }
-    else{
-        var rate = new Swiper ('.rate_swiper', {
-            loop: true,
-            direction:'vertical',
-            spaceBetween:0,
-            autoplay:{
-                delay:5000,
-                disableOnInteraction:false,
-            },
-        });
-    }
-    {/if}
-    {/foreach}
-    {/if}
+                    function formatTime(times='') {
+                        clearInterval(auto_time);
+                
+                        const time = new Date(times);
+                
+                        function update() {
+                            // 更新时间
+                            const hours = time.getHours().toString().padStart(2, '0');
+                            const minutes = time.getMinutes().toString().padStart(2, '0');
+                            const seconds = time.getSeconds().toString().padStart(2, '0');
+                            $('.beijing-time .beijing_sec').html(`${hours}:${minutes}:${seconds}`);
+                
+                            // 更新日期
+                            const year = time.getFullYear();
+                            const month = (time.getMonth() + 1).toString().padStart(2, '0');
+                            const day = time.getDate().toString().padStart(2, '0');
+                            $('.beijing-time .beijing_date').html(`${year}/${month}/${day}`);
+                
+                            // 递增秒数，模拟时间流逝
+                            time.setSeconds(time.getSeconds() + 1);
+                        }
+                        // 首次更新时间和日期
+                        update();
+                
+                        // 每秒更新时间和日期
+                        auto_time = setInterval(update, 1000);
+                    }
+                {elseif($v==3)}
+                    <!--汇率内容-->
+                
+                    if(IsPhone()){
+                        //汇率
+                        var mrate_swiper = new Swiper ('.mrate_swiper', {
+                            loop: true,
+                            direction:'vertical',
+                            spaceBetween:0,
+                            autoplay:{
+                                delay:5000,
+                                disableOnInteraction:false,
+                            },
+                        });
+                    }
+                    else{
+                        var rate = new Swiper ('.rate_swiper', {
+                            loop: true,
+                            direction:'vertical',
+                            spaceBetween:0,
+                            autoplay:{
+                                delay:5000,
+                                disableOnInteraction:false,
+                            },
+                        });
+                    }
+                {/if}
+            {/foreach}
+        {/if}
     {/if}
 
     //菜单
@@ -458,263 +458,263 @@
     }
 
     //首页轮播图
-    {if isset($data['websites']['rotate_info'])}
-    {if !empty($data['websites']['rotate_info'])}
-    new Swiper ('#carousel-container', {
-        // direction: 'vertical', // 垂直切换选项（不设置默认是水平切换）
-        loop: true, // 循环模式选项
-        autoplay: true,
-        // 如果需要分页器
-        pagination: {
-            el: '#carousel-pagination',
-        },
-
-        // 如果需要前进后退按钮
-        // navigation: {
-        //   nextEl: '.sn1',
-        //   prevEl: '.sp1',
-        // },
-    });
-    //轮播图结束
-    {/if}
+    {if isset($data['websites']['rotate'])}
+        {if !empty($data['websites']['rotate'])}
+            new Swiper ('#carousel-container', {
+                // direction: 'vertical', // 垂直切换选项（不设置默认是水平切换）
+                loop: true, // 循环模式选项
+                autoplay: true,
+                // 如果需要分页器
+                pagination: {
+                    el: '#carousel-pagination',
+                },
+        
+                // 如果需要前进后退按钮
+                // navigation: {
+                //   nextEl: '.sn1',
+                //   prevEl: '.sp1',
+                // },
+            });
+            //轮播图结束
+        {/if}
     {/if}
 
     //推荐区A
     {if isset($data['websites']['recommendA'])}
-    {if !empty($data['websites']['recommendA'])}
-    // 发现页轮播图开始
-    new Swiper ('#discovery-container', {
-        loop: true, // 循环模式选项
-        autoplay: {
-            delay:10000,
-        },
-        // 如果需要分页器
-        pagination: {
-            el: '.discovery-pagination',
-        },
-        speed:500,
-        navigation: {
-            nextEl: '.sn1',
-            prevEl: '.sp1',
-        },
-    });
-    {/if}
+        {if !empty($data['websites']['recommendA'])}
+            // 发现页轮播图开始
+            new Swiper ('#discovery-container', {
+                loop: true, // 循环模式选项
+                autoplay: {
+                    delay:10000,
+                },
+                // 如果需要分页器
+                pagination: {
+                    el: '.discovery-pagination',
+                },
+                speed:500,
+                navigation: {
+                    nextEl: '.sn1',
+                    prevEl: '.sp1',
+                },
+            });
+        {/if}
     {/if}
 
     //推荐区B
     {if isset($data['websites']['recommendB'])}
-    {if !empty($data['websites']['recommendB'])}
-    {foreach name="data['websites']['recommendB']" key="k2" id="v2"}
-    new Swiper ('.news{$k2}', {
-        direction:'vertical',
-        loop: true, // 循环模式选项
-        autoplay: {
-            delay:6000,
-        },
-        slidesPerView: 5,
-        setWrapperSize: true,
-        centeredSlides: true,
-        spaceBetween: 0,
-    });
-    {/foreach}
+        {if !empty($data['websites']['recommendB'])}
+            {foreach name="data['websites']['recommendB']" key="k2" id="v2"}
+                new Swiper ('.news{$k2}', {
+                    direction:'vertical',
+                    loop: true, // 循环模式选项
+                    autoplay: {
+                        delay:6000,
+                    },
+                    slidesPerView: 5,
+                    setWrapperSize: true,
+                    centeredSlides: true,
+                    spaceBetween: 0,
+                });
+            {/foreach}
 
-    //切换新闻/疾病
-    function change_news(type,keys,t){
-        if(type==2){
-            <!--热卖-->
-            $(t).addClass('newsAct');
-            $(t).siblings().removeClass('newsAct');
-        }else if(type==7){
-            <!--客服-->
-        {if !empty(session('account'))}
-            $(t).addClass('newsAct');
-            $(t).siblings().removeClass('newsAct');
-            let width = $('.newsCont').width();
-            let height = $('.newsCont').height();
-            $('#aichat').css({'width':width,'height':height});
-        {else}
-            window.location.href="/?s=index/customer_login&company_id={$company_id}&company_type={$company_type}";
+            //切换新闻/疾病
+            function change_news(type,keys,t){
+                if(type==2){
+                    <!--热卖-->
+                    $(t).addClass('newsAct');
+                    $(t).siblings().removeClass('newsAct');
+                }else if(type==7){
+                    <!--客服-->
+                {if !empty(session('account'))}
+                    $(t).addClass('newsAct');
+                    $(t).siblings().removeClass('newsAct');
+                    let width = $('.newsCont').width();
+                    let height = $('.newsCont').height();
+                    $('#aichat').css({'width':width,'height':height});
+                {else}
+                    window.location.href="/?s=index/customer_login&company_id={$company_id}&company_type={$company_type}";
+                {/if}
+                }
+                $('.news'+keys).css({'opacity':1,'z-index':11,'display':'block'});
+                $('.news'+keys).siblings().css({'opacity':0,'z-index':10,'display':'none'});
+            }
         {/if}
-        }
-        $('.news'+keys).css({'opacity':1,'z-index':11,'display':'block'});
-        $('.news'+keys).siblings().css({'opacity':0,'z-index':10,'display':'none'});
-    }
-    {/if}
     {/if}
 
     //导流区
     {if isset($data['websites']['guide'])}
-    {if !empty($data['websites']['guide'])}
-    {foreach name="data['websites']['guide']" key="k" id="v"}
-    {if $v['format_info']['id']==1}
-    <!--店铺展示版式-->
-    if(IsPhone()){
-        new Swiper ('.factorySwiper{$k}', {
-            direction:'horizontal',
-            loop: true, // 循环模式选项
-            autoplay: {
-                delay:5000,
-            },
-            slidesPerView: 2,
-            // setWrapperSize: true,
-            // centeredSlides: true,
-            spaceBetween: 20,
-            speed:500,
-            preventDefaultEvents:true,
-            navigation: {
-                nextEl: '.sn-factory{$k}',
-                prevEl: '.sp-factory{$k}',
-            },
-        });
-    }
-    else{
-        new Swiper ('.factorySwiper{$k}', {
-            direction:'horizontal',
-            loop: true, // 循环模式选项
-            autoplay: {
-                delay:5000,
-            },
-            slidesPerView: 4,
-            // setWrapperSize: true,
-            // centeredSlides: true,
-            spaceBetween: 20,
-            speed:500,
-            preventDefaultEvents:true,
-            navigation: {
-                nextEl: '.sn-factory{$k}',
-                prevEl: '.sp-factory{$k}',
-            },
-        });
-    }
-    {elseif($v['format_info']['id']==2 || $v['format_info']['id']==5)}
-    <!--卡片导航展示版式-->
-    if(IsPhone()){
-        new Swiper('.cardSwiper{$k}', {
-            loop: true, // 循环模式选项
-            autoplay: {
-                delay: 5000,
-            },
-            slidesPerView: 1,
-            paginationClickable: true,
-            spaceBetween: 20,
-        });
-    }
-    else {
-        new Swiper('.cardSwiper{$k}', {
-            loop: true, // 循环模式选项
-            autoplay: {
-                delay: 5000,
-            },
-            slidesPerView: 3,
-            paginationClickable: true,
-            spaceBetween: 20,
-            // 如果需要前进后退按钮
-            // navigation: {
-            //   nextEl: '.sn{$k+1}',
-            //   prevEl: '.sprv{$k+1}',
-            // },
-        });
-    }
-    {elseif($v['format_info']['id']==3)}
-    <!--节日好物版式-->
-    // if(IsPhone()){
-    //
-    // }
-    // else {
-    new Swiper('.guide2_content{$k}', {
-        direction: 'horizontal',
-        loop: true, // 循环模式选项
-        autoplay: {
-            delay: 10000,
-        },
-        slidesPerView: 1,
-        setWrapperSize: true,
-        centeredSlides: true,
-        spaceBetween: 20,
-        speed: 500,
-        navigation: {
-            nextEl: '.sn-festival{$k}',
-            prevEl: '.sp-festival{$k}',
-        },
-    });
-    // }
-    {elseif($v['format_info']['id']==4)}
-    //产业集聚-大卡片
-    new Swiper ('.cont6-{$k}', {
-        loop: false,
-        autoplay:false,
-        snap: false,
-        navigation: {
-            nextEl: '.sn-cont6-{$k}',
-            prevEl: '.sp-cont6-{$k}',
-        },
-        on: {
-            slideChange: function () {
-                // 获取当前索引
-                var aidx = this.activeIndex;
-                $('.industryDiv').find('.rightBox').find('.serviceContent').find('.guide_content_pc').css('display','none');
-                $('.industryDiv').find('.rightBox').find('.serviceContent').find('.guide_content_pc').eq(aidx).css('display','block');
-                // console.log(aidx,$('.industryDiv').find('.serviceContent').find('.swiper-container').eq(aidx).css('display'));
-                {foreach name="v['big_children']" key="k2" id="v2"}
-                if ({$k2}==aidx){
-                    new Swiper('.guide_content{$v2['id']}', {
+        {if !empty($data['websites']['guide'])}
+            {foreach name="data['websites']['guide']" key="k" id="v"}
+                {if $v['format_info']['id']==1}
+                    <!--店铺展示版式-->
+                    if(IsPhone()){
+                        new Swiper ('.factorySwiper{$k}', {
+                            direction:'horizontal',
+                            loop: true, // 循环模式选项
+                            autoplay: {
+                                delay:5000,
+                            },
+                            slidesPerView: 2,
+                            // setWrapperSize: true,
+                            // centeredSlides: true,
+                            spaceBetween: 20,
+                            speed:500,
+                            preventDefaultEvents:true,
+                            navigation: {
+                                nextEl: '.sn-factory{$k}',
+                                prevEl: '.sp-factory{$k}',
+                            },
+                        });
+                    }
+                    else{
+                        new Swiper ('.factorySwiper{$k}', {
+                            direction:'horizontal',
+                            loop: true, // 循环模式选项
+                            autoplay: {
+                                delay:5000,
+                            },
+                            slidesPerView: 4,
+                            // setWrapperSize: true,
+                            // centeredSlides: true,
+                            spaceBetween: 20,
+                            speed:500,
+                            preventDefaultEvents:true,
+                            navigation: {
+                                nextEl: '.sn-factory{$k}',
+                                prevEl: '.sp-factory{$k}',
+                            },
+                        });
+                    }
+                {elseif($v['format_info']['id']==2 || $v['format_info']['id']==5)}
+                    <!--卡片导航展示版式-->
+                    if(IsPhone()){
+                        new Swiper('.cardSwiper{$k}', {
+                            loop: true, // 循环模式选项
+                            autoplay: {
+                                delay: 5000,
+                            },
+                            slidesPerView: 1,
+                            paginationClickable: true,
+                            spaceBetween: 20,
+                        });
+                    }
+                    else {
+                        new Swiper('.cardSwiper{$k}', {
+                            loop: true, // 循环模式选项
+                            autoplay: {
+                                delay: 5000,
+                            },
+                            slidesPerView: 3,
+                            paginationClickable: true,
+                            spaceBetween: 20,
+                            // 如果需要前进后退按钮
+                            // navigation: {
+                            //   nextEl: '.sn{$k+1}',
+                            //   prevEl: '.sprv{$k+1}',
+                            // },
+                        });
+                    }
+                {elseif($v['format_info']['id']==3)}
+                    <!--节日好物版式-->
+                    // if(IsPhone()){
+                    //
+                    // }
+                    // else {
+                    new Swiper('.guide2_content{$k}', {
                         direction: 'horizontal',
-                        loop: false,
+                        loop: true, // 循环模式选项
                         autoplay: {
-                            delay: 6000,
-                            disableOnInteraction: true,
+                            delay: 10000,
                         },
+                        slidesPerView: 1,
                         setWrapperSize: true,
                         centeredSlides: true,
+                        spaceBetween: 20,
                         speed: 500,
                         navigation: {
-                            nextEl: ".sn-industry{$v2['id']}",
-                            prevEl: ".sp-industry{$v2['id']}",
+                            nextEl: '.sn-festival{$k}',
+                            prevEl: '.sp-festival{$k}',
                         },
                     });
-                }
-                {/foreach}
-            }
-        }
-    });
+                    // }
+                {elseif($v['format_info']['id']==4)}
+                    //产业集聚-大卡片
+                    new Swiper ('.cont6-{$k}', {
+                        loop: false,
+                        autoplay:false,
+                        snap: false,
+                        navigation: {
+                            nextEl: '.sn-cont6-{$k}',
+                            prevEl: '.sp-cont6-{$k}',
+                        },
+                        on: {
+                            slideChange: function () {
+                                // 获取当前索引
+                                var aidx = this.activeIndex;
+                                $('.industryDiv').find('.rightBox').find('.serviceContent').find('.guide_content_pc').css('display','none');
+                                $('.industryDiv').find('.rightBox').find('.serviceContent').find('.guide_content_pc').eq(aidx).css('display','block');
+                                // console.log(aidx,$('.industryDiv').find('.serviceContent').find('.swiper-container').eq(aidx).css('display'));
+                                {foreach name="v['big_children']" key="k2" id="v2"}
+                                if ({$k2}==aidx){
+                                    new Swiper('.guide_content{$v2['id']}', {
+                                        direction: 'horizontal',
+                                        loop: false,
+                                        autoplay: {
+                                            delay: 6000,
+                                            disableOnInteraction: true,
+                                        },
+                                        setWrapperSize: true,
+                                        centeredSlides: true,
+                                        speed: 500,
+                                        navigation: {
+                                            nextEl: ".sn-industry{$v2['id']}",
+                                            prevEl: ".sp-industry{$v2['id']}",
+                                        },
+                                    });
+                                }
+                                {/foreach}
+                            }
+                        }
+                    });
 
-    //产业集聚-小卡片
-    {foreach name="v['big_children']" key="k2" id="v2"}
-    var guide_content{$v2['id']} = new Swiper ('.guide_content{$v2['id']}', {
-        direction:'horizontal',
-        loop: false,
-        autoplay:{
-            delay:5000,
-            disableOnInteraction:true,
-        },
-        setWrapperSize: true,
-        centeredSlides: true,
-        speed:500,
-        navigation: {
-            nextEl: ".sn-industry{$v2['id']}",
-            prevEl: ".sp-industry{$v2['id']}",
-        },
-    });
-    {/foreach}
+                    //产业集聚-小卡片
+                    {foreach name="v['big_children']" key="k2" id="v2"}
+                        var guide_content{$v2['id']} = new Swiper ('.guide_content{$v2['id']}', {
+                            direction:'horizontal',
+                            loop: false,
+                            autoplay:{
+                                delay:5000,
+                                disableOnInteraction:true,
+                            },
+                            setWrapperSize: true,
+                            centeredSlides: true,
+                            speed:500,
+                            navigation: {
+                                nextEl: ".sn-industry{$v2['id']}",
+                                prevEl: ".sp-industry{$v2['id']}",
+                            },
+                        });
+                    {/foreach}
 
-    //手机版循环滚动小卡片
-    {foreach name="v['big_children']"  key="k2" id="v2"}
-    new Swiper ('.cont6_children_content{$v2['id']}', {
-        direction:'horizontal',
-        loop: true,
-        autoplay:{
-            delay:5000,
-            disableOnInteraction:true,
-        },
-        slidesPerView: 1,
-        setWrapperSize: true,
-        centeredSlides: true,
-        speed:500,
-    });
-    {/foreach}
-    {/if}
-    {/foreach}
-    {/if}
+                    //手机版循环滚动小卡片
+                    {foreach name="v['big_children']"  key="k2" id="v2"}
+                        new Swiper ('.cont6_children_content{$v2['id']}', {
+                            direction:'horizontal',
+                            loop: true,
+                            autoplay:{
+                                delay:5000,
+                                disableOnInteraction:true,
+                            },
+                            slidesPerView: 1,
+                            setWrapperSize: true,
+                            centeredSlides: true,
+                            speed:500,
+                        });
+                    {/foreach}
+                {/if}
+            {/foreach}
+        {/if}
     {/if}
 
     //社媒跟踪

@@ -40,7 +40,7 @@
         <input type="hidden" name="company_type" value="{$company_type}">
 
         <div class="content-header">
-            <h2 class="content-title">店铺信息配置</h2>
+            <h2 class="content-title">网站配置</h2>
     <!--        <div class="action-buttons">-->
     <!--            <button class="btn btn-primary" lay-submit lay-filter="formDemo">-->
     <!--                <i class="fas fa-save"></i> 保存更改-->
@@ -89,46 +89,48 @@
                     </div>
                 </div>
             </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">头部PC<br/>(像素：1920*90)</label>
-                <div class="layui-input-block">
-                    <div class="layui-upload" style="margin-top: 10px;">
-                        <button type="button" class="layui-btn" id="head_file-upload">上传图片(1张)</button>
-                        <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
-                            预览图：
-                            <div class="layui-upload-list" id="head_file-upload-list">
-                                {if !empty($data['head_file'])}
-                                <div style="display: inline-block;">
-                                    <img loading="lazy" onclick="seePic(this);" src="{$data['head_file']}" class="layui-upload-img" style="width:80px;height:80px;" alt="网站Logo">
-                                    <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
-                                    <input type="hidden" name="head_file[]" value="{$data['head_file']}">
+            {if $company_type==0}
+                <div class="layui-form-item">
+                    <label class="layui-form-label">头部PC<br/>(像素：1920*90)</label>
+                    <div class="layui-input-block">
+                        <div class="layui-upload" style="margin-top: 10px;">
+                            <button type="button" class="layui-btn" id="head_file-upload">上传图片(1张)</button>
+                            <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                                预览图：
+                                <div class="layui-upload-list" id="head_file-upload-list">
+                                    {if !empty($data['head_file'])}
+                                    <div style="display: inline-block;">
+                                        <img loading="lazy" onclick="seePic(this);" src="{$data['head_file']}" class="layui-upload-img" style="width:80px;height:80px;" alt="网站Logo">
+                                        <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
+                                        <input type="hidden" name="head_file[]" value="{$data['head_file']}">
+                                    </div>
+                                    {/if}
                                 </div>
-                                {/if}
-                            </div>
-                        </blockquote>
+                            </blockquote>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">头部Mob<br/>(像素：430*120)</label>
-                <div class="layui-input-block">
-                    <div class="layui-upload" style="margin-top: 10px;">
-                        <button type="button" class="layui-btn" id="mob_head_file-upload">上传图片(1张)</button>
-                        <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
-                            预览图：
-                            <div class="layui-upload-list" id="mob_head_file-upload-list">
-                                {if !empty($data['mob_head_file'])}
-                                <div style="display: inline-block;">
-                                    <img loading="lazy" onclick="seePic(this);" src="{$data['mob_head_file']}" class="layui-upload-img" style="width:80px;height:80px;" alt="网站Logo">
-                                    <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
-                                    <input type="hidden" name="mob_head_file[]" value="{$data['mob_head_file']}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">头部Mob<br/>(像素：430*120)</label>
+                    <div class="layui-input-block">
+                        <div class="layui-upload" style="margin-top: 10px;">
+                            <button type="button" class="layui-btn" id="mob_head_file-upload">上传图片(1张)</button>
+                            <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                                预览图：
+                                <div class="layui-upload-list" id="mob_head_file-upload-list">
+                                    {if !empty($data['mob_head_file'])}
+                                    <div style="display: inline-block;">
+                                        <img loading="lazy" onclick="seePic(this);" src="{$data['mob_head_file']}" class="layui-upload-img" style="width:80px;height:80px;" alt="网站Logo">
+                                        <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
+                                        <input type="hidden" name="mob_head_file[]" value="{$data['mob_head_file']}">
+                                    </div>
+                                    {/if}
                                 </div>
-                                {/if}
-                            </div>
-                        </blockquote>
+                            </blockquote>
+                        </div>
                     </div>
                 </div>
-            </div>
+            {/if}
             <div class="layui-form-item">
                 <label class="layui-form-label">网站名称</label>
                 <div class="layui-input-block">
@@ -145,6 +147,13 @@
                 <label class="layui-form-label">网站关键词</label>
                 <div class="layui-input-block">
                     <input type="text" name="keywords" value="{$data['keywords']}"  lay-verify="required" placeholder="请输入网站关键词" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label">页头背景色</div>
+                <div class="layui-input-block">
+                    <div id="color_head"></div>
+                    <input type="hidden" name="color_head" value="{$data['color_head']}" lay-verify="required">
                 </div>
             </div>
             <div class="layui-form-item">
@@ -191,7 +200,7 @@
 
             <div class="action-buttons">
                 <button class="btn btn-primary" lay-submit lay-filter="formDemo">
-                    <i class="fas fa-save"></i> 立即保存
+                    <i class="fas fa-save" style="display:none;"></i> 立即保存
                 </button>
             </div>
         </div>
@@ -201,13 +210,35 @@
 <script src="layui/layui.js"></script>
 <script>
     layui.use(['layer','form','laydate','upload','colorpicker'],function() {
-        laydate = layui.laydate;
-        layer = layui.layer;
-        var form = layui.form;
-        $ = layui.jquery;
-        var upload = layui.upload;
-        var colorpicker = layui.colorpicker;
-
+        var laydate = layui.laydate
+        ,layer = layui.layer
+        ,form = layui.form
+        ,$ = layui.jquery
+        ,upload = layui.upload
+        ,colorpicker = layui.colorpicker;
+        
+        {if !empty($data['color_head'])}
+            colorpicker.render({
+                elem:'#color_head',
+                alpha:true,
+                size:'lg',
+                predefine:true,
+                color:'{$data["color_head"]}',
+                done:function(color){
+                    $('input[name="color_head"]').val(color);
+                }
+            });
+        {else}
+            colorpicker.render({
+                elem:'#color_head',
+                alpha:true,
+                size:'lg',
+                done:function(color){
+                    $('input[name="color_head"]').val(color);
+                }
+            });
+        {/if}
+        
         {if !empty($data['color'])}
             colorpicker.render({
                 elem:'#color',
@@ -380,7 +411,6 @@
                 layer.msg(res.message, {time: 2000}, function () {
                     if (res.error == 1)
                     {
-
                         $('#mob_head_file-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="'+ res.file_path +'" class="layui-upload-img" style="width:80px;height:80px;" alt="网站logo图片"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="mob_head_file[]" value="'+res.file_path+'"></div>')
                     }
                 });
@@ -399,9 +429,9 @@
                     layer.msg(res.msg,{time:2000}, function () {
                         if(res.code == 0)
                         {
-                            let currentUrl = new URL(window.location.href);
-                            currentUrl.searchParams.set('tab', 'website_basic');
-                            window.history.pushState({}, '', currentUrl.toString());
+                            // let currentUrl = new URL(window.location.href);
+                            // currentUrl.searchParams.set('tab', 'website_basic');
+                            // window.history.pushState({}, '', currentUrl.toString());
                             window.location.reload();
                         }
                     });

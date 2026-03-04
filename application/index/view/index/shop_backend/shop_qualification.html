@@ -144,19 +144,23 @@
     function save(type) {
         if(type==1){
             //资质
-            var modal = document.getElementById('saveMenuModal');
-            modal.style.display = 'flex';
+            // var modal = document.getElementById('saveMenuModal');
+            // modal.style.display = 'flex';
 
-            $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_shop_qualification&company_id={$company_id}&company_type={$company_type}');
+            // $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_shop_qualification&company_id={$company_id}&company_type={$company_type}');
+            
+            window.location.href = '/?s=index/save_shop_qualification&company_id={$company_id}&company_type={$company_type}';
         }
     }
 
     //社媒编辑
     function edit(id,name=''){
-        var modal = document.getElementById('saveMenuModal');
-        modal.style.display = 'flex';
+        // var modal = document.getElementById('saveMenuModal');
+        // modal.style.display = 'flex';
 
-        $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_shop_qualification&company_id={$company_id}&company_type={$company_type}&id='+id);
+        // $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_shop_qualification&company_id={$company_id}&company_type={$company_type}&id='+id);
+        
+        window.location.href = '/?s=index/save_shop_qualification&company_id={$company_id}&company_type={$company_type}&id='+id;
     }
 
     //社媒删除

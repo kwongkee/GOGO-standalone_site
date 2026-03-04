@@ -81,10 +81,24 @@
         .layui-form-label{width:90px;}
         .layui-colorpicker-trigger-i{display: block;}
         .layui-colorpicker-main-input .layui-btn-container .layui-btn{margin:0 0 0 5px;}
+        .layui-input-block{margin-left:0;}
+        
+        /*返回按钮*/
+        .backDiv{padding: 5px 5px 5px 20px;border-bottom: 1px solid #d9d9d9;}
+        .backDiv .backBox{display: flex;align-items: center;cursor: pointer;}
+        .backDiv .back_icon{font-size: 18px;color: #333;margin-right: 10px;position: relative;}
+        .backDiv .back_icon:before{content:'';position:absolute;width:9px;height:9px;border-left:2px solid #000;border-top:2px solid #000;transform:rotate(-45deg);margin-right:5px;top:-7px;}
+        .backDiv .back_text{font-size: 16px;color: #333;font-weight: 500;margin-left: 5px;}
     </style>
 </head>
 
 <body>
+<div class="backDiv">
+    <div class="backBox" onclick="javascript:window.history.back(-1);">
+        <div class="back_icon"></div>
+        <div class="back_text">返回</div>
+    </div>
+</div>
 <form id="siteForm" class="layui-form" action="" method="post" lay-filter="component-form-index">
     <input type="hidden" name="company_id" value="{$company_id}">
     <input type="hidden" name="company_type" value="{$company_type}">
@@ -130,55 +144,55 @@
                 <label for="format_type">文本展示</label>
                 <table class="layui-table change_box_table">
                     <thead>
-                    <th>下级菜单</th>
-                    <th>图标</th>
-                    <th>标题</th>
-                    <th>描述</th>
-                    <th>操作</th>
+                        <th>下级菜单</th>
+                        <th>图标</th>
+                        <th>标题</th>
+                        <th>描述</th>
+                        <th>操作</th>
                     </thead>
                     <tbody>
-                    {if($id>0 && !empty($data['content']))}
-                    {volist name="data.content" key="k" id="vo"}
-                    <tr>
-                        <td class="next_menu">
-                            <input type="hidden" name="fnavbar[]" value="{$vo['fnavbar']}">
-                            {$vo['fnavbar_name']}
-                        </td>
-                        <td>
-                            <input class="form-control icp icp-auto layui-input" value="{$vo['ficon']}" placeholder="请选择图标" type="text" name="ficon[]"/>
-                        </td>
-                        <td>
-                            <input type="text" class="layui-input" placeholder="请输入标题" name="ftitle[]" value="{$vo['ftitle']}">
-                        </td>
-                        <td>
-                            <input type="text" class="layui-input" placeholder="请输入描述" name="fdesc[]" value="{$vo['fdesc']}">
-                        </td>
-                        <td>
-                            {if $k>0}
-                            <div class="closeBtn layui-btn-danger layui-btn" onclick="closeThis(this)">×</div>
-                            {/if}
-                        </td>
-                    </tr>
-                    {/volist}
-                    {else}
-                    <tr>
-                        <td class="next_menu" title="如果没选择框，请重新选择板块">
-                            <span style="font-size: 12px;color:#444;">如果没选择框，请重新选择板块</span>
-                        </td>
-                        <td>
-                            <input class="form-control icp icp-auto layui-input" value="" placeholder="请选择图标" type="text" name="ficon[]"/>
-                        </td>
-                        <td>
-                            <input type="text" class="layui-input" placeholder="请输入标题" name="ftitle[]">
-                        </td>
-                        <td>
-                            <input type="text" class="layui-input" placeholder="请输入描述" name="fdesc[]">
-                        </td>
-                        <td>
-                            <!--<div class="closeBtn layui-btn-danger layui-btn" onclick="closeThis(this)">×</div>-->
-                        </td>
-                    </tr>
-                    {/if}
+                        {if($id>0 && !empty($data['content']))}
+                            {volist name="data.content" key="k" id="vo"}
+                                <tr>
+                                    <td class="next_menu">
+                                        <input type="hidden" name="fnavbar[]" value="{$vo['fnavbar']}">
+                                        {$vo['fnavbar_name']}
+                                    </td>
+                                    <td>
+                                        <input class="form-control icp icp-auto layui-input" value="{$vo['ficon']}" placeholder="请选择图标" type="text" name="ficon[]"/>
+                                    </td>
+                                    <td>
+                                        <input type="text" class="layui-input" placeholder="请输入标题" name="ftitle[]" value="{$vo['ftitle']}">
+                                    </td>
+                                    <td>
+                                        <input type="text" class="layui-input" placeholder="请输入描述" name="fdesc[]" value="{$vo['fdesc']}">
+                                    </td>
+                                    <td>
+                                        {if $k>0}
+                                        <div class="closeBtn layui-btn-danger layui-btn" onclick="closeThis(this)">×</div>
+                                        {/if}
+                                    </td>
+                                </tr>
+                            {/volist}
+                        {else}
+                            <tr>
+                                <td class="next_menu" title="如果没选择框，请重新选择板块">
+                                    <span style="font-size: 12px;color:#444;">如果没选择框，请重新选择板块</span>
+                                </td>
+                                <td>
+                                    <input class="form-control icp icp-auto layui-input" value="" placeholder="请选择图标" type="text" name="ficon[]"/>
+                                </td>
+                                <td>
+                                    <input type="text" class="layui-input" placeholder="请输入标题" name="ftitle[]">
+                                </td>
+                                <td>
+                                    <input type="text" class="layui-input" placeholder="请输入描述" name="fdesc[]">
+                                </td>
+                                <td>
+                                    <!--<div class="closeBtn layui-btn-danger layui-btn" onclick="closeThis(this)">×</div>-->
+                                </td>
+                            </tr>
+                        {/if}
                     </tbody>
                     <tfoot>
                     <tr>
@@ -670,7 +684,7 @@
     </div>
 
     <div class="form-actions">
-        <button type="button" class="btn btn-outline" id="cancelBtnIndex" style="background:transparent;border: 2px solid var(--primary);color: var(--primary);">取消</button>
+        <button type="button" class="btn btn-outline" id="cancelBtnIndex" style="background:transparent;border: 2px solid var(--primary);color: var(--primary);display:none;">取消</button>
         <button type="submit" class="btn btn-primary" lay-submit lay-filter="component-form-index">立即保存</button>
     </div>
 </form>
@@ -691,12 +705,12 @@
     });
 
     layui.use(['layer','form','laydate','upload','colorpicker'],function() {
-        laydate = layui.laydate;
-        layer = layui.layer;
-        var form = layui.form;
-        $ = layui.jquery;
-        var upload = layui.upload;
-        var colorpicker = layui.colorpicker;
+        var laydate = layui.laydate
+        ,layer = layui.layer
+        ,form = layui.form
+        ,$ = layui.jquery
+        ,upload = layui.upload
+        ,colorpicker = layui.colorpicker;
 
         //菜单弹窗关闭事件
         const modal = parent.document.getElementById('saveIndexModal');
@@ -1186,10 +1200,10 @@
                     layer.msg(res.msg,{time:2000}, function () {
                         if(res.code == 0)
                         {
-                            let currentUrl = new URL(parent.location.href);
-                            currentUrl.searchParams.set('tab', 'channels');
-                            parent.history.pushState({}, '', currentUrl.toString());
-                            parent.location.reload();
+                            // let currentUrl = new URL(parent.location.href);
+                            // currentUrl.searchParams.set('tab', 'channels');
+                            // parent.history.pushState({}, '', currentUrl.toString());
+                            window.history.back(-1);
                         }
                     });
                 },

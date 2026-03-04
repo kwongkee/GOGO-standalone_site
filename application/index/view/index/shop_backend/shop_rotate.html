@@ -116,12 +116,12 @@
 <script src="layui/layui.js"></script>
 <script>
     layui.use(['layer','form','laydate','upload','colorpicker'],function() {
-        laydate = layui.laydate;
-        layer = layui.layer;
-        var form = layui.form;
-        $ = layui.jquery;
-        var upload = layui.upload;
-        var colorpicker = layui.colorpicker;
+        var laydate = layui.laydate
+        ,layer = layui.layer
+        ,form = layui.form
+        ,$ = layui.jquery
+        ,upload = layui.upload
+        ,colorpicker = layui.colorpicker;
 
         //菜单弹窗关闭事件===start
         const menu_modal = document.getElementById('saveMenuModal');
@@ -144,19 +144,23 @@
     function save(type) {
         if(type==1){
             //社媒
-            var modal = document.getElementById('saveMenuModal');
-            modal.style.display = 'flex';
+            // var modal = document.getElementById('saveMenuModal');
+            // modal.style.display = 'flex';
 
-            $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_shop_rotate&company_id={$company_id}&company_type={$company_type}');
+            // $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_shop_rotate&company_id={$company_id}&company_type={$company_type}');
+            
+            window.location.href = '/?s=index/save_shop_rotate&company_id={$company_id}&company_type={$company_type}';
         }
     }
 
     //社媒编辑
     function edit(id,name=''){
-        var modal = document.getElementById('saveMenuModal');
-        modal.style.display = 'flex';
+        // var modal = document.getElementById('saveMenuModal');
+        // modal.style.display = 'flex';
 
-        $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_shop_rotate&company_id={$company_id}&company_type={$company_type}&id='+id);
+        // $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_shop_rotate&company_id={$company_id}&company_type={$company_type}&id='+id);
+        
+        window.location.href = '/?s=index/save_shop_rotate&company_id={$company_id}&company_type={$company_type}&id='+id;
     }
 
     //社媒删除

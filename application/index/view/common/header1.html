@@ -43,7 +43,7 @@
         body::before {content: '';position: absolute;top: 0;left: 0;width: 100%;height: 100%;background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLTIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0ibm9uZSIvPjxyZWN0IHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiBmaWxsPSJ1cmwoI2dyaWQpIiBvcGFjaXR5PSIwLjAzIi8+PC9zdmc+');background-size: 20px 20px;pointer-events: none;z-index: -1;}
         .container {width: 100%;margin: 0 auto;max-width: 1200px;padding: 0 20px;}
         /* 顶部导航栏 - 现代玻璃拟态效果 */
-        header {background: var(--glass-bg);backdrop-filter: blur(12px);position: fixed;top: 0;left: 0;width: 100%;z-index: 1000;box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);border-bottom: var(--glass-border);}
+        header {background: var(--glass-bg);backdrop-filter: blur(12px);position: relative;/*top: 0;left: 0;*/width: 100%;box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);border-bottom: var(--glass-border);z-index:10px;}
         .navbar-brand{margin-top:-25px;}
         .top-bar {height: 40px;background: {$website['color']};display: flex;align-items: center;justify-content: space-between;padding: 0 20px;font-size: 14px;color: white;}
         .top-bar .contact-info {display: flex;gap: 20px;}
@@ -129,6 +129,14 @@
 </head>
 <body style="background:;">
 <div id="wrapper" class="home-page">
+    <!--滚动信息开始-->
+    {if !empty($rotate_info) && $rotate_info['location']==1}
+        {if !empty($rotate_info['content_id'])}
+            {include file="common/rotate_info"}
+        {/if}
+    {/if}
+    <!--滚动信息结束-->
+    
     <!-- 菜单栏开始 -->
     <header style="background:{$website['color_head']};">
         <div class="top-bar" style="display:none;">
@@ -218,7 +226,15 @@
         </div>
     </header>
     <!-- 菜单栏结束 -->
-
+    
+    <!--滚动信息开始-->
+    {if !empty($rotate_info) && $rotate_info['location']==2}
+        {if !empty($rotate_info['content_id'])}
+            {include file="common/rotate_info"}
+        {/if}
+    {/if}
+    <!--滚动信息结束-->
+    
     <!--谷歌翻译SCRIPT-->
     <div class="gtranslate_wrapper" style="display:none;"></div>
     <script>window.gtranslateSettings = {"default_language":"zh-CN","native_language_names":true,"url_structure":"sub_directory","languages":["zh-CN","ja","fy","zh-TW","ms","en","ko","ru","de"],"wrapper_selector":".gtranslate_wrapper","switcher_horizontal_position":"right","switcher_vertical_position":"top"}</script>

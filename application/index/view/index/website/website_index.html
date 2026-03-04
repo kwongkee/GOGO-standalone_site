@@ -28,7 +28,6 @@
         .content-header {display: flex;justify-content: space-between;align-items: center;margin-bottom: 25px;padding-bottom: 15px;border-bottom: 1px solid #eee;}
         .content-title {font-size: 1.5rem;color: var(--primary-dark);}
         .btn{background:var(--primary-light);color: white;border: none;}
-        .btn-warn{background:#f8ac59;color:#fff;border:none;}
         .btn-edit {background: var(--primary-light);color: white;border: none;}
         .btn-edit:hover {background: var(--primary);}
         .btn-delete {background: transparent;color: #ff4757;border: 2px solid #ff4757;}
@@ -53,139 +52,106 @@
         .layui-form-label{width:100px;}
         .layui-colorpicker-trigger-span{line-height: 24px;}
         .layui-btn-container{display: flex;}
-        .btnHide-1{display:none;}
+        
+        /* 频道管理样式 */
+        .channel-list {list-style: none;}
+        .channel-item {background: var(--background);border-radius: 10px;padding: 20px;margin-bottom: 15px;display: flex;justify-content: space-between;align-items: center;transition: all 0.3s ease;}
+        .channel-item:hover {transform: translateX(5px);box-shadow: var(--shadow);}
+        .channel-info {flex: 1;}
+        .channel-name {font-weight: 600;margin-bottom: 5px;color: var(--primary-dark);}
+        .channel-desc {color: #666;font-size: 0.9rem;}
         .channel-actions {display: flex;gap: 10px;}
+        .channel-btn {padding: 8px 15px;border-radius: 8px;font-size: 0.9rem;font-weight: 500;cursor: pointer;transition: all 0.3s ease;display: flex;align-items: center;}
+        .channel-btn i {margin-right: 5px;}
+        .btn{background:var(--primary-light);color: white;border: none;}
+        .btn-edit {background: var(--primary-light);color: white;border: none;}
+        .btn-edit:hover {background: var(--primary);}
+        .btn-delete {background: transparent;color: #ff4757;border: 2px solid #ff4757;}
+        .btn-delete:hover {background: #ff4757;color: white;}
+        .add-channel {display: flex;align-items: center;justify-content: center;padding: 15px;border: 2px dashed var(--primary-light);border-radius: 10px;color: var(--primary);font-weight: 600;cursor: pointer;transition: all 0.3s ease;margin-top: 20px;}
+        .add-channel:hover {background: var(--accent);border-color: var(--primary);}
+        .add-channel i {margin-right: 10px;}
     </style>
 </head>
 <body>
-<div class="row">
-    <div class="col-sm-12">
-        <div class="ibox float-e-margins">
-            <div class="ibox-content">
-                <div id="toolbar" class="btn-group" style="margin-top: 10px;margin-bottom: 10px;line-height: 34px;">
-                    <button type="button" onclick="save(1);" class="btn btn-default">
-                        <i class="fas fa-add"></i>
-                        添加模块
-                    </button>
-                </div>
-                <table id="table" class="layui-table">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>模块名称</th>
-                        <th>版式名称</th>
-                        <th>操作</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {if empty($list)}
-                    <tr>
-                        <td colspan="4" style="text-align:center;">--暂无信息--</td>
-                    </tr>
-                    {else}
-                    {volist name="list" id="vo"}
-                    <tr>
-                        <td>{$vo['id']}</td>
-                        <td>{$vo['title']}</td>
-                        <td>{$vo['content_name']}</td>
-                        <td>
-                            <div class="channel-actions">
-                                <button class="channel-btn btn-warn btn" onclick="content_manage({$vo['id']},{$vo['content_id']},'{$vo['title']}')"><i class="fas fa-eye"></i> 内容管理</button>
-                                <button class="channel-btn btn-edit btn" onclick="edit({$vo['id']},'{$vo['title']}')"><i class="fas fa-edit"></i> 编辑</button>
-                                <button class="channel-btn btn-delete btn" onclick="del_component({$vo['id']},'{$vo['title']}')"><i class="fas fa-trash"></i> 删除</button>
-                            </div>
-                        </td>
-                    </tr>
-                    {/volist}
-                    {/if}
-                    </tbody>
-                </table>
-            </div>
+    <div class="form-section">
+        <h3 class="form-title"><i class="fas fa-layer-group"></i> 网站频道管理</h3>
+    
+        <ul class="channel-list">
+            {if empty($website_index)}
+                <div style="font-size:15px;text-align: center;">--暂无信息--</div>
+            {else}
+                {volist name="website_index" id="vo"}
+                    <li class="channel-item">
+                        <div class="channel-info">
+                            <div class="channel-name">{$vo['name']}</div>
+                            <div class="channel-desc">排序：{$vo['displayorder']}</div>
+                        </div>
+                        <div class="channel-actions">
+                            <button class="channel-btn btn-edit" onclick="edit_index({$vo['id']})"><i class="fas fa-edit"></i> 编辑</button>
+                            <button class="channel-btn btn-delete" onclick="del_index({$vo['id']})"><i class="fas fa-trash"></i> 删除</button>
+                        </div>
+                    </li>
+                {/volist}
+            {/if}
+        </ul>
+    
+        <div class="add-channel" onclick="save(3)">
+            <i class="fas fa-plus"></i> 添加新频道
         </div>
     </div>
-</div>
-
-<!-- 添加轮播图·模态框 -->
-<div class="modal" id="saveMenuModal">
-    <div class="modal-content" style="min-height:600px;max-height:600px;overflow-y:hidden;">
-        <span class="close-modal close-modal-menu">&times;</span>
-        <h2 class="modal-title content_title" style="display: none;">内容管理</h2>
-        <h2 class="modal-title module_title" style="display: none;">保存模块</h2>
-        <iframe src="" class="menu_iframe" frameborder="0" style="width: 100%;height:800px;"></iframe>
-    </div>
-</div>
 </body>
 <script src="js/jquery-3.6.0.min.js"></script>
 <script src="layui/layui.js"></script>
+
 <script>
-    layui.use(['layer','form','laydate','upload','colorpicker'],function() {
-        var laydate = layui.laydate
-        ,layer = layui.layer
-        ,form = layui.form
-        ,$ = layui.jquery
-        ,upload = layui.upload
-        ,colorpicker = layui.colorpicker;
-
-        //菜单弹窗关闭事件===start
-        const menu_modal = document.getElementById('saveMenuModal');
-        const menu_closeBtn = document.querySelector('.close-modal-menu');
-
-        // 关闭模态框
-        function closeModalMenu() {
-            menu_modal.style.display = 'none';
-        }
-        menu_closeBtn.addEventListener('click', closeModalMenu);
-        // 点击模态框外部关闭
-        window.addEventListener('click', function(event) {
-            if (event.target === menu_modal) {
-                closeModalMenu();
-            }
-        });
-        //菜单弹窗关闭事件===end
-    });
-
-    //模块内容
-    function content_manage(id,pid,title=''){
-        // window.location.href='/?s=index/shop_guide_content_list&pid='+pid+'&guide_id='+id;
-        window.location.href='/?s=index/shop_guide_content_list&company_id={$company_id}&company_type={$company_type}&guide_id='+id;
-        // var modal = document.getElementById('saveMenuModal');
-        // modal.style.display = 'flex';
-        // $('.content_title').show();
-        // $('.module_title').hide();
-        //     $('#saveMenuModal .menu_iframe').attr('src','/?s=index/shop_guide_content_list&company_id={$company_id}&company_type={$company_type}&guide_id='+id);
-    }
-
-    function save(type) {
-        if(type==1){
-            //社媒
-            // var modal = document.getElementById('saveMenuModal');
-            // modal.style.display = 'flex';
-            // $('.content_title').hide();
-            // $('.module_title').show();
-            // $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_shop_guide&company_id={$company_id}&company_type={$company_type}');
+    layui.config({
+        base: '/layuiadmin/' //静态资源所在路径
+    }).extend({
+        index: 'lib/index', //主入口模块
+        treetable: 'treetable-lay/treetable'
+    }).use(['index', 'form','upload', 'colorpicker','treetable'], function() {
+        var $ = layui.$
+            , admin = layui.admin
+            , element = layui.element
+            , layer = layui.layer
+            , form = layui.form
+            , colorpicker = layui.colorpicker
+            , upload = layui.upload
+            , treetable = layui.treetable;
             
-            window.location.href = '/?s=index/save_shop_guide&company_id={$company_id}&company_type={$company_type}';
+    });
+    
+    function save(type) {
+        if(type==3){
+            //网站频道
+            // var modal = document.getElementById('saveIndexModal');
+            // modal.style.display = 'flex';
+
+            // $('#saveIndexModal .index_iframe').attr('src','/?s=index/save_website_index&company_id={$company_id}&company_type=1');
+            
+            window.location.href = '/?s=index/save_website_index&company_id={$company_id}&company_type={$company_type}';
         }
     }
-
-    //社媒编辑
-    function edit(id,name=''){
-        // var modal = document.getElementById('saveMenuModal');
+    
+    //网站频道编辑
+    function edit_index(id){
+        // var modal = document.getElementById('saveIndexModal');
         // modal.style.display = 'flex';
 
-        // $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_shop_guide&company_id={$company_id}&company_type={$company_type}&id='+id);
+        // $('#saveIndexModal .index_iframe').attr('src','/?s=index/save_website_index&company_id={$company_id}&company_type=1&id='+id);
         
-        window.location.href = '/?s=index/save_shop_guide&company_id={$company_id}&company_type={$company_type}&id='+id;
+        window.location.href = '/?s=index/save_website_index&company_id={$company_id}&company_type={$company_type}&id='+id;
     }
 
-    //社媒删除
-    function del_component(id,name=''){
+    //网站频道删除
+    function del_index(id){
         var layer = layui.layer,$ = layui.$;
-        layer.confirm('确认要删除该模块？', {
+        layer.confirm('确认要删除该频道？', {
             btn: ['删除','取消']
         }, function(){
             $.ajax({
-                url:"/?s=index/del_shop_guide",
+                url:"/?s=index/del_website_index",
                 type:"GET",
                 dataType:"json",
                 data:{id:id},

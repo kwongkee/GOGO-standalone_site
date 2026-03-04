@@ -12,7 +12,7 @@
 
         * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
         .action-buttons {display: flex;justify-content:end;gap: 15px;}
-        .btn {padding: 5px 10px;border-radius: 50px;font-weight: 600;cursor: pointer;transition: all 0.3s ease;display: flex;align-items: center;gap: 8px;border: none;}
+        .btn {padding: 10px 20px;border-radius: 50px;font-weight: 600;cursor: pointer;transition: all 0.3s ease;display: flex;align-items: center;gap: 8px;border: none;}
         .btn-primary {background: var(--gradient);color: white;}
         .btn-primary:hover {transform: translateY(-3px);box-shadow: var(--shadow-hover);}
         .btn-outline {background: transparent;color: var(--primary);border: 2px solid var(--primary-light);}
@@ -116,12 +116,12 @@
 <script src="layui/layui.js"></script>
 <script>
     layui.use(['layer','form','laydate','upload','colorpicker'],function() {
-        laydate = layui.laydate;
-        layer = layui.layer;
-        var form = layui.form;
-        $ = layui.jquery;
-        var upload = layui.upload;
-        var colorpicker = layui.colorpicker;
+        var laydate = layui.laydate
+        ,layer = layui.layer
+        ,form = layui.form
+        ,$ = layui.jquery
+        ,upload = layui.upload
+        ,colorpicker = layui.colorpicker;
 
         //菜单弹窗关闭事件===start
         const menu_modal = document.getElementById('saveMenuModal');
@@ -144,19 +144,23 @@
     function save(type) {
         if(type==1){
             //轮播图
-            var modal = document.getElementById('saveMenuModal');
-            modal.style.display = 'flex';
+            // var modal = document.getElementById('saveMenuModal');
+            // modal.style.display = 'flex';
 
-            $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_shop_recommend&company_id={$company_id}&company_type={$company_type}');
+            // $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_shop_recommend&company_id={$company_id}&company_type={$company_type}');
+            
+            window.location.href = '/?s=index/save_shop_recommend&company_id={$company_id}&company_type={$company_type}';
         }
     }
 
     //社媒编辑
     function edit(id,name=''){
-        var modal = document.getElementById('saveMenuModal');
-        modal.style.display = 'flex';
+        // var modal = document.getElementById('saveMenuModal');
+        // modal.style.display = 'flex';
 
-        $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_shop_recommend&company_id={$company_id}&company_type={$company_type}&id='+id);
+        // $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_shop_recommend&company_id={$company_id}&company_type={$company_type}&id='+id);
+        
+        window.location.href = '/?s=index/save_shop_recommend&company_id={$company_id}&company_type={$company_type}&id='+id;
     }
 
     //社媒删除

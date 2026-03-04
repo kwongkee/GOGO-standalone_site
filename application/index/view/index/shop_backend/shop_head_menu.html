@@ -143,27 +143,33 @@
     function save(type) {
         if(type==2){
             //菜单
-            var modal = document.getElementById('saveMenuModal');
-            modal.style.display = 'flex';
+            // var modal = document.getElementById('saveMenuModal');
+            // modal.style.display = 'flex';
 
-            $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_shop_menu&company_id={$company_id}&company_type={$company_type}');
+            // $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_shop_menu&company_id={$company_id}&company_type={$company_type}');
+            
+            window.location.href = '/?s=index/save_shop_menu&company_id={$company_id}&company_type={$company_type}';
         }
     }
 
     //添加下级菜单
     function addMenu(pid=0) {
-        var modal = document.getElementById('saveMenuModal');
-        modal.style.display = 'flex';
+        // var modal = document.getElementById('saveMenuModal');
+        // modal.style.display = 'flex';
 
-        $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_shop_menu&company_id={$company_id}&company_type={$company_type}&pid='+pid);
+        // $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_shop_menu&company_id={$company_id}&company_type={$company_type}&pid='+pid);
+        
+        window.location.href = '/?s=index/save_shop_menu&company_id={$company_id}&company_type={$company_type}&pid='+pid;
     }
 
     //编辑菜单
     function editMenu(id=0) {
-        var modal = document.getElementById('saveMenuModal');
-        modal.style.display = 'flex';
+        // var modal = document.getElementById('saveMenuModal');
+        // modal.style.display = 'flex';
 
-        $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_shop_menu&company_id={$company_id}&company_type={$company_type}&id='+id);
+        // $('#saveMenuModal .menu_iframe').attr('src','/?s=index/save_shop_menu&company_id={$company_id}&company_type={$company_type}&id='+id);
+        
+        window.location.href = '/?s=index/save_shop_menu&company_id={$company_id}&company_type={$company_type}&id='+id;
     }
 
     //删除菜单
@@ -181,7 +187,7 @@
                     layer.msg(res.msg);
                     if (res.code==0){
                         setTimeout(function () {
-                            location.reload();
+                            window.location.reload();
                         },2000);
                     }
                 },

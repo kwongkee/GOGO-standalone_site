@@ -29,21 +29,22 @@ class WebsiteBasic extends Model
     {
         $data = $this->where(['company_id' => $company_id, 'company_type' => $company_type])
                     ->find();
+        
         if ($data) {
             // $data['domain'] = json_decode($data['domain'], true)[$lang] ?? $data['domain'];
             // 添加其他JSON处理
-            if(isset($data['name'])){
-                $data['name'] = json_decode($data['name'],true);
-            }
-            if(isset($data['desc'])) {
-                $data['desc'] = json_decode($data['desc'], true);
-            }
-            if(isset($data['keywords'])) {
-                $data['keywords'] = json_decode($data['keywords'], true);
-            }
-            if(isset($data['copyright'])) {
-                $data['copyright'] = json_decode($data['copyright'], true);
-            }
+            // if(isset($data['name'])){
+            //     $data['name'] = json_decode($data['name'],true);
+            // }
+            // if(isset($data['desc'])) {
+            //     $data['desc'] = json_decode($data['desc'], true);
+            // }
+            // if(isset($data['keywords'])) {
+            //     $data['keywords'] = json_decode($data['keywords'], true);
+            // }
+            // if(isset($data['copyright'])) {
+            //     $data['copyright'] = json_decode($data['copyright'], true);
+            // }
         }
         return $data;
     }

@@ -1,0 +1,56 @@
+{include file="common/header1"}
+{include file="index/detail_schema" /}
+<link href="css/gallery-1.css" rel="stylesheet">
+<link rel="stylesheet" href="layui/css/layui.css">
+<script src="layui/layui.js"></script>
+
+<style>
+    body{background:{$website['color_inner']} !important;}
+    #content{width:1200px;margin:100px auto 20px;padding:0;background:{$website['color_inner']};}
+    #content p,#content a,#content span,#content div{color:{$website['color_word']};}
+    
+    .content{min-height: 60vh;border:1px solid {$website['color']};padding:20px;}
+    #content .box_content{display: flex;align-items: center;justify-content: space-evenly;}
+    .need_service, .need_share, .need_advice {padding: 15px 75px;box-sizing: border-box;font-size: 15px;font-weight: 800;box-shadow: 1px 1px 10px #333;text-align: center;margin-top: 20px;border: 1px solid {$website['color']};color: {$website['color_word']};background: {$website['color']};white-space: nowrap;}
+    .input{color:#000;}
+    @media (max-width: 992px){
+        #content{width:100%;padding:0 20px;}
+        .need_service, .need_share, .need_advice{padding: 10px 20px;}
+        footer .foot-menu{margin-top:15px;}
+        #content img{width:100%;height:auto;}
+    }
+</style>
+
+<section id="content" class="">
+    {if !empty($data['content'])}
+        <div class="row content common_inner_background" style="width:100%;margin:0 auto;">
+            <div class="col-md-12" style="padding:10px;box-sizing:border-box;">
+                <div class="about-logo" style="margin-bottom:10px;">
+                    {if $data['avatar_location']==1}
+                        <div class="" style="text-align:center;">
+                            {if $data['format']==1 && isset($data['thumb'])}
+                                <img loading="lazy" alt="文章圖片：{$data.title|default='GOGO198 內容圖'}" class="main_img" src="{$data['source_link']}{$data['thumb']}" alt="" />
+                            {elseif($data['format']==2 && isset($data['color']))}
+                                <div class="color_word" style="background:{$data['color']} !important;color:{$data['word_color']};width:500px;height:280px;">{$data['color_word']}</div>
+                            {/if}
+                        </div>
+                    {/if}
+    
+                    {$data['content']}
+    
+                    {if $data['avatar_location']==2}
+                        <div class="" style="text-align:center;">
+                            {if $data['format']==1 && isset($data['thumb'])}
+                                <img loading="lazy" alt="文章圖片：{$data.title|default='GOGO198 內容圖'}" class="main_img" src="{$data['source_link']}{$data['thumb']}" alt="" />
+                            {elseif($data['format']==2 && isset($data['color']))}
+                                <div class="color_word" style="background:{$data['color']} !important;color:{$data['word_color']};font-size:16px;width:500px;height:280px;">{$data['color_word']}</div>
+                            {/if}
+                        </div>
+                    {/if}
+                </div>
+            </div>
+        </div>
+        {include file="common/advice"}
+    {/if}
+</section>
+{include file="common/footer"}

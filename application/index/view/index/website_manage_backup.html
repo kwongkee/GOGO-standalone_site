@@ -120,7 +120,7 @@
         <div class="sites-panel">
             <div class="panel-header">
                 <h2 class="panel-title">服务管理</h2>
-                <!--<div class="company_domain_btn"></div>-->
+                <div class="company_domain_btn"></div>
             </div>
 
             {if empty($company)}
@@ -293,6 +293,7 @@
                 {/if}
             {/if}
         },1000);
+
     });
 
     function get_enterprise_info(company_id){
@@ -322,80 +323,62 @@
                         var html2 = '';
                         if(res.list2.length>0){
                             for(let i=0;i<res.list2.length;i++){
-                                //最新版本的权限
-                                html2 += '<div class="siteNames">\n' + res.list2[i].title+ '</div>\n'+
-                                         '<div class="sites-grid">\n';
-                                for(let i2=0;i2<res.list2[i].children.length;i2++){
-                                    html2 += '<div class="site-card">\n' +
-                                            '                    <div class="site-header">\n' +
-                                            '                        <h3 class="site-name">' + res.list2[i].children[i2].title + '</h3>\n' +
-                                            '                    </div>\n';
-                                    //为建站和开店列出网址
-                                    if(res.list2[i].children[i2].id==45 || res.list2[i].children[i2].id==46){
-                                        html2 += '           <div class="site-domain">\n' +
-                                                 '                <i class="fas fa-link"></i> \n';
-                                                 
-                                        if (res.list2[i].children[i2].id == 45) {
-                                            html2 += '<a href="http://dtc.gogo198.net/web?company_id='+company_id+'&company_type=1" target="_blank" class="site-url" style="word-break:break-all;">dtc.gogo198.net/web?company_id='+company_id+'&company_type=1</a>';
-                                        }
-
-                                        if (res.list2[i].children[i2].id == 46) {
-                                            html2 += '<a href="http://dtc.gogo198.net/shops?company_id='+company_id+'&company_type=0" target="_blank" class="site-url" style="word-break:break-all;">dtc.gogo198.net/shops?company_id='+company_id+'&company_type=0</a>';
-                                        }
-                                        html2 += '           </div>\n';
+                                if(res.list2[i].pid==0){
+                                    if(i!=0){
+                                        html2 += '</div>\n';
                                     }
-                                    
-                                    html2 += '               <div class="site-actions">\n' +
-                                            '                        <button class="action-btn btn-manage" data-id="'+company_id+'" data-func_id="'+res.list2[i].children[i2].id+'" data-domain_name="'+res.list.domain_name+'" onclick="website_manage2(this,\''+res.list2[i].children[i2].url+'\','+company_id+')"><i class="fas fa-cog"></i> 管理</button>\n' +
-                                            '                    </div>\n' +
-                                            '                </div>\n';
+                                    html2 += '<div class="siteNames">\n' + res.list2[i].title+ '</div>\n'+
+                                             '<div class="sites-grid">\n';
                                 }
-                                
-                                html2 += '</div>';
-                                
-                                if(1>2){
-                                    if(res.list2[i].pid==0){
-                                        if(i!=0){
-                                            html2 += '</div>\n';
-                                        }
-                                        html2 += '<div class="siteNames">\n' + res.list2[i].title+ '</div>\n'+
-                                                 '<div class="sites-grid">\n';
-                                    }
-                                    else{
-                                        html2 += '<div class="site-card">\n' +
-                                            '                    <div class="site-header">\n' +
-                                            '                        <h3 class="site-name">' + res.list2[i].title + '</h3>\n' +
-                                            '                    </div>\n';
-                                            
-                                        if(res.list2[i].id==319 || res.list2[i].id==320) {
-                                            html2 += '           <div class="site-domain">\n' +
-                                                '                        <i class="fas fa-link"></i> \n';
-                                            if (res.list.domain_name == 0) {
-                                                html2 += '未配置二级域名';
-                                            } else {
-                                                if (res.list2[i].id == 319) {
-                                                    html2 += '';
-                                                } else if (res.list2[i].id == 320) {
-                                                    html2 += '';
-                                                } 
-                                                
-                                                // +res.list.domain_name2+
-                                                if (res.list2[i].id == 319) {
-                                                    html2 += '<a href="http://dtc.gogo198.net/web?company_id='+company_id+'&company_type=1" target="_blank" class="site-url" style="word-break:break-all;">dtc.gogo198.net/web?company_id='+company_id+'&company_type=1</a>';
-                                                }
-    
-                                                if (res.list2[i].id == 320) {
-                                                    html2 += '<a href="http://dtc.gogo198.net/shops?company_id='+company_id+'&company_type=0" target="_blank" class="site-url" style="word-break:break-all;">dtc.gogo198.net/shops?company_id='+company_id+'&company_type=0</a>';
+                                else{
+                                    html2 += '<div class="site-card">\n' +
+                                        '                    <div class="site-header">\n' +
+                                        '                        <h3 class="site-name">' + res.list2[i].title + '</h3>\n' +
+                                        '                    </div>\n';
+                                    if(res.list2[i].id==319 || res.list2[i].id==320) {
+                                        html2 += '           <div class="site-domain">\n' +
+                                            '                        <i class="fas fa-link"></i> \n';
+                                        if (res.list.domain_name == 0) {
+                                            html2 += '未配置二级域名';
+                                        } else {
+                                            if (res.list2[i].id == 319) {
+                                                html2 += '';
+                                            } else if (res.list2[i].id == 320) {
+                                                html2 += '';
+                                            } else if (1 > 2) {
+                                                if (res.list2[i].id == 322) {
+                                                    html2 += 'gpay';
+                                                } else if (res.list2[i].id == 323) {
+                                                    html2 += 'cpay';
+                                                } else if (res.list2[i].id == 325) {
+                                                    html2 += 'group';
+                                                } else if (res.list2[i].id == 326) {
+                                                    html2 += 'aigogo';
+                                                } else if (res.list2[i].id == 328) {
+                                                    html2 += 'seo';
+                                                } else if (res.list2[i].id == 329) {
+                                                    html2 += 'geo';
+                                                } else if (res.list2[i].id == 331) {
+                                                    html2 += 'market';
+                                                } else if (res.list2[i].id == 332) {
+                                                    html2 += 'digital';
                                                 }
                                             }
-                                            html2 += '            </div>\n';
+                                            // +res.list.domain_name2+
+                                            if (res.list2[i].id == 319) {
+                                                html2 += '<a href="http://dtc.gogo198.net/web?company_id='+company_id+'&company_type=1" target="_blank" class="site-url" style="word-break:break-all;">dtc.gogo198.net/web?company_id='+company_id+'&company_type=1</a>';
+                                            }
+
+                                            if (res.list2[i].id == 320) {
+                                                html2 += '<a href="http://dtc.gogo198.net/shops?company_id='+company_id+'&company_type=0" target="_blank" class="site-url" style="word-break:break-all;">dtc.gogo198.net/shops?company_id='+company_id+'&company_type=0</a>';
+                                            }
                                         }
-                                        
-                                        html2 += '               <div class="site-actions">\n' +
-                                            '                        <button class="action-btn btn-manage" data-id="'+company_id+'" data-domain_name="'+res.list.domain_name+'" onclick="website_manage2(\''+res.list2[i].url+'\','+company_id+')"><i class="fas fa-cog"></i> 管理</button>\n' +
-                                            '                    </div>\n' +
-                                            '                </div>\n';
+                                        html2 += '            </div>\n';
                                     }
+                                    html2 += '               <div class="site-actions">\n' +
+                                        '                        <button class="action-btn btn-manage" data-id="'+company_id+'" data-domain_name="'+res.list.domain_name+'" onclick="website_manage2(\''+res.list2[i].url+'\','+company_id+')"><i class="fas fa-cog"></i> 管理</button>\n' +
+                                        '                    </div>\n' +
+                                        '                </div>\n';
                                 }
                             }
                             html2 += '</div>';
@@ -405,11 +388,11 @@
 
                         $('.dashboard .sites-panel .sites-container').html(html2);
 
-                        // 二级域名弹窗（废弃）
+                        // 二级域名弹窗
                         let domain_btn = '<button class="create-site-btn" id="createSiteBtn" data-id="'+company_id+'" onclick="createSiteDomain('+company_id+')">\n' +
                             '                   <i class="fas fa-cog"></i> 二级域名\n' +
                             '             </button>';
-                        // $('.dashboard .sites-panel .company_domain_btn').html(domain_btn);
+                        $('.dashboard .sites-panel .company_domain_btn').html(domain_btn);
 
                         if(res.list.domain_name==0){
                             $('#createSiteModal .domain_input').css('display','flex');
@@ -461,12 +444,10 @@
     }
 
     //管理企业2（用这个）
-    function website_manage2(t,url,company_id){
+    function website_manage2(url,company_id){
         var lang = getLanguageFromUrl();
-        
-        let fid = $(t).attr('data-func_id');
-        
-        window.open(lang+url+'&fid='+fid+'&company_id='+company_id, '_blank');
+
+        window.open(lang+url+'&company_id='+company_id, '_blank');
     }
 </script>
 

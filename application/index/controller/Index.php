@@ -22,7 +22,9 @@ class Index extends Controller
     public $website_sico='';
     public $website_tel='';
     public $website_email='';
+    public $website_address='';
     public $website_copyright='';
+    public $website_footer_menu = [];
     public $website_color='';
     public $website_color_inner='';
     public $website_colorword='';
@@ -30,6 +32,8 @@ class Index extends Controller
     public $website_colorhead='';
     public $website_inpic='';
     public $website_contact=[];
+    public $website_qualification=[];
+    public $website_publicity_info=[];
     public $website_canonical='';
     public $website_og='';
     public $config = [
@@ -71,31 +75,45 @@ class Index extends Controller
         }
 
         if($this->company_id==0){
-            $website = Db::name('website_basic')->where(['id'=>9])->find();
+            $website = Db::name('website_basic')->where(['id'=>33])->find();
 
-            $this->website_contact = Db::name('website_contact')->where(['system_id'=>9])->select();
+            $this->website_contact = Db::name('website_contact')->where(['company_id'=>33,'company_type'=>1])->select();
+            $this->website_footer_menu = [];
         }
         else{
             $website = Db::name('website_basic')->where(['company_id'=>$this->company_id,'company_type'=>$this->company_type])->find();
-            $this->website_contact = [];
+            $this->website_contact = Db::name('website_contact')->where(['company_id'=>$this->company_id,'company_type'=>$this->company_type])->select();
             session('company_id',$this->company_id);
             session('company_type',$this->company_type);
+            
+            #获取页脚功能菜单
+            $this->website_footer_menu = Db::name('website_footer')->where(['company_id'=>$this->company_id,'company_type'=>$this->company_type,'pid'=>0])->select();
+            foreach($this->website_footer_menu as $k=>$v){
+                $this->website_footer_menu[$k]['childMenu'] = Db::name('website_footer')->where(['company_id'=>$this->company_id,'company_type'=>$this->company_type,'pid'=>$v['id']])->select();
+            }
+            
+            #获取网站资质
+            $this->website_qualification = Db::name('merchsite_qualification')->where(['company_id'=>$this->company_id,'company_type'=>$this->company_type])->select();
+            
+            #获取公示信息
+            $this->website_publicity_info = json_decode($website['publicity_info'],true);
         }
-        if(!empty($website)){
-            $website['name'] = json_decode($website['name'],true);
-            $website['keywords'] = json_decode($website['keywords'],true);
-            $website['desc'] = json_decode($website['desc'],true);
-            $website['copyright'] = json_decode($website['copyright'],true);
-        }
+        // if(!empty($website)){
+            // $website['name'] = json_decode($website['name'],true);
+            // $website['keywords'] = json_decode($website['keywords'],true);
+            // $website['desc'] = json_decode($website['desc'],true);
+            // $website['copyright'] = json_decode($website['copyright'],true);
+        // }
 
-        $this->website_name = $website['name'][session('lang')];
-        $this->website_keywords = $website['keywords'][session('lang')];
-        $this->website_description = $website['desc'][session('lang')];
+        $this->website_name = $website['name'];
+        $this->website_keywords = $website['keywords'];
+        $this->website_description = $website['desc'];
         $this->website_ico = $website['logo'];
         $this->website_sico = $website['slogo'];
         $this->website_tel = $website['mobile'];
         $this->website_email = $website['email'];
-        $this->website_copyright = $website['copyright'][session('lang')];
+        $this->website_address = $website['address'];
+        $this->website_copyright = $website['copyright'];#[session('lang')]
         $this->website_color = $website['color'];
         $this->website_color_inner = $website['color_inner'];
         $this->website_colorword = $website['color_word'];
@@ -169,59 +187,60 @@ class Index extends Controller
         #找上级
         $navbar_menu = '';
         $now_level = Db::name('website_navbar')->where('id',$id)->find();
-        $now_level['name'] = json_decode($now_level['name'],true);
+        // $now_level['name'] = json_decode($now_level['name'],true);
         $now_level2 = [];$now_level3 = [];$now_level4 = [];$now_level5 = [];$now_level6 = [];
         if(!empty($now_level['pid'])){
             $now_level2 = Db::name('website_navbar')->where('id',$now_level['pid'])->find();
-            $now_level2['name'] = json_decode($now_level2['name'],true);
+            // $now_level2['name'] = json_decode($now_level2['name'],true);
             if(!empty($now_level2['pid'])){
                 $now_level3 = Db::name('website_navbar')->where('id',$now_level2['pid'])->find();
-                $now_level3['name'] = json_decode($now_level3['name'],true);
+                // $now_level3['name'] = json_decode($now_level3['name'],true);
                 if(!empty($now_level3['pid'])){
                     $now_level4 = Db::name('website_navbar')->where('id',$now_level3['pid'])->find();
-                    $now_level4['name'] = json_decode($now_level4['name'],true);
+                    // $now_level4['name'] = json_decode($now_level4['name'],true);
                     if(!empty($now_level4['pid'])){
                         $now_level5 = Db::name('website_navbar')->where('id',$now_level4['pid'])->find();
-                        $now_level5['name'] = json_decode($now_level5['name'],true);
+                        // $now_level5['name'] = json_decode($now_level5['name'],true);
                         if(!empty($now_level5['pid'])){
                             $now_level6 = Db::name('website_navbar')->where('id',$now_level6['pid'])->find();
-                            $now_level6['name'] = json_decode($now_level6['name'],true);
+                            // $now_level6['name'] = json_decode($now_level6['name'],true);
                         }
                     }
                 }
             }
         }
+        // [session('lang')]
         $count = 0;
         if(!empty($now_level)){
             $count += 1;
-            $navbar_menu .= '<a href="?s=index/detail&company_id='.$this->company_id.'&company_type='.$this->company_type.'&id='.$now_level['id'].'">'.$now_level['name'][session('lang')].'</a>&nbsp;<span style="color:#d1a575;">\</span>&nbsp;';
+            $navbar_menu .= '<a href="?s=index/detail&company_id='.$this->company_id.'&company_type='.$this->company_type.'&id='.$now_level['id'].'">'.$now_level['name'].'</a>&nbsp;<span style="color:#d1a575;">\</span>&nbsp;';
         }
         if(!empty($now_level2)){
             $count += 1;
-            $navbar_menu = '<a href="?s=index/detail&company_id='.$this->company_id.'&company_type='.$this->company_type.'&id='.$now_level2['id'].'">'.$now_level2['name'][session('lang')].'</a>&nbsp;<span style="color:#d1a575;">\</span>&nbsp;'.$navbar_menu;
+            $navbar_menu = '<a href="?s=index/detail&company_id='.$this->company_id.'&company_type='.$this->company_type.'&id='.$now_level2['id'].'">'.$now_level2['name'].'</a>&nbsp;<span style="color:#d1a575;">\</span>&nbsp;'.$navbar_menu;
         }
         if($count<2){
             if(!empty($now_level3)){
                 $count += 1;
-                $navbar_menu = '<a href="?s=index/detail&company_id='.$this->company_id.'&company_type='.$this->company_type.'&id='.$now_level3['id'].'">'.$now_level3['name'][session('lang')].'</a>&nbsp;<span style="color:#d1a575;">\</span>&nbsp;'.$navbar_menu;
+                $navbar_menu = '<a href="?s=index/detail&company_id='.$this->company_id.'&company_type='.$this->company_type.'&id='.$now_level3['id'].'">'.$now_level3['name'].'</a>&nbsp;<span style="color:#d1a575;">\</span>&nbsp;'.$navbar_menu;
             }
         }
         if($count<2){
             if(!empty($now_level4)){
                 $count += 1;
-                $navbar_menu = '<a href="?s=index/detail&company_id='.$this->company_id.'&company_type='.$this->company_type.'&id='.$now_level4['id'].'">'.$now_level4['name'][session('lang')].'</a>&nbsp;<span style="color:#d1a575;">\</span>&nbsp;'.$navbar_menu;
+                $navbar_menu = '<a href="?s=index/detail&company_id='.$this->company_id.'&company_type='.$this->company_type.'&id='.$now_level4['id'].'">'.$now_level4['name'].'</a>&nbsp;<span style="color:#d1a575;">\</span>&nbsp;'.$navbar_menu;
             }    
         }
         if($count<2){
             if(!empty($now_level5)){
                 $count += 1;
-                $navbar_menu = '<a href="?s=index/detail&company_id='.$this->company_id.'&company_type='.$this->company_type.'&id='.$now_level5['id'].'">'.$now_level5['name'][session('lang')].'</a>&nbsp;<span style="color:#d1a575;">\</span>&nbsp;'.$navbar_menu;
+                $navbar_menu = '<a href="?s=index/detail&company_id='.$this->company_id.'&company_type='.$this->company_type.'&id='.$now_level5['id'].'">'.$now_level5['name'].'</a>&nbsp;<span style="color:#d1a575;">\</span>&nbsp;'.$navbar_menu;
             }
         }
         if($count<2){
             if(!empty($now_level6)){
                 $count += 1;
-                $navbar_menu = '<a href="?s=index/detail&company_id='.$this->company_id.'&company_type='.$this->company_type.'&id='.$now_level6['id'].'">'.$now_level6['name'][session('lang')].'</a>&nbsp;<span style="color:#d1a575;">\</span>&nbsp;'.$navbar_menu;
+                $navbar_menu = '<a href="?s=index/detail&company_id='.$this->company_id.'&company_type='.$this->company_type.'&id='.$now_level6['id'].'">'.$now_level6['name'].'</a>&nbsp;<span style="color:#d1a575;">\</span>&nbsp;'.$navbar_menu;
             }
         }
         return substr($navbar_menu,0,-49);
@@ -291,12 +310,16 @@ class Index extends Controller
         $website['sico'] = $this->website_sico;
         $website['tel'] = $this->website_tel;
         $website['email'] = $this->website_email;
+        $website['address'] = $this->website_address;
+        $website['footer_menu'] = $this->website_footer_menu;
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
         $website['color_adorn'] = $this->website_coloradorn;
         $website['color_head'] = $this->website_colorhead;
         $website['website_contact'] = $this->website_contact;
+        $website['website_qualification'] = $this->website_qualification;
+        $website['website_publicity_info'] = $this->website_publicity_info;
         $website['website_canonical'] = $this->website_canonical;
         $website['website_og'] = $this->website_og;
 
@@ -540,12 +563,24 @@ class Index extends Controller
         $company = Db::name('website_user_company')->where(['id'=>intval($data['company_id'])])->find();
 
         $list = [];
-        #获取权限
-        if(!empty($company['webList'])){
-            $company['webList'] = explode(',',$company['webList']);
-            $list = Db::name('centralize_manage_menu')
-                ->whereIn('id', $company['webList'])
+        
+        #获取权限（旧的，暂时不用）
+        // if(!empty($company['webList'])){
+        //     $company['webList'] = explode(',',$company['webList']);
+        //     $list = Db::name('centralize_manage_menu')
+        //         ->whereIn('id', $company['webList'])
+        //         ->select();
+        // }
+        
+        #获取卖家服务权限
+        if(!empty($company['sellerList'])){
+            $company['sellerList'] = explode(',',$company['sellerList']);
+            $list = Db::name('website_menu')
+                ->whereIn('id', $company['sellerList'])
                 ->select();
+                
+            #整理上下级
+            $list = $this->listToTree($list);
         }
         
         #获取已配置的logo和浏览器标志
@@ -557,12 +592,44 @@ class Index extends Controller
         else{
             $company['domain_name2'] = explode('.',$company['domain_name'])[1];
         }
-
+        
         return json(['code'=>0,'list'=>$company,'list2'=>$list,'website_basic'=>$website_basic,'msg'=>'正在刷新...']);
+    }
+    
+    public function listToTree($list)
+    {
+        $tree = [];          // 最终树形结果
+        $refer = [];         // 引用数组，以id为键
+    
+        // 第一步：遍历数组，初始化每个元素的children，并建立id引用
+        foreach ($list as $key => $item) {
+            $refer[$item['id']] = &$list[$key];
+            $list[$key]['children'] = [];   // 每个节点默认添加children字段
+        }
+    
+        // 第二步：再次遍历，将子节点添加到父节点的children中
+        foreach ($list as $key => $item) {
+            $parentId = $item['pid'];
+            if ($parentId != 0 && isset($refer[$parentId])) {
+                // 找到父节点引用
+                $parent = &$refer[$parentId];
+                // 将当前节点加入父节点的children（使用值传递即可，也可用引用，视需求而定）
+                $parent['children'][] = $list[$key];
+            }
+        }
+    
+        // 第三步：提取所有顶级节点（pid=0）
+        foreach ($list as $key => $item) {
+            if ($item['pid'] == 0) {
+                $tree[] = $list[$key];
+            }
+        }
+    
+        return $tree;
     }
 
     #保存企业二级域名
-    public function save_domainname(Request $request){
+    public function save_domainname_backup(Request $request){
         $dat = input();
 
         $company_id = intval($dat['company_id']);
@@ -587,13 +654,26 @@ class Index extends Controller
     }
 
     #企业网站==============================================start
+    public function groupByArray($array, $key){
+        $result = [];
+        foreach ($array as $item) {
+            $groupKey = $item[$key];
+            if (!isset($result[$groupKey])) {
+                $result[$groupKey] = [];
+            }
+            $result[$groupKey][] = $item;
+        }
+        return $result;
+    }
+    
     #商家网站首页
     public function merch_website_index(Request $request)
     {
         $data = input();
         $company_id = intval($data['company_id']);
         $company_type = intval($data['company_type']); #企业类型，0商家商店，1商家网站
-
+        $is_mobile = isMobile();
+        
         $website['title'] = $this->website_name;
         $website['keywords'] = $this->website_keywords;
         $website['description'] = $this->website_description;
@@ -601,12 +681,16 @@ class Index extends Controller
         $website['sico'] = $this->website_sico;
         $website['tel'] = $this->website_tel;
         $website['email'] = $this->website_email;
+        $website['address'] = $this->website_address;
+        $website['footer_menu'] = $this->website_footer_menu;
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
         $website['color_adorn'] = $this->website_coloradorn;
         $website['color_head'] = $this->website_colorhead;
         $website['website_contact'] = $this->website_contact;
+        $website['website_qualification'] = $this->website_qualification;
+        $website['website_publicity_info'] = $this->website_publicity_info;
         $website['website_canonical'] = $this->website_canonical;
         $website['website_og'] = $this->website_og;
 
@@ -638,15 +722,49 @@ class Index extends Controller
         #栏目
         $menu = $this->company_menu($company_id,$company_type);
 
+        #滚动信息
+        $rotate_info = Db::name('merchsite_rotate')->where(['company_id'=>$company_id,'company_type'=>$company_type])->find();
+        if(!empty($rotate_info['content_id'])){
+            $rotate_info['content_id'] = explode(',',$rotate_info['content_id']);
+            foreach($rotate_info['content_id'] as $k=>$v){
+                if($v==1){
+                    #新闻内容
+                    $news = Db::name('website_crossborder_news')->where(['time'=>date('Y-m-d')])->orderRaw('rand()')->limit(50)->select();
+                    if(count($news)==0){
+                        $news = Db::name('website_crossborder_news')->where(['status'=>1])->orderRaw('rand()')->limit(50)->select();
+                    }
+                    $rotate_info['content'][$k] = $news;
+                }
+                elseif($v==2){
+                    #时间内容
+                    $citys2 = Db::name('website_world_time')->where(['is_show'=>0])->order('displayorder asc')->group('contryCn')->select();
+                    $citys = $this->groupByArray($citys2, 'contryCn');
+                    $rotate_info['content'][$k] = $citys;
+                }
+                elseif($v==3){
+                    #汇率内容
+                    $rate = Db::name('website_exchange_rate')->whereRaw('id != 158 ')->select();
+
+                    #其他币种
+                    $currency = Db::name('centralize_currency')->whereRaw('code_zhname <> "人民币元"')->select();
+
+                    $rotate_info['content'][$k] = ['rate'=>$rate,'currency'=>$currency];
+                }
+            }
+        }
+        
         #轮播图
         $rotate = Db::name('website_rotate')->where(['company_id'=>$company_id,'company_type'=>$company_type])->select();
         foreach($rotate as $k=>$v){
+            if($is_mobile==true){
+                #手机版轮播图
+                $rotate[$k]['thumb'] = $v['mob_thumb'];
+            }
             $rotate[$k]['link'] = $this->getAppLink($v['go_other'],$v,'lunbo');
         }
 
         #首页板块
         $services = Db::name('website_index')->where(['company_id'=>$company_id,'company_type'=>$company_type])->order('displayorder asc')->select();
-
         foreach($services as $k=>$v){
             if($v['format_type']==2){
                 #内容切换框
@@ -761,7 +879,7 @@ class Index extends Controller
         $data['thumb'] = 'https://shop.gogo198.cn/collect_website/public/uploads/centralize/website_index/64a5282e9bdbf.png';
         $signPackage = weixin_share($data);
         
-        return view('/index/merch_index',compact('menu','rotate','website','services','services2','link','news','signPackage','discovery_rotate','company_id','company_type','ishave_website'));
+        return view('/index/merch_index',compact('menu','rotate','website','services','services2','link','news','signPackage','discovery_rotate','company_id','company_type','ishave_website','rotate_info'));
     }
 
     #企业网站管理
@@ -786,7 +904,6 @@ class Index extends Controller
             $company_info['domain_name2'] = explode('.',$company_info['domain_name'])[1];
         }
         
-
         #企业网站-轮播图
         $rotate = Db::name('website_rotate')->where(['company_id'=>$company_id,'company_type'=>1])->select();
         foreach($rotate as $k=>$v){
@@ -850,12 +967,12 @@ class Index extends Controller
         $company_type = intval($dat['company_type']);
 
         $list = Db::name('website_navbar')->where(['company_id'=>$company_id,'company_type'=>$company_type])->order('displayorder,id asc')->select();
-        if($company_type==1){
-            #网站
-            foreach($list as $k=>$v){
-                $list[$k]['name'] = json_decode($v['name'],true)['zh'];
-            }
-        }
+        // if($company_type==1){
+        //     #网站
+        //     foreach($list as $k=>$v){
+        //         $list[$k]['name'] = json_decode($v['name'],true)['zh'];
+        //     }
+        // }
 
         return json(['code' => 0, 'msg' => '', 'count' => count($list), 'data' => $list]);
     }
@@ -1086,6 +1203,49 @@ class Index extends Controller
         }
     }
 
+    #获取下级菜单
+    public function get_nextNavbar(Request $request){
+        $dat = input();
+
+        $id = intval($dat['id']);
+
+        $cmenu = [];
+        if($id>0){
+            $cmenu = Db::name('website_navbar')->where(['pid'=>$id])->field('id,name')->select();
+            foreach($cmenu as $k=>$v){
+                $cmenu[$k]['name'] = json_decode($v['name'],true)['zh'];
+            }
+        }
+
+
+        return json(['code'=>0,'list'=>$cmenu]);
+    }
+    
+    #网站频道
+    public function website_index(){
+        $dat = input();
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);
+        
+        #企业网站-网站频道
+        $website_index = Db::name('website_index')->where(['company_id'=>$company_id,'company_type'=>$company_type])->order('displayorder,id asc')->select();
+        foreach($website_index as $k=>$v){
+            if($v['navbar_id']=='A1'){
+                $website_index[$k]['name'] = '发现轮播+信息切换框';
+            }elseif($v['navbar_id']=='A2'){
+                $website_index[$k]['name'] = '常见问题';
+            }else{
+                $website_index[$k]['name'] = Db::name('website_navbar')->where(['id'=>intval($v['navbar_id'])])->field('name')->find()['name'];
+                // $website_index[$k]['name'] = json_decode($name,true)['zh'];
+            }
+        }
+        
+        $website['website_canonical'] = $this->website_canonical;
+        $website['website_og'] = $this->website_og;
+        
+        return view('index/website/website_index',compact('company_id','company_type','website_index','website'));
+    }
+    
     #保存频道
     public function save_website_index(Request $request){
         $dat = input();
@@ -1284,24 +1444,24 @@ class Index extends Controller
         }
     }
 
-    #获取下级菜单
-    public function get_nextNavbar(Request $request){
+    #发现轮播图
+    public function website_discovery(Request $request){
         $dat = input();
-
-        $id = intval($dat['id']);
-
-        $cmenu = [];
-        if($id>0){
-            $cmenu = Db::name('website_navbar')->where(['pid'=>$id])->field('id,name')->select();
-            foreach($cmenu as $k=>$v){
-                $cmenu[$k]['name'] = json_decode($v['name'],true)['zh'];
-            }
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);#0商城，1官网
+        
+        #企业网站-发现轮播
+        $website_discovery = Db::name('website_discovery_list')->where(['company_id'=>$company_id,'company_type'=>$company_type])->select();
+        foreach($website_discovery as $k=>$v){
+            $website_discovery[$k]['createtime'] = date('Y-m-d H:i',$v['createtime']);
         }
-
-
-        return json(['code'=>0,'list'=>$cmenu]);
+        
+        $website['website_canonical'] = $this->website_canonical;
+        $website['website_og'] = $this->website_og;
+        
+        return view('index/website/website_discovery',compact('company_id','company_type','website_discovery','website'));
     }
-
+    
     #保存发现轮播图
     public function save_website_discovery(Request $request){
         $dat = input();
@@ -1364,7 +1524,7 @@ class Index extends Controller
     public function company_menu($company_id,$company_type,$type=0){
         $menu = Db::name('website_navbar')->where(['company_id'=>$company_id,'company_type'=>$company_type,'pid'=>0])->order('displayorder,id asc')->select();
         foreach($menu as $k=>$v){
-            $menu[$k]['name'] = json_decode($v['name'],true)['zh'];
+            // $menu[$k]['name'] = json_decode($v['name'],true)['zh'];
             if($type==2){
                 #不获取下级
                 $menu[$k]['childMenu'] = [];
@@ -1379,13 +1539,13 @@ class Index extends Controller
     public function getDownCompanyMenu($id){
         $cmenu = Db::name('website_navbar')->where(['pid'=>$id])->order('displayorder,id asc')->select();
         foreach($cmenu as $k=>$v){
-            $cmenu[$k]['name'] = json_decode($v['name'],true)['zh'];
+            // $cmenu[$k]['name'] = json_decode($v['name'],true)['zh'];
             $cmenu[$k]['childMenu'] = Db::name('website_navbar')->where(['pid'=>$v['id']])->order('displayorder,id asc')->select();
             foreach($cmenu[$k]['childMenu'] as $k2=>$v2){
-                $cmenu[$k]['childMenu'][$k2]['name'] = json_decode($v2['name'],true)['zh'];
+                // $cmenu[$k]['childMenu'][$k2]['name'] = json_decode($v2['name'],true)['zh'];
                 $cmenu[$k]['childMenu'][$k2]['childMenu'] = Db::name('website_navbar')->where(['pid'=>$v2['id']])->order('displayorder,id asc')->select();
                 foreach($cmenu[$k]['childMenu'][$k2]['childMenu'] as $k3=>$v3){
-                    $cmenu[$k]['childMenu'][$k2]['childMenu'][$k3]['name'] = json_decode($v3['name'],true)['zh'];
+                    // $cmenu[$k]['childMenu'][$k2]['childMenu'][$k3]['name'] = json_decode($v3['name'],true)['zh'];
                 }
             }
         }
@@ -1514,6 +1674,7 @@ class Index extends Controller
                     'color'=>$dat['color'],
                     'color_inner'=>$dat['color_inner'],
                     'color_word'=>$dat['color_word'],
+                    'color_head'=>$dat['color_head'],
                     'color_adorn'=>$dat['color_adorn'],
                     'font_family'=>$dat['font_family'],
 //                    'is_website'=>$dat['is_website'],
@@ -1541,6 +1702,7 @@ class Index extends Controller
                     'color'=>$dat['color'],
                     'color_inner'=>$dat['color_inner'],
                     'color_word'=>$dat['color_word'],
+                    'color_head'=>$dat['color_head'],
                     'color_adorn'=>$dat['color_adorn'],
                     'font_family'=>$dat['font_family'],
 //                    'is_website'=>$dat['is_website'],
@@ -1565,7 +1727,7 @@ class Index extends Controller
             $data = Db::name('website_basic')->where(['company_id'=>$company_id,'company_type'=>$company_type])->find();
 
             if(empty($data)){
-                $data = ['slogo'=>'','logo'=>'','head_file'=>'','mob_head_file'=>'','name'=>'','desc'=>'','keywords'=>'','color'=>'','color_inner'=>'#ffffff','color_word'=>'#ffffff','color_adorn'=>'','is_website'=>0,'font_family'=>"Microsoft JhengHei, 微軟正黑體, Arial, sans-serif",'pay_method'=>0,'cash_on_delivery'=>1,'down_payment'=>1,'prepaid_method'=>1,'prepaid_percent'=>'','prepaid_currency'=>'','prepaid_amount'=>'','paypal'=>['client_id'=>'','client_secret'=>'','is_through'=>0]];
+                $data = ['slogo'=>'','logo'=>'','head_file'=>'','mob_head_file'=>'','name'=>'','desc'=>'','keywords'=>'','color'=>'','color_inner'=>'#ffffff','color_word'=>'#ffffff','color_head'=>'','color_adorn'=>'','is_website'=>0,'font_family'=>"Microsoft JhengHei, 微軟正黑體, Arial, sans-serif",'pay_method'=>0,'cash_on_delivery'=>1,'down_payment'=>1,'prepaid_method'=>1,'prepaid_percent'=>'','prepaid_currency'=>'','prepaid_amount'=>'','paypal'=>['client_id'=>'','client_secret'=>'','is_through'=>0]];
             }
             else{
                 if(empty($data['paypal'])){
@@ -2255,6 +2417,40 @@ class Index extends Controller
         Db::name('website_footer')->where('id',$id)->delete();
 
         return json(['code' => 0, 'msg' => '已删除']);
+    }
+
+    #保存域名配置
+    public function save_domainname(Request $request){
+        $dat = input();
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);#0商城，1官网
+        
+        if($request->isAjax()){
+            $data = Db::name('website_basic')->where(['company_id'=>$company_id,'company_type'=>$company_type])->find();
+            $res = '';
+            if(!empty($data)){
+                $res = Db::name('website_basic')->where(['company_id'=>$company_id,'company_type'=>$company_type])->update([
+                    'domain_name'=>trim($dat['domain_name']),
+                ]);
+            }
+            else{
+                $res = Db::name('website_basic')->insert([
+                    'company_id'=>$company_id,
+                    'company_type'=>$company_type,
+                    'domain_name'=>trim($dat['domain_name'])
+                ]);
+            }
+            
+            if($res){
+                return json(['code'=>0,'msg'=>'保存成功']);
+            }else{
+                return json(['code'=>-1,'msg'=>'暂无修改']);
+            }
+        }else{
+            $data = Db::name('website_basic')->where(['company_id'=>$company_id,'company_type'=>$company_type])->find();
+            
+            return view('index/shop_backend/save_domainname',compact('data','company_id','company_type'));
+        }
     }
 
     #社交媒体管理
@@ -14227,12 +14423,16 @@ class Index extends Controller
         $website['sico'] = $this->website_sico;
         $website['tel'] = $this->website_tel;
         $website['email'] = $this->website_email;
+        $website['address'] = $this->website_address;
+        $website['footer_menu'] = $this->website_footer_menu;
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
         $website['color_adorn'] = $this->website_coloradorn;
         $website['color_head'] = $this->website_colorhead;
         $website['website_contact'] = $this->website_contact;
+        $website['website_qualification'] = $this->website_qualification;
+        $website['website_publicity_info'] = $this->website_publicity_info;
         $website['website_canonical'] = $this->website_canonical;
         $website['website_og'] = $this->website_og;
 
@@ -14268,9 +14468,37 @@ class Index extends Controller
             }
 
         }else{
-
-
-            return view('',compact('data','website'));
+            #客服群组-显示位置
+            $group = Db::name('merchsite_customer_group')->where('company_id',$company_id)->find();
+            if(empty($group)){
+                $group = ['direction'=>'','name'=>'','staff_ids'=>'','worktime'=>'周一至周六 08:00-12:00 13:30-18:00'];
+            }else{
+                if(empty($group['worktime'])){
+                    $group['worktime'] = '周一至周六 08:00-12:00 13:30-18:00';
+                }
+            }
+    
+            $website['title'] = $this->website_name;
+            $website['keywords'] = $this->website_keywords;
+            $website['description'] = $this->website_description;
+            $website['ico'] = $this->website_ico;
+            $website['sico'] = $this->website_sico;
+            $website['tel'] = $this->website_tel;
+            $website['email'] = $this->website_email;
+            $website['address'] = $this->website_address;
+            $website['footer_menu'] = $this->website_footer_menu;
+            $website['copyright'] = $this->website_copyright;
+            $website['color'] = $this->website_color;
+            $website['color_word'] = $this->website_colorword;
+            $website['color_adorn'] = $this->website_coloradorn;
+            $website['color_head'] = $this->website_colorhead;
+            $website['website_contact'] = $this->website_contact;
+            $website['website_qualification'] = $this->website_qualification;
+            $website['website_publicity_info'] = $this->website_publicity_info;
+            $website['website_canonical'] = $this->website_canonical;
+            $website['website_og'] = $this->website_og;
+        
+            return view('index/group/save_customer_direction',compact('data','website','company_id','company_type','group'));
         }
     }
 
@@ -14306,9 +14534,39 @@ class Index extends Controller
             }
 
         }else{
-            $data = Db::name('merchsite_customer_group')->where('company_id',$company_id)->find();
+            $group = Db::name('merchsite_customer_group')->where('company_id',$company_id)->find();
+            if(empty($group)){
+                $group = ['direction'=>'','name'=>'','staff_ids'=>'','worktime'=>'周一至周六 08:00-12:00 13:30-18:00'];
+            }else{
+                if(empty($group['worktime'])){
+                    $group['worktime'] = '周一至周六 08:00-12:00 13:30-18:00';
+                }
+            }
 
-            return view('',compact('data','website','staffs'));
+            $staffs = Db::name('centralize_manage_person')->where(['company_id'=>$company_id])->select();
+            $staffs = json_encode($staffs,true);
+    
+            $website['title'] = $this->website_name;
+            $website['keywords'] = $this->website_keywords;
+            $website['description'] = $this->website_description;
+            $website['ico'] = $this->website_ico;
+            $website['sico'] = $this->website_sico;
+            $website['tel'] = $this->website_tel;
+            $website['email'] = $this->website_email;
+            $website['address'] = $this->website_address;
+            $website['footer_menu'] = $this->website_footer_menu;
+            $website['copyright'] = $this->website_copyright;
+            $website['color'] = $this->website_color;
+            $website['color_word'] = $this->website_colorword;
+            $website['color_adorn'] = $this->website_coloradorn;
+            $website['color_head'] = $this->website_colorhead;
+            $website['website_contact'] = $this->website_contact;
+            $website['website_qualification'] = $this->website_qualification;
+            $website['website_publicity_info'] = $this->website_publicity_info;
+            $website['website_canonical'] = $this->website_canonical;
+            $website['website_og'] = $this->website_og;
+            
+            return view('index/group/save_customer_group',compact('data','website','staffs','group','company_id','company_type'));
         }
     }
 
@@ -14799,12 +15057,16 @@ class Index extends Controller
         $website['sico'] = $this->website_sico;
         $website['tel'] = $this->website_tel;
         $website['email'] = $this->website_email;
+        $website['address'] = $this->website_address;
+        $website['footer_menu'] = $this->website_footer_menu;
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
         $website['color_adorn'] = $this->website_coloradorn;
         $website['color_head'] = $this->website_colorhead;
         $website['website_contact'] = $this->website_contact;
+        $website['website_qualification'] = $this->website_qualification;
+        $website['website_publicity_info'] = $this->website_publicity_info;
         $website['website_canonical'] = $this->website_canonical;
         $website['website_og'] = $this->website_og;
 
@@ -14814,7 +15076,8 @@ class Index extends Controller
     #知识库
     public function knowledge_list(Request $request){
         $dat = input();
-        $company_id =  intval($dat['company_id']);
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);
 
         if(isset($dat['pa'])){
             $limit = $request->get('limit');
@@ -14857,7 +15120,27 @@ class Index extends Controller
             return json(['code'=>0,'count'=>$count,'data'=>$rows]);
         }else{
             
-            return view('',compact('company_id'));
+            $website['title'] = $this->website_name;
+            $website['keywords'] = $this->website_keywords;
+            $website['description'] = $this->website_description;
+            $website['ico'] = $this->website_ico;
+            $website['sico'] = $this->website_sico;
+            $website['tel'] = $this->website_tel;
+            $website['email'] = $this->website_email;
+            $website['address'] = $this->website_address;
+            $website['footer_menu'] = $this->website_footer_menu;
+            $website['copyright'] = $this->website_copyright;
+            $website['color'] = $this->website_color;
+            $website['color_word'] = $this->website_colorword;
+            $website['color_adorn'] = $this->website_coloradorn;
+            $website['color_head'] = $this->website_colorhead;
+            $website['website_contact'] = $this->website_contact;
+            $website['website_qualification'] = $this->website_qualification;
+            $website['website_publicity_info'] = $this->website_publicity_info;
+            $website['website_canonical'] = $this->website_canonical;
+            $website['website_og'] = $this->website_og;
+            
+            return view('index/ai/knowledge_list',compact('company_id','company_type'));
         }
     }
     
@@ -15246,6 +15529,111 @@ class Index extends Controller
     }
     #企业服务==============================================end
 
+    #营销==============================================start
+    public function website_market(Request $request){
+        $dat = input();
+        
+        $typ = 0;
+        $company_id = intval($dat['company_id']);
+        $company_type = isset($dat['company_type'])?intval($dat['company_type']):0;#0商城，1网站
+        $fid = intval($dat['fid']);
+        
+        #获取当前功能下的所有子功能
+        $func = Db::name('website_menu')->where(['pid'=>$fid])->select();
+        foreach($func as $k=>$v){
+            $func[$k]['children'] = Db::name('website_menu')->where(['pid'=>$v['id']])->select();
+            foreach($func[$k]['children'] as $k2=>$v2){
+                $func[$k]['children'][$k2]['children'] = Db::name('website_menu')->where(['pid'=>$v2['id']])->select();
+                foreach($func[$k]['children'][$k2]['children'] as $k3=>$v3){
+                    $func[$k]['children'][$k2]['children'][$k3]['children'] = Db::name('website_menu')->where(['pid'=>$v3['id']])->select();
+                    foreach($func[$k]['children'][$k2]['children'][$k3]['children'] as $k4=>$v4){
+                        $func[$k]['children'][$k2]['children'][$k3]['children'][$k4]['children'] = Db::name('website_menu')->where(['pid'=>$v4['id']])->select();
+                    }
+                }
+            }
+        }
+        
+        #获取当前企业的相应功能
+        $company = Db::name('website_user_company')->where(['id'=>$company_id])->field('sellerList')->find();
+        $company['sellerList'] = explode(',',$company['sellerList']);
+
+        #根据当前企业的权限找到可操作的功能
+        $authlist = $this->filterTreeByIds($func, $company['sellerList']);
+        
+        $website_basic = ['slogo'=>'','logo'=>'','company_info'=>['id'=>0,'company'=>'','webList'=>'']];
+        
+        if($company_id>0){
+            #企业网站-基本&页头页脚配置
+            $model = new WebsiteBasic();
+            $website_basic = $model->getByCompanyId($company_id, $company_type);
+            $website_basic = json_decode($website_basic,true);
+            
+            $web_company = Db::name('website_user_company')->where(['id'=>$company_id])->find();
+            $website_basic['company_info'] = $web_company;
+            
+            $list = [];
+            #获取权限
+            if(!empty($web_company['sellerList'])){
+                $web_company['webList'] = explode(',',$web_company['sellerList']);
+                $list = Db::name('website_menu')
+                    ->whereIn('id', $web_company['sellerList'])
+                    ->select();
+                $list = $this->buildTree($list, 0);
+            }
+            $website_basic['company_info']['webList'] = $list;
+        }
+        
+        $website['title'] = $this->website_name;
+        $website['keywords'] = $this->website_keywords;
+        $website['description'] = $this->website_description;
+        $website['ico'] = $this->website_ico;
+        $website['sico'] = $this->website_sico;
+        $website['tel'] = $this->website_tel;
+        $website['email'] = $this->website_email;
+        $website['address'] = $this->website_address;
+        $website['footer_menu'] = $this->website_footer_menu;
+        $website['copyright'] = $this->website_copyright;
+        $website['color'] = $this->website_color;
+        $website['color_word'] = $this->website_colorword;
+        $website['color_adorn'] = $this->website_coloradorn;
+        $website['color_head'] = $this->website_colorhead;
+        $website['website_contact'] = $this->website_contact;
+        $website['website_qualification'] = $this->website_qualification;
+        $website['website_publicity_info'] = $this->website_publicity_info;
+        $website['website_canonical'] = $this->website_canonical;
+        $website['website_og'] = $this->website_og;
+
+        return view('index/market/website_market',compact('company','company_id','company_type','authlist','website','website_basic'));
+    }
+    
+    #根据权限ID列表过滤树形数组
+    public function filterTreeByIds($tree, $allowedIds){
+        $result = [];
+        $allowedMap = array_flip($allowedIds); // 转为哈希表，提升查找效率
+        
+        foreach ($tree as $node) {
+            // 递归处理子节点
+            $filteredChildren = [];
+            if (!empty($node['children']) && is_array($node['children'])) {
+                $filteredChildren = $this->filterTreeByIds($node['children'], $allowedIds);
+            }
+    
+            // 当前节点ID在允许列表中，保留该节点
+            if (isset($allowedMap[$node['id']])) {
+                $newNode = $node;
+                $newNode['children'] = $filteredChildren;
+                $result[] = $newNode;
+            } else {
+                // 当前节点不在列表中，但其过滤后的子节点提升到当前层级
+                $result = array_merge($result, $filteredChildren);
+            }
+        }
+    
+        return $result;
+    }
+    #营销==============================================end
+
+
     public function getAppLink($go=0,$data=[],$type=''){
         if($go==1){
             #第三方链接
@@ -15368,8 +15756,8 @@ class Index extends Controller
             $next_menu = Db::name('website_navbar')->where('pid',$id)->select();
             // dd($next_menu);
             foreach($next_menu as $k=>$v){
-                $next_menu[$k]['name'] = json_decode($v['name'],true)[session('lang')];
-                $next_menu[$k]['color_word'] = json_decode($v['color_word'],true)[session('lang')];
+                // $next_menu[$k]['name'] = json_decode($v['name'],true)[session('lang')];
+                // $next_menu[$k]['color_word'] = json_decode($v['color_word'],true)[session('lang')];
                 // $next_menu[$k]['children'] = Db::name('website_navbar')->where('pid',$v['id'])->select();
                 // foreach($next_menu[$k]['children'] as $k2=>$v2){
                 //     $next_menu[$k]['children'][$k2]['name'] = json_decode($v2['name'],true)[session('lang')];
@@ -15406,10 +15794,11 @@ class Index extends Controller
         $article_schema = json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         // -----------------------------------------
 
-        #栏目
+        #菜单栏目
         #$menu = $this->menu();
         $menu =  $this->company_menu($company_id,$company_type);
-        $data['content'] = str_replace('src="https://shop.gogo198.cn','src="',json_decode($data['content'],true)[session('lang')]);
+        // [session('lang')]
+        $data['content'] = str_replace('src="https://shop.gogo198.cn','src="',json_decode($data['content'],true));
         // $data['content'] = str_replace('src="','src="https://admin.gogo198.cn',$data['content']);
         $data['content'] = str_replace('src="https://admin.gogo198.cnhttps','src="https',$data['content']);
         $data['content'] = str_replace('src="https://admin.gogo198.cnhttp','src="http',$data['content']);
@@ -15418,9 +15807,10 @@ class Index extends Controller
         #网站信息
         if($data['seo_type']==2){
             $data['seo_content'] = json_decode($data['seo_content'],true);
-            $website['title'] = $data['seo_content']['title'][session('lang')];
-            $website['keywords'] = $data['seo_content']['keywords'][session('lang')];
-            $website['description'] = $data['seo_content']['desc'][session('lang')];
+            #[session('lang')]
+            $website['title'] = $data['seo_content']['title'];
+            $website['keywords'] = $data['seo_content']['keywords'];
+            $website['description'] = $data['seo_content']['desc'];
         }else{
             $website['title'] = $page_name . ' - ' . $this->website_name;
             $website['keywords'] = $this->website_keywords;
@@ -15428,13 +15818,16 @@ class Index extends Controller
         }
         
         $data['name'] = $website['title'];
-        $desc = json_decode($data['desc'],true)[session('lang')];
+        #[session('lang')]
+        $desc = json_decode($data['desc'],true);
         $data['desc'] = $website['description'];
         
         $website['ico'] = $this->website_ico;
         $website['sico'] = $this->website_sico;
         $website['tel'] = $this->website_tel;
         $website['email'] = $this->website_email;
+        $website['address'] = $this->website_address;
+        $website['footer_menu'] = $this->website_footer_menu;
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
@@ -15443,6 +15836,8 @@ class Index extends Controller
         $website['inpic'] = $this->website_inpic;
         $website['color_inner'] = $this->website_color_inner;
         $website['website_contact'] = $this->website_contact;
+        $website['website_qualification'] = $this->website_qualification;
+        $website['website_publicity_info'] = $this->website_publicity_info;
         $website['website_canonical'] = $this->website_canonical;
         $website['website_og'] = $this->website_og;
         
@@ -15464,6 +15859,234 @@ class Index extends Controller
         $news['share_num'] = intval($data['share_num']);
         
         return view('',compact('menu','website','data','rand','id','navbar_menu','next_menu','link','rotate','isrotate','news','signPackage','all_comment','type','news','company_id','company_type','website','article_schema'));
+    }
+    
+    #页脚详情
+    public function fdetail(Request $request){
+        $dat = input();
+        $is_footer = isset($dat['is_footer'])?intval($dat['is_footer']):0;
+        $id = isset($dat['id'])?intval($dat['id']):0;
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);
+
+        $data = [];
+        if($is_footer==1){
+            #页脚菜单
+            $data = Db::name('website_footer')->where(['id'=>$id])->find();
+        }
+        else{
+            #页头菜单
+            $data = Db::name('website_navbar')->where(['id'=>$id])->find();
+        }
+
+        $website['title'] = $data['name'];
+        $website['keywords'] = $data['desc'];
+        $website['description'] = $data['desc'];
+        
+        #内页seo优化
+        if($data['seo_type']==2){
+            $data['seo_content'] = json_decode($data['seo_content'],true);
+            $this->website_name = $data['seo_content']['title'];
+            $this->website_keywords = $data['seo_content']['keywords'];
+            $this->website_description = $data['seo_content']['desc'];
+            
+            $website['title'] = $this->website_name;
+            $website['keywords'] = $this->website_keywords;
+            $website['description'] = $this->website_description;
+        }
+
+        $data['content'] = json_decode($data['content'],true);
+        $data['url_this'] = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER["REQUEST_URI"];
+        
+        $website['ico'] = $this->website_ico;
+        $website['sico'] = $this->website_sico;
+        $website['tel'] = $this->website_tel;
+        $website['email'] = $this->website_email;
+        $website['address'] = $this->website_address;
+        $website['footer_menu'] = $this->website_footer_menu;
+        $website['copyright'] = $this->website_copyright;
+        $website['color'] = $this->website_color;
+        $website['color_word'] = $this->website_colorword;
+        $website['color_adorn'] = $this->website_coloradorn;
+        $website['color_head'] = $this->website_colorhead;
+        $website['inpic'] = $this->website_inpic;
+        $website['color_inner'] = $this->website_color_inner;
+        $website['website_contact'] = $this->website_contact;
+        $website['website_qualification'] = $this->website_qualification;
+        $website['website_publicity_info'] = $this->website_publicity_info;
+        $website['website_canonical'] = $this->website_canonical;
+        $website['website_og'] = $this->website_og;
+
+        $origin_page = '/?s=index/fdetail?id='.$id.'&company_id='.$company_id.'&company_type='.$company_type.'&is_footer='.$is_footer;
+
+        #随机码
+        $rand = $this->random_str();
+        
+        #菜单栏目
+        #$menu = $this->menu();
+        $menu =  $this->company_menu($company_id,$company_type);
+        
+        #所有评论
+        $type=7;
+        $all_comment = Db::name('website_crossborder_news_chat')->where(['news_id'=>$id,'type'=>$type])->order('id','desc')->select();
+        $news['id'] = $id;
+        $news['comment_num'] = Db::name('website_crossborder_news_chat')->where(['news_id'=>$id,'type'=>$type])->count();
+        $news['share_num'] = intval($data['share_num']);
+        
+        return view('',compact('data','origin_page','id','company_id','company_type','website','menu','rand','news','type'));
+    }
+    
+    #社交媒体
+    public function social_detail(Request $request){
+        $dat = input();
+        $id = intval($dat['id']);
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);
+        
+        $data = Db::name('website_contact')->where('id',$id)->find();
+        
+        #栏目
+        $menu = $this->company_menu($company_id,$company_type);
+        
+        $website['title'] = $this->website_name;
+        $website['keywords'] = $this->website_keywords;
+        $website['description'] = $this->website_description;
+        $website['ico'] = $this->website_ico;
+        $website['sico'] = $this->website_sico;
+        $website['tel'] = $this->website_tel;
+        $website['email'] = $this->website_email;
+        $website['address'] = $this->website_address;
+        $website['footer_menu'] = $this->website_footer_menu;
+        $website['copyright'] = $this->website_copyright;
+        $website['color'] = $this->website_color;
+        $website['color_word'] = $this->website_colorword;
+        $website['color_adorn'] = $this->website_coloradorn;
+        $website['color_head'] = $this->website_colorhead;
+        $website['inpic'] = $this->website_inpic;
+        $website['color_inner'] = $this->website_color_inner;
+        $website['website_contact'] = $this->website_contact;
+        $website['website_qualification'] = $this->website_qualification;
+        $website['website_publicity_info'] = $this->website_publicity_info;
+        $website['website_canonical'] = $this->website_canonical;
+        $website['website_og'] = $this->website_og;
+        
+        #底部社交链接
+        $link = $this->get_footer_link();
+        #分享
+        $data['url'] = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER["REQUEST_URI"];
+        $data['desc'] = $website['description'];
+        $data['name'] = $website['title'];
+        $data['url_this'] = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER["REQUEST_URI"];
+        $signPackage = weixin_share($data);
+        
+        return view('',compact('menu','data','id','link','website','signPackage','company_id','company_type'));
+    }
+    
+    #汇率内容
+    public function rate_detail(Request $request){
+        $dat = input();
+        $id = isset($dat['id'])?intval($dat['id']):0;
+        $isframe = isset($dat['isframe'])?intval($dat['isframe']):0;
+        $price = isset($dat['price'])?intval($dat['price']):1;
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);
+
+        if($request->isAjax()){
+
+            if($dat['pa']==1){
+                $key = 'feea63fb96c064f252418348bf775fa9';
+                $from = Db::name('website_exchange_rate')->where(['id'=>$dat['from_currency']])->find();
+                $to = Db::name('website_exchange_rate')->where(['id'=>$dat['to_currency']])->find();
+                $url = 'http://api.tanshuapi.com/api/exchange/v1/index?key='.$key.'&from='.$from['symbol'].'&to='.$to['symbol'].'&money='.intval($dat['from_money']);
+                $list = json_decode(file_get_contents($url),true);
+
+                if($list['code']==1){
+                    return json(['code'=>0,'msg'=>'查询成功','data'=>$list['data']]);
+                }else{
+                    return json(['code'=>-1,'msg'=>'查询失败']);
+                }
+            }
+        }else{
+            $rate = Db::name('website_exchange_rate')->where(['id'=>$id])->find();
+
+            #币种
+            $currency = Db::name('website_exchange_rate')->whereRaw('id != 158 ')->select();
+
+            $origin_page = '/?s=merch/merch_shop_index&company_id='.$company_id.'&company_type='.$company_type;
+            
+            #栏目
+            $menu = $this->company_menu($company_id,$company_type);
+        
+            $website['title'] = $this->website_name;
+            $website['keywords'] = $this->website_keywords;
+            $website['description'] = $this->website_description;
+            $website['ico'] = $this->website_ico;
+            $website['sico'] = $this->website_sico;
+            $website['tel'] = $this->website_tel;
+            $website['email'] = $this->website_email;
+            $website['address'] = $this->website_address;
+            $website['footer_menu'] = $this->website_footer_menu;
+            $website['copyright'] = $this->website_copyright;
+            $website['color'] = $this->website_color;
+            $website['color_word'] = $this->website_colorword;
+            $website['color_adorn'] = $this->website_coloradorn;
+            $website['color_head'] = $this->website_colorhead;
+            $website['inpic'] = $this->website_inpic;
+            $website['color_inner'] = $this->website_color_inner;
+            $website['website_contact'] = $this->website_contact;
+            $website['website_qualification'] = $this->website_qualification;
+            $website['website_publicity_info'] = $this->website_publicity_info;
+            $website['website_canonical'] = $this->website_canonical;
+            $website['website_og'] = $this->website_og;
+
+            return view('',compact('website','id','rate','currency','isframe','price','origin_page','company_id','company_type','menu'));
+        }
+    }
+    
+    #企业资质内页
+    public function qualific(){
+        $dat = input();
+        $id = intval($dat['id']);
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);
+        
+        $data = Db::name('merchsite_qualification')->where('id',$id)->find();
+        
+        #栏目
+        $menu = $this->company_menu($company_id,$company_type);
+        
+        $website['title'] = $this->website_name;
+        $website['keywords'] = $this->website_keywords;
+        $website['description'] = $this->website_description;
+        $website['ico'] = $this->website_ico;
+        $website['sico'] = $this->website_sico;
+        $website['tel'] = $this->website_tel;
+        $website['email'] = $this->website_email;
+        $website['address'] = $this->website_address;
+        $website['footer_menu'] = $this->website_footer_menu;
+        $website['copyright'] = $this->website_copyright;
+        $website['color'] = $this->website_color;
+        $website['color_word'] = $this->website_colorword;
+        $website['color_adorn'] = $this->website_coloradorn;
+        $website['color_head'] = $this->website_colorhead;
+        $website['inpic'] = $this->website_inpic;
+        $website['color_inner'] = $this->website_color_inner;
+        $website['website_contact'] = $this->website_contact;
+        $website['website_qualification'] = $this->website_qualification;
+        $website['website_publicity_info'] = $this->website_publicity_info;
+        $website['website_canonical'] = $this->website_canonical;
+        $website['website_og'] = $this->website_og;
+        
+        #底部社交链接
+        $link = $this->get_footer_link();
+        #分享
+        $data['url'] = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER["REQUEST_URI"];
+        $data['desc'] = $website['description'];
+        $data['name'] = $website['title'];
+        $data['url_this'] = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER["REQUEST_URI"];
+        $signPackage = weixin_share($data);
+        
+        return view('',compact('menu','data','id','link','website','signPackage','company_id','company_type'));
     }
     
     /**
@@ -15549,6 +16172,8 @@ class Index extends Controller
         $website['sico'] = $this->website_sico;
         $website['tel'] = $this->website_tel;
         $website['email'] = $this->website_email;
+        $website['address'] = $this->website_address;
+        $website['footer_menu'] = $this->website_footer_menu;
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
@@ -15557,6 +16182,8 @@ class Index extends Controller
         $website['inpic'] = $this->website_inpic;
         $website['color_inner'] = $this->website_color_inner;
         $website['website_contact'] = $this->website_contact;
+        $website['website_qualification'] = $this->website_qualification;
+        $website['website_publicity_info'] = $this->website_publicity_info;
 
         #随机码
         $rand = $this->random_str();
@@ -15606,6 +16233,8 @@ class Index extends Controller
         $website['sico'] = $this->website_sico;
         $website['tel'] = $this->website_tel;
         $website['email'] = $this->website_email;
+        $website['address'] = $this->website_address;
+        $website['footer_menu'] = $this->website_footer_menu;
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
@@ -15614,6 +16243,8 @@ class Index extends Controller
         $website['inpic'] = $this->website_inpic;
         $website['color_inner'] = $this->website_color_inner;
         $website['website_contact'] = $this->website_contact;
+        $website['website_qualification'] = $this->website_qualification;
+        $website['website_publicity_info'] = $this->website_publicity_info;
         $website['name'] = $news['name'];
 
         $website['title'] = $news['name'];
@@ -15656,6 +16287,8 @@ class Index extends Controller
         $website['sico'] = $this->website_sico;
         $website['tel'] = $this->website_tel;
         $website['email'] = $this->website_email;
+        $website['address'] = $this->website_address;
+        $website['footer_menu'] = $this->website_footer_menu;
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
@@ -15664,6 +16297,8 @@ class Index extends Controller
         $website['inpic'] = $this->website_inpic;
         $website['color_inner'] = $this->website_color_inner;
         $website['website_contact'] = $this->website_contact;
+        $website['website_qualification'] = $this->website_qualification;
+        $website['website_publicity_info'] = $this->website_publicity_info;
         $website['title'] = $this->website_name;
         $website['keywords'] = $this->website_keywords;
         $website['description'] = $this->website_description;    
@@ -15725,6 +16360,8 @@ class Index extends Controller
         $website['sico'] = $this->website_sico;
         $website['tel'] = $this->website_tel;
         $website['email'] = $this->website_email;
+        $website['address'] = $this->website_address;
+        $website['footer_menu'] = $this->website_footer_menu;
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
@@ -15733,6 +16370,8 @@ class Index extends Controller
         $website['inpic'] = $this->website_inpic;
         $website['color_inner'] = $this->website_color_inner;
         $website['website_contact'] = $this->website_contact;
+        $website['website_qualification'] = $this->website_qualification;
+        $website['website_publicity_info'] = $this->website_publicity_info;
         
         #底部社交链接
         $link = $this->get_footer_link();
@@ -15774,6 +16413,8 @@ class Index extends Controller
         $website['sico'] = $this->website_sico;
         $website['tel'] = $this->website_tel;
         $website['email'] = $this->website_email;
+        $website['address'] = $this->website_address;
+        $website['footer_menu'] = $this->website_footer_menu;
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_inner'] = $this->website_color_inner;
@@ -15782,6 +16423,8 @@ class Index extends Controller
         $website['color_head'] = $this->website_colorhead;
         $website['inpic'] = $this->website_inpic;
         $website['website_contact'] = $this->website_contact;
+        $website['website_qualification'] = $this->website_qualification;
+        $website['website_publicity_info'] = $this->website_publicity_info;
         #分享
         $data['url'] = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER["REQUEST_URI"];
         $data['desc'] = $website['description'];
@@ -15807,6 +16450,8 @@ class Index extends Controller
         $website['sico'] = $this->website_sico;
         $website['tel'] = $this->website_tel;
         $website['email'] = $this->website_email;
+        $website['address'] = $this->website_address;
+        $website['footer_menu'] = $this->website_footer_menu;
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
@@ -15815,6 +16460,8 @@ class Index extends Controller
         $website['inpic'] = $this->website_inpic;
         $website['color_inner'] = $this->website_color_inner;
         $website['website_contact'] = $this->website_contact;
+        $website['website_qualification'] = $this->website_qualification;
+        $website['website_publicity_info'] = $this->website_publicity_info;
         #随机码
         $rand = 0;
         #底部社交链接
@@ -15876,6 +16523,8 @@ class Index extends Controller
         $website['sico'] = $this->website_sico;
         $website['tel'] = $this->website_tel;
         $website['email'] = $this->website_email;
+        $website['address'] = $this->website_address;
+        $website['footer_menu'] = $this->website_footer_menu;
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
@@ -15884,6 +16533,8 @@ class Index extends Controller
         $website['inpic'] = $this->website_inpic;
         $website['color_inner'] = $this->website_color_inner;
         $website['website_contact'] = $this->website_contact;
+        $website['website_qualification'] = $this->website_qualification;
+        $website['website_publicity_info'] = $this->website_publicity_info;
         
         $news = Db::name('policy_list')->where('id',$dat['id'])->find();
         #网站信息
@@ -15966,6 +16617,8 @@ class Index extends Controller
         $website['sico'] = $this->website_sico;
         $website['tel'] = $this->website_tel;
         $website['email'] = $this->website_email;
+        $website['address'] = $this->website_address;
+        $website['footer_menu'] = $this->website_footer_menu;
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
@@ -15974,6 +16627,8 @@ class Index extends Controller
         $website['inpic'] = $this->website_inpic;
         $website['color_inner'] = $this->website_color_inner;
         $website['website_contact'] = $this->website_contact;
+        $website['website_qualification'] = $this->website_qualification;
+        $website['website_publicity_info'] = $this->website_publicity_info;
         #随机码
         $rand = 0;
         #网页导航
@@ -16028,6 +16683,8 @@ class Index extends Controller
             $website['sico'] = $this->website_sico;
             $website['tel'] = $this->website_tel;
             $website['email'] = $this->website_email;
+            $website['address'] = $this->website_address;
+            $website['footer_menu'] = $this->website_footer_menu;
             $website['copyright'] = $this->website_copyright;
             $website['color'] = $this->website_color;
             $website['color_inner'] = $this->website_color_inner;
@@ -16035,6 +16692,8 @@ class Index extends Controller
             $website['color_adorn'] = $this->website_coloradorn;
             $website['color_head'] = $this->website_colorhead;
             $website['website_contact'] = $this->website_contact;
+            $website['website_qualification'] = $this->website_qualification;
+            $website['website_publicity_info'] = $this->website_publicity_info;
             #底部社交链接
             $link = $this->get_footer_link();
             #内页轮播图
@@ -16088,6 +16747,8 @@ class Index extends Controller
         $website['sico'] = $this->website_sico;
         $website['tel'] = $this->website_tel;
         $website['email'] = $this->website_email;
+        $website['address'] = $this->website_address;
+        $website['footer_menu'] = $this->website_footer_menu;
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
@@ -16095,6 +16756,8 @@ class Index extends Controller
         $website['color_head'] = $this->website_colorhead;
         $website['color_inner'] = $this->website_color_inner;
         $website['website_contact'] = $this->website_contact;
+        $website['website_qualification'] = $this->website_qualification;
+        $website['website_publicity_info'] = $this->website_publicity_info;
         #底部社交链接
         $link = $this->get_footer_link();
         $rand='';
@@ -16137,6 +16800,8 @@ class Index extends Controller
         $website['sico'] = $this->website_sico;
         $website['tel'] = $this->website_tel;
         $website['email'] = $this->website_email;
+        $website['address'] = $this->website_address;
+        $website['footer_menu'] = $this->website_footer_menu;
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
@@ -16145,6 +16810,8 @@ class Index extends Controller
         $website['inpic'] = $this->website_inpic;
         $website['color_inner'] = $this->website_color_inner;
         $website['website_contact'] = $this->website_contact;
+        $website['website_qualification'] = $this->website_qualification;
+        $website['website_publicity_info'] = $this->website_publicity_info;
         #随机码
         $rand = 0;
         #底部社交链接
@@ -16352,6 +17019,8 @@ class Index extends Controller
             $website['sico'] = $this->website_sico;
             $website['tel'] = $this->website_tel;
             $website['email'] = $this->website_email;
+            $website['address'] = $this->website_address;
+            $website['footer_menu'] = $this->website_footer_menu;
             $website['copyright'] = $this->website_copyright;
             $website['color'] = $this->website_color;
             $website['color_word'] = $this->website_colorword;
@@ -16360,6 +17029,8 @@ class Index extends Controller
             $website['inpic'] = $this->website_inpic;
             $website['color_inner'] = $this->website_color_inner;
             $website['website_contact'] = $this->website_contact;
+            $website['website_qualification'] = $this->website_qualification;
+            $website['website_publicity_info'] = $this->website_publicity_info;
             #随机码
             $rand = 0;
             #网页导航
@@ -16380,38 +17051,6 @@ class Index extends Controller
         }
     }
     #跨境新闻-end
-
-    #企业资质内页
-    public function qualific(){
-        $dat = input();
-        $id = intval($dat['id']);
-        $data = Db::name('website_qualifications')->where('id',$id)->find();
-        
-        #栏目
-        $menu = $this->menu();
-        $website['title'] = $this->website_name;
-        $website['keywords'] = $this->website_keywords;
-        $website['description'] = $this->website_description;
-        $website['ico'] = $this->website_ico;
-        $website['sico'] = $this->website_sico;
-        $website['tel'] = $this->website_tel;
-        $website['email'] = $this->website_email;
-        $website['copyright'] = $this->website_copyright;
-        $website['color'] = $this->website_color;
-        $website['color_word'] = $this->website_colorword;
-        $website['color_adorn'] = $this->website_coloradorn;
-        $website['color_head'] = $this->website_colorhead;
-        $website['website_contact'] = $this->website_contact;
-        #底部社交链接
-        $link = $this->get_footer_link();
-        #分享
-        $data['url'] = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER["REQUEST_URI"];
-        $data['desc'] = $website['description'];
-        $data['name'] = $website['title'];
-        $data['url_this'] = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER["REQUEST_URI"];
-        $signPackage = weixin_share($data);
-        return view('',compact('menu','data','id','link','website','signPackage'));
-    }
 
     #切换账号
     public function change_account(Request $request){
@@ -16555,12 +17194,16 @@ class Index extends Controller
             $website['sico'] = $this->website_sico;
             $website['tel'] = $this->website_tel;
             $website['email'] = $this->website_email;
+            $website['address'] = $this->website_address;
+            $website['footer_menu'] = $this->website_footer_menu;
             $website['copyright'] = $this->website_copyright;
             $website['color'] = $this->website_color;
             $website['color_word'] = $this->website_colorword;
             $website['color_adorn'] = $this->website_coloradorn;
             $website['color_head'] = $this->website_colorhead;
             $website['website_contact'] = $this->website_contact;
+            $website['website_qualification'] = $this->website_qualification;
+            $website['website_publicity_info'] = $this->website_publicity_info;
             $website['color_inner'] = $this->website_color_inner;
             #底部社交链接
             $link = $this->get_footer_link();
@@ -16662,12 +17305,16 @@ class Index extends Controller
         $website['sico'] = $this->website_sico;
         $website['tel'] = $this->website_tel;
         $website['email'] = $this->website_email;
+        $website['address'] = $this->website_address;
+        $website['footer_menu'] = $this->website_footer_menu;
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
         $website['color_adorn'] = $this->website_coloradorn;
         $website['color_head'] = $this->website_colorhead;
         $website['website_contact'] = $this->website_contact;
+        $website['website_qualification'] = $this->website_qualification;
+        $website['website_publicity_info'] = $this->website_publicity_info;
         $website['color_inner'] = $this->website_color_inner;
 
         return view('',compact('info','website','app_info'));
@@ -16960,12 +17607,16 @@ Hello, Your one-time code is:</p><br/><p>'.$code.'</p><br/><p>或直接点击：
             $website['sico'] = $this->website_sico;
             $website['tel'] = $this->website_tel;
             $website['email'] = $this->website_email;
+            $website['address'] = $this->website_address;
+            $website['footer_menu'] = $this->website_footer_menu;
             $website['copyright'] = $this->website_copyright;
             $website['color'] = $this->website_color;
             $website['color_word'] = $this->website_colorword;
             $website['color_adorn'] = $this->website_coloradorn;
             $website['color_head'] = $this->website_colorhead;
             $website['website_contact'] = $this->website_contact;
+            $website['website_qualification'] = $this->website_qualification;
+            $website['website_publicity_info'] = $this->website_publicity_info;
             #底部社交链接
             $link = $this->get_footer_link();
             #分享
@@ -17056,12 +17707,16 @@ Hello, Your one-time code is:</p><br/><p>'.$code.'</p><br/><p>或直接点击：
             $website['sico'] = $this->website_sico;
             $website['tel'] = $this->website_tel;
             $website['email'] = $this->website_email;
+            $website['address'] = $this->website_address;
+            $website['footer_menu'] = $this->website_footer_menu;
             $website['copyright'] = $this->website_copyright;
             $website['color'] = $this->website_color;
             $website['color_word'] = $this->website_colorword;
             $website['color_adorn'] = $this->website_coloradorn;
             $website['color_head'] = $this->website_colorhead;
             $website['website_contact'] = $this->website_contact;
+            $website['website_qualification'] = $this->website_qualification;
+            $website['website_publicity_info'] = $this->website_publicity_info;
             #底部社交链接
             $link = $this->get_footer_link();
             #个人信息
@@ -17092,12 +17747,16 @@ Hello, Your one-time code is:</p><br/><p>'.$code.'</p><br/><p>或直接点击：
         $website['sico'] = $this->website_sico;
         $website['tel'] = $this->website_tel;
         $website['email'] = $this->website_email;
+        $website['address'] = $this->website_address;
+        $website['footer_menu'] = $this->website_footer_menu;
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
         $website['color_adorn'] = $this->website_coloradorn;
         $website['color_head'] = $this->website_colorhead;
         $website['website_contact'] = $this->website_contact;
+        $website['website_qualification'] = $this->website_qualification;
+        $website['website_publicity_info'] = $this->website_publicity_info;
         #底部社交链接
         $link = $this->get_footer_link();
         #分享
@@ -17299,12 +17958,16 @@ Hello, Your one-time code is:</p><br/><p>'.$code.'</p><br/><p>或直接点击：
             $website['sico'] = $this->website_sico;
             $website['tel'] = $this->website_tel;
             $website['email'] = $this->website_email;
+            $website['address'] = $this->website_address;
+            $website['footer_menu'] = $this->website_footer_menu;
             $website['copyright'] = $this->website_copyright;
             $website['color'] = $this->website_color;
             $website['color_word'] = $this->website_colorword;
             $website['color_adorn'] = $this->website_coloradorn;
             $website['color_head'] = $this->website_colorhead;
             $website['website_contact'] = $this->website_contact;
+            $website['website_qualification'] = $this->website_qualification;
+            $website['website_publicity_info'] = $this->website_publicity_info;
             #底部社交链接
             $link = $this->get_footer_link();
             #分享
@@ -17379,6 +18042,8 @@ Hello, Your one-time code is:</p><br/><p>'.$code.'</p><br/><p>或直接点击：
             $website['sico'] = $this->website_sico;
             $website['tel'] = $this->website_tel;
             $website['email'] = $this->website_email;
+            $website['address'] = $this->website_address;
+            $website['footer_menu'] = $this->website_footer_menu;
             $website['copyright'] = $this->website_copyright;
             $website['color'] = $this->website_color;
             $website['color_inner'] = $this->website_color_inner;
@@ -17386,6 +18051,8 @@ Hello, Your one-time code is:</p><br/><p>'.$code.'</p><br/><p>或直接点击：
             $website['color_adorn'] = $this->website_coloradorn;
             $website['color_head'] = $this->website_colorhead;
             $website['website_contact'] = $this->website_contact;
+            $website['website_qualification'] = $this->website_qualification;
+            $website['website_publicity_info'] = $this->website_publicity_info;
             #底部社交链接
             $link = $this->get_footer_link();
             #分享
@@ -17440,6 +18107,8 @@ Hello, Your one-time code is:</p><br/><p>'.$code.'</p><br/><p>或直接点击：
             $website['sico'] = $this->website_sico;
             $website['tel'] = $this->website_tel;
             $website['email'] = $this->website_email;
+            $website['address'] = $this->website_address;
+            $website['footer_menu'] = $this->website_footer_menu;
             $website['copyright'] = $this->website_copyright;
             $website['color'] = $this->website_color;
             $website['color_inner'] = $this->website_color_inner;
@@ -17447,6 +18116,8 @@ Hello, Your one-time code is:</p><br/><p>'.$code.'</p><br/><p>或直接点击：
             $website['color_adorn'] = $this->website_coloradorn;
             $website['color_head'] = $this->website_colorhead;
             $website['website_contact'] = $this->website_contact;
+            $website['website_qualification'] = $this->website_qualification;
+            $website['website_publicity_info'] = $this->website_publicity_info;
             #底部社交链接
             $link = $this->get_footer_link();
             #分享
@@ -17533,6 +18204,8 @@ Hello, Your one-time code is:</p><br/><p>'.$code.'</p><br/><p>或直接点击：
             $website['sico'] = $this->website_sico;
             $website['tel'] = $this->website_tel;
             $website['email'] = $this->website_email;
+            $website['address'] = $this->website_address;
+            $website['footer_menu'] = $this->website_footer_menu;
             $website['copyright'] = $this->website_copyright;
             $website['color'] = $this->website_color;
             $website['color_inner'] = $this->website_color_inner;
@@ -17540,6 +18213,8 @@ Hello, Your one-time code is:</p><br/><p>'.$code.'</p><br/><p>或直接点击：
             $website['color_adorn'] = $this->website_coloradorn;
             $website['color_head'] = $this->website_colorhead;
             $website['website_contact'] = $this->website_contact;
+            $website['website_qualification'] = $this->website_qualification;
+            $website['website_publicity_info'] = $this->website_publicity_info;
             #底部社交链接
             $link = $this->get_footer_link();
             #分享
@@ -17650,12 +18325,16 @@ Hello, Your one-time code is:</p><br/><p>'.$code.'</p><br/><p>或直接点击：
         $website['sico'] = $this->website_sico;
         $website['tel'] = $this->website_tel;
         $website['email'] = $this->website_email;
+        $website['address'] = $this->website_address;
+        $website['footer_menu'] = $this->website_footer_menu;
         $website['copyright'] = $this->website_copyright;
         $website['color'] = $this->website_color;
         $website['color_word'] = $this->website_colorword;
         $website['color_adorn'] = $this->website_coloradorn;
         $website['color_head'] = $this->website_colorhead;
         $website['website_contact'] = $this->website_contact;
+        $website['website_qualification'] = $this->website_qualification;
+        $website['website_publicity_info'] = $this->website_publicity_info;
         #底部社交链接
         $link = $this->get_footer_link();
         #分享
@@ -17727,12 +18406,16 @@ Hello, Your one-time code is:</p><br/><p>'.$code.'</p><br/><p>或直接点击：
             $website['sico'] = $this->website_sico;
             $website['tel'] = $this->website_tel;
             $website['email'] = $this->website_email;
+            $website['address'] = $this->website_address;
+            $website['footer_menu'] = $this->website_footer_menu;
             $website['copyright'] = $this->website_copyright;
             $website['color'] = $this->website_color;
             $website['color_word'] = $this->website_colorword;
             $website['color_adorn'] = $this->website_coloradorn;
             $website['color_head'] = $this->website_colorhead;
             $website['website_contact'] = $this->website_contact;
+            $website['website_qualification'] = $this->website_qualification;
+            $website['website_publicity_info'] = $this->website_publicity_info;
 
             return view('',compact('website'));
         }
@@ -17820,12 +18503,16 @@ Hello, Your one-time code is:</p><br/><p>'.$code.'</p><br/><p>或直接点击：
             $website['sico'] = $this->website_sico;
             $website['tel'] = $this->website_tel;
             $website['email'] = $this->website_email;
+            $website['address'] = $this->website_address;
+            $website['footer_menu'] = $this->website_footer_menu;
             $website['copyright'] = $this->website_copyright;
             $website['color'] = $this->website_color;
             $website['color_word'] = $this->website_colorword;
             $website['color_adorn'] = $this->website_coloradorn;
             $website['color_head'] = $this->website_colorhead;
             $website['website_contact'] = $this->website_contact;
+            $website['website_qualification'] = $this->website_qualification;
+            $website['website_publicity_info'] = $this->website_publicity_info;
 
             return view('',compact('info','website','id'));
         }

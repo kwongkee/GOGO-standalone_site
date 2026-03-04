@@ -30,11 +30,14 @@ Route::any('index/save_website_rotate', 'index/Index/save_website_rotate');#企�
 Route::any('index/del_website_rotate', 'index/Index/del_website_rotate');#企业网站-删除轮播图
 Route::any('index/save_website_menu', 'index/Index/save_website_menu');#企业网站-保存菜单
 Route::any('index/del_website_menu', 'index/Index/del_website_menu');#企业网站-删除菜单
+Route::any('index/get_nextNavbar', 'index/Index/get_nextNavbar');#企业网站-获取下级菜单
+Route::any('index/website_index', 'index/Index/website_index');#企业网站-网站频道
 Route::any('index/save_website_index', 'index/Index/save_website_index');#企业网站-保存频道
 Route::any('index/del_website_index', 'index/Index/del_website_index');#企业网站-删除频道
-Route::any('index/get_nextNavbar', 'index/Index/get_nextNavbar');#企业网站-获取下级菜单
+Route::any('index/website_discovery', 'index/Index/website_discovery');#企业网站-发现轮播图
 Route::any('index/save_website_discovery', 'index/Index/save_website_discovery');#企业网站-保存发现轮播图
 Route::any('index/del_website_discovery', 'index/Index/del_website_discovery');#企业网站-删除发现轮播图
+
 #企业网店-后台
 Route::any('index/website_shop', 'index/Index/website_shop');#企业网店
 Route::any('index/website_basic', 'index/Index/website_basic');#企业网店-店铺信息
@@ -53,6 +56,7 @@ Route::any('index/shop_scroll_info', 'index/Index/shop_scroll_info');#企业网�
 Route::any('index/shop_foot_menu', 'index/Index/shop_foot_menu');#企业网店-页脚菜单管理
 Route::any('index/save_shop_foot_menu', 'index/Index/save_shop_foot_menu');#企业网店-保存页脚菜单
 Route::any('index/del_shop_foot_menu', 'index/Index/del_shop_foot_menu');#企业网店-删除页脚菜单
+Route::any('index/save_domainname', 'index/Index/save_domainname');#企业网店&网站-域名配置
 Route::any('index/shop_social', 'index/Index/shop_social');#企业网店-社交媒体管理
 Route::any('index/save_shop_social', 'index/Index/save_shop_social');#企业网店-保存社交媒体
 Route::any('index/del_shop_social', 'index/Index/del_shop_social');#企业网店-删除社交媒体
@@ -262,6 +266,9 @@ Route::any('index/chat_history', 'index/Index/chat_history');#企业网店-商�
 Route::any('index/chat_histories', 'index/Index/chat_histories');#企业网店-商家与客户聊天历史
 Route::any('index/chat_association_info', 'index/Index/chat_association_info');#企业网店-当前对话的关联信息
 
+#电商运营-营销
+Route::any('index/website_market','index/Index/website_market');#电商运营-营销/客户
+
 //**商家商城前端界面**====START
 //Route::get('merch/merch_shop_index', 'index/Merch/merch_shop_index'); // 定义GET请求路由规则
 Route::rule('shops', 'index/Merch/merch_shop_index');
@@ -281,6 +288,9 @@ Route::any('merch/getFrame', 'index/Merch/getFrame'); // 规则详情
 
 //**商家网站前端界面（部分）**====START
 Route::get('index/detail', 'index/Index/detail');
+Route::get('index/fdetail', 'index/Index/fdetail');
+Route::any('index/social_detail', 'index/Index/social_detail'); // 社媒
+Route::any('index/rate_detail', 'index/Index/rate_detail'); // 汇率
 Route::get('web', 'index/index/merch_website_index');
 //    ->pattern(['company_id' => '\d+']);
 Route::any('index/change_date', 'index/Index/change_date');
@@ -294,7 +304,7 @@ Route::any('index/news_detail', 'index/Index/news_detail');
 Route::any('index/all_news', 'index/Index/all_news');
 Route::any('index/cross_news', 'index/Index/cross_news');#跨境新闻
 Route::any('index/cross_news_detail', 'index/Index/cross_news_detail');#跨境新闻详情
-Route::any('index/qualific', 'index/Index/qualific');
+Route::any('index/qualific', 'index/Index/qualific'); // 资质
 
 Route::any('index/rule_list', 'index/Index/rule_list');#平台规则-列表
 Route::any('index/version_list', 'index/Index/version_list');#平台规则-版本列表

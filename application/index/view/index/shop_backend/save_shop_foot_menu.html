@@ -45,6 +45,12 @@
         .form-group select:focus {border-color: var(--primary);outline: none;}
         .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
 
+        /*返回按钮*/
+        .backDiv{padding: 5px 5px 5px 20px;border-bottom: 1px solid #d9d9d9;}
+        .backDiv .backBox{display: flex;align-items: center;cursor: pointer;}
+        .backDiv .back_icon{font-size: 18px;color: #333;margin-right: 10px;position: relative;}
+        .backDiv .back_icon:before{content:'';position:absolute;width:9px;height:9px;border-left:2px solid #000;border-top:2px solid #000;transform:rotate(-45deg);margin-right:5px;top:-7px;}
+        .backDiv .back_text{font-size: 16px;color: #333;font-weight: 500;margin-left: 5px;}
 
         /* 动画 */
         @keyframes fadeIn {
@@ -72,6 +78,12 @@
     <script type="text/javascript" src="cklein/plugins/ueditor/lang/zh-cn/zh-cn.js"></script>
 </head>
 <body>
+<div class="backDiv">
+    <div class="backBox" onclick="javascript:window.history.back(-1);">
+        <div class="back_icon"></div>
+        <div class="back_text">返回</div>
+    </div>
+</div>
 <form id="siteForm" class="layui-form" action="" method="post" lay-filter="component-form-menu" style="padding:10px;margin-bottom:300px;">
     <input type="hidden" name="company_id" value="{$company_id}">
     <input type="hidden" name="company_type" value="{$company_type}">
@@ -278,7 +290,7 @@
     </div>
 
     <div class="form-actions">
-        <button type="button" class="btn btn-outline" id="cancelBtnMenu" style="background:transparent;border: 2px solid var(--primary);color: var(--primary);">取消</button>
+        <button type="button" class="btn btn-outline" id="cancelBtnMenu" style="background:transparent;border: 2px solid var(--primary);color: var(--primary);display:none;">取消</button>
         <button type="submit" class="btn btn-primary" lay-submit lay-filter="component-form-menu">立即保存</button>
     </div>
 </form>
@@ -287,12 +299,12 @@
 <script src="layui/layui.js"></script>
 <script>
     layui.use(['layer','form','laydate','upload','colorpicker'],function() {
-        laydate = layui.laydate;
-        layer = layui.layer;
-        var form = layui.form;
-        $ = layui.jquery;
-        var upload = layui.upload;
-        var colorpicker = layui.colorpicker;
+        var laydate = layui.laydate
+        ,layer = layui.layer
+        ,form = layui.form
+        ,$ = layui.jquery
+        ,upload = layui.upload
+        ,colorpicker = layui.colorpicker;
 
         let ue = UE.getEditor('content', {
             initialFrameHeight: 400,
@@ -314,158 +326,158 @@
 
 
         {if !empty($data['color'])}
-        colorpicker.render({
-            elem:'#color',
-            alpha:true,
-            size:'lg',
-            predefine:true,
-            color:'{$data["color"]}',
-            done:function(color){
-                $('input[name="color"]').val(color);
-            }
-        });
-        colorpicker.render({
-            elem:'#word_color',
-            alpha:true,
-            size:'lg',
-            predefine:true,
-            color:'{$data["word_color"]}',
-            done:function(color){
-                $('input[name="word_color"]').val(color);
-            }
-        });
+            colorpicker.render({
+                elem:'#color',
+                alpha:true,
+                size:'lg',
+                predefine:true,
+                color:'{$data["color"]}',
+                done:function(color){
+                    $('input[name="color"]').val(color);
+                }
+            });
+            colorpicker.render({
+                elem:'#word_color',
+                alpha:true,
+                size:'lg',
+                predefine:true,
+                color:'{$data["word_color"]}',
+                done:function(color){
+                    $('input[name="word_color"]').val(color);
+                }
+            });
         {else}
-        colorpicker.render({
-            elem:'#color',
-            alpha:true,
-            size:'lg',
-            done:function(color){
-                $('input[name="color"]').val(color);
-            }
-        });
-        colorpicker.render({
-            elem:'#word_color',
-            alpha:true,
-            size:'lg',
-            done:function(color){
-                $('input[name="word_color"]').val(color);
-            }
-        });
+            colorpicker.render({
+                elem:'#color',
+                alpha:true,
+                size:'lg',
+                done:function(color){
+                    $('input[name="color"]').val(color);
+                }
+            });
+            colorpicker.render({
+                elem:'#word_color',
+                alpha:true,
+                size:'lg',
+                done:function(color){
+                    $('input[name="word_color"]').val(color);
+                }
+            });
         {/if}
 
-            //配图格式
-            form.on('select(format)',function(data){
-                let val = data.value;
-                if(val==1){
-                    $('.format1').show();
-                    $('.format2').hide();
-                }else if(val==2){
-                    $('.format1').hide();
-                    $('.format2').show();
-                }else{
-                    $('.format1').hide();
-                    $('.format2').hide();
-                }
-            });
+        //配图格式
+        form.on('select(format)',function(data){
+            let val = data.value;
+            if(val==1){
+                $('.format1').show();
+                $('.format2').hide();
+            }else if(val==2){
+                $('.format1').hide();
+                $('.format2').show();
+            }else{
+                $('.format1').hide();
+                $('.format2').hide();
+            }
+        });
 
-            form.on('select(go_other)',function(data){
-                let val = data.value;
-                if(val==0){
-                    $('.other_link').hide();
-                    $('.other_navbar').hide();
-                }else if(val==1){
-                    $('.other_link').show();
-                    $('.other_navbar').hide();
-                }else if(val==2){
-                    $('.other_link').hide();
-                    $('.other_navbar').show();
-                }else if(val==3){
-                    $('.other_link').hide();
-                    $('.other_navbar').hide();
-                }
-            });
+        form.on('select(go_other)',function(data){
+            let val = data.value;
+            if(val==0){
+                $('.other_link').hide();
+                $('.other_navbar').hide();
+            }else if(val==1){
+                $('.other_link').show();
+                $('.other_navbar').hide();
+            }else if(val==2){
+                $('.other_link').hide();
+                $('.other_navbar').show();
+            }else if(val==3){
+                $('.other_link').hide();
+                $('.other_navbar').hide();
+            }
+        });
 
-            form.on('select(content_id)',function(data){
-                let val = data.value;
-                if(val==4){
-                    $('.other_link').show();
-                }else{
-                    $('.other_link').hide();
-                }
-            });
+        form.on('select(content_id)',function(data){
+            let val = data.value;
+            if(val==4){
+                $('.other_link').show();
+            }else{
+                $('.other_link').hide();
+            }
+        });
 
-            // 轮播图文件
-            upload.render({
-                elem: '#img_file-upload'
-                ,url: '/?s=index/upload_file'
-                ,accept: 'image'
-                ,data: { folder: 'merch_file', type:"shop_detail"}
-                ,multiple: false
-                ,number:1
-                ,before: function(obj){
-                    layer.load(); //上传loading
-                }
-                ,done: function(res){
-                    layer.closeAll('loading'); //关闭loading
-                    layer.msg(res.message, {time: 2000}, function () {
-                        if (res.error == 1) {
-                            $('#img_file-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="' + res.file_path + '" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="thumb[]" value="' + res.file_path + '"></div>')
-                        }
-                    });
-                }
-            });
-
-            form.on('select(type)',function(data){
-                let val = data.value;
-                if(val==1){
-                    $('.detail_format,.peitu,.location_in').show();
-                    $('.list_format,.location_out').hide();
-                }
-                else if(val==2){
-                    $('.detail_format,.location_out').show();
-                    $('.list_format,.location_in,.peitu').hide();
-                }
-                else{
-                    $('.detail_format,.list_format,.peitu,.location_in,.location_out').hide();
-                }
-            });
-
-            form.on('select(seo_type)',function(data){
-                let val = data.value;
-
-                if(val==1){
-                    $('.seo_content').hide();
-                }else if(val==2){
-                    $('.seo_content').show();
-                }
-            });
-
-            form.on('submit(component-form-menu)', function(data){
-                layer.load();
-                $.ajax({
-                    url:"/?s=index/save_shop_foot_menu",
-                    method:'post',
-                    data:data.field,
-                    dataType:'JSON',
-                    success:function(res){
-                        layer.closeAll('loading');
-                        layer.msg(res.msg,{time:2000}, function () {
-                            if(res.code == 0)
-                            {
-                                // let currentUrl = new URL(parent.location.href);
-                                // currentUrl.searchParams.set('tab', 'shop_head_menu');
-                                // parent.history.pushState({}, '', currentUrl.toString());
-                                parent.location.reload();
-                            }
-                        });
-                    },
-                    error:function (data) {
-                        layer.msg('系统错误',{time:2000});
+        // 轮播图文件
+        upload.render({
+            elem: '#img_file-upload'
+            ,url: '/?s=index/upload_file'
+            ,accept: 'image'
+            ,data: { folder: 'merch_file', type:"shop_detail"}
+            ,multiple: false
+            ,number:1
+            ,before: function(obj){
+                layer.load(); //上传loading
+            }
+            ,done: function(res){
+                layer.closeAll('loading'); //关闭loading
+                layer.msg(res.message, {time: 2000}, function () {
+                    if (res.error == 1) {
+                        $('#img_file-upload-list').append('<div style="display: inline-block;"><img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="' + res.file_path + '" class="layui-upload-img" style="width:80px;height:80px;"><button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button><input type="hidden" name="thumb[]" value="' + res.file_path + '"></div>')
                     }
                 });
-                return false;
-            });
+            }
         });
+
+        form.on('select(type)',function(data){
+            let val = data.value;
+            if(val==1){
+                $('.detail_format,.peitu,.location_in').show();
+                $('.list_format,.location_out').hide();
+            }
+            else if(val==2){
+                $('.detail_format,.location_out').show();
+                $('.list_format,.location_in,.peitu').hide();
+            }
+            else{
+                $('.detail_format,.list_format,.peitu,.location_in,.location_out').hide();
+            }
+        });
+
+        form.on('select(seo_type)',function(data){
+            let val = data.value;
+
+            if(val==1){
+                $('.seo_content').hide();
+            }else if(val==2){
+                $('.seo_content').show();
+            }
+        });
+
+        form.on('submit(component-form-menu)', function(data){
+            layer.load();
+            $.ajax({
+                url:"/?s=index/save_shop_foot_menu",
+                method:'post',
+                data:data.field,
+                dataType:'JSON',
+                success:function(res){
+                    layer.closeAll('loading');
+                    layer.msg(res.msg,{time:2000}, function () {
+                        if(res.code == 0)
+                        {
+                            // let currentUrl = new URL(parent.location.href);
+                            // currentUrl.searchParams.set('tab', 'shop_head_menu');
+                            // parent.history.pushState({}, '', currentUrl.toString());
+                            window.history.back(-1);
+                        }
+                    });
+                },
+                error:function (data) {
+                    layer.msg('系统错误',{time:2000});
+                }
+            });
+            return false;
+        });
+    });
 
     function delPic(obj)
     {

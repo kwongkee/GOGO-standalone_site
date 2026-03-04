@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="layui/css/layui.css">
 
     <style>
-        html{height:100%;}
+        html,body{height:100%;}
         :root {--primary: #8a2be2;--primary-dark: #6a1cb9;--primary-light: #9b4de3;--secondary: #bb86fc;--accent: #e6d7f5;--text: #333333;--text-light: #f8f8f8;--background: #f9f5fd;--card-bg: #ffffff;--gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));--gradient-light: linear-gradient(135deg, var(--primary-light), var(--secondary));--shadow: 0 10px 30px rgba(138, 43, 226, 0.15);--shadow-hover: 0 15px 35px rgba(138, 43, 226, 0.25);}
         * {margin: 0;padding: 0;box-sizing: border-box;font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
         body {color: var(--text);line-height: 1.6;overflow-x: hidden;}
@@ -60,6 +60,13 @@
 
         .layui-form-label{width:100px;}
 
+        /*返回按钮*/
+        .backDiv{padding: 5px 5px 5px 20px;border-bottom: 1px solid #d9d9d9;}
+        .backDiv .backBox{display: flex;align-items: center;cursor: pointer;}
+        .backDiv .back_icon{font-size: 18px;color: #333;margin-right: 10px;position: relative;}
+        .backDiv .back_icon:before{content:'';position:absolute;width:9px;height:9px;border-left:2px solid #000;border-top:2px solid #000;transform:rotate(-45deg);margin-right:5px;top:-7px;}
+        .backDiv .back_text{font-size: 16px;color: #333;font-weight: 500;margin-left: 5px;}
+        
         /* 动画 */
         @keyframes fadeIn {
             from {opacity: 0;transform: translateY(10px);}
@@ -74,6 +81,13 @@
 
 </head>
 <body>
+<div class="backDiv">
+    <div class="backBox" onclick="javascript:window.history.back(-1);">
+        <div class="back_icon"></div>
+        <div class="back_text">返回</div>
+    </div>
+</div>
+
 <form class="layui-form" id="siteForm" action="" method="post" lay-filter="component-form-demo" style="height:100%;overflow-y:auto;">
     <input type="hidden" name="company_id" value="{$company_id}">
     <input type="hidden" name="company_type" value="{$company_type}">
@@ -134,13 +148,17 @@
             <div class="layui-input-block">
                 <select name="go_other" id="go_other" lay-filter="go_other">
                     <option value="0">无</option>
-                    <option value="1" {if $data['go_other']==1}selected{/if}>分享插件</option>
-                    <option value="2" {if $data['go_other']==2}selected{/if}>商品详情</option>
-                    <option value="3" {if $data['go_other']==3}selected{/if}>网站菜单</option>
-                    <option value="4" {if $data['go_other']==4}selected{/if}>网址链接</option>
-                    <option value="5" {if $data['go_other']==5}selected{/if}>搜索结果</option>
-                    <option value="6" {if $data['go_other']==6}selected{/if}>我要咨询</option>
-                    <option value="7" {if $data['go_other']==7}selected{/if}>去找客服</option>
+                    {if $company_type==1}
+                        <option value="4" {if $data['go_other']==4}selected{/if}>网址链接</option>
+                    {elseif($company_type==0)}
+                        <option value="1" {if $data['go_other']==1}selected{/if}>分享插件</option>
+                        <option value="2" {if $data['go_other']==2}selected{/if}>商品详情</option>
+                        <option value="3" {if $data['go_other']==3}selected{/if}>网站菜单</option>
+                        <option value="4" {if $data['go_other']==4}selected{/if}>网址链接</option>
+                        <option value="5" {if $data['go_other']==5}selected{/if}>搜索结果</option>
+                        <option value="6" {if $data['go_other']==6}selected{/if}>我要咨询</option>
+                        <option value="7" {if $data['go_other']==7}selected{/if}>去找客服</option>
+                    {/if}
                 </select>
             </div>
         </div>
@@ -199,7 +217,7 @@
     </div>
 
     <div class="form-actions">
-        <button type="button" class="btn btn-outline" id="cancelBtn" style="background:transparent;border: 2px solid var(--primary);color: var(--primary);">取消</button>
+        <button type="button" class="btn btn-outline" id="cancelBtn" style="background:transparent;border: 2px solid var(--primary);color: var(--primary);display:none;">取消</button>
         <button type="submit" class="btn btn-primary" lay-submit lay-filter="component-form-demo">立即保存</button>
     </div>
 </form>
@@ -209,12 +227,12 @@
 <script src="layui/layui.js"></script>
 <script>
     layui.use(['layer','form','laydate','upload','colorpicker'],function() {
-        laydate = layui.laydate;
-        layer = layui.layer;
-        var form = layui.form;
-        $ = layui.jquery;
-        var upload = layui.upload;
-        var colorpicker = layui.colorpicker;
+        var laydate = layui.laydate
+        ,layer = layui.layer
+        ,form = layui.form
+        ,$ = layui.jquery
+        ,upload = layui.upload
+        ,colorpicker = layui.colorpicker;
 
         //轮播图弹窗关闭事件
         const modal = parent.document.getElementById('saveMenuModal');
@@ -309,7 +327,7 @@
                             // let currentUrl = new URL(parent.location.href);
                             // currentUrl.searchParams.set('tab', 'carousel');
                             // parent.history.pushState({}, '', currentUrl.toString());
-                            parent.location.reload();
+                            window.history.back(-1);
                         }
                     });
                 },

@@ -56,14 +56,18 @@
         .form-group select:focus {border-color: var(--primary);outline: none;}
         .form-actions {display: flex;justify-content: flex-end;gap: 15px;margin-top: 25px;}
 
-
+        /*返回按钮*/
+        .backDiv{padding: 5px 5px 5px 20px;border-bottom: 1px solid #d9d9d9;}
+        .backDiv .backBox{display: flex;align-items: center;cursor: pointer;}
+        .backDiv .back_icon{font-size: 18px;color: #333;margin-right: 10px;position: relative;}
+        .backDiv .back_icon:before{content:'';position:absolute;width:9px;height:9px;border-left:2px solid #000;border-top:2px solid #000;transform:rotate(-45deg);margin-right:5px;top:-7px;}
+        .backDiv .back_text{font-size: 16px;color: #333;font-weight: 500;margin-left: 5px;}
+        
         /* 动画 */
         @keyframes fadeIn {
             from {opacity: 0;transform: translateY(10px);}
             to {opacity: 1;transform: translateY(0);}
         }
-
-
 
         @media (max-width: 576px) {
             .btn {padding: 10px 20px;font-size: 0.9rem;}
@@ -73,9 +77,15 @@
     <link rel="stylesheet" href="layui/css/layui.css">
 </head>
 <body>
+<div class="backDiv">
+    <div class="backBox" onclick="javascript:window.history.back(-1);">
+        <div class="back_icon"></div>
+        <div class="back_text">返回</div>
+    </div>
+</div>
 <form class="layui-form" id="siteForm" action="" method="post" lay-filter="component-form-rotate">
     <input type="hidden" name="company_id" value="{$company_id}">
-    <input type="hidden" name="company_type" value="1">
+    <input type="hidden" name="company_type" value="{$company_type}">
     <input type="hidden" name="id" value="{$id}">
 
     <div class="form-group" style="padding:0px;">
@@ -115,7 +125,7 @@
     </div>
 
     <div class="form-actions">
-        <button type="button" class="btn btn-outline" id="cancelBtn" style="background:transparent;border: 2px solid var(--primary);color: var(--primary);">取消</button>
+        <button type="button" class="btn btn-outline" id="cancelBtn" style="background:transparent;border: 2px solid var(--primary);color: var(--primary);display:none;">取消</button>
         <button type="submit" class="btn btn-primary" lay-submit lay-filter="component-form-rotate">立即保存</button>
     </div>
 </form>
@@ -125,12 +135,12 @@
 <script src="layui/layui.js"></script>
 <script>
     layui.use(['layer','form','laydate','upload','colorpicker'],function() {
-        laydate = layui.laydate;
-        layer = layui.layer;
-        var form = layui.form;
-        $ = layui.jquery;
-        var upload = layui.upload;
-        var colorpicker = layui.colorpicker;
+        var laydate = layui.laydate
+        ,layer = layui.layer
+        ,form = layui.form
+        ,$ = layui.jquery
+        ,upload = layui.upload
+        ,colorpicker = layui.colorpicker;
 
         //轮播图弹窗关闭事件
         const modal = parent.document.getElementById('saveDiscoveryModal');
@@ -195,10 +205,10 @@
                     layer.msg(res.msg,{time:2000}, function () {
                         if(res.code == 0)
                         {
-                            let currentUrl = new URL(parent.location.href);
-                            currentUrl.searchParams.set('tab', 'discovery');
-                            parent.history.pushState({}, '', currentUrl.toString());
-                            parent.location.reload();
+                            // let currentUrl = new URL(parent.location.href);
+                            // currentUrl.searchParams.set('tab', 'discovery');
+                            // parent.history.pushState({}, '', currentUrl.toString());
+                            window.history.back(-1);
                         }
                     });
                 },

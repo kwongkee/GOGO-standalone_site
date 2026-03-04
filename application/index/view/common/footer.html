@@ -7,9 +7,10 @@
     footer .footerItem:after{content:'';width: 0;position: absolute;top: 5px;left: 60%;height: 0;border-left: 10px solid transparent;border-right: 10px solid transparent;border-bottom: 10px solid #fff;transform: rotate(180deg);}
     footer .footerItem2:after{content:'';width: 0;position: absolute;top: 5px;left: 60%;height: 0;border-left: 10px solid transparent;border-right: 10px solid transparent;border-bottom: 10px solid #fff;}
     footer .footerItem .footerChildren, footer .footerItem2 .footerChildren{display:none;position: absolute;left:50%;bottom: 34px;background: #2f2f2f;width: max-content;color:{$website['color_word']};border: 2px solid {$website['color_word']};border-bottom: 0;border-top-left-radius: 5px;border-top-right-radius: 5px;transform: translate(-50%, 0px);}
-    footer .footerItem2 .footerChildren .footerChildrenItem{padding:10px;box-sizing: border-box;border-bottom: 2px solid {$website['color_word']};}
+    footer .footerItem2 .footerChildren .footerChildrenItem{padding:10px;box-sizing: border-box;border-bottom: 2px solid {$website['color_word']};max-width:400px;text-align:left;}
     footer .footerItem2 .footerChildren .footerChildrenItem:last-child{border-bottom: 0;}
     footer .footerItem2 .footerChildren .footerChildrenItem a span{font-size: 15px;}
+    footer .footerItem2 .footerChildren .footerChildrenItem::after {content: "";display: block;clear: both;visibility: hidden;height: 0;}
     .contact_contain{width: 40%;position: relative;left:10%}
     .foot-menu{justify-content: space-between;align-items:baseline;}
     footer .widgetheading{color:{$website['color_word']};/*text-shadow: -1px 0px 0px #fff, 0px 1px 0px #fff, 1px 0px 0px #fff, 0px -1px 0px #fff;*/}
@@ -27,9 +28,12 @@
         /*footer .footerDiv .footerItem,footer .footerDiv .footerItem2{width:48%;display: inline-block;}*/
         footer .footerItem:after{left:85%;border-left: 5px solid transparent;border-right: 5px solid transparent;border-bottom: 5px solid #fff;top:10px;}
         footer .footerItem2:after{left:85%;border-left: 5px solid transparent;border-right: 5px solid transparent;border-bottom: 5px solid #fff;top:10px;}
-        footer .footerItem .footerChildren, footer .footerItem2 .footerChildren{left:-10%;transform:unset;}
-        footer .footerItem:last-child .footerChildren, footer .footerItem2:last-child .footerChildren{width: 340px;left:-190%;transform:unset;}
+        footer .footerItem .footerChildren, footer .footerItem2 .footerChildren{transform:unset;}
+        footer .footerItem:nth-of-type(1) .footerChildren, footer .footerItem2:nth-of-type(1) .footerChildren{width: 350px;max-width:350px;left:30px;transform:unset;}
+        footer .footerItem:nth-of-type(2) .footerChildren, footer .footerItem2:nth-of-type(2) .footerChildren{width: 350px;max-width:350px;left:-100px;transform:unset;}
+        footer .footerItem:last-child .footerChildren, footer .footerItem2:last-child .footerChildren{width: 350px;max-width:350px;left:-230px;transform:unset;}
         footer .swiper-button-prev, footer .swiper-button-next{width:20px;height:20px;top:90%;}
+        footer .col-md-4{width: fit-content;display: inline-flex;}
     }
     .contact_contain .box{width: 100%;position: relative;overflow: hidden;height:34px;}
     .contact_contain .box_wheel{height: 500px;position: absolute;overflow: hidden;}
@@ -40,47 +44,102 @@
 
     .copyright p span:first-child{display:none;}
     .col-md-4{margin-bottom: 10px;}
+    
+    /*社媒跟踪*/
+    footer .contact_contain{width: 80%;position: relative;left:10%;padding:10px 0;}
+    footer a:link,footer a:hover,footer ul.link-list li a:hover{color:{$website['color_word']};}
+    footer h1, footer h2, footer h3, footer h4, footer h5, footer h6{color:{$website['color_word']};}
+    @media (max-width: 992px) {
+        footer .contact_contain{width: 80%;position: relative;left:10%}
+    }
+    footer .contact_contain .box{width: 100%;position: relative;overflow: hidden;height:34px;}
+    footer .contact_contain .box_wheel{height: 500px;position: absolute;overflow: hidden;}
+    footer .contact_contain .box_wheel li{width: 1040px;height: 500px;background: pink;text-align: center;line-height: 500px;float: left;}
+    footer .contact_contain .contact_btn{width: 30px;height: 30px;/*line-height: 30px;*/text-align: center;color: #f1be83;font-size: 25px;cursor: pointer;display:none;}
+    footer .contact_contain .btn_left{position: absolute;left: -22px;top: 10%;}
+    footer .contact_contain .btn_right{position: absolute;right: -22px;top: 10%;}
 </style>
 <footer>
     <div class="footerDiv">
         <div class="footerItem f15">
             <span>联系我们</span>
             <div class="footerChildren">
-                <div class="footerChildrenItem"><i class="fa fa-phone" style="width: 18px;font-size: 15px;padding-left: 4px;"></i> <a href="tel:{$website['tel']}" class="f15">{$website['tel']}</a></div>
-                <div class="footerChildrenItem"><img loading="lazy" alt="GOGO198 網站圖片" src="img/email.png" alt="" style="width:18px;"/> <a href="mailto:{$website['email']}" class="f15">{$website['email']}</a></div>
+                {if !empty($website['tel'])}
+                    <div class="footerChildrenItem"><i class="fa fa-phone" style="width: 18px;font-size: 15px;padding-left: 4px;"></i> <a href="tel:{$website['tel']}" class="f15">{$website['tel']}</a></div>
+                {/if}
+                {if !empty($website['email'])}
+                    <div class="footerChildrenItem"><img loading="lazy" alt="GOGO198 網站圖片" src="img/email.png" alt="" style="width:18px;"/> <a href="mailto:{$website['email']}" class="f15">{$website['email']}</a></div>
+                {/if}
+                {if !empty($website['address'])}
+                    <div class="footerChildrenItem"><img loading="lazy" alt="GOGO198 網站圖片" src="img/address.png" alt="" style="width:18px;"/> <span class="f15">{$website['address']}</span></div>
+                {/if}
+                {if !empty($website['website_contact'])}
+                    <div class="contact_contain">
+                        <div class="box" style="">
+                            <ul class="social-network" style="overflow-x:unset;position:absolute;">
+                                {foreach name="website['website_contact']" key="key" id="vo"}
+                                    {if $vo['type']==1}
+                                        <li style="margin-left:0;"><a href="{$vo['link']}" data-placement="top" title="{$vo['name']}" target="_blank"><img loading="lazy" alt="GOGO198 網站圖片" src="https://dtc.gogo198.net/{$vo['ico']}" alt="" style="width:18px;margin-bottom: 3px;"/></a></li>
+                                    {else}
+                                        <li style="margin-left:0;"><a href="/?s=index/social_detail&id={$vo['id']}&company_id={$company_id}&company_type={$company_type}" data-placement="top" title="{$vo['name']}"><img loading="lazy" alt="GOGO198 網站圖片" src="https://dtc.gogo198.net/{$vo['ico']}" alt="" style="width:18px;margin-bottom: 3px;"/></a></li>
+                                    {/if}
+                                {/foreach}
+                            </ul>
+                        </div>
+                        <div class="contact_btn btn_left"><</div>
+                        <div class="contact_btn btn_right">></div>
+                    </div>
+                {/if}
             </div>
         </div>
         <div class="footerItem f15">
             <span>网站导航</span>
             <div class="footerChildren">
+                <!--页脚菜单-->
                 <div class="footerChildrenItem">
-
-                    {volist name="menu" key="key" id="vo"}
-                    {if(!empty($vo.childMenu))}
-                    <div class="col-md-4 col-sm-4">
-                        <div class="widget">
-                            <h4 class="widgetheading f18" style="margin-bottom:5px;text-align:center;white-space: nowrap;">{$vo['name']}</h4>
-                            <ul class="link-list" style="text-align:center;">
-                                {volist name="vo.childMenu" id="vo2"}
-                                {if $vo2.go_other==1}
-                                <li><a href="{$vo2.other_link}" target="_blank" class="f15">{$vo2.name}</a></li>
-                                {elseif($vo2.go_other==2)}
-                                <li><a href="?s=index/detail&id={$vo2.other_navbar}&company_id={$company_id}&company_type={$company_type}" target="_blank" class="f15">{$vo2.name}</a></li>
-                                {else}
-                                <li><a href="?s=index/detail&id={$vo2.id}&company_id={$company_id}&company_type={$company_type}" class="f15">{$vo2.name}</a></li>
-                                {/if}
-                                {/volist}
-                            </ul>
-                        </div>
-                    </div>
-                    {/if}
+                    {volist name="website['footer_menu']" key="key" id="vo"}
+                        {if !empty($vo.childMenu)}
+                            <div class="col-md-4 col-sm-4">
+                                <div class="widget">
+                                    <h4 class="widgetheading f18" style="margin-bottom:5px;text-align:center;white-space: nowrap;font-weight:800;">{$vo['name']}</h4>
+                                    <ul class="link-list" style="text-align:center;">
+                                        {volist name="vo.childMenu" id="vo2"}
+                                            {if $vo2.go_other==1}
+                                                <li><a href="{$vo2.other_link}" target="_blank" class="f15">{$vo2.name}</a></li>
+                                            {elseif($vo2.go_other==2)}
+                                                <li><a href="/?s=index/fdetail&id={$vo2.other_navbar}&company_id={$company_id}&company_type={$company_type}&is_footer=1" target="_blank" class="f15">{$vo2.name}</a></li>
+                                            {else}
+                                                <li><a href="/?s=index/fdetail&id={$vo2.id}&company_id={$company_id}&company_type={$company_type}&is_footer=1" target="_blank" class="f15">{$vo2.name}</a></li>
+                                            {/if}
+                                        {/volist}
+                                    </ul>
+                                </div>
+                            </div>
+                        {/if}
                     {/volist}
                 </div>
+                
             </div>
         </div>
         <div class="footerItem f15">
             <span>网站信息</span>
-            <div class="footerChildren">
+            <div class="footerChildren" style="padding:10px;">
+                <!--网站资质-->
+                <p style="text-align:center;" class="f16">
+                    {if !empty($website['website_qualification'])}
+                        {foreach name="website['website_qualification']" key="k" id="v"}
+                            {if $k!=0} <span>|</span> {/if} &nbsp;<a href="/?s=index/qualific&id={$v['id']}&company_id={$company_id}&company_type={$company_type}" class="f16" target="_blank">{$v['name']}</a>&nbsp;
+                        {/foreach}
+                    {/if}
+                </p>
+                <!--公示信息-->
+                <div style="text-align:center;">
+                    {if !empty($website['website_publicity_info'])}
+                        {foreach name="website['website_publicity_info']" key="k" id="v"}
+                            {if $k!=0} <span>|</span> {/if} &nbsp;<a href="{$v['link']}" class="f16" target="_blank">{$v['name']}</a>&nbsp;
+                        {/foreach}
+                    {/if}
+                </div>
                 <div class="footerChildrenItem">
                     {$website['copyright']}
                 </div>
@@ -107,6 +166,7 @@
 <script src="js/jquery.magnific-popup.min.js"></script>
 <script src="js/animate.js"></script>
 <script src="js/custom.js"></script>
+<script src="js/jquery.chosen.js?v=1.3"></script>
 <script type="text/javascript" charset="utf-8">
     //判断是否MicrosoftEdge（微软）浏览器
     function isMicrosoftEdge() {
@@ -244,6 +304,22 @@
             // $('.web_translate').attr('id','translate');
         }
 
+        //控制联系方式====start
+        var liW = $(".social-network li").width()+12;
+        //获取li元素的长度(个数)
+        var len = $(".social-network li").length;
+
+        //计算ul的总宽度
+        var ulW = len*liW;
+        //设置ul的宽度
+        $(".social-network").css("width",ulW);
+        if($(".social-network").css("width")>$(".contact_contain").css('width')){
+            $('.contact_btn').show();
+            $('.contact_contain').css('left','10%');
+        }else{
+            $('.contact_btn').hide();
+            $('.contact_contain').css('left','0%');
+        }
         var idx = 0;
         $(".btn_left").click(function(){
             idx --;  //索引自加
@@ -251,6 +327,7 @@
                 idx = len - 1;
             }
             changeLi(idx);
+            event.stopPropagation(); // 阻止冒泡
         });
         $(".btn_right").click(function(){
             idx ++;  //索引自减
@@ -258,12 +335,145 @@
                 idx = 0;
             }
             changeLi(idx);
+            event.stopPropagation(); // 阻止冒泡
         });
         function changeLi(idx){
             var move = -idx * liW;
             $(".social-network").stop().animate({"left":move},300);
         }
+        //控制联系方式====end
 
+        //头部滚动内容====start
+        {if isset($rotate_info)}
+            {if !empty($rotate_info)}
+                if(IsPhone()){
+                    new Swiper ('#mobileNewsBox-container', {
+                        loop: true, // 循环模式选项
+                        direction:'vertical',
+                        autoplay: {
+                            delay:15000,
+                        },
+                        // 如果需要分页器
+                        // pagination: {
+                        //     el: '.swiper-pagination',
+                        // },
+                    });
+                }
+    
+                {foreach name="rotate_info['content_id']" key="k" id="v"}
+                    {if $v==1}
+                        <!--新闻内容-->
+                        //新闻轮播
+                        var newsSwiper = new Swiper('.news', {
+                            direction:'vertical',
+                            loop: true, // 循环模式选项
+                            autoplay: {
+                                delay:5000
+                            },
+                            spaceBetween: 1,
+                            // 如果需要分页器
+                            // pagination: {
+                            //     el: '.swiper-pagination',
+                            // },
+                        });
+                    {elseif($v==2)}
+                        <!--时间内容-->
+                        $('.city-select').chosen();
+                        
+                        var auto_time = '';
+                        $(function(){
+                            //获取北京时间
+                            auto_time = setInterval(function getTime(){
+                                // 创建一个 Date 对象
+                                var date = new Date();
+                    
+                                // 使用 toLocaleString() 方法将 Date 对象转换为所需的格式
+                                var formatted_date = date.toLocaleString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+                                formatted_date = formatted_date.split(', ');
+                                $('.beijing-time .beijing_sec').html(formatted_date[1]);
+                            },1000);
+                    
+                            if(IsPhone()){
+                                $('.contentBox').css({'-webkit-transform':'translate(-50%, -0.2%)'});
+                                $('.wapNavContent').show();
+                                $('.mobile_news_box').show();
+                                $('.pcNavContent').hide();
+                            }else{
+                                if (isMicrosoftEdge()) {
+                                    $('.contentBox').css({'-webkit-transform':'translate(-50%, 0.2%)'});
+                                }
+                            }
+                        });
+    
+                        //获取城市时间
+                        function selectCity(t){
+                            let val = $(t).val();
+                            console.log(val,333);
+                            $.post('//shop.gogo198.cn/collect_website/public/?s=api/getgoods/get_worldcity_time', {'city':val}, function(data) {
+                                // setInterval(function getWorldTime(){
+                                formatTime(data.data.result.datetime_1);
+                                // }, 1000);
+                            }, 'json');
+                        }
+    
+                        function formatTime(times='') {
+                            clearInterval(auto_time);
+                    
+                            const time = new Date(times);
+                    
+                            function update() {
+                                // 更新时间
+                                const hours = time.getHours().toString().padStart(2, '0');
+                                const minutes = time.getMinutes().toString().padStart(2, '0');
+                                const seconds = time.getSeconds().toString().padStart(2, '0');
+                                $('.beijing-time .beijing_sec').html(`${hours}:${minutes}:${seconds}`);
+                    
+                                // 更新日期
+                                const year = time.getFullYear();
+                                const month = (time.getMonth() + 1).toString().padStart(2, '0');
+                                const day = time.getDate().toString().padStart(2, '0');
+                                $('.beijing-time .beijing_date').html(`${year}/${month}/${day}`);
+                    
+                                // 递增秒数，模拟时间流逝
+                                time.setSeconds(time.getSeconds() + 1);
+                            }
+                            // 首次更新时间和日期
+                            update();
+                    
+                            // 每秒更新时间和日期
+                            auto_time = setInterval(update, 1000);
+                        }
+                    {elseif($v==3)}
+                        <!--汇率内容-->
+                    
+                        if(IsPhone()){
+                            //汇率
+                            var mrate_swiper = new Swiper ('.mrate_swiper', {
+                                loop: true,
+                                direction:'vertical',
+                                spaceBetween:0,
+                                autoplay:{
+                                    delay:5000,
+                                    disableOnInteraction:false,
+                                },
+                            });
+                        }
+                        else{
+                            var rate = new Swiper ('.rate_swiper', {
+                                loop: true,
+                                direction:'vertical',
+                                spaceBetween:0,
+                                autoplay:{
+                                    delay:5000,
+                                    disableOnInteraction:false,
+                                },
+                            });
+                        }
+                    {/if}
+                {/foreach}
+            {/if}
+        {/if}
+        //头部滚动内容====end
 
         //头部菜单点击
         // $('.navbar-nav .dropdown').click(function(){
@@ -272,6 +482,47 @@
         // });
     });
 
+    //选择事件切换===========start
+    //获取城市时间
+    function selectCity(t){
+        let val = $(t).val();
+        console.log(val,333);
+        $.post('//shop.gogo198.cn/collect_website/public/?s=api/getgoods/get_worldcity_time', {'city':val}, function(data) {
+            // setInterval(function getWorldTime(){
+            formatTime(data.data.result.datetime_1);
+            // }, 1000);
+        }, 'json');
+    }
+
+    function formatTime(times='') {
+        clearInterval(auto_time);
+
+        const time = new Date(times);
+
+        function update() {
+            // 更新时间
+            const hours = time.getHours().toString().padStart(2, '0');
+            const minutes = time.getMinutes().toString().padStart(2, '0');
+            const seconds = time.getSeconds().toString().padStart(2, '0');
+            $('.beijing-time .beijing_sec').html(`${hours}:${minutes}:${seconds}`);
+
+            // 更新日期
+            const year = time.getFullYear();
+            const month = (time.getMonth() + 1).toString().padStart(2, '0');
+            const day = time.getDate().toString().padStart(2, '0');
+            $('.beijing-time .beijing_date').html(`${year}/${month}/${day}`);
+
+            // 递增秒数，模拟时间流逝
+            time.setSeconds(time.getSeconds() + 1);
+        }
+        // 首次更新时间和日期
+        update();
+
+        // 每秒更新时间和日期
+        auto_time = setInterval(update, 1000);
+    }
+    //选择事件切换===========end
+    
     //占满屏判断
     // function setFullScreenSectionHeight() {
     //     var windowHeight = $(window).height()+20;
@@ -299,46 +550,46 @@
 <!-- Google Analytics 4 (GA4) - dtc.gogo198.net -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-LQH9QBW547"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  // GA4 配置（台湾隐私 + 电商优化）
-  gtag('config', 'G-LQH9QBW547', {
-    'send_page_view': true,
-    'cookie_prefix': 'gogo_',
-    'cookie_domain': 'gogo198.net',  // 主域名
-    'cookie_expires': 63072000,      // 2 年
-    'anonymize_ip': true,            // 隐私保护（台湾法规）
-    'linker': {
-      'domains': ['gogo198.net', 'dtc.gogo198.net']
-    }
-  });
-
-  // 自定义事件：页面加载（兼容 ThinkPHP 动态页）
-  document.addEventListener('DOMContentLoaded', function() {
-    gtag('event', 'page_view', {
-      'page_location': window.location.href,
-      'page_title': document.title,
-      'page_path': window.location.pathname + window.location.search
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    
+    // GA4 配置（台湾隐私 + 电商优化）
+    gtag('config', 'G-LQH9QBW547', {
+        'send_page_view': true,
+        'cookie_prefix': 'gogo_',
+        'cookie_domain': 'gogo198.net',  // 主域名
+        'cookie_expires': 63072000,      // 2 年
+        'anonymize_ip': true,            // 隐私保护（台湾法规）
+        'linker': {
+          'domains': ['gogo198.net', 'dtc.gogo198.net']
+        }
     });
-  });
 
-  // 自动点击追踪（按钮、链接）
-  document.addEventListener('click', function(e) {
-    let target = e.target.closest('a, button, .btn, [data-track]');
-    if (!target) return;
-
-    let label = (target.innerText || target.value || '').trim().substring(0, 50);
-    let url = target.href || '';
-
-    gtag('event', 'click', {
-      'event_category': 'engagement',
-      'event_label': label,
-      'link_url': url,
-      'page_path': window.location.pathname
+    // 自定义事件：页面加载（兼容 ThinkPHP 动态页）
+    document.addEventListener('DOMContentLoaded', function() {
+        gtag('event', 'page_view', {
+          'page_location': window.location.href,
+          'page_title': document.title,
+          'page_path': window.location.pathname + window.location.search
+        });
     });
-  });
+
+    // 自动点击追踪（按钮、链接）
+    document.addEventListener('click', function(e) {
+        let target = e.target.closest('a, button, .btn, [data-track]');
+        if (!target) return;
+        
+        let label = (target.innerText || target.value || '').trim().substring(0, 50);
+        let url = target.href || '';
+        
+        gtag('event', 'click', {
+          'event_category': 'engagement',
+          'event_label': label,
+          'link_url': url,
+          'page_path': window.location.pathname
+        });
+    });
 </script>
 <!-- End GA4 -->
 

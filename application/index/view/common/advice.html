@@ -177,7 +177,7 @@
 <div class="mask"></div>
 <!--分享-->
 <div class="mask_content contract2" style="background:{$website['color']} !important;border:1px solid {$website['color_word']};">
-    <p class="bt">{if session('lang')=='zh'}我要分享{elseif(session('lang')=='cht')}我要分享{elseif(session('lang')=='en')}I Need Share{/if}</p>
+    <p class="bt">我要分享</p>
     <div class="position">
         <!--<div class="social-share"></div>-->
         <div class="disf" style="justify-content: center;margin-bottom:12px;">
@@ -245,7 +245,7 @@
             </div>
         </div>
         <div class="btn-line">
-            <button class="cancel">{if session('lang')=='zh'}关闭{elseif(session('lang')=='cht')}關閉{elseif(session('lang')=='en')}Close{/if}</button>
+            <button class="cancel">关闭</button>
         </div>
     </div>
 </div>
@@ -255,47 +255,42 @@
             <input type="text" name="id" id="id" value="{$id}" style="display:none;"/>
             <div class="text-center padding text-sub">
                 <h3>
-                    {if session('lang')=='zh'}
                     我要咨询
-                    {elseif(session('lang')=='cht')}
-                    我要咨詢
-                    {elseif(session('lang')=='en')}
-                    I need to consult
-                    {/if} <small style="display: none;">Gogo服务</small>
+                    <small style="display: none;">Gogo服务</small>
                 </h3>
             </div>
             <div class="form-group">
                 <div class="input-group">
-                    <img loading="lazy" alt="GOGO198 網站圖片" class="addon icon-user text-large" src="https://admin.gogo198.cn/collect_website/public/static/img/advice/addon1.png" alt=""> <input type="text" class="input" name="myname" data-validate="required:必填" placeholder="{if session('lang')=='zh'}您的名称{elseif(session('lang')=='cht')}您的名稱{elseif(session('lang')=='en')}Your Name{/if}">
+                    <img loading="lazy" alt="GOGO198 網站圖片" class="addon icon-user text-large" src="https://admin.gogo198.cn/collect_website/public/static/img/advice/addon1.png" alt=""> <input type="text" class="input" name="myname" data-validate="required:必填" placeholder="您的名称">
                 </div>
             </div>
             <div class="form-group">
                 <div class="input-group">
-                    <img loading="lazy" alt="GOGO198 網站圖片" class="addon icon-user text-large" src="https://admin.gogo198.cn/collect_website/public/static/img/advice/addon4.png" alt=""> <input type="text" class="input" name="mobile" maxlength="50" placeholder="{if session('lang')=='zh'}您的联系电话{elseif(session('lang')=='cht')}您的聯係電話{elseif(session('lang')=='en')}Your Contact Number{/if}" data-validate="required:请填写您的联系电话">
+                    <img loading="lazy" alt="GOGO198 網站圖片" class="addon icon-user text-large" src="https://admin.gogo198.cn/collect_website/public/static/img/advice/addon4.png" alt=""> <input type="text" class="input" name="mobile" maxlength="50" placeholder="您的联系电话" data-validate="required:请填写您的联系电话">
                 </div>
             </div>
             <div class="form-group">
                 <div class="input-group">
-                    <img loading="lazy" alt="GOGO198 網站圖片" class="addon icon-user text-large" src="https://admin.gogo198.cn/collect_website/public/static/img/advice/addon2.png" alt=""> <input type="text" class="input" name="myemail" maxlength="50" placeholder="{if session('lang')=='zh'}您的邮箱号码{elseif(session('lang')=='cht')}您的郵箱號碼{elseif(session('lang')=='en')}Your Email Number{/if}" data-validate="required:请填写您的邮箱号码">
+                    <img loading="lazy" alt="GOGO198 網站圖片" class="addon icon-user text-large" src="https://admin.gogo198.cn/collect_website/public/static/img/advice/addon2.png" alt=""> <input type="text" class="input" name="myemail" maxlength="50" placeholder="您的邮箱号码" data-validate="required:请填写您的邮箱号码">
                 </div>
             </div>
             <div class="form-group">
                 <div class="input-group">
                     <!--<div class="addon" style="height:72px;line-height:55px;"></div>-->
-                    <img loading="lazy" alt="GOGO198 網站圖片" class="addon icon-user text-large" src="https://admin.gogo198.cn/collect_website/public/static/img/advice/addon3.png" alt=""> <textarea name="contents" class="input" placeholder="{if session('lang')=='zh'}请输入您的需求{elseif(session('lang')=='cht')}請輸入您的需求{elseif(session('lang')=='en')}Please Enter Your Requirements{/if}"  data-validate="required:请输入您的需求,length#<500:字数在0-500个"></textarea>
+                    <img loading="lazy" alt="GOGO198 網站圖片" class="addon icon-user text-large" src="https://admin.gogo198.cn/collect_website/public/static/img/advice/addon3.png" alt=""> <textarea name="contents" class="input" placeholder="请输入您的需求"  data-validate="required:请输入您的需求,length#<500:字数在0-500个"></textarea>
                 </div>
             </div>
             <div class="form-group">
                 <div class="input-group">
                     <input name="codeimg" type="hidden" value="{$rand}">
-                    <span class="addon text-center" style="width:30%;line-height: 30px;color:#000;" id="codeimg">{$rand}</span> <input name="mycode" class="input" type="text" maxlength="5" placeholder="{if session('lang')=='zh'}请输入左侧验证码{elseif(session('lang')=='cht')}請輸入左側驗證碼{elseif(session('lang')=='en')}Please Enter The Verification Code On The Left Side{/if}" data-validate="required:(必填)请填写左侧验证码">
+                    <span class="addon text-center" style="width:30%;line-height: 30px;color:#000;" id="codeimg">{$rand}</span> <input name="mycode" class="input" type="text" maxlength="5" placeholder="请输入左侧验证码" data-validate="required:(必填)请填写左侧验证码">
                 </div>
             </div>
             
             <div class="form-group">
                 <div class="field" style="text-align:center;">
-                    <input type="submit" class="button x6 x3-move bg-blue text-big" value="{if session('lang')=='zh'}立即提交{elseif(session('lang')=='cht')}立即提交{elseif(session('lang')=='en')}Submit Now{/if}" style="border:1px solid {$website['color_word']};color:{$website['color_word']};float:unset;">
-                    <div class="cancel" style="">{if session('lang')=='zh'}关闭{elseif(session('lang')=='cht')}關閉{elseif(session('lang')=='en')}Close{/if}</div>
+                    <input type="submit" class="button x6 x3-move bg-blue text-big" value="立即提交" style="border:1px solid {$website['color_word']};color:{$website['color_word']};float:unset;">
+                    <div class="cancel" style="">关闭</div>
                 </div>
             </div>
         </form>

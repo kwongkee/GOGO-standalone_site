@@ -175,10 +175,12 @@
     function save(type,url) {
         if(type==1){
             //轮播图
-            var modal = document.getElementById('saveMenuModal');
-            modal.style.display = 'flex';
+            // var modal = document.getElementById('saveMenuModal');
+            // modal.style.display = 'flex';
 
-            $('#saveMenuModal .menu_iframe').attr('src',url);
+            // $('#saveMenuModal .menu_iframe').attr('src',url);
+            
+            window.location.href = url;
         }
     }
 

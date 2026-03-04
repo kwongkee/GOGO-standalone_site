@@ -69,31 +69,37 @@
         .layui-form-item .layui-form-label{width:100px;}
 
         .edui-editor{z-index: 1 !important;}
-        
-        /*返回按钮*/
-        .backDiv{padding: 5px 5px 5px 20px;border-bottom: 1px solid #d9d9d9;}
-        .backDiv .backBox{display: flex;align-items: center;cursor: pointer;}
-        .backDiv .back_icon{font-size: 18px;color: #333;margin-right: 10px;position: relative;}
-        .backDiv .back_icon:before{content:'';position:absolute;width:9px;height:9px;border-left:2px solid #000;border-top:2px solid #000;transform:rotate(-45deg);margin-right:5px;top:-7px;}
-        .backDiv .back_text{font-size: 16px;color: #333;font-weight: 500;margin-left: 5px;}
     </style>
 </head>
 <body>
-<div class="backDiv">
-    <div class="backBox" onclick="javascript:window.history.back(-1);">
-        <div class="back_icon"></div>
-        <div class="back_text">返回</div>
-    </div>
-</div>
 <form id="siteForm" class="layui-form" action="" method="post" lay-filter="component-form-menu" style="padding:10px;margin-bottom:0px;">
     <input type="hidden" name="company_id" value="{$company_id}">
     <input type="hidden" name="company_type" value="{$company_type}">
-    <input type="hidden" name="id" value="{$id}">
 
     <div class="layui-form-item">
-        <div class="layui-form-label">类别名称</div>
+        <div class="layui-form-label">域名配置</div>
         <div class="layui-input-block">
-            <input type="text" class="layui-input" name="name" value="{$data['name']}" lay-verify="" placeholder="类别名称">
+            <!--<div class="domain_input" style="display: flex; align-items: center;">-->
+                <!--<span style="background: #f0f0f0; padding: 17px 10px; border: 2px solid #e0e0e0; border-right: none; border-radius: 10px; border-top-right-radius: 0px; border-bottom-right-radius: 0px;">www.</span>-->
+                <input type="text" class="layui-input" name="domain_name" value="{$data['domain_name']}" lay-verify="required" placeholder="请输入域名地址">
+                <!--<input type="text" id="siteDomain" placeholder="xxx" required style="border-top-right-radius: 0; border-bottom-right-radius: 0;">-->
+                <!--<select id="siteType" required>-->
+                <!--    <option value=".com">.com</option>-->
+                <!--    <option value=".cn">.cn</option>-->
+                <!--    <option value=".net">.net</option>-->
+                <!--    <option value=".org">.org</option>-->
+                <!--    <option value=".info">.info</option>-->
+                <!--    <option value=".edu">.edu</option>-->
+                <!--    <option value=".gov">.gov</option>-->
+                <!--    <option value=".co">.co</option>-->
+                <!--    <option value=".io">.io</option>-->
+                <!--    <option value=".online">.online</option>-->
+                <!--    <option value=".us">.us</option>-->
+                <!--    <option value=".gov.cn">.gov.cn</option>-->
+                <!--    <option value=".edu.cn">.edu.cn</option>-->
+                <!--</select>-->
+            <!--</div>-->
+            <!--<div class="domain_input2" style="display: flex; align-items: center;font-size: 20px;text-align: center;"></div>-->
         </div>
     </div>
 
@@ -103,16 +109,7 @@
     </div>
 </form>
 
-<!-- 添加轮播图·模态框 -->
-<div class="modal" id="saveMenuModal">
-    <div class="modal-content" style="/**min-height:600px;max-height:600px;**/overflow-y:auto;">
-        <span class="close-modal close-modal-menu">&times;</span>
-        <h2 class="modal-title">保存信息</h2>
-        <iframe src="" class="menu_iframe" frameborder="0" style="width: 100%;height:400px;"></iframe>
-    </div>
-</div>
 </body>
-<script src="./layui/xm-select.js"></script>
 <script src="js/jquery-3.6.0.min.js"></script>
 <script src="layui/layui.js"></script>
 <script>
@@ -124,29 +121,10 @@
             ,upload = layui.upload
             ,colorpicker = layui.colorpicker;
 
-        //菜单弹窗关闭事件===start
-        const menu_modal = document.getElementById('saveMenuModal');
-        const menu_closeBtn = document.querySelector('.close-modal-menu');
-        const cancelBtn = document.getElementById('cancelBtnMenu');
-
-        // 关闭模态框
-        function closeModalMenu() {
-            menu_modal.style.display = 'none';
-        }
-        menu_closeBtn.addEventListener('click', closeModalMenu);
-        cancelBtn.addEventListener('click', closeModalMenu);
-        // 点击模态框外部关闭
-        window.addEventListener('click', function(event) {
-            if (event.target === menu_modal) {
-                closeModalMenu();
-            }
-        });
-        //菜单弹窗关闭事件===end
-
         form.on('submit(component-form-menu2)', function(data){
             layer.load();
             $.ajax({
-                url:"/?s=index/save_description",
+                url:"/?s=index/save_domainname",
                 method:'post',
                 data:data.field,
                 dataType:'JSON',
@@ -159,7 +137,7 @@
                             // currentUrl.searchParams.set('tab', 'shop_head_menu');
                             // parent.history.pushState({}, '', currentUrl.toString());
 
-                            window.history.back(-1);
+                            window.location.reload();
                         }
                     });
                 },
