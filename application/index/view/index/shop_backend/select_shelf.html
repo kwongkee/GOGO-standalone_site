@@ -34,6 +34,7 @@
         .btn-primary:hover {background: transparent;border-color: var(--primary);color: var(--primary);transform: translateY(-3px);box-shadow: var(--shadow);}
         .btn-normal {background:#009688;color: white;border: 2px solid transparent;}
         .btn-normal:hover {background: transparent;border-color: #009688;color: #009688;transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-danger {background:#ff2222;color: white;border: 2px solid transparent;}
 
         /* 表单样式 */
         .form-section {margin-bottom: 30px;}
@@ -305,6 +306,7 @@
             border-radius: 0 0 8px 8px;
             padding: 25px;
             box-shadow: var(--shadow);
+            min-height: 500px;
         }
         
         .layui-table {
@@ -876,25 +878,36 @@
                     {if empty($list['platform_shop'])}
                         <p style="font-size:15px;">平台商城暂未配置，请联系平台</p>
                     {else}
-                        <table class="layui-table" style="width: 100%;">
-                            <thead>
-                            <th>导流名称</th>
-                            <th>导流关键词</th>
-                            </thead>
-                            <tbody>
-                            {volist name="list['platform_shop']" id="vo"}
-                            <tr>
-                                <td>
-                                    {$vo['title']}
-                                    <input type="text" name="guide[platform_shop][]" value="{$vo['id']}" style="display: none;">
-                                </td>
-                                <td>
-                                    <input type="text" class="layui-input keywords" name="keywords[platform_shop][]" placeholder="多个关键字用“、”顿号隔开" value="{$vo['my_keywords']}">
-                                </td>
-                            </tr>
-                            {/volist}
-                            </tbody>
-                        </table>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">上架平台</label>
+                            <div class="layui-input-block">
+                                <select name="is_shelf_platform" id="is_shelf_platform" lay-filter="is_shelf_platform">
+                                    <option value="0" {if $list['is_shelf_platform']==0}selected{/if}>开启</option>
+                                    <option value="-1" {if $list['is_shelf_platform']==-1}selected{/if}>关闭</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="platform_shop_table" style="display:{if $list['is_shelf_platform']==0}block{else}none{/if}">
+                            <table class="layui-table" style="width: 100%;">
+                                <thead>
+                                    <th>导流名称</th>
+                                    <th>导流关键词</th>
+                                </thead>
+                                <tbody>
+                                    {volist name="list['platform_shop']" id="vo"}
+                                        <tr>
+                                            <td>
+                                                {$vo['title']}
+                                                <input type="text" name="guide[platform_shop][]" value="{$vo['id']}" style="display: none;">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="layui-input keywords" name="keywords[platform_shop][]" placeholder="多个关键字用“、”顿号隔开" value="{$vo['my_keywords']}">
+                                            </td>
+                                        </tr>
+                                    {/volist}
+                                </tbody>
+                            </table>
+                        </div>
                     {/if}
                 </div>
                 <div class="layui-tab-item">
@@ -950,7 +963,7 @@
                                 </div>
                             </div>
                             <div class="disf" style="display:flex;align-items:center;justify-content:center;">
-                                <button type="button" class="btn btn-normal" onclick="edit_express()">修改物流</button>
+                                <button type="button" class="btn btn-danger" onclick="edit_express()">修改物流</button>
                             </div>
                         {/if}
                     </div>
@@ -1172,6 +1185,17 @@ layui.use(['layer','form','laydate','upload','colorpicker','element'],function()
     // 支付方式选择
     form.on('radio(paymentType)', function(data) {
         logisticsData.express_paytype = data.value;
+    });
+    
+    //是否上架平台
+    form.on('select(is_shelf_platform)', function(data){
+        let val = data.value;
+        
+        if(val == 0){
+            $('.platform_shop_table').show();
+        }else if(val == -1){
+            $('.platform_shop_table').hide();
+        }
     });
     
     // 绑定新的提交按钮点击事件
@@ -2870,6 +2894,7 @@ function collectAllData() {
         company_type: $('input[name="company_type"]').val(),
         id: $('input[name="id"]').val(),
         type: $('input[name="type"]').val(),
+        is_shelf_platform: $('#is_shelf_platform').val(),
         // 导流关键词数据
         guide: {
             my_guide: [],

@@ -405,7 +405,7 @@
             $.ajax({
                 url: "?s=index/customer_login",
                 method: 'post',
-                data: {'reg_method':$('#reg_method').val(),'number':number,'country_code':country_code,'code':$('#code').val(),'inquiry_id':"{$inquiry_id}",'company_id':"{$company_id}",'company_type':"{$company_type}"},
+                data: {'reg_method':$('#reg_method').val(),'number':number,'country_code':country_code,'code':$('#code').val(),'inquiry_id':"{$inquiry_id}",'company_id':"{$company_id}",'company_type':"{$company_type}",'is_merchs':"{$is_merchs}"},
                 dataType: 'JSON',
                 success: function (res) {
                     if(res.code==-1){
@@ -413,7 +413,9 @@
                         return false;
                     }else{
                         alert(res.msg);
-                        if({$open}==1){
+                        if({$is_merchs}==1){
+                            window.location.href="/?s=index/merch_manage_index";
+                        }else if({$open}==1){
                             parent.location.href="/?s=index/thanks";
                         }else if({$open}==2){
                             window.location.href="http://chat.gogo198.net/?s=index/chat&refresh=1&uid="+res.uid;
@@ -519,7 +521,9 @@
                         if(data2.code==1){
                             //授权成功
                             // alert(data2.msg);
-                            if("{$open}"==1){
+                            if({$is_merchs}==1){
+                                window.location.href="/?s=index/merch_manage_index";
+                            }else if("{$open}"==1){
                                 window.location.href="/?s=gather/service_center";
                             }else if("{$open}"==3){
                                 var layer = layui.layer;

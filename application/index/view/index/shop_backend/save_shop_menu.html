@@ -124,78 +124,78 @@
         </div>
     </div>
     <div class="format1" style="display:{if $data['format']==1}block{else}none{/if};">
-    <fieldset class="layui-elem-field">
-        <legend>导向图上传</legend>
-        <div class="layui-field-box">
-            <div class="layui-form-item">
-                <div class="layui-form-label">导向图(像素：815*455)</div>
-                <div class="layui-input-block">
-                    <div class="layui-upload" style="margin-top: 10px;">
-                        <button type="button" class="layui-btn" id="img_file-upload">上传图片(一张)</button>
-                        <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
-                            预览图：
-                            <div class="layui-upload-list" id="img_file-upload-list">
-                                {if !empty($data['thumb'])}
-                                <div style="display: inline-block;">
-                                    <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$data['thumb']}" class="layui-upload-img" style="width:80px;height:80px;">
-                                    <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
-                                    <input type="hidden" name="thumb[]" value="{$data['thumb']}">
+        <fieldset class="layui-elem-field">
+            <legend>导向图上传</legend>
+            <div class="layui-field-box">
+                <div class="layui-form-item">
+                    <div class="layui-form-label">导向图(像素：815*455)</div>
+                    <div class="layui-input-block">
+                        <div class="layui-upload" style="margin-top: 10px;">
+                            <button type="button" class="layui-btn" id="img_file-upload">上传图片(一张)</button>
+                            <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                                预览图：
+                                <div class="layui-upload-list" id="img_file-upload-list">
+                                    {if !empty($data['thumb'])}
+                                    <div style="display: inline-block;">
+                                        <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$data['thumb']}" class="layui-upload-img" style="width:80px;height:80px;">
+                                        <button type="button" onclick="delPic(this);" class="layui-btn layui-btn-xs layui-btn-danger" style="position: relative;left: -45px;top: -39px;">删除</button>
+                                        <input type="hidden" name="thumb[]" value="{$data['thumb']}">
+                                    </div>
+                                    {/if}
                                 </div>
-                                {/if}
-                            </div>
-                        </blockquote>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-form-label">摆放位置</div>
+                    <div class="layui-input-block">
+                        <select name="avatar_location" id="avatar_location" lay-filter="avatar_location">
+                            <option value="1" {if $data['avatar_location']==1}selected{/if}>图文上方</option>
+                            <option value="2" {if $data['avatar_location']==2}selected{/if}>图文下方</option>
+                            <option value="3" {if $data['avatar_location']==3}selected{/if}>无</option>
+                        </select>
                     </div>
                 </div>
             </div>
-            <div class="layui-form-item">
-                <div class="layui-form-label">摆放位置</div>
-                <div class="layui-input-block">
-                    <select name="avatar_location" id="avatar_location" lay-filter="avatar_location">
-                        <option value="1" {if $data['avatar_location']==1}selected{/if}>图文上方</option>
-                        <option value="2" {if $data['avatar_location']==2}selected{/if}>图文下方</option>
-                        <option value="3" {if $data['avatar_location']==3}selected{/if}>无</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </fieldset>
+        </fieldset>
     </div>
     <div class="format2 colorAndWord" style="display:{if $data['format']==2}block{else}none{/if};">
-    <fieldset class="layui-elem-field">
-        <legend>色块设置</legend>
-        <div class="layui-field-box">
-            <div class="layui-form-item">
-                <div class="layui-form-label">色块颜色</div>
-                <div class="layui-input-block">
-                    <div id="color"></div>
-                    <input type="hidden" name="color" value="{$data['color']}">
+        <fieldset class="layui-elem-field">
+            <legend>色块设置</legend>
+            <div class="layui-field-box">
+                <div class="layui-form-item">
+                    <div class="layui-form-label">色块颜色</div>
+                    <div class="layui-input-block">
+                        <div id="color"></div>
+                        <input type="hidden" name="color" value="{$data['color']}">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-form-label">文字</div>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input" name="color_word" value="{$data['color_word']}">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-form-label">文字颜色</div>
+                    <div class="layui-input-block">
+                        <div id="word_color"></div>
+                        <input type="hidden" name="word_color" value="{$data['word_color']}">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-form-label">摆放位置</div>
+                    <div class="layui-input-block">
+                        <select name="avatar_location2" id="avatar_location" lay-filter="avatar_location">
+                            <option value="1" {if $data['avatar_location']==1}selected{/if}>图文上方</option>
+                            <option value="2" {if $data['avatar_location']==2}selected{/if}>图文下方</option>
+                            <option value="3" {if $data['avatar_location']==3}selected{/if}>无</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-            <div class="layui-form-item">
-                <div class="layui-form-label">文字</div>
-                <div class="layui-input-block">
-                    <input type="text" class="layui-input" name="color_word" value="{$data['color_word']}">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-form-label">文字颜色</div>
-                <div class="layui-input-block">
-                    <div id="word_color"></div>
-                    <input type="hidden" name="word_color" value="{$data['word_color']}">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-form-label">摆放位置</div>
-                <div class="layui-input-block">
-                    <select name="avatar_location2" id="avatar_location" lay-filter="avatar_location">
-                        <option value="1" {if $data['avatar_location']==1}selected{/if}>图文上方</option>
-                        <option value="2" {if $data['avatar_location']==2}selected{/if}>图文下方</option>
-                        <option value="3" {if $data['avatar_location']==3}selected{/if}>无</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </fieldset>
+        </fieldset>
     </div>
     <!--菜单详情页样式-->
     <div class="detail_format" style="display:{if $data['type']==1 || $data['type']==2}block{else}none{/if};">

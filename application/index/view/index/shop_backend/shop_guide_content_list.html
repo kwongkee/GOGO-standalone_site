@@ -29,7 +29,7 @@
         .btn-outline {border: 2px solid var(--primary);color: var(--primary);background: transparent;margin-right: 15px;}
         .btn-outline:hover {background: var(--primary);color: white;transform: translateY(-3px);box-shadow: var(--shadow);}
         .btn-primary {background: var(--gradient);color: white;border: 2px solid transparent;}
-        .btn-primary:hover {background: transparent;border-color: var(--primary);color: var(--primary);transform: translateY(-3px);box-shadow: var(--shadow);}
+        /*.btn-primary:hover {background: transparent;border-color: var(--primary);color: var(--primary);transform: translateY(-3px);box-shadow: var(--shadow);}*/
 
         /* 表单样式 */
         .form-section {margin-bottom: 30px;}
@@ -135,12 +135,12 @@
 <script src="./layui/xm-select.js"></script>
 <script>
     layui.use(['layer','form','laydate','upload','table'],function() {
-        laydate = layui.laydate;
-        layer = layui.layer;
-        var form = layui.form;
-        $ = layui.jquery;
-        var upload = layui.upload;
-        var table = layui.table;
+        var laydate = layui.laydate
+        ,layer = layui.layer
+        ,form = layui.form
+        ,$ = layui.jquery
+        ,upload = layui.upload
+        ,table = layui.table;
 
         const modal = document.getElementById('saveRotateModal');
         const closeBtn = document.querySelector('.close-modal');
@@ -167,11 +167,11 @@
                 {field:'id', width:80, title: '编号'}
                 ,{field:'name', title: '卡片名称'}
                 ,{field:'go_method', title: '导流方式'}
-                ,{width:180,align:'center', fixed: 'right', title: '操作', templet: function(d){
+                ,{width:250,align:'center', fixed: 'right', title: '操作', templet: function(d){
                         var result = "";
                         if("{$guide_info['content_id']}" == 4){
                             //杂志样式的下级管理
-                            result += '<a onclick="content_manage('+d.id+',1);" class="layui-btn layui-btn-xs btn-warn"><i class="fas fa-edit"></i> 内容管理</a>';
+                            result += '<a onclick="content_manage('+d.id+',1);" class="layui-btn layui-btn-xs btn-warn"><i class="fas fa-eye"></i> 内容管理</a>';
                         }
                         result += '<a onclick="save('+d.id+',1);" class="layui-btn layui-btn-xs btn-edit"><i class="fas fa-edit"></i> 编辑</a>';
                         result += '<a onclick="del_component('+ "'"+d.id+"'" +');" class="layui-btn layui-btn-xs btn-delete"><i class="fas fa-trash"></i> 删除</a>';
@@ -207,7 +207,7 @@
     });
 
     function content_manage(pid,typ){
-        parent.location.href="/?s=index/shop_guide_content_list2&company_id={$company_id}&company_type={$company_type}&guide_id={$guide_id}&top_id="+pid;
+        window.location.href="/?s=index/shop_guide_content_list2&company_id={$company_id}&company_type={$company_type}&guide_id={$guide_id}&top_id="+pid;
     }
 
     //内容删除
@@ -244,10 +244,12 @@
         var layer = layui.layer,$ = layui.$;
         if(type==1){
             //保存内容
-            var modal = document.getElementById('saveRotateModal');
-            modal.style.display = 'flex';
+            // var modal = document.getElementById('saveRotateModal');
+            // modal.style.display = 'flex';
 
-            $('#saveRotateModal .rotate_iframe').attr('src','/?s=index/save_shop_guide_content&company_id={$company_id}&company_type={$company_type}&guide_id={$guide_id}&top_id={$top_id}&id='+id);
+            // $('#saveRotateModal .rotate_iframe').attr('src','/?s=index/save_shop_guide_content&company_id={$company_id}&company_type={$company_type}&guide_id={$guide_id}&top_id={$top_id}&id='+id);
+            
+            window.location.href = '/?s=index/save_shop_guide_content&company_id={$company_id}&company_type={$company_type}&guide_id={$guide_id}&top_id={$top_id}&id='+id;
         }
     }
 

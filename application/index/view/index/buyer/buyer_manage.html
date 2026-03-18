@@ -8,7 +8,7 @@
     {else}
         <link rel="icon" href="./img/website_logo.png" type="image/x-icon" />
     {/if}
-    <title>独立站平台 - dtc.gogo198.net</title>
+    <title>买手管理</title>
     <link rel="stylesheet" href="css/all.min.css">
     <!--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>-->
     <script src="js/jquery-3.6.0.min.js"></script>
@@ -238,7 +238,7 @@
             width: calc(100% / 6);
             background-color: var(--sidebar-bg);
             border-right: 1px solid var(--border-color);
-            overflow-y: auto;
+            /*overflow-y: auto;*/
             transition: width 0.3s ease;
             padding-top: 20px;
         }
@@ -421,48 +421,33 @@
         <div class="header-left">
             <div class="logo">
                 <img loading="lazy" alt="GOGO198 網站圖片" src="{if !empty($website_basic['logo'])}{$website_basic['logo']}{else}./img/website_logo.png{/if}" alt="" style="width:90px;height:50px;margin-right:10px;background: var(--primary);">
-                <span style="display:none;">{if !empty($website_basic['company_info']['company'])}{$website_basic['company_info']['company']}{else}燚境国际{/if}</span>
+                <span style="display:none;">{if !empty($website_basic['company_info']['company'])}{$website_basic['company_info']['company']}{else}买手管理{/if}</span>
             </div>
             <button class="collapse-btn" id="collapseBtn">三</button>
         </div>
         <div class="header-right">
             <ul class="nav-menu">
                 <li>
-                    <a href="#">网站导航 <i class="fas fa-chevron-down"></i></a>
-                    <ul class="dropdown">
-                        <li>
-                            <a href="/admin?cid=<?php echo base64_encode($company_id);?>" target="_blank" class="sublink f16">
-                                管理后台
-                            </a>
-                        </li>
-                        <li>
-                            <a href="//dtc.gogo198.net/web?company_id={$website_basic['company_info']['id']}&company_type=1" target="_blank" class="sublink f16">
-                                资讯网站
-                            </a>
-                        </li>
-                        <li>
-                            <a href="//dtc.gogo198.net/shops?company_id={$website_basic['company_info']['id']}&company_type=0" target="_blank" class="sublink f16">
-                                电商网店
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a href="#">管理导航 <i class="fas fa-chevron-down"></i></a>
-                    <ul class="dropdown">
-                        {if !empty($website_basic['company_info']['webList'])}
-                            {volist name="website_basic['company_info']['webList']" id="vo"}
-                                <li>
-                                    <a href="javascript:void(0);" class="f16">{$vo['title']} <i class="fas fa-chevron-right"></i></a>
-                                    <ul class="submenu">
-                                        {volist name="vo['children']" id="vo2"}
-                                            <li><a href="{$vo2['url']}&fid={$vo2['id']}&company_id={$website_basic['company_info']['id']}" target="_blank" class="sublink f16">{$vo2['title']}</a></li>
-                                        {/volist}
-                                    </ul>
-                                </li>
-                            {/volist}
-                        {/if}
-                    </ul>
+                    <!--<a href="#">买手管理 <i class="fas fa-chevron-down"></i></a>-->
+                    <!--<ul class="dropdown">-->
+                    <!--    <li>-->
+                    <!--        <a href="/admin?cid=<?php echo base64_encode($company_id);?>" target="_blank" class="sublink f16">-->
+                    <!--            采购管理-->
+                    <!--        </a>-->
+                    <!--    </li>-->
+                    <!--    <li>-->
+                    <!--        <a href="javascript:void(0);" class="has-submenu"><i class="fas fa-circle" style="font-size: 8px;"></i> 订单管理 <i class="fas fa-chevron-right submenu-arrow" style="float: right; margin-top: 3px;"></i></a>-->
+                    <!--        <ul class="submenu-list">-->
+                    <!--            <li><a href="javascript:void(0)" onclick="openWindow('shop_recommend');">平台分配订单</a></li>-->
+                    <!--            <li><a href="javascript:void(0)" onclick="openWindow('shop_recommend2');">商品上架订单</a></li>-->
+                    <!--        </ul>-->
+                    <!--    </li>-->
+                    <!--    <li>-->
+                    <!--        <a href="javascript:void(0);" target="_blank" class="sublink f16">-->
+                    <!--            结算管理-->
+                    <!--        </a>-->
+                    <!--    </li>-->
+                    <!--</ul>-->
                 </li>
             </ul>
             <div class="user-info">
@@ -487,72 +472,23 @@
     <div class="main-container">
         <!-- 左侧边栏 -->
         <nav class="sidebar" id="sidebar">
-            <!-- 一级导航 -->
-            {volist name="authlist" key="key" id="vo"}
-                <div class="menu-section">
-                    <div class="menu-title" data-menu="menu{$key}" {if empty($vo['children'])} onclick="openWindow('{$vo['url']}')" {/if}>
-                        <span>{$vo['title']}</span>
-                        {if !empty($vo['children'])}
-                            <i class="fas fa-chevron-right"></i>
-                        {/if}
-                    </div>
-                    {if !empty($vo['children'])}
-                        <ul class="menu-list" id="menu{$key}" style="display:none;">
-                            <!-- 一级导航 -->
-                            {volist name="vo['children']" key="key2" id="vo2"}
-                                <li>
-                                    <a href="javascript:void(0);" class="{if !empty($vo2['children'])}has-submenu{/if}" {if empty($vo2['children'])}onclick="openWindow('{$vo2['url']}',{$vo2['id']});"{/if}>{if empty($vo2['children'])}<i class="fas fa-circle" style="font-size: 8px;"></i>{/if} {$vo2['title']} {if !empty($vo2['children'])}<i class="fas fa-chevron-right submenu-arrow" style="float: right; margin-top: 3px;"></i>{/if}</a>
-                                    {if !empty($vo2['children'])}
-                                        <ul class="submenu-list">
-                                            {volist name="vo2['children']" key="key3" id="vo3"}
-                                                <li>
-                                                    <a href="javascript:void(0)" class="{if !empty($vo3['children'])}has-submenu{/if}" {if empty($vo3['children'])}onclick="openWindow('{$vo3['url']}',{$vo3['id']});"{/if}>{if empty($vo3['children'])}<i class="fas fa-circle" style="font-size: 8px;"></i>{/if} {$vo3['title']} {if !empty($vo3['children'])}<i class="fas fa-chevron-right submenu-arrow" style="float: right; margin-top: 3px;"></i>{/if}</a>
-                                                    {if !empty($vo3['children'])}
-                                                        <ul class="submenu-list">
-                                                            {volist name="vo3['children']" key="key4" id="vo4"}
-                                                                <li>
-                                                                    <a href="javascript:void(0)" class="{if !empty($vo4['children'])}has-submenu{/if}" {if empty($vo4['children'])}onclick="openWindow('{$vo4['url']}',{$vo4['id']});"{/if}>{if empty($vo4['children'])}<i class="fas fa-circle" style="font-size: 8px;"></i>{/if} {$vo4['title']} {if !empty($vo4['children'])}<i class="fas fa-chevron-right submenu-arrow" style="float: right; margin-top: 3px;"></i>{/if}</a>
-                                                                    {if !empty($vo4['children'])}
-                                                                        <ul class="submenu-list">
-                                                                            {volist name="vo4['children']" key="key5" id="vo5"}
-                                                                                <li>
-                                                                                    <a href="javascript:void(0)" class="{if !empty($vo5['children'])}has-submenu{/if}" {if empty($vo5['children'])}onclick="openWindow('{$vo5['url']}',{$vo5['id']});"{/if}>{if empty($vo5['children'])}<i class="fas fa-circle" style="font-size: 8px;"></i>{/if} {$vo5['title']} {if !empty($vo5['children'])}<i class="fas fa-chevron-right submenu-arrow" style="float: right; margin-top: 3px;"></i>{/if}</a>
-                                                                                    {if !empty($vo5['children'])}
-                                                                                        <ul class="submenu-list">
-                                                                                            {volist name="vo5['children']" key="key6" id="vo6"}
-                                                                                                <li>
-                                                                                                    <a href="javascript:void(0)" class="{if !empty($vo6['children'])}has-submenu{/if}" {if empty($vo6['children'])}onclick="openWindow('{$vo6['url']}',{$vo6['id']});"{/if}>{if empty($vo6['children'])}<i class="fas fa-circle" style="font-size: 8px;"></i>{/if} {$vo6['title']} {if !empty($vo6['children'])}<i class="fas fa-chevron-right submenu-arrow" style="float: right; margin-top: 3px;"></i>{/if}</a>
-                                                                                                    {if !empty($vo6['children'])}
-                                                                                                        <ul class="submenu-list">
-                                                                                                            {volist name="vo6['children']" key="key7" id="vo7"}
-                                                                                                                <li>
-                                                                                                                    <a href="javascript:void(0)" class="{if !empty($vo7['children'])}has-submenu{/if}" {if empty($vo7['children'])}onclick="openWindow('{$vo7['url']}',{$vo6['id']});"{/if}>{if empty($vo7['children'])}<i class="fas fa-circle" style="font-size: 8px;"></i>{/if} {$vo7['title']} {if !empty($vo7['children'])}<i class="fas fa-chevron-right submenu-arrow" style="float: right; margin-top: 3px;"></i>{/if}</a>
-                                                                                                                </li>
-                                                                                                            {/volist}
-                                                                                                        </ul>
-                                                                                                    {/if}
-                                                                                                </li>
-                                                                                            {/volist}
-                                                                                        </ul>
-                                                                                    {/if}
-                                                                                </li>
-                                                                            {/volist}
-                                                                        </ul>
-                                                                    {/if}
-                                                                </li>
-                                                            {/volist}
-                                                        </ul>
-                                                    {/if}
-                                                </li>
-                                            {/volist}
-                                        </ul>
-                                    {/if}
-                                </li>
-                            {/volist}
-                        </ul>
-                    {/if}
+            <div class="menu-section">
+                <div class="menu-title" data-menu="menu1">
+                    <span>买手管理</span>
+                    <i class="fas fa-chevron-right"></i>
                 </div>
-            {/volist}
+                <ul class="menu-list" id="menu1" style="display:none;">
+                    <li><a href="javascript:void(0)" onclick="openWindow('quicky_selgoods');"><i class="fas fa-circle" style="font-size: 8px;"></i> 采购管理</a></li>
+                    <li>
+                        <a href="javascript:void(0);" class="has-submenu"><i class="fas fa-circle" style="font-size: 8px;"></i> 订单管理 <i class="fas fa-chevron-right submenu-arrow" style="float: right; margin-top: 3px;"></i></a>
+                        <ul class="submenu-list">
+                            <li><a href="javascript:void(0)" onclick="openWindow('buyer_order');">平台分配订单</a></li>
+                            <li><a href="javascript:void(0)" onclick="openWindow('goods_shelf_order');">商品上架订单</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="javascript:void(0)" onclick="openWindow('transport_process1');"><i class="fas fa-circle" style="font-size: 8px;"></i> 结算管理</a></li>
+                </ul>
+            </div>
         </nav>
 
         <!-- 右侧主工作区 -->
@@ -628,13 +564,13 @@
             return match ? match[1] : ''; // 默认返回 'en'
         }
         
-        function openWindow(siteurl,id,param=''){
+        function openWindow(siteurl,param=''){
             var lang = getLanguageFromUrl();
     
             if(lang!=''){
-                $('#content-area').find('.iframe_info').attr('src','/'+lang+siteurl+'&pid='+id+'&company_id={$company_id}&company_type={$company_type}'+param);
+                $('#content-area').find('.iframe_info').attr('src','/'+lang+'/?s=index/'+siteurl+'&company_id={$company_id}&company_type=0&buyer_id={$buyer_id}'+param);
             }else{
-                $('#content-area').find('.iframe_info').attr('src',siteurl+'&pid='+id+'&company_id={$company_id}&company_type={$company_type}'+param);
+                $('#content-area').find('.iframe_info').attr('src','/?s=index/'+siteurl+'&company_id={$company_id}&company_type=0&buyer_id={$buyer_id}'+param);
             }
     
             // var target = $('#content-area');

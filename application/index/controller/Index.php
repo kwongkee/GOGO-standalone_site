@@ -596,6 +596,36 @@ class Index extends Controller
         return json(['code'=>0,'list'=>$company,'list2'=>$list,'website_basic'=>$website_basic,'msg'=>'正在刷新...']);
     }
     
+    #获取企业信息2
+    public function get_enterprise_info2(Request $request){
+        $dat = input();
+        $company_id = intval($dat['company_id']);
+        
+        #查看有无服务商
+        $servicer = Db::name('website_user_company')->whereRaw('id='.$company_id.' and servicesList!=""')->find();
+        
+        #查看有无销售商
+        $saler = Db::name('website_user_company')->whereRaw('id='.$company_id.' and sellerList!=""')->find();
+        if($saler['user_id'] != session('account.id')){
+            $ishave = Db::name('centralize_manage_person')->where(['gogo_id'=>session('account.id'),'company_id'=>$company_id])->find();
+            if(empty($ishave)){
+                $saler = null;
+            }
+        }
+        #查看有无买手
+        $buyer = Db::name('website_buyer')->whereRaw('company_id='.$company_id.' and is_verify=1 and uid='.session('account.id'))->find();
+        
+        #查看是否运营商
+        $manager = 0;
+        if($company_id==33){
+            $manager = 1;
+        }
+        
+        $cid = base64_encode($company_id);
+        
+        return json(['code'=>0,'msg'=>'获取成功','servicer'=>$servicer,'saler'=>$saler,'buyer'=>$buyer,'manager'=>$manager,'cid'=>$cid]);
+    }
+    
     public function listToTree($list)
     {
         $tree = [];          // 最终树形结果
@@ -2881,6 +2911,184 @@ class Index extends Controller
                 return json(['code' => -1, 'msg' => '暂无修改']);
             }
         }else{
+            $data = ['navbar_id'=>'','displayorder'=>'','format_type'=>1,'gkeywords'=>'','bg_type'=>1,'bg_color'=>'','bg_img'=>'','fq_ids'=>'','format_img'=>'','bind_festival'=>''];
+            $cmenu = [];
+
+            if($id>0){
+                $data = Db::name('website_index')->where('id',$id)->find();
+
+                $cmenu = Db::name('website_navbar')->where(['pid'=>$data['navbar_id']])->field('id,name')->select();
+
+                $data['format_img'] = Db::name('website_format_list')->where(['id'=>$data['format_type']])->field('img')->find()['img'];
+            }
+
+            # 一问一答图文内容
+            $fq_list = Db::name('website_image_txt')->select();
+            foreach($fq_list as $k=>$v){
+                $fq_list[$k]['name'] = json_decode($v['name'],true)['zh'];
+                $fq_list[$k]['value'] = $fq_list[$k]['id'];
+                $fq_list[$k]['children'] = [];
+            }
+            $fq_list = json_encode($fq_list,true);
+
+            $typ = 2;
+
+            $list = $this->menu2($typ,0);
+
+            #针对系统添加内容
+            array_push($list,['id'=>'A1','name'=>'发现轮播+信息切换框','value'=>'A1','children'=>[]]);
+            array_push($list,['id'=>'A2','name'=>'常见问题','value'=>'A2','children'=>[]]);
+            $list = json_encode($list,true);
+
+            if($id>0){
+                if($data['format_type']==2){
+                    // 左右图文切换框
+                    $data['content'] = json_decode($data['content'],true);
+                    foreach($data['content'] as $k=>$v){
+                        $data['content'][$k]['fnavbar_name'] = Db::name('website_navbar')->where(['id'=>$v['fnavbar']])->field('name')->find()['name'];
+                    }
+                    #按键内容
+                    $data['btn_content'] = json_decode($data['btn_content'],true);
+                    foreach($data['btn_content'] as $k=>$v){
+                        $navbar_name = Db::name('website_navbar')->where(['id'=>$v['btn_navbar']])->field('name')->find()['name'];
+                        $data['btn_content'][$k]['btn_navbar_name'] = json_decode($navbar_name,true)['zh'];
+                    }
+                }
+                elseif($data['format_type']==4){
+                    // 标题+描述折叠框
+                    $data['fq_content'] = json_decode($data['fq_content'],true);
+                }
+                elseif($data['format_type']==5){
+                    // 一问一答图文内容
+                    $data['fq_category_content'] = json_decode($data['fq_category_content'],true);
+                }
+                elseif($data['format_type']==6){
+                    $data['card1_content'] = json_decode($data['card1_content'],true);
+                }
+                elseif($data['format_type']==7){
+                    $data['card2_content'] = json_decode($data['card2_content'],true);
+                }
+                elseif($data['format_type']==8){
+                    $data['card3_content'] = json_decode($data['card3_content'],true);
+                }
+            }
+
+            $btn_list='';
+            if($system_id==1 || $system_id==4 || $system_id==3 || $system_id==8){
+                $btn_list = $this->menu($system_id);
+            }elseif($system_id==2){
+                $btn_list = $this->get_gather_process();
+            }
+
+            #图文链接
+            $pic_list = Db::name('website_image_txt')->select();
+            foreach($pic_list as $k=>$v){
+                $pic_list[$k]['name'] = json_decode($v['name'],'true')['zh'];
+            }
+            #消息链接
+            $msg_list = Db::name('website_message_manage')->select();
+
+            #版式集
+            $format_list = Db::name('website_format_list')->select();
+            if($id==0){
+                $data['format_img'] = Db::name('website_format_list')->where(['id'=>$format_list[0]['id']])->field('img')->find()['img'];
+            }
+
+            return view('index/shop_backend/save_shop_guide',compact('company_type','company_id','data','id','list','system_id','cmenu','fq_list','btn_list','pic_list','msg_list','format_list'));
+        }
+    }
+    
+    #菜单栏目-xmselect树形结构
+    public function menu2($typ=0,$system_id=0){
+        if($system_id==0){
+            $menu = Db::name('website_navbar')->where(['pid'=>0])->field('id,name')->select();
+        }else{
+            $menu = Db::name('website_navbar')->where(['pid'=>0,'system_id'=>$system_id,'company_type'=>0,'company_id'=>0])->field('id,name')->select();
+        }
+
+        foreach($menu as $k=>$v){
+            $menu[$k]['name'] = json_decode($v['name'],true)['zh'];
+            $menu[$k]['value'] = $v['id'];
+            if($typ==1){
+                $menu[$k]['children'] = $this->getDownMenu3($v['id']);  
+            }
+            elseif($typ==2){
+                $menu[$k]['children'] = [];
+            }
+            else{
+                $menu[$k]['children'] = $this->getDownMenu2($v['id']);    
+            }
+        }
+        return $menu;
+    }
+
+    #下级菜单
+    public function getDownMenu2($id){
+        $cmenu = Db::name('website_navbar')->where(['pid'=>$id])->field('id,name')->select();
+        foreach($cmenu as $k=>$v){
+            $cmenu[$k]['name'] = json_decode($v['name'],true)['zh'];
+            $cmenu[$k]['value'] = $v['id'];
+            $cmenu[$k]['children'] = Db::name('website_navbar')->where(['pid'=>$v['id']])->field('id,name')->select();
+            foreach($cmenu[$k]['children'] as $k2=>$v2){
+                $cmenu[$k]['children'][$k2]['name'] = json_decode($v2['name'],true)['zh'];
+                $cmenu[$k]['children'][$k2]['value'] = $v2['id'];
+                $cmenu[$k]['children'][$k2]['children'] = Db::name('website_navbar')->where(['pid'=>$v2['id']])->field('id,name')->select();
+                foreach($cmenu[$k]['children'][$k2]['children'] as $k3=>$v3){
+                    $cmenu[$k]['children'][$k2]['children'][$k3]['name'] = json_decode($v3['name'],true)['zh'];
+                    $cmenu[$k]['children'][$k2]['children'][$k3]['value'] = $v3['id'];
+                    $cmenu[$k]['children'][$k2]['children'][$k3]['children'] = Db::name('website_navbar')->where(['pid'=>$v3['id']])->field('id,name')->select();
+                    foreach($cmenu[$k]['children'][$k2]['children'][$k3]['children'] as $k4=>$v4){
+                        $cmenu[$k]['children'][$k2]['children'][$k3]['children'][$k4]['name'] = json_decode($v4['name'],true)['zh'];
+                        $cmenu[$k]['children'][$k2]['children'][$k3]['children'][$k4]['value'] = $v4['id'];
+                    }
+                }
+            }
+        }
+        return $cmenu;
+    }
+    
+    #不要最下一层的菜单
+    public function getDownMenu3($id){
+        $cmenu = Db::name('website_navbar')->where(['pid'=>$id])->field('id,name')->select();
+        foreach($cmenu as $k=>$v){
+            $cmenu[$k]['name'] = json_decode($v['name'],true)['zh'];
+            $cmenu[$k]['value'] = $v['id'];
+        }
+        return $cmenu;
+    }
+    
+    #保存导流模块（废弃）
+    public function save_shop_guide_backup(Request $request){
+        $dat = input();
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);#0商城，1官网
+        $id = isset($dat['id'])?$dat['id']:0;
+
+        if($request->isAjax()){
+            if($id>0){
+                $res = Db::connect($this->config)->name('merchsite_guide_body')->where('id',$dat['id'])->update([
+                    'title'=>trim($dat['title']),
+                    'content_id'=>intval($dat['content_id']),
+                    'gkeywords'=>trim($dat['gkeywords'])
+                ]);
+            }
+            else{
+                $res = Db::connect($this->config)->name('merchsite_guide_body')->insert([
+                    'company_id'=>$company_id,
+                    'company_type'=>$company_type,
+                    'title'=>trim($dat['title']),
+                    'content_id'=>intval($dat['content_id']),
+                    'gkeywords'=>trim($dat['gkeywords'])
+                ]);
+            }
+
+            if($res){
+                return json(['code' => 0, 'msg' => '保存成功']);
+            }
+            else{
+                return json(['code' => -1, 'msg' => '暂无修改']);
+            }
+        }else{
             $data = ['title'=>'','content_id'=>0,'gkeywords'=>''];
             if($id>0){
                 $data = Db::connect($this->config)->name('merchsite_guide_body')->where('id',$id)->find();
@@ -3414,7 +3622,6 @@ class Index extends Controller
                 }
             }
 
-
             #商品分类===============================start
             $cat_id1 = 0;$cat_id2 = 0;$cat_id3 = 0;$cat_id = 0;
             if($dat['cat_id1']==-1){
@@ -3523,6 +3730,7 @@ class Index extends Controller
 
             $goods_merchant_id = $id;
             if($id>0){
+                #修改商品
                 $goods = Db::connect($this->config)->name('goods_merchant')->where(['id'=>$id])->find();
 
                 Db::connect($this->config)->name('goods_merchant')->where(['id'=>$id])->update([
@@ -3538,6 +3746,9 @@ class Index extends Controller
                     'brand_name'=>$dat['brand_type2']==0?trim($dat['brand_name']):'',
                     'goods_image'=>$dat['goods_image'],
                     'goods_video'=>isset($dat['video'])?$dat['video']:'',
+                    'shipping_country'=>isset($dat['shipping_country'])?$dat['shipping_country']:'',
+                    'goods_currency'=>isset($dat['goods_currency'])?$dat['goods_currency']:'',
+                    'areas'=>isset($dat['areas'])?json_encode($dat['areas'],true):''
                 ]);
 
                 #主图
@@ -3578,6 +3789,9 @@ class Index extends Controller
                         'brand_name'=>$dat['brand_type2']==0?trim($dat['brand_name']):'',
                         'goods_image'=>$dat['goods_image'],
                         'goods_video'=>isset($dat['video'])?$dat['video']:'',
+                        'shipping_country'=>isset($dat['shipping_country'])?$dat['shipping_country']:'',
+                        'goods_currency'=>isset($dat['goods_currency'])?$dat['goods_currency']:'',
+                        'areas'=>isset($dat['areas'])?json_encode($dat['areas'],true):''
                     ]);
 
                     #主图
@@ -3602,6 +3816,7 @@ class Index extends Controller
                 }
             }
             else{
+                #新增商品
                 $goods_merchant_id = Db::connect($this->config)->name('goods_merchant')->insertGetId([
                     'cid'=>$company_id,
                     'goods_name'=>trim($dat['goods_name']),
@@ -3616,6 +3831,9 @@ class Index extends Controller
                     'brand_name'=>$dat['brand_type2']==0?trim($dat['brand_name']):'',
                     'goods_image'=>$dat['goods_image'],
                     'goods_video'=>isset($dat['video'])?$dat['video']:'',
+                    'shipping_country'=>isset($dat['shipping_country'])?$dat['shipping_country']:'',
+                    'goods_currency'=>isset($dat['goods_currency'])?$dat['goods_currency']:'',
+                    'areas'=>isset($dat['areas'])?json_encode($dat['areas'],true):'',
                     'created_at'=>$created_at,
                 ]);
 
@@ -3650,7 +3868,7 @@ class Index extends Controller
         }
         else{
 
-            $data = ['cate_id'=>0,'cat_info'=>['cat_ids'=>[],'cat_names'=>''],'brand_type'=>0,'brand_type2'=>'','brand_id'=>0,'brand_name'=>'','goods_name'=>'','goods_image'=>'','goods_video'=>'','images_arr'=>[]];
+            $data = ['cate_id'=>0,'cat_info'=>['cat_ids'=>[],'cat_names'=>''],'brand_type'=>0,'brand_type2'=>'','brand_id'=>0,'brand_name'=>'','goods_name'=>'','goods_image'=>'','goods_video'=>'','images_arr'=>[],'shipping_country'=>0,'goods_currency'=>'','areas'=>[]];
             if($id>0){
                 $data = Db::connect($this->config)->name('goods_merchant')->where(['id'=>$id,'cid'=>$company_id])->find();
                 $data['images_arr'] = Db::connect($this->config)->name('goods_image_merchant')->where(['goods_id'=>$id,'cid'=>$company_id,'is_default'=>0])->select();
@@ -3679,6 +3897,19 @@ class Index extends Controller
                     $data['cat_info']['cat_ids'][2] = $cat_level3['cat_id'];
                     $data['cat_info']['cat_names'][2] = $cat_level3['cat_name'];
                 }
+                
+                if(isset($data['areas'])){
+                    $data['areas'] = json_decode($data['areas'],true);
+                    if(!empty($data['areas'])){
+                        foreach($data['areas'] as $k=>$v){
+                            $data['areas2'][$k] = Db::name('centralize_adminstrative_area')->where(['id'=>$v])->find();
+                        }
+                    }
+                }else{
+                    $data['areas'] = [];
+                }
+
+                $data['currency'] = Db::name('centralize_currency')->where(['id'=>$data['goods_currency']])->find();
             }
 
             $sale_cate = Db::connect($this->config)->name('category')->where(['type_id'=>1,'parent_id'=>0])->select();
@@ -3686,8 +3917,11 @@ class Index extends Controller
             $brand = Db::name('centralize_diycountry_content')->where(['pid'=>8])->select();
 
             $goods_list = Db::connect($this->config)->name('goods_merchant')->where(['type'=>0,'cid'=>$company_id])->order('id desc')->select();
+            
+            #发货国地
+            $types['country'] = Db::name('centralize_diycountry_content')->where(['pid'=>5])->field(['id','param2'])->select();
 
-            return view('index/shop_backend/save_product',compact('id','company_id','company_type','data','brand','sale_cate','type','goods_list'));
+            return view('index/shop_backend/save_product',compact('id','company_id','company_type','data','brand','sale_cate','type','goods_list','types'));
         }
     }
 
@@ -3837,8 +4071,10 @@ class Index extends Controller
         $dat = input();
         $company_id = intval($dat['company_id']);
         $company_type = intval($dat['company_type']);#0商城，1官网
-
-        return view('index/shop_backend/quicky_selgoods',compact('company_id','company_type'));
+        
+        $user = Db::name('website_user')->where(['id'=>session('account.id')])->find();
+        
+        return view('index/shop_backend/quicky_selgoods',compact('company_id','company_type','user'));
     }
 
     #商品系列
@@ -6309,7 +6545,6 @@ class Index extends Controller
             }
             elseif($dat['pa']==2){
                 #管理上架
-                // dd($dat);
                 
                 #==记录物流设置
                 $res = '';
@@ -6514,12 +6749,14 @@ class Index extends Controller
                             'gid'=>$shelf_id,
                             'type'=>4,
                             'guide_id'=>$v,
-                            'keywords'=>trim($dat['keywords']['platform_shop'][$k])
+                            'keywords'=>intval($dat['is_shelf_platform'])==0?trim($dat['keywords']['platform_shop'][$k]):'',
+                            'is_shelf_platform'=>intval($dat['is_shelf_platform'])
                         ]);
                     }
                     else{
                         $res=Db::connect($this->config)->name('goods_shelf')->where(['cid'=>$company_id,'gid_merch'=>$gid,'type'=>4,'guide_id'=>$v])->update([
-                            'keywords'=>trim($dat['keywords']['platform_shop'][$k])
+                            'keywords'=>intval($dat['is_shelf_platform'])==0?trim($dat['keywords']['platform_shop'][$k]):'',
+                            'is_shelf_platform'=>intval($dat['is_shelf_platform'])
                         ]);
                     }
                 }
@@ -6574,7 +6811,7 @@ class Index extends Controller
             }
         }
         else{
-            $list = [];
+            $list = ['is_shelf_platform'=>0];
             #商品
             $list['goods'] = Db::connect($this->config)->name('goods_merchant')->where(['id'=>$gid,'type'=>$type])->find();
             if($list['goods']['goods_type']==1){
@@ -6626,9 +6863,17 @@ class Index extends Controller
                 $list['my_shop'][$k]['my_keywords']=Db::connect($this->config)->name('goods_shelf')->where(['gid_merch'=>$gid,'type'=>3,'guide_id'=>$v['id']])->find()['keywords'];
             }
             #平台商城
-            $list['platform_shop'] = Db::connect($this->config)->name('guide_body')->where(['company_id'=>0,'system_id'=>3])->order('displayorders','asc')->select();
+            // $list['platform_shop'] = Db::connect($this->config)->name('guide_body')->where(['company_id'=>0,'system_id'=>3])->order('displayorders','asc')->select();
+            // foreach($list['platform_shop'] as $k=>$v){
+            //     $list['platform_shop'][$k]['my_keywords']=Db::connect($this->config)->name('goods_shelf')->where(['gid_merch'=>$gid,'type'=>4,'guide_id'=>$v['id']])->find()['keywords'];
+            // }
+            $list['platform_shop'] = Db::name('website_index')->where(['system_id'=>3,'company_id'=>0])->order('displayorder','asc')->select();
             foreach($list['platform_shop'] as $k=>$v){
-                $list['platform_shop'][$k]['my_keywords']=Db::connect($this->config)->name('goods_shelf')->where(['gid_merch'=>$gid,'type'=>4,'guide_id'=>$v['id']])->find()['keywords'];
+                $name = Db::name('website_navbar')->where(['id'=>$v['navbar_id']])->value('name');
+                $list['platform_shop'][$k]['title'] = json_decode($name,true)['zh'];
+                $shelf_info = Db::connect($this->config)->name('goods_shelf')->where(['gid_merch'=>$gid,'type'=>4,'guide_id'=>$v['id']])->field('keywords,is_shelf_platform')->find();
+                $list['platform_shop'][$k]['my_keywords'] = $shelf_info['keywords'];
+                $list['is_shelf_platform'] = $shelf_info['is_shelf_platform'];
             }
             
             return view('index/shop_backend/select_shelf',compact('company_id','company_type','list','gid','type'));
@@ -7079,6 +7324,7 @@ class Index extends Controller
         return json(['code' => 0, 'data' => $result]);
     }
     #管理上架=================================================end
+    
     #采购管理=======================================================start
     #采购管理（废弃）
     public function procurement_manage_backup(Request $request){
@@ -11130,6 +11376,10 @@ class Index extends Controller
             return '无货';
         }elseif($status==-12){
             return '拒绝订购';
+        }elseif($status==-13){
+            return '请求支付中';
+        }elseif($status==-14){
+            return '允许支付';
         }elseif($status==0){
             return '待付款';
         }elseif($status==1){
@@ -14390,6 +14640,688 @@ class Index extends Controller
     }
     #企业网店==============================================end
 
+    #买手管理====start
+    public function buyer_manage(Request $request){
+        $dat = input();
+        $company_id = isset($dat['company_id'])?intval($dat['company_id']):0;
+        $company_type = isset($dat['company_type'])?intval($dat['company_type']):0;
+        $buyer_id = isset($dat['buyer_id'])?intval($dat['buyer_id']):0;
+        
+        $website_basic = ['slogo'=>'','logo'=>'','company_info'=>['id'=>0,'company'=>'','webList'=>'']];
+        
+        if($company_id>0){
+            #企业网站-基本&页头页脚配置
+            $model = new WebsiteBasic();
+            $website_basic = $model->getByCompanyId($company_id, $company_type);
+            $website_basic = json_decode($website_basic,true);
+            
+            $web_company = Db::name('website_user_company')->where(['id'=>$company_id])->find();
+            $website_basic['company_info'] = $web_company;
+            
+            $list = [];
+            #获取权限
+            if(!empty($web_company['sellerList'])){
+                $web_company['webList'] = explode(',',$web_company['sellerList']);
+                $list = Db::name('website_menu')
+                    ->whereIn('id', $web_company['sellerList'])
+                    ->select();
+                $list = $this->buildTree($list, 0);
+            }
+            $website_basic['company_info']['webList'] = $list;
+        }
+        
+        #默认登录
+        $buyer = Db::name('website_buyer')->where(['id'=>$buyer_id])->find();
+        $account = Db::name('website_user')->where(['id'=>$buyer['uid']])->find();
+        session('account',$account);
+        
+        $website['title'] = $this->website_name;
+        $website['keywords'] = $this->website_keywords;
+        $website['description'] = $this->website_description;
+        $website['ico'] = $this->website_ico;
+        $website['sico'] = $this->website_sico;
+        $website['tel'] = $this->website_tel;
+        $website['email'] = $this->website_email;
+        $website['address'] = $this->website_address;
+        $website['footer_menu'] = $this->website_footer_menu;
+        $website['copyright'] = $this->website_copyright;
+        $website['color'] = $this->website_color;
+        $website['color_word'] = $this->website_colorword;
+        $website['color_adorn'] = $this->website_coloradorn;
+        $website['color_head'] = $this->website_colorhead;
+        $website['website_contact'] = $this->website_contact;
+        $website['website_qualification'] = $this->website_qualification;
+        $website['website_publicity_info'] = $this->website_publicity_info;
+        $website['website_canonical'] = $this->website_canonical;
+        $website['website_og'] = $this->website_og;
+        
+        return view('/index/buyer/buyer_manage',compact('company_type','company_id','buyer_id','website','website_basic'));
+    }
+    
+    #平台分配订单
+    public function buyer_order(Request $request){
+        $dat = input();
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);#0商城，1官网
+        $buyer_id = isset($dat['buyer_id'])?intval($dat['buyer_id']):0;
+        
+        if(isset($dat['pa'])){
+            $limit = $request->get('limit');
+            $page = $request->get('page') - 1;
+            if ($page != 0) {
+                $page = $limit * $page;
+            }
+            $where =['buyer_id'=>2];
+
+            $count = Db::name('website_order_list')->where($where)->count();
+            $rows = DB::name('website_order_list')
+                ->where($where)
+                ->limit($page . ',' . $limit)
+                ->order('id','desc')
+                ->select();
+
+            foreach($rows as $k=>&$v){
+                $rows[$k]['createtime'] = date('Y-m-d H:i:s',$v['createtime']);
+                $rows[$k]['status_name'] = $this->get_statusname($v['status']);
+            }
+
+            return json(['code'=>0,'count'=>$count,'data'=>$rows]);
+        }else{
+            return view('index/buyer/buyer_order',compact('company_id','company_type','buyer_id'));
+        }
+    }
+    
+    #订单详情
+    public function buyer_order_detail(Request $request){
+        $dat = input();
+        $company_id = intval($dat['company_id']);
+        $company_type = intval($dat['company_type']);#0商城，1官网
+        $id = intval($dat['id']);
+        
+        $order = Db::name('website_order_list')->where(['id'=>$id])->find();
+        $order['content'] = json_decode($order['content'],true);
+
+        if(isset($dat['pa'])){
+            $time = time();
+            $user = Db::name('website_user')->where(['id'=>$order['user_id']])->find();
+
+            $system = Db::name('centralize_system_notice')->where(['uid'=>0])->find();
+            $manage_openid = $system['account'];
+            if($dat['status']==1){
+                #有货（无修改），通知总后台
+                Db::name('website_order_list')->where(['id'=>$order['id']])->update([
+                    'status'=>-9,
+                ]);
+                common_notice([
+                    'openid'=>$manage_openid,
+                    'phone'=>'',
+                    'email'=>''
+                ],[
+                    'msg'=>'订购清单['.$order['ordersn'].']已确认有货[无修改]，点击链接查看：https://gadmin.gogo198.cn',
+                    'opera'=>'确认有货（无修改）',
+                    'url'=>'https://gadmin.gogo198.cn'
+                ]);
+            }
+            elseif($dat['status']==-4){
+                #无货，通知总后台
+                Db::name('website_order_list')->where(['id'=>$order['id']])->update([
+                    'status'=>-11,
+                ]);
+                common_notice([
+                    'openid'=>$manage_openid,
+                    'phone'=>'',
+                    'email'=>''
+                ],[
+                    'msg'=>'订购清单['.$order['ordersn'].']已确认无货，点击链接查看：https://www.gogo198.net/?s=shop/audit',
+                    'opera'=>'确认无货',
+                    'url'=>'https://www.gogo198.net/?s=shop/audit'
+                ]);
+            }
+            elseif($dat['status']==-9){
+                //有货（已修改），通知总后台
+                Db::name('website_order_list')->where(['id'=>$order['id']])->update([
+                    'status'=>-10,
+                ]);
+                common_notice([
+                    'openid'=>$manage_openid,
+                    'phone'=>'',
+                    'email'=>''
+                ],[
+                    'msg'=>'订购清单['.$order['ordersn'].']已确认有货[有修改]，点击链接查看：https://www.gogo198.net/?s=shop/audit',
+                    'opera'=>'确认有货（有修改）',
+                    'url'=>'https://www.gogo198.net/?s=shop/audit'
+                ]);
+            }
+            elseif($dat['status']==3){
+                #已采购
+
+                #1、仓库预定
+                $prediction_id = 2;
+                $start = strtotime(date('Y-01-01 00:00:00'));$end = strtotime(date('Y-12-31 23:59:59'));
+                $order_num = Db::name('centralize_parcel_order')->where(['prediction_id'=>$prediction_id,'user_id'=>$user['id']])->whereBetween('createtime',[$start,$end],'AND')->count();
+                $order_num = str_pad($order_num+1,3,'0',STR_PAD_LEFT);
+                $ordersn = substr($user['custom_id'],-5) . date('Y') . $order_num;
+                #多个包裹
+                $content = [
+                    'user_id'    => $user['id'],
+                    'agent_id'   => $user['agent_id'],
+                    'ordersn'    => 'G'.$ordersn,
+                    'warehouse_id'=> 16,#默认仓库地址
+                    'prediction_id'=> $prediction_id,
+                    'task_id'    => 0,
+                    'sure_prediction'=>1,
+                    'createtime' => $time
+                ];
+                $orderid = Db::name('centralize_parcel_order')->insertGetId($content);
+
+                //1.1、任务信息处理
+                $time = time();
+                #获取任务流水号
+                $start_num = $this->get_today_task($time);
+                if(empty($start_num)){
+                    $serial_number = 'MC'.date('ymdHis',$time).str_pad(1,2,'0',STR_PAD_LEFT);
+                }else{
+                    $serial_number = 'MC'.date('ymdHis',$time).str_pad(intval($start_num)+1,2,'0',STR_PAD_LEFT);
+                }
+                #获取任务名称
+                $task_name = $user['custom_id'].'发起任务[仓库预报]';
+                Db::name('centralize_task')->insertGetId([
+                    'user_id'=>$user['id'],
+                    'type'=>3,
+                    'task_name'=>$task_name,
+                    'task_id'=>19,
+                    'order_id'=>$orderid,
+                    'serial_number'=>$serial_number,
+                    'remark'=>'',
+                    'status'=>1,
+                    'createtime'=>$time
+                ]);
+
+                #2、包裹预报
+                $insert_data = [
+                    'user_id'=>$user['id'],
+                    'orderid'=>$orderid,
+                    'gogo_oid'=>$order['id'],
+                    'express_id'=>$dat['express_id'],
+                    'express_no'=>$dat['express_no'],
+                    #入仓信息
+                    'delivery_logistics'=>1,
+                    'delivery_method'=>1,
+                    #物品信息
+                    'inspection_method'=>1,
+                    #包装材质
+                    'package'=>$dat['package'],
+                    'package_name'=>$dat['package']=='包装'?trim($dat['package_name']):'',
+                    #包裹毛重
+                    'grosswt'=>trim($dat['grosswt']),
+                    #包裹体积
+                    'volumn'=>trim($dat['long']).'*'.trim($dat['width']).'*'.trim($dat['height']),
+                    #状态
+                    'status2'=>0,#直接转运或集货转运都要先签收入库
+                    #创建时间
+                    'createtime'=>$time
+                ];
+                $package_id = Db::name('centralize_parcel_order_package')->insertGetId($insert_data);
+
+                #3、预报商品
+                $brand_name = '';
+                if($dat['goods_brand']==2){
+                    #仿牌
+                    $brand_name=$dat['goods_brand_name2'];
+                }
+                elseif($dat['goods_brand']==3){
+                    #普通品牌
+                    $brand_name=$dat['goods_brand_name'];
+                }
+                elseif($dat['goods_brand']==4){
+                    #奢侈品牌
+                    $brand_name=$dat['goods_brand_name3'];
+                }
+                Db::name('centralize_parcel_order_goods')->insert([
+                    'user_id'=>$user['id'],
+                    'orderid'=>$orderid,
+                    'package_id'=>$package_id,
+                    #物品属性
+                    'valueid'=>$dat['valueid'],
+                    #物品描述
+                    'good_desc'=>$dat['goods_select_desc']==-1?trim($dat['goods_desc']):$dat['goods_select_desc'],
+                    #物品数量
+                    'good_num'=>trim($dat['goods_num']),
+                    #物品单位
+                    'good_unit'=>$dat['goods_unit'],
+                    #物品币种
+                    'good_currency'=>$dat['goods_currency'],
+                    #物品金额
+                    'good_price'=>trim($dat['goods_price']),
+                    #物品金额（等值美元）
+                    'goods_usdprice'=>trim($dat['goods_usdprice']),
+                    #物品包装
+                    'good_package'=>$dat['goods_package'],
+                    #物品品牌类型
+                    'brand_type'=>$dat['goods_brand'],
+                    'brand_name'=>$brand_name,
+                    #物品备注
+                    'good_remark'=>trim($dat['goods_remark']),
+                    #创建时间
+                    'createtime'=>$time
+                ]);
+                #插入物品属性指定id下的标签
+                if(!empty($dat['goods_desc'])){
+                    $gvalue = Db::name('centralize_gvalue_list')->where(['id'=>$dat['valueid']])->field('keywords')->find();
+                    $gvalue['keywords'] = $gvalue['keywords'].'、'.trim($dat['goods_desc']);
+                    Db::name('centralize_gvalue_list')->where(['id'=>$dat['valueid']])->update(['keywords'=>$gvalue['keywords']]);
+                }
+
+                #4、包裹订单
+                Db::name('centralize_order_fee_log')->insert([
+                    'type'=>1,
+                    'ordersn'=>'G'.date('YmdHis'),
+                    'user_id'=>$user['id'],
+                    'orderid'=>$orderid,
+                    #包裹id
+                    'good_id'=>$package_id,
+                    'express_no'=>$dat['express_id'],
+                    'service_status'=>1,
+                    'order_status'=>0,
+                    'createtime'=>$time
+                ]);
+
+                #5、修改购购网订单表
+                Db::name('website_order_list')->where(['id'=>$id])->update(['status'=>2]);
+
+                #6、通知用户
+                common_notice([
+                    'openid'=>$user['openid'],
+                    'phone'=>$user['phone'],
+                    'email'=>$user['email']
+                ],[
+                    'msg'=>'订单['.$order['ordersn'].']状态变更为[已预报]，点击链接查看：https://www.gogo198.com/',
+                    'opera'=>'包裹已预报',
+                    'url'=>'https://www.gogo198.com'
+                ]);
+//                $warehouse = Db::name('centralize_warehouse_list')->where(['id'=>16])->find();
+//                $merchant = Db::name('website_user')->where(['id'=>$warehouse['uid']])->find();
+
+
+                return json(['code'=>0,'msg'=>'已保存预报信息并通知客户']);
+            }
+
+            return json(['code'=>0,'msg'=>'保存成功']);
+        }
+        else{
+            $order['status_name'] = $this->get_statusname($order['status']);
+
+            $express = Db::name('centralize_diycountry_content')->where(['pid'=>6])->select();
+            $unit = Db::name('unit')->select();
+            $currency = Db::name('centralize_currency')->select();
+            $package = Db::name('packing_type')->select();
+            $value = json_encode($this->valuemenu2(2),true);
+            $brand = Db::name('centralize_diycountry_content')->where(['pid'=>8])->select();
+            #订购清单信息
+            foreach($order['content']['goods_info'] as $k=>$v){
+                $order['content']['goods_info'][$k]['goods_info'] = Db::connect($this->config)->name('goods')->where(['goods_id'=>$v['good_id']])->find();
+                foreach($v['sku_info'] as $k2=>$v2){
+                    $order['content']['goods_info'][$k]['sku_info'][$k2]['sku_info'] =  Db::connect($this->config)->name('goods_sku')->where(['sku_id'=>$v2['sku_id']])->find();
+                }
+            }
+            $goods = $order['content']['goods_info'];
+
+            return view('index/buyer/buyer_order_detail',compact('order','goods','id','express','unit','currency','package','value','brand','company_id','company_type'));
+        }
+    }
+    
+    #修改商品规格参数+费用项目价格+商品数量
+    public function shunt_edit(Request $request){
+        $dat = input();
+
+        if(isset($dat['pa'])){
+//            dd($dat);
+            $id = intval($dat['id']);
+            $gid = intval($dat['gid']);
+            $gkey = intval($dat['gkey']);
+            $skey = intval($dat['skey']);
+            $sku_id = intval($dat['sku_id']);
+            $cart_id = intval($dat['cart_id']);
+
+            $edit_type = intval($dat['edit_type']);
+
+            $order = Db::name('website_order_list')->where(['id'=>$id])->find();
+            $order['content'] = json_decode($order['content'],true);
+//            dd($order['content']);
+            Db::startTrans();
+            try {
+                if($edit_type==1){
+                    #商品规格参数
+
+                    #旧的规格与商品价值
+                    $order['content']['goods_info'][$gkey]['sku_info'][$skey]['odd_skuid']=$order['content']['goods_info'][$gkey]['sku_info'][$skey]['sku_id'];
+                    $order['content']['goods_info'][$gkey]['sku_info'][$skey]['odd_price']=$order['content']['goods_info'][$gkey]['sku_info'][$skey]['price'];
+
+                    #新的规格与商品价值
+                    $new_skuid = intval($dat['new_skuid']);
+                    $order['content']['goods_info'][$gkey]['sku_info'][$skey]['sku_id']=$new_skuid;
+
+                    #新的规格参数
+                    $new_skuinfo = Db::connect($this->config)->name('goods_sku')->where(['sku_id'=>$new_skuid])->find();
+                    $new_skuinfo['sku_prices'] = json_decode($new_skuinfo['sku_prices'],true);
+                    #商品信息
+                    $goods = Db::connect($this->config)->name('goods')->where(['goods_id'=>$order['content']['goods_info'][$gkey]['good_id']])->find();
+                    $goods_num = $order['content']['goods_info'][$gkey]['sku_info'][$skey]['goods_num'];
+                    #计算新的规格参数下的商品单价*购买数量
+                    if($goods['shop_id']>0){
+                        #自营店铺
+                        foreach($new_skuinfo['sku_prices']['start_num'] as $k=>$v){
+                            if($new_skuinfo['sku_prices']['select_end'][$k]==1){
+                                #区间
+                                if($v<=$goods_num && $goods_num<=$new_skuinfo['sku_prices']['end_num']){
+                                    $order['content']['goods_info'][$gkey]['sku_info'][$skey]['price'] = number_format($new_skuinfo['sku_prices']['price'][$k] * $goods_num,2);
+                                }
+                            }
+                            elseif($new_skuinfo['sku_prices']['select_end'][$k]==2){
+                                #以上
+                                if($v<=$goods_num){
+                                    $order['content']['goods_info'][$gkey]['sku_info'][$skey]['price'] = number_format($new_skuinfo['sku_prices']['price'][$k] * $goods_num,2);
+                                }
+                            }
+                        }
+                    }
+                    elseif($goods['shop_id']==0){
+                        #接口店铺
+                        $order['content']['goods_info'][$gkey]['sku_info'][$skey]['price'] = number_format($new_skuinfo['sku_prices']['price'][0] * $goods_num,2);
+                    }
+
+                    #修改买家的选购清单
+                    Db::connect($this->config)->name('cart_sku')->where(['sku_id'=>$sku_id,'cart_id'=>$cart_id])->update([
+                        'sku_id'=>$new_skuid,
+                        'attr_id'=>str_replace('|','_',$new_skuinfo['spec_vids']),
+                        'spec_id'=>str_replace('|','_',$new_skuinfo['spec_ids']),
+                        'price'=>$order['content']['goods_info'][$gkey]['sku_info'][$skey]['price']
+                    ]);
+
+                }
+                elseif($edit_type==2){
+                    #费用项目价格
+
+                    #减免金额
+                    if(isset($dat['new_reduction'])){
+                        if($dat['new_reduction']==''){
+                            $dat['new_reduction'] = 0;
+                        }
+                        $order['content']['goods_info'][$gkey]['odd_reduction_money'] = $order['content']['goods_info'][$gkey]['reduction_money'];
+                        $order['content']['goods_info'][$gkey]['reduction_money'] = floatval($dat['new_reduction']);
+                    }
+
+                    #优惠随赠
+                    if(isset($dat['new_gift'])){
+                        if($dat['new_gift']==''){
+                            $dat['new_gift'] = 0;
+                        }
+                        $order['content']['goods_info'][$gkey]['odd_gift_money'] = $order['content']['goods_info'][$gkey]['gift_money'];
+                        $order['content']['goods_info'][$gkey]['gift_money'] = floatval($dat['new_gift']);
+                    }
+
+                    #其他费用
+                    if(isset($dat['new_otherfee_total'])){
+                        if($dat['new_otherfee_total']==''){
+                            $dat['new_otherfee_total'] = 0;
+                        }
+                        $order['content']['goods_info'][$gkey]['odd_otherfee_total'] = $order['content']['goods_info'][$gkey]['otherfee_total'];
+                        $order['content']['goods_info'][$gkey]['otherfee_total'] = floatval($dat['new_otherfee_total']);
+                    }
+
+                    #服务费用
+                    if(isset($dat['new_services_money'])){
+                        if($dat['new_services_money']==''){
+                            $dat['new_services_money'] = 0;
+                        }
+
+                        $order['content']['goods_info'][$gkey]['services'] = json_decode($order['content']['goods_info'][$gkey]['services'],true);
+                        $services_money = 0;
+                        foreach($order['content']['goods_info'][$gkey]['services'] as $k2=>$v2){
+                            $services = Db::connect($this->config)->name('goods_services')->where(['id'=>$v2['service_id']])->find();
+                            if($v2['service_id']==1){
+                                if($v2['photonum']>1){
+                                    $services_money += $services['price'] + (($v2['photonum'] - 1) * $services['interval_price']);
+                                }
+                            }else{
+                                $services_money += $services['price'];
+                            }
+                        }
+
+                        $order['content']['goods_info'][$gkey]['odd_services_money'] = $services_money;
+                        #新增“修改的服务金额”字段
+                        $order['content']['goods_info'][$gkey]['services_money'] = floatval($dat['new_services_money']);
+                        $order['content']['goods_info'][$gkey]['services'] = json_encode($order['content']['goods_info'][$gkey]['services'],true);
+                    }
+                }
+                elseif($edit_type==3){
+                    #商品数量
+                    $new_num = intval($dat['new_num']);
+                    if($new_num==0 || $new_num==''){
+                        return json(['code'=>-1,'msg'=>'请输入新的商品数量']);
+                    }
+                    if($new_num==$order['content']['goods_info'][$gkey]['sku_info'][$skey]['goods_num']){
+                        return json(['code'=>-1,'msg'=>'新的商品数量不能与之相同']);
+                    }
+                    $order['content']['goods_info'][$gkey]['sku_info'][$skey]['odd_goods_num']=$order['content']['goods_info'][$gkey]['sku_info'][$skey]['goods_num'];
+                    $order['content']['goods_info'][$gkey]['sku_info'][$skey]['goods_num']=$new_num;
+
+                    #当前规格
+                    $new_skuinfo = Db::connect($this->config)->name('goods_sku')->where(['sku_id'=>$order['content']['goods_info'][$gkey]['sku_info'][$skey]['sku_id']])->find();
+                    $new_skuinfo['sku_prices'] = json_decode($new_skuinfo['sku_prices'],true);
+                    #商品信息
+                    $goods = Db::connect($this->config)->name('goods')->where(['goods_id'=>$order['content']['goods_info'][$gkey]['good_id']])->find();
+                    $goods_num = $order['content']['goods_info'][$gkey]['sku_info'][$skey]['goods_num'];
+                    #计算新的规格参数下的商品单价*购买数量
+                    if($goods['shop_id']>0){
+                        #自营店铺
+                        foreach($new_skuinfo['sku_prices']['start_num'] as $k=>$v){
+                            if($new_skuinfo['sku_prices']['select_end'][$k]==1){
+                                #区间
+                                if($v<=$goods_num && $goods_num<=$new_skuinfo['sku_prices']['end_num']){
+                                    $order['content']['goods_info'][$gkey]['sku_info'][$skey]['price'] = number_format($new_skuinfo['sku_prices']['price'][$k] * $goods_num,2);
+                                }
+                            }
+                            elseif($new_skuinfo['sku_prices']['select_end'][$k]==2){
+                                #以上
+                                if($v<=$goods_num){
+                                    $order['content']['goods_info'][$gkey]['sku_info'][$skey]['price'] = number_format($new_skuinfo['sku_prices']['price'][$k] * $goods_num,2);
+                                }
+                            }
+                        }
+                    }
+                    elseif($goods['shop_id']==0){
+                        #接口店铺
+                        $order['content']['goods_info'][$gkey]['sku_info'][$skey]['price'] = number_format($new_skuinfo['sku_prices']['price'][0] * $goods_num,2);
+                    }
+
+                    #修改买家的选购清单
+                    Db::connect($this->config)->name('cart_sku')->where(['sku_id'=>$sku_id,'cart_id'=>$cart_id])->update([
+                        'goods_num'=>$order['content']['goods_info'][$gkey]['sku_info'][$skey]['goods_num'],
+                        'price'=>$order['content']['goods_info'][$gkey]['sku_info'][$skey]['price'],
+                    ]);
+                }
+
+                #重新计算订购清单价格
+                $true_price = 0;
+                foreach($order['content']['goods_info'] as $k=>$v){
+                    #是否拿已修改的更多服务金额
+                    if(isset($order['content']['goods_info'][$k]['services_money'])){
+                        $services_money = $order['content']['goods_info'][$k]['services_money'];
+                    }else{
+                        $order['content']['goods_info'][$k]['services'] = json_decode($order['content']['goods_info'][$k]['services'],true);
+                        $services_money = 0;
+                        foreach($order['content']['goods_info'][$k]['services'] as $k2=>$v2){
+                            $services = Db::connect($this->config)->name('goods_services')->where(['id'=>$v2['service_id']])->find();
+                            if($v2['service_id']==1){
+                                if($v2['photonum']>1){
+                                    $services_money += $services['price'] + (($v2['photonum'] - 1) * $services['interval_price']);
+                                }
+                            }else{
+                                $services_money += $services['price'];
+                            }
+                        }
+                        $order['content']['goods_info'][$k]['services'] = json_encode($order['content']['goods_info'][$k]['services'],true);
+                    }
+
+
+                    $price = 0;
+                    foreach($v['sku_info'] as $k2=>$v2){
+                        $price += floatval($v2['price']);
+                    }
+                    $true_price += number_format($price + floatval($v['otherfee_total']) + $services_money - floatval($v['reduction_money']) - floatval($v['gift_money']),2);
+                }
+
+                //修改购物清单价格
+                $odd_money = $order['true_money'];
+                Db::name('website_order_list')->where(['id'=>$id])->update([
+                    'odd_money'=>$odd_money,
+                    'true_money'=>$true_price,
+                    'content'=>json_encode($order['content'],true),
+                ]);
+                Db::commit();
+                return json(['code' => 0, 'msg' => '修改成功']);
+            } catch (\Exception $e) {
+                Db::rollback();
+                return json(['code' => -1, 'msg' => '操作失败：'.$e->getMessage()]);
+            }
+        }else{
+            $is_manage = intval($dat['is_manage']);
+            $arr = explode(',',$dat['arr']);
+            $id = intval($arr[0]);
+            $gid = intval($arr[1]);
+            $gkey = intval($arr[2]);
+            $skey = intval($arr[3])-1;
+            $sku_id = intval($arr[4]);
+            $cart_id = intval($arr[5]);
+
+            $order = Db::name('website_order_list')->where(['id'=>$id])->find();
+            $order['content'] = json_decode($order['content'],true);
+//            foreach($order['content']['goods_info'] as $k=>$v){
+//                $order['content']['goods_info'][$k]['services'] = json_encode($order['content']['goods_info'][$k]['services'],true);
+//            }
+//            Db::name('website_order_list')->where(['id'=>$id])->update([
+//                'content'=>json_encode($order['content'],true)
+//            ]);
+//            dd($order['content']);
+
+            $sku_data = $order['content']['goods_info'][$gkey]['sku_info'][$skey];
+            $goods_data = $order['content']['goods_info'][$gkey];
+
+            #商品规格
+            $origin_skuinfo = Db::connect($this->config)->name('goods_sku')->where(['sku_id'=>$sku_data['sku_id']])->find()['spec_names'];
+            $other_skuinfo = [];
+            if(!empty($origin_skuinfo)){
+                $other_skuinfo = Db::connect($this->config)->name('goods_sku')->where(['goods_id'=>$goods_data['good_id']])->select();
+            }
+//            dd($other_skuinfo);
+            #费用项目
+                #是否拿已修改的更多服务金额
+            if(isset($goods_data['services_money'])){
+                $services_money = $goods_data['services_money'];
+            }else{
+                $goods_data['services'] = json_decode($goods_data['services'],true);
+                $services_money = 0;
+                foreach($goods_data['services'] as $k2=>$v2){
+                    $services = Db::connect($this->config)->name('goods_services')->where(['id'=>$v2['service_id']])->find();
+                    if($v2['service_id']==1){
+                        $goods_data['services'][$k2]['photoRequest'] = explode('@@@',rtrim($v2['photoRequest'],'@@@'));
+                        if($v2['photonum']>1){
+                            $services_money += $services['price'] + (($v2['photonum'] - 1) * $services['interval_price']);
+                        }
+                    }else{
+                        $services_money += $services['price'];
+                    }
+                }
+            }
+
+            $origin_services = ['reduction_money'=>$goods_data['reduction_money'],'gift_money'=>$goods_data['gift_money'],'otherfee_total'=>$goods_data['otherfee_total'],'otherfee_currency'=>$goods_data['otherfee_currency'],'services_money'=>$services_money];
+
+            return view('index/buyer/shunt_edit',compact('id','gid','gkey','skey','sku_id','cart_id','sku_data','origin_skuinfo','other_skuinfo','origin_services','is_manage'));
+        }
+    }
+    
+    #商品上架订单
+    public function goods_shelf_order(Request $request){
+        $dat = input();
+        $company_id = isset($dat['company_id'])?intval($dat['company_id']):0;
+        $company_type = isset($dat['company_type'])?intval($dat['company_type']):0;
+        $buyer_id = isset($dat['buyer_id'])?intval($dat['buyer_id']):0;
+        
+        if(isset($dat['pa'])){
+            $limit = $request->get('limit');
+            $page = $request->get('page') - 1;
+            if ($page != 0) {
+                $page = $limit * $page;
+            }
+            $where =['buyer_id'=>$buyer_id];
+            
+            $count = Db::name('website_user_goods_list')->where($where)->count();
+            $rows = DB::name('website_user_goods_list')
+                ->where($where)
+                ->limit($page . ',' . $limit)
+                ->order('id','desc')
+                ->select();
+            
+            $status_name = ['-2'=>'拒绝通过','-1'=>'已删除','0'=>'已添加待入库','1'=>'已入库待审批','2'=>'已审批上架'];
+            foreach($rows as $k=>$v){
+                $rows[$k]['createtime'] = date('Y-m-d H:i:s',$v['createtime']);
+                $rows[$k]['status_name'] = $status_name[$v['status']];
+                if($v['status']==-2){
+                    $rows[$k]['status_name'] .= '（拒绝原因：'.$v['remark'].'）';
+                }
+            }
+
+            return json(['code'=>0,'count'=>$count,'data'=>$rows]);
+        }else{
+            return view('index/buyer/goods_shelf_order',compact('company_id','company_type','buyer_id'));
+        }
+    }
+    
+    #商品上架详情
+    public function goods_shelf_detail(Request $request){
+        $dat = input();
+        $company_id = isset($dat['company_id'])?intval($dat['company_id']):0;
+        $company_type = isset($dat['company_type'])?intval($dat['company_type']):0;
+        $id = isset($dat['id'])?intval($dat['id']):0;
+        
+        $goods = Db::name('website_user_goods_list')->where(['id'=>$id])->find();
+        #选品国家
+        $goods['country_name'] = Db::name('centralize_diycountry_content')->where(['id'=>$goods['country_id']])->field('param2')->find()['param2'];
+        #商品单位
+        $goods['unit_name'] = Db::name('unit')->where(['code_value'=>$goods['unit']])->value('code_name');
+        #商品币种
+        $goods['currency_name'] = Db::name('centralize_currency')->where(['id'=>$goods['currency']])->value('currency_symbol_standard');
+        #商品销售渠道
+        $goods['sale_unit_name'] = Db::name('sale_unit')->where(['id'=>$goods['sale_unit']])->value('name');
+        #商品分类
+        $goods['cate_ids'] = explode(',',$goods['cate_ids']);
+        $goods['cate_name'] = '';
+        foreach($goods['cate_ids'] as $k=>$v){
+            $category = Db::connect($this->config)->name('category')->where(['cat_id'=>$v])->field('cat_name')->find();
+            $goods['cate_name'] .= $category['cat_name'].',';
+        }
+        $goods['cate_name'] = trim($goods['cate_name'],',');
+        
+        #商品图片
+        $goods['pic_list'] = json_decode($goods['pic_list'],true);
+        #商品详情图
+        $goods['desc_list'] = json_decode($goods['desc_list'],true);
+        #商品规格
+        $goods['option_list'] = json_decode($goods['option_list'],true);
+        #商品参数
+        $goods['spec_list'] = json_decode($goods['spec_list'],true);
+        
+        #商品状态
+        $status_name = ['-2'=>'拒绝通过','-1'=>'已删除','0'=>'已添加待入库','1'=>'已入库待审批','2'=>'已审批上架'];
+        $goods['status_name'] = $status_name[$goods['status']];
+        if($goods['status']==-2){
+            $goods['status_name'] .= '（拒绝原因：'.$goods['remark'].'）';
+        }
+        return view('index/buyer/goods_shelf_detail',compact('goods','id','company_id','company_type'));
+    }
+    #买手管理====end
+
     #企业群组==============================================start
     public function website_group(Request $request){
         $dat = input();
@@ -15548,6 +16480,12 @@ class Index extends Controller
                     $func[$k]['children'][$k2]['children'][$k3]['children'] = Db::name('website_menu')->where(['pid'=>$v3['id']])->select();
                     foreach($func[$k]['children'][$k2]['children'][$k3]['children'] as $k4=>$v4){
                         $func[$k]['children'][$k2]['children'][$k3]['children'][$k4]['children'] = Db::name('website_menu')->where(['pid'=>$v4['id']])->select();
+                        foreach($func[$k]['children'][$k2]['children'][$k3]['children'][$k4]['children'] as $k5=>$v5){
+                            $func[$k]['children'][$k2]['children'][$k3]['children'][$k4]['children'][$k5]['children'] = Db::name('website_menu')->where(['pid'=>$v5['id']])->select();
+                            foreach($func[$k]['children'][$k2]['children'][$k3]['children'][$k4]['children'][$k5]['children'] as $k6=>$v6){
+                                $func[$k]['children'][$k2]['children'][$k3]['children'][$k4]['children'][$k5]['children'][$k6]['children'] = Db::name('website_menu')->where(['pid'=>$v6['id']])->select();
+                            }
+                        }
                     }
                 }
             }
@@ -17079,7 +18017,8 @@ class Index extends Controller
         $member_id = isset($dat['member_id'])?intval($dat['member_id']):0;
         $company_id = isset($dat['company_id'])?intval($dat['company_id']):0;
         $company_type = isset($dat['company_type'])?intval($dat['company_type']):0;
-
+        $is_merchs = isset($dat['is_merchs'])?intval($dat['is_merchs']):0;#公众号&小程序登录
+        
         if(!empty($member_id)){
             #小程序进来
             $uid = $member_id;
@@ -17094,7 +18033,6 @@ class Index extends Controller
         if(!isset($dat['is_email'])){
             session('login_code',$code);
         }
-
 
         if($uid>0){
             $account = Db::name('website_user')->where('id',$uid)->find();
@@ -17181,7 +18119,7 @@ class Index extends Controller
             if(!empty($company)){
                 $ishave_company=1;
             }
-            return json(['code'=>0,'msg'=>'登录成功！','uid'=>$account['id'],'base64_uid'=>base64_encode($account['id']),'account'=>$account,'company'=>$ishave_company,'company_id'=>$company_id,'company_type'=>$company_type]);
+            return json(['code'=>0,'msg'=>'登录成功！','uid'=>$account['id'],'base64_uid'=>base64_encode($account['id']),'account'=>$account,'company'=>$ishave_company,'company_id'=>$company_id,'company_type'=>$company_type,'is_merchs'=>$is_merchs]);
             
         }
         else{
@@ -17259,8 +18197,12 @@ class Index extends Controller
 
             $login_content = Db::name('website_login_content')->where(['system_id'=>9])->find();
             $login_content['content'] = json_decode($login_content['content'],true);
-
-            return view('',compact('menu','data','id','link','website','open','inquiry_id','param','param2','signPackage','country_code','authlogin_apps','autologin_apps2','code','email','token','login_content','company_id','company_type'));
+            
+            if($is_merchs==1 && !empty(session('account'))){
+                header('Location: /?s=index/merch_manage_index');
+            }
+            
+            return view('',compact('menu','data','id','link','website','open','inquiry_id','param','param2','signPackage','country_code','authlogin_apps','autologin_apps2','code','email','token','login_content','company_id','company_type','is_merchs'));
         }
     }
 
@@ -17524,6 +18466,53 @@ Hello, Your one-time code is:</p><br/><p>'.$code.'</p><br/><p>或直接点击：
                 return json(['code'=>-1,'msg'=>'发送失败，请联系管理员！']);
             }
         }
+    }
+
+    #商户登录
+    public function merch_manage_index(Request $request){
+        $dat = input();
+        $company_id = 0;
+        $mid = session('account.id');
+        
+        $company = Db::name('website_user_company')->where(['user_id'=>session('account.id'),'status'=>0])->select();
+        if(empty($company)){
+            $company = Db::name('centralize_manage_person')
+            ->alias('cmp')
+            ->join('website_user_company wuc','wuc.id = cmp.company_id','left')
+            ->where(['cmp.gogo_id'=>session('account.id'),'cmp.status'=>1])
+            ->field('wuc.*')
+            ->select();
+        }else{
+            $companys = Db::name('centralize_manage_person')
+                ->alias('cmp')
+                ->join('website_user_company wuc','wuc.id = cmp.company_id','left')
+                ->where(['cmp.gogo_id'=>session('account.id'),'cmp.status'=>1])
+                ->field('wuc.*')
+                ->select();
+            
+            $company = array_merge($company,$companys);
+            
+            $temp = array_column($company, null, 'company');
+            $company = array_values($temp);
+        }
+        
+        $buyer_company = Db::name('website_buyer')
+            ->alias('wb')
+            ->join('website_user_company wuc','wuc.id = wb.company_id','left')
+            ->whereRaw('wb.company_id!=0 and wb.uid='.session('account.id').' and wb.is_verify=1')
+            ->field('wuc.*')
+            ->select();
+        
+        $company = array_merge($company,$buyer_company);
+            
+        $temp = array_column($company, null, 'company');
+        $company = array_values($temp);
+        
+        $website_basic = ['slogo'=>'','logo'=>'','company_info'=>['id'=>0,'company'=>'','webList'=>'']];
+        $website['website_canonical'] = $this->website_canonical;
+        $website['website_og'] = $this->website_og;
+        
+        return view('/index/merch_manage_index',compact('company','website_basic','website','company_id','mid'));
     }
 
     #保存账号基础信息

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>商品信息</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <script src="layui/layui.js"></script>
+    <style>
+        .layui-fluid{padding-top:15px;}
+        .layui-form-item{margin-bottom: 10px;}
+        .inline{line-height: 38px;}
+        .disf{display:flex;align-items: center;}
+        .link{text-decoration: underline;color:#1790FF;}
+        .head{padding-bottom: 5px;padding-left: 5px;border-bottom: 1px solid #666;margin-bottom: 10px;}
+        .f15{font-size:15px;}
+        .layui-form-item .layui-form-label{text-align: left;}
+        .layui-input-block{line-height:36px;}
+    </style>
+</head>
+<body>
+<div class="layui-fluid">
+    <div class="head">
+        <a href="javascript:history.back(-1);" class="f15">&lt; 返回</a>
+    </div>
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-form-item">
+                    <div class="layui-form-label">选品地点</div>
+                    <div class="layui-input-block">
+                        {$goods['country_name']}
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-form-label">选品渠道</div>
+                    <div class="layui-input-block">
+                        {$goods['sale_unit_name']}
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-form-label">商品名称</div>
+                    <div class="layui-input-block">
+                        {$goods['name']}
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-form-label">商品类别</div>
+                    <div class="layui-input-block">
+                        {$goods['cate_name']}
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-form-label">商品价格</div>
+                    <div class="layui-input-block">
+                        {$goods['currency_name']} {$goods['price']}/{$goods['unit_name']}
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-form-label">选品说明</div>
+                    <div class="layui-input-block">
+                        {$goods['desc']}
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-form-label">商品图片</div>
+                    <div class="layui-input-block">
+                        <div class="layui-upload" style="margin-top: 10px;">
+                            <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                                预览图：
+                                <div class="layui-upload-list" id="img_file-upload-list">
+                                    {if !empty($goods['pic_list'])}
+                                        {volist name="goods.pic_list" key="k" id="vo"}
+                                            <div style="display: inline-block;">
+                                                <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$vo}" class="layui-upload-img" style="width:80px;height:80px;">
+                                            </div>
+                                        {/volist}
+                                    {/if}
+                                </div>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-form-label">商品详情</div>
+                    <div class="layui-input-block">
+                        <div class="layui-upload" style="margin-top: 10px;">
+                            <blockquote class="layui-elem-quote layui-quote-nm yulan" style="margin-top: 10px;">
+                                预览图：
+                                <div class="layui-upload-list" id="img_file-upload-list">
+                                    {if !empty($goods['desc_list'])}
+                                        {volist name="goods.desc_list" key="k" id="vo"}
+                                            <div style="display: inline-block;">
+                                                <img loading="lazy" alt="GOGO198 網站圖片" onclick="seePic(this);" src="{$vo}" class="layui-upload-img" style="width:80px;height:80px;">
+                                            </div>
+                                        {/volist}
+                                    {/if}
+                                </div>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-form-label">商品型号</div>
+                    <div class="layui-input-block">
+                        {volist name="goods.option_list" key="k" id="v"}
+                        <p style="margin-bottom:0px;">{$v['option_name']}：{$v['option_desc']}</p>
+                        {/volist}
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-form-label">商品参数</div>
+                    <div class="layui-input-block">
+                        {volist name="goods.spec_list" key="k" id="v"}
+                            <p style="margin-bottom:0px;">{$v['spec_name']}：{$v['spec_desc']}</p>
+                        {/volist}
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-form-label">商品状态</div>
+                    <div class="layui-input-block">
+                        <span style="color:#ec1600;">{$goods['status_name']}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script>
+    layui.use(['layer', 'form', 'table', 'upload'], function () {
+        var $ = layui.$
+            , layer = layui.layer
+            , form = layui.form
+            , upload = layui.upload
+            , table = layui.table;
+
+    });
+    
+    function seePic(obj) {
+        var layer = layui.layer,$ = layui.$;
+        layer.open({
+            type: 1,
+            title: false,
+            closeBtn: 1,
+            area: ['80%','auto'],
+            skin: 'layui-layer-nobg',
+            shadeClose: true,
+            content: '<img width="100%" style="height:100%;max-height:700px;" src="' + $(obj)[0].src + '" />'
+        });
+    }
+</script>
+</html>

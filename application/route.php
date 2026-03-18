@@ -19,7 +19,9 @@ Route::rule('admin', 'index/index/website_manage');
 //    ->pattern(['company_id' => '\d+']);
 
 Route::any('index/get_enterprise_info', 'index/Index/get_enterprise_info');#获取企业信息
+Route::any('index/get_enterprise_info2', 'index/Index/get_enterprise_info2');#获取企业信息2
 Route::any('index/save_domainname', 'index/Index/save_domainname');#保存企业二级域名
+Route::any('index/merch_manage_index', 'index/Index/merch_manage_index');#商户登录
 
 #企业网站-后台
 Route::any('index/website_official', 'index/Index/website_official');#企业网站
@@ -318,6 +320,15 @@ Route::any('index/customer_login', 'index/Index/customer_login');#登录
 Route::any('index/send_code', 'index/Index/send_code');
 Route::any('index/change_account', 'index/Index/change_account');#切换账号
 //==========独立网站界面===========end
+
+#买手管理start
+Route::any('index/buyer_manage', 'index/Index/buyer_manage');
+Route::any('index/buyer_order', 'index/Index/buyer_order');
+Route::any('index/buyer_order_detail', 'index/Index/buyer_order_detail');
+Route::any('index/shunt_edit', 'index/Index/shunt_edit');
+Route::any('index/goods_shelf_order', 'index/Index/goods_shelf_order');
+Route::any('index/goods_shelf_detail', 'index/Index/goods_shelf_detail');
+#买手管理end
 
 #账户管理
 Route::any('index/save_contact', 'index/Index/save_contact');#授权登录时，补充联系方式（邮箱+手机号）

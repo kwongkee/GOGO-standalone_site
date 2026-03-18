@@ -93,6 +93,12 @@
         <div style="text-align: center;">
             <img loading="lazy" alt="GOGO198 網站圖片" src="/img/quicky_selgoods.png" alt="" style="width:200px;height:200px;">
             <p style="font-size: 15px;margin-top:10px;">温馨提示：请使用微信扫描上方二维码后点击进入新增选品。</p>
+            
+            {if empty($user['openid']) || empty($user['sns_openid'])}
+                <p style="margin-top:10px;font-size:15px;">
+                    为了更好地接受通知，请先关联{if empty($user['openid'])}<a href="https://boss.gogo198.cn/?s=index/member_login&uid=<?php echo base64_encode($user['id']);?>" target="_blank" style="color:#ff2222;text-decoration:underline;">公众号</a>{/if}&nbsp;{if empty($user['sns_openid'])}<a href="https://boss.gogo198.cn/?s=index/member_login&uid=<?php echo base64_encode($user['id']);?>" target="_blank" style="color:#ff2222;text-decoration:underline;">小程序</a>{/if}
+                </p>
+            {/if}
         </div>
     </div>
 </body>

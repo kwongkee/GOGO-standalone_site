@@ -29,7 +29,8 @@
         .btn-outline {border: 2px solid var(--primary);color: var(--primary);background: transparent;margin-right: 15px;}
         .btn-outline:hover {background: var(--primary);color: white;transform: translateY(-3px);box-shadow: var(--shadow);}
         .btn-primary {background: var(--gradient);color: white;border: 2px solid transparent;}
-        /*.btn-primary:hover {background: transparent;border-color: var(--primary);color: var(--primary);transform: translateY(-3px);box-shadow: var(--shadow);}*/
+        .btn-primary:hover {background: transparent;border-color: var(--primary);color: var(--primary);transform: translateY(-3px);box-shadow: var(--shadow);}
+        .btn-warning{background:#f8ac59;color:#fff;border:none;}
 
         /* 表单样式 */
         .form-section {margin-bottom: 30px;}
@@ -49,7 +50,7 @@
 
         /* 模态框样式 */
         .modal {display: none;position: fixed;top: 0;left: 0;width: 100%;height: 100%;background: rgba(0, 0, 0, 0.5);backdrop-filter: blur(5px);z-index: 2000;align-items: center;justify-content: center;}
-        .modal-content {background: white;border-radius: 20px;padding: 30px;width: 90%;box-shadow: var(--shadow-hover);position: relative;}
+        .modal-content {background: white;border-radius: 20px;padding: 30px;width: 90%;max-width: 500px;box-shadow: var(--shadow-hover);position: relative;}
         .close-modal {position: absolute;top: 20px;right: 20px;font-size: 1.5rem;color: #999;cursor: pointer;transition: color 0.3s ease;}
         .close-modal:hover {color: var(--primary);}
         .modal-title {font-size: 1.5rem;margin-bottom: 20px;color: var(--primary);}
@@ -57,11 +58,10 @@
         .btn {padding: 10px 20px;border-radius: 50px;font-weight: 600;cursor: pointer;transition: all 0.3s ease;display: flex;align-items: center;gap: 8px;border: none;}
         .btn-edit {background: var(--primary-light);color: white;border: none;}
         .btn-edit:hover {background: var(--primary);}
-        .btn-warn{background:#f8ac59;color:#fff;border:none;}
         .btn-delete {background: transparent;color: #ff4757;border: 2px solid #ff4757;}
         .btn-delete:hover {background: #ff4757;color: white;}
         .btn-primary {background: var(--gradient);color: white;}
-        /*.btn-primary:hover {transform: translateY(-3px);box-shadow: var(--shadow-hover);}*/
+        .btn-primary:hover {transform: translateY(-3px);box-shadow: var(--shadow-hover);}
         .btn-outline {background: transparent;color: var(--primary);border: 2px solid var(--primary-light);}
         .btn-outline:hover {background: var(--primary-light);color: white;}
 
@@ -77,13 +77,6 @@
         .layui-table th,
         .member-table th {background: var(--accent);color: var(--primary-dark);font-weight: 600;}
 
-        /*返回按钮*/
-        .backDiv{padding: 5px 5px 5px 20px;border-bottom: 1px solid #d9d9d9;}
-        .backDiv .backBox{display: flex;align-items: center;cursor: pointer;}
-        .backDiv .back_icon{font-size: 18px;color: #333;margin-right: 10px;position: relative;}
-        .backDiv .back_icon:before{content:'';position:absolute;width:9px;height:9px;border-left:2px solid #000;border-top:2px solid #000;transform:rotate(-45deg);margin-right:5px;top:-7px;}
-        .backDiv .back_text{font-size: 16px;color: #333;font-weight: 500;margin-left: 5px;}
-        
         /* 动画 */
         @keyframes fadeIn {
             from {opacity: 0;transform: translateY(10px);}
@@ -98,21 +91,15 @@
 
 </head>
 <body>
-<div class="backDiv">
-    <div class="backBox" onclick="javascript:window.history.back(-1);">
-        <div class="back_icon"></div>
-        <div class="back_text">返回</div>
-    </div>
-</div>
-<div class="row" style="padding:10px;">
+<div class="row" style="padding:0px;">
     <div class="col-sm-12">
         <div class="ibox float-e-margins">
             <div class="ibox-content">
-                <div id="toolbar" class="btn-group" style="margin-top: 10px;margin-bottom: 10px;line-height: 34px;">
-                    <button type="button" onclick="save(0,1);" class="btn btn-primary">
-                        <i class="fas fa-add"></i>
-                        添加内容
-                    </button>
+                <div id="toolbar" class="btn-group" style="margin-top: 10px;margin-bottom: 10px;line-height: 34px;display:flex;">
+                    <!--<button type="button" onclick="save(1);" class="btn btn-primary" style="margin-right:10px;">-->
+                    <!--    <i class="fas fa-add"></i>-->
+                    <!--    添加知识-->
+                    <!--</button>-->
                 </div>
                 <table class="layui-hide" id="mainTable"></table>
             </div>
@@ -120,65 +107,33 @@
     </div>
 </div>
 
-<!-- 添加场景·模态框 -->
-<div class="modal" id="saveRotateModal">
-    <div class="modal-content" style="transform: translate(0%, -30%);">
-        <span class="close-modal">&times;</span>
-        <h2 class="modal-title">保存内容</h2>
-        <iframe src="" class="rotate_iframe" frameborder="0" style="width: 100%;height:340px;"></iframe>
-    </div>
-</div>
-
 </body>
 <script src="js/jquery-3.6.0.min.js"></script>
 <script src="layui/layui.js"></script>
-<script src="./layui/xm-select.js"></script>
+
 <script>
     layui.use(['layer','form','laydate','upload','table'],function() {
         var laydate = layui.laydate
-        ,layer = layui.layer
-        ,form = layui.form
-        ,$ = layui.jquery
-        ,upload = layui.upload
-        ,table = layui.table;
-
-        const modal = document.getElementById('saveRotateModal');
-        const closeBtn = document.querySelector('.close-modal');
-        // const cancelBtn = document.getElementById('cancelBtn');
-        // 关闭模态框
-        function closeModal() {
-            modal.style.display = 'none';
-        }
-        closeBtn.addEventListener('click', closeModal);
-        // cancelBtn.addEventListener('click', closeModal);
-
-        // 点击模态框外部关闭
-        window.addEventListener('click', function(event) {
-            if (event.target === modal) {
-                closeModal();
-            }
-        });
+            ,layer = layui.layer
+            ,form = layui.form
+            ,$ = layui.jquery
+            ,upload = layui.upload
+            ,table = layui.table;
 
         table.render({
             elem: '#mainTable'
-            ,url: "/?s=index/shop_guide_content_list2&pa=1&company_id={$company_id}&company_type={$company_type}&guide_id={$guide_id}&top_id={$top_id}&pid={$pid}"
+            ,url: "/?s=index/buyer_order&pa=1&company_id={$company_id}&company_type={$company_type}&buyer_id={$buyer_id}"
             ,cellMinWidth: 200
             ,cols: [[
                 {field:'id', width:80, title: '编号'}
-                ,{field:'name', title: '卡片名称'}
-                ,{field:'go_method', title: '导流方式'}
-                ,{width:180,align:'center', fixed: 'right', title: '操作', templet: function(d){
-                        var result = "";
-
-                        result += '<a onclick="save('+d.id+',1);" class="layui-btn layui-btn-xs btn-edit"><i class="fas fa-edit"></i> 编辑</a>';
-                        result += '<a onclick="del_component('+ "'"+d.id+"'" +');" class="layui-btn layui-btn-xs btn-delete"><i class="fas fa-trash"></i> 删除</a>';
-
-                        return [
-                            result
-                        ].join('');
-
-                        return result;
-                    }}
+                ,{field:'ordersn', width:200, title: '订单编号'}
+                ,{field:'status_name', width:100, title: '订单状态'}
+                ,{field:'createtime', title: '创建时间'}
+                ,{ align:'center', fixed: 'right', width:100, title: '操作', templet: function(d){
+                    return [
+                        '<a onclick="view_detail('+d.id+');" class="layui-btn layui-btn-xs btn-edit"><i class="fas fa-eye"></i>  查看详情</a>',
+                    ].join('');
+                }}
             ]]
             ,page: true
         });
@@ -203,47 +158,22 @@
         });
     });
 
-    //内容删除
-    function del_component(id){
+    //查看详情
+    function view_detail(id){
+        window.location.href = '/?s=index/buyer_order_detail&company_id={$company_id}&company_type={$company_type}&id='+id;
+    }
+
+    function delPic(obj)
+    {
         var layer = layui.layer,$ = layui.$;
-        layer.confirm('确认要删除该内容？', {
+        layer.confirm('确认要删除该附件？', {
             btn: ['删除','取消']
         }, function(){
-            $.ajax({
-                url:"/?s=index/del_shop_guide_content",
-                type:"GET",
-                dataType:"json",
-                data:{id:id,company_id:"{$company_id}"},
-                success:function (res) {
-                    layer.msg(res.msg);
-                    if (res.code==0){
-                        setTimeout(function () {
-                            window.location.reload();
-                        },2000);
-                    }
-                },
-                error:function (xhr) {
-                    layer.msg('连接服务器错误！');
-                }
-            });
+            $(obj).parent().remove();
             layer.closeAll();
         }, function(){
 
         });
-    }
-
-    //添加内容&编辑内容
-    function save(id,type) {
-        var layer = layui.layer,$ = layui.$;
-        if(type==1){
-            //保存内容
-            // var modal = document.getElementById('saveRotateModal');
-            // modal.style.display = 'flex';
-
-            // $('#saveRotateModal .rotate_iframe').attr('src','/?s=index/save_shop_guide_content2&company_id={$company_id}&company_type={$company_type}&guide_id={$guide_id}&top_id={$top_id}&id='+id);
-            
-            window.location.href = '/?s=index/save_shop_guide_content2&company_id={$company_id}&company_type={$company_type}&guide_id={$guide_id}&top_id={$top_id}&id='+id;
-        }
     }
 </script>
 </html>
