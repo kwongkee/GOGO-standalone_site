@@ -1744,22 +1744,34 @@
                                 xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');
                                 xhr.onreadystatechange = function() {
                                     if (xhr.status == 200) {
-                                        var results = JSON.parse(xhr.response);
-                                        var html = '';
-                                        if(results.code==0 && results.list != ''){
-                                            for(let i=0;i<results.list.length;i++){
-                                                if(results.list[i].limit_product==1){
-                                                    //禁限物品属性
-                                                    html += '<div style="display:flex;align-items: center;justify-content: space-between;margin-bottom:5px;"><div class="xm-option-content" onclick="select_option(\''+results.list[i].name+'\','+results.list[i].id+',\''+u.nowElement+'\')" style="color:#ff2222;width: 135px;overflow: hidden;display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;word-break: break-all;white-space: break-spaces;">'+results.list[i].parent_name + '__' + results.list[i].name+'</div><div style="white-space:nowrap;margin-right:15px;padding:0px 8px;box-sizing: border-box;border:1px solid #000;border-radius:5px;font-size:12px;" onclick="openValue('+results.list[i].id+',1);">查看详情</div></div>';
-                                                }else{
-                                                    html += '<div style="display:flex;align-items: center;justify-content: space-between;margin-bottom:5px;"><div class="xm-option-content" onclick="select_option(\''+results.list[i].name+'\','+results.list[i].id+',\''+u.nowElement+'\')" style="width: 135px;overflow: hidden;display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;word-break: break-all;white-space: break-spaces;">'+results.list[i].parent_name + '__' + results.list[i].name+'</div><div style="white-space:nowrap;margin-right:15px;padding:0px 8px;box-sizing: border-box;border:1px solid #000;border-radius:5px;font-size:12px;" onclick="openValue('+results.list[i].id+',1);">查看详情</div></div>';
+                                        if(xhr.response != ''){
+                                            var results = JSON.parse(xhr.response);
+                                            var html = '';
+                                            if(results.code==0 && results.list != ''){
+                                                for(let i=0;i<results.list.length;i++){
+                                                    let name = '';
+                                                    
+                                                    if(results.list[i].parent_name != null){
+                                                        name += results.list[i].parent_name + '__';
+                                                    }
+                                                    if(results.list[i].name != null){
+                                                        name += results.list[i].name;
+                                                    }
+                                                    
+                                                    if(results.list[i].limit_product==1){
+                                                        //禁限物品属性
+                                                        //results.list[i].parent_name + '__' + results.list[i].name
+                                                        html += '<div style="display:flex;align-items: center;justify-content: space-between;margin-bottom:5px;"><div class="xm-option-content" onclick="select_option(\''+results.list[i].name+'\','+results.list[i].id+',\''+u.nowElement+'\')" style="color:#ff2222;width: 135px;overflow: hidden;display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;word-break: break-all;white-space: break-spaces;">'+name+'</div><div style="white-space:nowrap;margin-right:15px;padding:0px 8px;box-sizing: border-box;border:1px solid #000;border-radius:5px;font-size:12px;" onclick="openValue('+results.list[i].id+',1);">查看详情</div></div>';
+                                                    }else{
+                                                        html += '<div style="display:flex;align-items: center;justify-content: space-between;margin-bottom:5px;"><div class="xm-option-content" onclick="select_option(\''+results.list[i].name+'\','+results.list[i].id+',\''+u.nowElement+'\')" style="width: 135px;overflow: hidden;display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;word-break: break-all;white-space: break-spaces;">'+name+'</div><div style="white-space:nowrap;margin-right:15px;padding:0px 8px;box-sizing: border-box;border:1px solid #000;border-radius:5px;font-size:12px;" onclick="openValue('+results.list[i].id+',1);">查看详情</div></div>';
+                                                    }
                                                 }
+                                                // console.log(document.getElementsByClassName('diy-search-content')[0]);
+                                            }else{
+                                                html = '';
                                             }
-                                            // console.log(document.getElementsByClassName('diy-search-content')[0]);
-                                        }else{
-                                            html = '';
+                                            this2.getElementsByClassName('diy-search-content')[0].innerHTML=html;
                                         }
-                                        this2.getElementsByClassName('diy-search-content')[0].innerHTML=html;
                                     }
                                 };
                                 // n.optionClick.bind(n, t, y, x, "checkbox", r)

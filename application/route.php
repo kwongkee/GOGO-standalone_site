@@ -353,6 +353,8 @@ Route::any('gather/getminiprogramcode', 'index/Gather/getminiprogramcode');#计�
 Route::any('gather/getweixin', 'index/Gather/getweixin');#获取微信账号信息
 Route::any('gather/paymentdisplay', 'index/Gather/paymentdisplay');#保存“小程序”支付显示
 Route::any('gather/printdisplay', 'index/Gather/printdisplay');#保存“小程序”打印显示
+Route::any('gather/search_info', 'index/Gather/search_info');#查询属性内物品名称
+Route::any('gather/value_introduce', 'index/Gather/value_introduce');#查询属性内物品名称
 //物流官网end
 
 //上传方法start

@@ -129,7 +129,7 @@
                 ,{field:'ordersn', width:200, title: '订单编号'}
                 ,{field:'status_name', width:100, title: '订单状态'}
                 ,{field:'createtime', title: '创建时间'}
-                ,{ align:'center', fixed: 'right', width:100, title: '操作', templet: function(d){
+                ,{ align:'center', fixed: 'right', width:150, title: '操作', templet: function(d){
                     return [
                         '<a onclick="view_detail('+d.id+');" class="layui-btn layui-btn-xs btn-edit"><i class="fas fa-eye"></i>  查看详情</a>',
                     ].join('');

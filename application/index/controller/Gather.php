@@ -355,4 +355,65 @@ class Gather
         
         return view('/gather/printdisplay', compact('info'));
     }
+    
+    #查找物品属性信息
+    public function search_info(Request $request){
+        set_time_limit(0);
+        $data = input();
+        $list = [];
+        if($data['type']==1){
+            #属性查询
+            $list = Db::name('centralize_gvalue_list')->where('keywords','like','%'.trim($data['keywords']).'%')->select();
+            foreach($list as $k=>$v){
+                if($v['pid']==20){
+                    $list[$k]['limit_product'] = 1;
+                }else{
+                    $list[$k]['limit_product'] = 0;
+                }
+                $parent = Db::name('centralize_gvalue_list')->where(['id'=>$v['pid']])->field('id,name,pid')->find();
+                $list[$k]['parent_name'] = $parent['name'];
+                if(!empty($parent['pid'])){
+                    $parent2 = Db::name('centralize_gvalue_list')->where(['id'=>$parent['pid']])->field('id,name,pid')->find();
+                    $list[$k]['parent_name'] = $parent2['name'];
+                    if($parent2['id']==20){
+                        $list[$k]['limit_product'] = 1;
+                    }
+                    if(!empty($parent2['pid'])){
+                        $parent3 = Db::name('centralize_gvalue_list')->where(['id'=>$parent2['pid']])->field('id,name,pid')->find();
+                        if($parent3['id']==20){
+                            $list[$k]['limit_product'] = 1;
+                        }
+                        $list[$k]['parent_name'] = $parent3['name'];
+                    }
+                }
+            }
+        }
+        return json(['code'=>0,'list'=>$list]);
+    }
+
+    #属性详情
+    public function value_introduce(Request $request){
+        $data = input();
+        $id = $data['id'];
+
+        $info = Db::name('centralize_gvalue_list')->where(['id'=>$id])->find();
+        $info['country'] = explode(',',$info['country']);
+        foreach($info['country'] as $k=>$v){
+            $info['country'][$k] = Db::name('centralize_diycountry_content')->where(['id'=>$v])->find();
+        }
+        $info['channel'] = explode(',',$info['channel']);
+        $channel = '';
+        foreach($info['channel'] as $k=>$v){
+            if($v==1){
+                $channel .= '国际快递，';
+            }elseif($v==2){
+                $channel .= '国际邮政，';
+            }elseif($v==3){
+                $channel .= '国际专线，';
+            }
+        }
+        $info['channel'] = rtrim($channel,',');
+
+        return view('/gather/estimate/value_introduce',compact('id','info'));
+    }
 }

@@ -14711,7 +14711,7 @@ class Index extends Controller
             if ($page != 0) {
                 $page = $limit * $page;
             }
-            $where =['buyer_id'=>2];
+            $where =['buyer_id'=>$buyer_id];
 
             $count = Db::name('website_order_list')->where($where)->count();
             $rows = DB::name('website_order_list')
@@ -14757,9 +14757,9 @@ class Index extends Controller
                     'phone'=>'',
                     'email'=>''
                 ],[
-                    'msg'=>'订购清单['.$order['ordersn'].']已确认有货[无修改]，点击链接查看：https://gadmin.gogo198.cn',
+                    'msg'=>'订购清单['.$order['ordersn'].']已确认有货[无修改]，点击链接查看：https://www.gogo198.net/?s=shop/audit',
                     'opera'=>'确认有货（无修改）',
-                    'url'=>'https://gadmin.gogo198.cn'
+                    'url'=>'https://www.gogo198.net/?s=shop/audit'
                 ]);
             }
             elseif($dat['status']==-4){

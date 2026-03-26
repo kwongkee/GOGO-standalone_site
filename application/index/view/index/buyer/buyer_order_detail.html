@@ -69,7 +69,7 @@
                                     {volist name="vo.sku_info" key="k" id="vo2"}
                                         <tr>
 <!--                                            <td class="ltd" width="5%">{$num}</td>-->
-                                            <td class="ltd" width="25%">{$vo['goods_info']['goods_name']}</td>
+                                            <td class="ltd" width="25%"><a href="https://www.gogo198.cn/goods-{$vo['good_id']}.html" target="_blank">{$vo['goods_info']['goods_name']}</a></td>
                                             <td class="ltd" width="25%">{$vo2['sku_info']['spec_names']}</td>
                                             <td class="ltd" width="20%">{$vo2['goods_num']}</td>
                                             <td class="ltd" width="20%">{$vo2['price']}</td>
@@ -295,6 +295,7 @@
 </body>
 
 <script src="./layui/xm-select3.js?v=<?php echo time();?>"></script>
+<script src="./js/gather/common.js?v=<?php echo time();?>"></script>
 <script>
     layui.use(['layer', 'form', 'table', 'upload'], function () {
         var $ = layui.$
@@ -347,26 +348,29 @@
             on:function(data){
                 //1、选择了属性后，记录当前属性最上级的类名。
                 //2、添加物品后，选择了其他的最上级类名则按原逻辑提示。
-                $('.value_selected0').val(data['change'][0]['top_id']);
-                if(data['change'][0]['top_id']==17){
-                    $('#package0').val('普货');
-                }else if(data['change'][0]['top_id']==19){
-                    $('#package0').val('敏感货');
-                }else if(data['change'][0]['top_id']==20){
-                    $('#package0').val('特殊货');
+                if(data['change']!=''){
+                    $('.value_selected0').val(data['change'][0]['top_id']);
+                    if(data['change'][0]['top_id']==17){
+                        $('#package0').val('普货');
+                    }else if(data['change'][0]['top_id']==19){
+                        $('#package0').val('敏感货');
+                    }else if(data['change'][0]['top_id']==20){
+                        $('#package0').val('特殊货');
+                    }
+                    var keywords = data['change'][0]['keywords'];
+                    keywords = keywords.split('、');
+                    let html = '<option value="">请选择物品</option>\n' +
+                        '<option value="-1">没有可选物品，另外添加</option>';
+                    for(let i=0;i<keywords.length;i++){
+                        html+='<option value="'+keywords[i]+'">'+keywords[i]+'</option>';
+                    }
+                    $('#valueid1').parents(":eq(2)").find('.goods_select_desc').html(html);
+                    //隐藏并清空输入新的物品框
+                    $('#valueid1').parents(":eq(2)").find('.goods_input_desc').val('');
+                    $('#valueid1').parents(":eq(2)").find('.goods_input_desc').hide();
+                    form.render(null,'component-form-element');
                 }
-                var keywords = data['change'][0]['keywords'];
-                keywords = keywords.split('、');
-                let html = '<option value="">请选择物品</option>\n' +
-                    '<option value="-1">没有可选物品，另外添加</option>';
-                for(let i=0;i<keywords.length;i++){
-                    html+='<option value="'+keywords[i]+'">'+keywords[i]+'</option>';
-                }
-                $('#valueid1').parents(":eq(2)").find('.goods_select_desc').html(html);
-                //隐藏并清空输入新的物品框
-                $('#valueid1').parents(":eq(2)").find('.goods_input_desc').val('');
-                $('#valueid1').parents(":eq(2)").find('.goods_input_desc').hide();
-                form.render(null,'component-form-element');
+                
                 valueid.closed();
             }
         });
