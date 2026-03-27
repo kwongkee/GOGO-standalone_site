@@ -32,7 +32,7 @@ class Parceltask
 
     #通知管理员
     public static function notice($task_name,$id=0,$data=[]){
-        $data = Db::name('centralize_system_notice')->where(['uid'=>0,'system_type'=>1])->find();
+        // $data = Db::name('centralize_system_notice')->where(['uid'=>0,'system_type'=>1])->find();
         $url = '';
         if($task_name=='仓库预订'){
             $url = 'https://shop.gogo198.cn/app/index.php?i=3&c=entry&do=gather&p=index&m=sz_yi&op=gather_info&id='.$id;
@@ -40,31 +40,61 @@ class Parceltask
             $url = 'https://gadmin.gogo198.cn';
         }
 
-        if($data['notice_type']==1){
-            #微信
-            $post = json_encode([
-                'call'=>'confirmCollectionNotice',
-                'find' =>"用户[".session('account')['custom_id']."]提交了[".$task_name."]事项操作，请打开查看！",
-                'keyword1' => "用户[".session('account')['custom_id']."]提交了[".$task_name."]事项操作，请打开查看！",
-                'keyword2' => '已提交待操作',
-                'keyword3' => date('Y-m-d H:i:s',time()),
-                'remark' => '点击查看详情',
-                'url' => $url,
-                'openid' => $data['account'],
-                'temp_id' => 'SVVs5OeD3FfsGwW0PEfYlZWetjScIT8kDxht5tlI1V8'
-            ]);
-
-            httpRequest('https://shop.gogo198.cn/api/sendwechattemplatenotice.php', $post);
-        }elseif($data['notice_type']==3){
-            $title = "管理员您好，用户[".session('account')['custom_id'].']提交了['.$task_name.']事项操作，请进入集运总后台进行操作！';
-            $post_data = json_encode(['email'=>$data['account'],'title'=>$title,'content'=>$url],true);
-            $res = httpRequest('https://admin.gogo198.cn/collect_website/public/?s=api/sendemail/index',$post_data,array(
-                'Content-Type: application/json; charset=utf-8',
-                'Content-Length:' . strlen($post_data),
-                'Cache-Control: no-cache',
-                'Pragma: no-cache'
-            ));
+        $servicers = Db::name('centralize_system_servicer')->where(['status'=>1])->select();
+        foreach($servicers as $k=>$v) {
+            $muser = Db::name('website_user')->where(['id' => $v['uid']])->find();
+            if (!empty($muser['openid'])) {
+                #微信
+                $post = json_encode([
+                    'call'=>'confirmCollectionNotice',
+                    'find' =>"用户[".session('account')['custom_id']."]提交了[".$task_name."]事项操作，请打开查看！",
+                    'keyword1' => "用户[".session('account')['custom_id']."]提交了[".$task_name."]事项操作，请打开查看！",
+                    'keyword2' => '已提交待操作',
+                    'keyword3' => date('Y-m-d H:i:s',time()),
+                    'remark' => '点击查看详情',
+                    'url' => $url,
+                    'openid' => $muser['openid'],
+                    'temp_id' => 'SVVs5OeD3FfsGwW0PEfYlZWetjScIT8kDxht5tlI1V8'
+                ]);
+    
+                httpRequest('https://shop.gogo198.cn/api/sendwechattemplatenotice.php', $post);
+            }elseif(!empty($muser['email'])){
+                $title = "管理员您好，用户[".session('account')['custom_id'].']提交了['.$task_name.']事项操作，请进入集运总后台进行操作！';
+                $post_data = json_encode(['email'=>$muser['email'],'title'=>$title,'content'=>$url],true);
+                $res = httpRequest('https://admin.gogo198.cn/collect_website/public/?s=api/sendemail/index',$post_data,array(
+                    'Content-Type: application/json; charset=utf-8',
+                    'Content-Length:' . strlen($post_data),
+                    'Cache-Control: no-cache',
+                    'Pragma: no-cache'
+                ));
+            }
         }
+
+        // if($data['notice_type']==1){
+        //     #微信
+        //     $post = json_encode([
+        //         'call'=>'confirmCollectionNotice',
+        //         'find' =>"用户[".session('account')['custom_id']."]提交了[".$task_name."]事项操作，请打开查看！",
+        //         'keyword1' => "用户[".session('account')['custom_id']."]提交了[".$task_name."]事项操作，请打开查看！",
+        //         'keyword2' => '已提交待操作',
+        //         'keyword3' => date('Y-m-d H:i:s',time()),
+        //         'remark' => '点击查看详情',
+        //         'url' => $url,
+        //         'openid' => $data['account'],
+        //         'temp_id' => 'SVVs5OeD3FfsGwW0PEfYlZWetjScIT8kDxht5tlI1V8'
+        //     ]);
+
+        //     httpRequest('https://shop.gogo198.cn/api/sendwechattemplatenotice.php', $post);
+        // }elseif($data['notice_type']==3){
+        //     $title = "管理员您好，用户[".session('account')['custom_id'].']提交了['.$task_name.']事项操作，请进入集运总后台进行操作！';
+        //     $post_data = json_encode(['email'=>$data['account'],'title'=>$title,'content'=>$url],true);
+        //     $res = httpRequest('https://admin.gogo198.cn/collect_website/public/?s=api/sendemail/index',$post_data,array(
+        //         'Content-Type: application/json; charset=utf-8',
+        //         'Content-Length:' . strlen($post_data),
+        //         'Cache-Control: no-cache',
+        //         'Pragma: no-cache'
+        //     ));
+        // }
     }
 
     #仓库预订任务

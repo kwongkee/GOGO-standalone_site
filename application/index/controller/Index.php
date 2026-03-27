@@ -6490,19 +6490,25 @@ class Index extends Controller
             Db::connect($this->config)->name('goods')->where(['goods_id'=>$data['shelf_id']])->update(['goods_status'=>-1,'goods_reasons'=>'']);
 
             #通知平台
-            $system = Db::name('centralize_system_notice')->where(['uid'=>0])->find();
-            $post = json_encode([
-                'call'=>'confirmCollectionNotice',
-                'find' =>"商户已把商品[".$data['goods_name']."]已下架！",
-                'keyword1' => "商户已把商品[".$data['goods_name']."]已下架！",
-                'keyword2' => '已下架',
-                'keyword3' => date('Y-m-d H:i:s',time()),
-                'remark' => '点击查看详情',
-                'url' => 'https://gadmin.gogo198.cn',
-                'openid' => $system['account'],
-                'temp_id' => 'SVVs5OeD3FfsGwW0PEfYlZWetjScIT8kDxht5tlI1V8'
-            ]);
-            httpRequest('https://shop.gogo198.cn/api/sendwechattemplatenotice.php', $post);
+            // $system = Db::name('centralize_system_notice')->where(['uid'=>0])->find();
+            $servicers = Db::name('centralize_system_servicer')->where(['status'=>1])->select();
+            foreach($servicers as $k=>$v) {
+                $muser = Db::name('website_user')->where(['id' => $v['uid']])->find();
+                if (!empty($muser['openid'])) {
+                    $post = json_encode([
+                        'call'=>'confirmCollectionNotice',
+                        'find' =>"商户已把商品[".$data['goods_name']."]已下架！",
+                        'keyword1' => "商户已把商品[".$data['goods_name']."]已下架！",
+                        'keyword2' => '已下架',
+                        'keyword3' => date('Y-m-d H:i:s',time()),
+                        'remark' => '点击查看详情',
+                        'url' => 'https://gadmin.gogo198.cn',
+                        'openid' => $muser['openid'],
+                        'temp_id' => 'SVVs5OeD3FfsGwW0PEfYlZWetjScIT8kDxht5tlI1V8'
+                    ]);
+                    httpRequest('https://shop.gogo198.cn/api/sendwechattemplatenotice.php', $post);
+                }
+            }
 
             return json(['code'=>0,'msg'=>'下架成功！']);
         }
@@ -9880,19 +9886,25 @@ class Index extends Controller
         }
 
         #通知平台
-        $system = Db::name('centralize_system_notice')->where(['uid'=>0])->find();
-        $post = json_encode([
-            'call'=>'confirmCollectionNotice',
-            'find' =>"有新的商品提交审核，请打开查看！",
-            'keyword1' => "有新的商品提交审核，请打开查看！",
-            'keyword2' => '待审核',
-            'keyword3' => date('Y-m-d H:i:s',time()),
-            'remark' => '点击查看详情',
-            'url' => 'https://gadmin.gogo198.cn',
-            'openid' => $system['account'],
-            'temp_id' => 'SVVs5OeD3FfsGwW0PEfYlZWetjScIT8kDxht5tlI1V8'
-        ]);
-        httpRequest('https://shop.gogo198.cn/api/sendwechattemplatenotice.php', $post);
+        // $system = Db::name('centralize_system_notice')->where(['uid'=>0])->find();
+        $servicers = Db::name('centralize_system_servicer')->where(['status'=>1])->select();
+        foreach($servicers as $k=>$v) {
+            $muser = Db::name('website_user')->where(['id' => $v['uid']])->find();
+            if (!empty($muser['openid'])) {
+                $post = json_encode([
+                    'call'=>'confirmCollectionNotice',
+                    'find' =>"有新的商品提交审核，请打开查看！",
+                    'keyword1' => "有新的商品提交审核，请打开查看！",
+                    'keyword2' => '待审核',
+                    'keyword3' => date('Y-m-d H:i:s',time()),
+                    'remark' => '点击查看详情',
+                    'url' => 'https://gadmin.gogo198.cn',
+                    'openid' => $muser['openid'],
+                    'temp_id' => 'SVVs5OeD3FfsGwW0PEfYlZWetjScIT8kDxht5tlI1V8'
+                ]);
+                httpRequest('https://shop.gogo198.cn/api/sendwechattemplatenotice.php', $post);
+            }
+        }
 
         return $shelf_id;
     }
@@ -11508,16 +11520,24 @@ class Index extends Controller
                     $res = Db::name('website_order_list')->where(['id'=>$id])->update(['status'=>-3]);
                     if($res){
                         $order = Db::name('website_order_list')->where(['id'=>$id])->find();
-                        #通知管理员
-                        common_notice([
-                            'openid'=>$manage_openid,
-                            'phone'=>'',
-                            'email'=>''
-                        ],[
-                            'msg'=>'订单['.$order['ordersn'].']已申请取消退订，点击链接查看：https://www.gogo198.net/?s=shop/audit',
-                            'opera'=>'买手取消退订',
-                            'url'=>'https://www.gogo198.net/?s=shop/audit'
-                        ]);
+                        
+                        $servicers = Db::name('centralize_system_servicer')->where(['status'=>1])->select();
+                        foreach($servicers as $k=>$v) {
+                            $muser = Db::name('website_user')->where(['id' => $v['uid']])->find();
+                            if (!empty($muser['openid'])) {
+                                #通知管理员
+                                common_notice([
+                                    'openid'=>$muser['openid'],
+                                    'phone'=>'',
+                                    'email'=>''
+                                ],[
+                                    'msg'=>'订单['.$order['ordersn'].']已申请取消退订，点击链接查看：https://www.gogo198.net/?s=shop/audit',
+                                    'opera'=>'买手取消退订',
+                                    'url'=>'https://www.gogo198.net/?s=shop/audit'
+                                ]);
+                            }
+                        }
+                        
                         return json(['code'=>0,'msg'=>'退订成功！']);
                     }
                 }
@@ -12771,17 +12791,23 @@ class Index extends Controller
         if($res){
             $order = Db::name('website_order_list')->where(['id'=>$id])->find();
             #通知管理员
-            $system = Db::name('centralize_system_notice')->where(['uid'=>0])->find();
-            $manage_openid = $system['account'];
-            common_notice([
-                'openid'=>$manage_openid,
-                'phone'=>'',
-                'email'=>''
-            ],[
-                'msg'=>'订单['.$order['ordersn'].']已申请取消退订，点击链接查看：https://www.gogo198.net/?s=shop/audit',
-                'opera'=>'买手取消退订',
-                'url'=>'https://www.gogo198.net/?s=shop/audit'
-            ]);
+            // $system = Db::name('centralize_system_notice')->where(['uid'=>0])->find();
+            // $manage_openid = $system['account'];
+            $servicers = Db::name('centralize_system_servicer')->where(['status'=>1])->select();
+            foreach($servicers as $k=>$v) {
+                $muser = Db::name('website_user')->where(['id' => $v['uid']])->find();
+                if (!empty($muser['openid'])) {
+                    common_notice([
+                        'openid'=>$muser['openid'],
+                        'phone'=>'',
+                        'email'=>''
+                    ],[
+                        'msg'=>'订单['.$order['ordersn'].']已申请取消退订，点击链接查看：https://www.gogo198.net/?s=shop/audit',
+                        'opera'=>'买手取消退订',
+                        'url'=>'https://www.gogo198.net/?s=shop/audit'
+                    ]);
+                }
+            }
             return json(['code'=>0,'msg'=>'退订成功！']);
         }
     }
@@ -14745,52 +14771,70 @@ class Index extends Controller
             $time = time();
             $user = Db::name('website_user')->where(['id'=>$order['user_id']])->find();
 
-            $system = Db::name('centralize_system_notice')->where(['uid'=>0])->find();
-            $manage_openid = $system['account'];
+            // $system = Db::name('centralize_system_notice')->where(['uid'=>0])->find();
+            // $manage_openid = $system['account'];
             if($dat['status']==1){
                 #有货（无修改），通知总后台
                 Db::name('website_order_list')->where(['id'=>$order['id']])->update([
                     'status'=>-9,
                 ]);
-                common_notice([
-                    'openid'=>$manage_openid,
-                    'phone'=>'',
-                    'email'=>''
-                ],[
-                    'msg'=>'订购清单['.$order['ordersn'].']已确认有货[无修改]，点击链接查看：https://www.gogo198.net/?s=shop/audit',
-                    'opera'=>'确认有货（无修改）',
-                    'url'=>'https://www.gogo198.net/?s=shop/audit'
-                ]);
+                $servicers = Db::name('centralize_system_servicer')->where(['status'=>1])->select();
+                foreach($servicers as $k=>$v) {
+                    $muser = Db::name('website_user')->where(['id' => $v['uid']])->find();
+                    if (!empty($muser['openid'])) {
+                        common_notice([
+                            'openid'=>$muser['openid'],
+                            'phone'=>'',
+                            'email'=>''
+                        ],[
+                            'msg'=>'订购清单['.$order['ordersn'].']已确认有货[无修改]，点击链接查看：https://www.gogo198.net/?s=shop/audit',
+                            'opera'=>'确认有货（无修改）',
+                            'url'=>'https://www.gogo198.net/?s=shop/audit'
+                        ]);
+                    }
+                }
             }
             elseif($dat['status']==-4){
                 #无货，通知总后台
                 Db::name('website_order_list')->where(['id'=>$order['id']])->update([
                     'status'=>-11,
                 ]);
-                common_notice([
-                    'openid'=>$manage_openid,
-                    'phone'=>'',
-                    'email'=>''
-                ],[
-                    'msg'=>'订购清单['.$order['ordersn'].']已确认无货，点击链接查看：https://www.gogo198.net/?s=shop/audit',
-                    'opera'=>'确认无货',
-                    'url'=>'https://www.gogo198.net/?s=shop/audit'
-                ]);
+                $servicers = Db::name('centralize_system_servicer')->where(['status'=>1])->select();
+                foreach($servicers as $k=>$v) {
+                    $muser = Db::name('website_user')->where(['id' => $v['uid']])->find();
+                    if (!empty($muser['openid'])) {
+                        common_notice([
+                            'openid'=>$muser['openid'],
+                            'phone'=>'',
+                            'email'=>''
+                        ],[
+                            'msg'=>'订购清单['.$order['ordersn'].']已确认无货，点击链接查看：https://www.gogo198.net/?s=shop/audit',
+                            'opera'=>'确认无货',
+                            'url'=>'https://www.gogo198.net/?s=shop/audit'
+                        ]);
+                    }
+                }
             }
             elseif($dat['status']==-9){
                 //有货（已修改），通知总后台
                 Db::name('website_order_list')->where(['id'=>$order['id']])->update([
                     'status'=>-10,
                 ]);
-                common_notice([
-                    'openid'=>$manage_openid,
-                    'phone'=>'',
-                    'email'=>''
-                ],[
-                    'msg'=>'订购清单['.$order['ordersn'].']已确认有货[有修改]，点击链接查看：https://www.gogo198.net/?s=shop/audit',
-                    'opera'=>'确认有货（有修改）',
-                    'url'=>'https://www.gogo198.net/?s=shop/audit'
-                ]);
+                $servicers = Db::name('centralize_system_servicer')->where(['status'=>1])->select();
+                foreach($servicers as $k=>$v) {
+                    $muser = Db::name('website_user')->where(['id' => $v['uid']])->find();
+                    if (!empty($muser['openid'])) {
+                        common_notice([
+                            'openid'=>$muser['openid'],
+                            'phone'=>'',
+                            'email'=>''
+                        ],[
+                            'msg'=>'订购清单['.$order['ordersn'].']已确认有货[有修改]，点击链接查看：https://www.gogo198.net/?s=shop/audit',
+                            'opera'=>'确认有货（有修改）',
+                            'url'=>'https://www.gogo198.net/?s=shop/audit'
+                        ]);
+                    }
+                }
             }
             elseif($dat['status']==3){
                 #已采购
