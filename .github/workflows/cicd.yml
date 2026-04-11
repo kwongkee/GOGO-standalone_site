@@ -1,0 +1,35 @@
+name: GOGO-standalone CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  SERVER_HOST: 39.108.11.214
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker image
+        run: docker build -t gogo-standalone:test .
+      - name: Push to DockerHub
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+          docker tag gogo-standalone:test ${{ secrets.DOCKERHUB_USERNAME }}/gogo-standalone:latest
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/gogo-standalone:latest
+      - name: Deploy to server
+        if: github.ref == 'refs/heads/main'
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ env.SERVER_HOST }}
+          username: root
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /opt/docker/gogo-standalone
+            docker compose pull
+            docker compose up -d
