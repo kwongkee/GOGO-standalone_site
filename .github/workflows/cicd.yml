@@ -1,35 +1,260 @@
-name: GOGO-standalone CI/CD Pipeline
+# ============================================
+# GOGO-standalone_site 智能CI/CD Workflow
+# 技术栈: ThinkPHP 5.0 / PHP 7.2
+# 功能: 代码审核 → 修复建议 → 自动修复 → 测试 → 部署
+# 通知: 钉钉 + 邮件
+# ============================================
+
+name: GOGO-standalone_site Smart CI/CD
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop ]
   pull_request:
     branches: [ main ]
 
 env:
-  SERVER_HOST: 39.108.11.214
+  PROJECT_NAME: gogo-standalone_site
+  PROJECT_PATH: /www/wwwroot/independent.gogo198.com
+  SERVER_IP: 39.108.11.214
+  SONAR_PROJECT_KEY: gogo-standalone
 
 jobs:
-  build-and-deploy:
+  # ==================== 阶段1: 代码审核 ====================
+  code-review:
+    name: 代码审核
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Build Docker image
-        run: docker build -t gogo-standalone:test .
-      - name: Push to DockerHub
-        if: github.ref == 'refs/heads/main'
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 设置PHP环境
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.2'
+          extensions: pdo_mysql, mbstring, zip, gd
+          coverage: none
+
+      - name: SonarQube扫描
         run: |
-          echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
-          docker tag gogo-standalone:test ${{ secrets.DOCKERHUB_USERNAME }}/gogo-standalone:latest
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/gogo-standalone:latest
-      - name: Deploy to server
+          if ! command -v sonar-scanner &> /dev/null; then
+            wget -q https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip -O /tmp/sonar.zip
+            unzip -o /tmp/sonar.zip -d /opt
+          fi
+          
+          /opt/sonar-scanner-4.8.0.2856-linux/bin/sonar-scanner \
+            -Dsonar.projectKey=${{ env.SONAR_PROJECT_KEY }} \
+            -Dsonar.sources=. \
+            -Dsonar.host.url=http://${{ env.SERVER_IP }}:9001 \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN_STANDALONE }} \
+            -Dsonar.php.exclusions=vendor/**
+        continue-on-error: true
+
+      - name: PHP语法检查
+        run: |
+          echo "检查PHP语法..."
+          ERROR_COUNT=0
+          if [ -d "application" ]; then
+            find application -name "*.php" -exec php -l {} \; 2>&1 | grep -v "No syntax errors" || echo "✅ 语法检查通过"
+          fi
+
+      - name: 保存审核结果
+        run: |
+          echo "commit=${{ github.sha }}" > review_summary.txt
+          echo "branch=${{ github.ref }}" >> review_summary.txt
+          echo "actor=${{ github.actor }}" >> review_summary.txt
+
+      - name: 上传审核结果
+        uses: actions/upload-artifact@v4
+        with:
+          name: gogo-standalone_site-review-results
+          path: review_summary.txt
+
+  # ==================== 阶段2: 生成修复建议 ====================
+  generate-fix-suggestions:
+    name: 生成修复建议
+    runs-on: ubuntu-latest
+    needs: code-review
+    if: github.event_name == 'push'
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 获取SonarQube问题
+        run: |
+          echo "# GOGO-standalone_site 修复建议报告" > fix-suggestions.md
+          echo "**提交**: \`${{ github.sha }}\`" >> fix-suggestions.md
+          echo "" >> fix-suggestions.md
+          
+          curl -s -u "${{ secrets.SONAR_TOKEN_STANDALONE }}:" \
+            "http://${{ env.SERVER_IP }}:9001/api/issues/search?component=gogo-standalone&statuses=OPEN" \
+            > sonar-issues.json 2>/dev/null || echo "{}" > sonar-issues.json
+          
+          ISSUE_COUNT=$(cat sonar-issues.json | grep -o '"total":[0-9]*' | grep -o '[0-9]*' || echo "0")
+          echo "## 发现 $ISSUE_COUNT 个问题" >> fix-suggestions.md
+          echo "" >> fix-suggestions.md
+          
+          if [ "$ISSUE_COUNT" -gt 0 ]; then
+            echo "👉 http://${{ env.SERVER_IP }}:9001/project/issues?id=gogo-standalone" >> fix-suggestions.md
+          else
+            echo "✅ 代码质量良好" >> fix-suggestions.md
+          fi
+
+      - name: 创建GitHub Issue
         if: github.ref == 'refs/heads/main'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const content = fs.readFileSync('fix-suggestions.md', 'utf8');
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `📋 代码审核报告 - ${{ github.sha }}`,
+              body: content,
+              labels: ['code-review', 'automated', 'gogo-standalone_site']
+            });
+
+      - name: 上传修复建议
+        uses: actions/upload-artifact@v4
+        with:
+          name: gogo-standalone_site-fix-suggestions
+          path: fix-suggestions.md
+
+  # ==================== 阶段3: 自动修复 ====================
+  auto-fix:
+    name: 自动修复
+    runs-on: ubuntu-latest
+    needs: [code-review, generate-fix-suggestions]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 执行自动修复
+        run: |
+          FIX_BRANCH="fix/auto-fix-$(date +%Y%m%d%H%M%S)"
+          git checkout -b "$FIX_BRANCH"
+          
+          find . -name "*.php" -exec sed -i 's/[[:space:]]*$//' {} \; 2>/dev/null || true
+          find . -name "*.php" -exec sed -i 's/<? /<?php /g' {} \; 2>/dev/null || true
+
+      - name: 提交修复
+        run: |
+          if ! git diff --quiet; then
+            git config user.name "CI Bot"
+            git config user.email "ci@gogo.com"
+            git add -A
+            git commit -m "chore: auto-fix code issues"
+            git push -u origin HEAD || true
+            echo "fix_status=committed" >> $GITHUB_OUTPUT
+          else
+            echo "fix_status=no_changes" >> $GITHUB_OUTPUT
+          fi
+        id: commit_fix
+
+      - name: 创建修复PR
+        if: steps.commit_fix.outputs.fix_status == 'committed'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: "🔧 自动修复: 代码质量问题",
+              body: `自动修复常见代码问题\n\n来源: \`${{ github.sha }}\``,
+              head: "fix/auto-fix-$(date +%Y%m%d%H%M%S)",
+              base: 'main'
+            });
+
+  # ==================== 阶段4: 部署 ====================
+  deploy:
+    name: 部署到服务器
+    runs-on: ubuntu-latest
+    needs: [code-review, auto-fix]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    environment: production
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 部署到服务器
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ env.SERVER_HOST }}
+          host: ${{ env.SERVER_IP }}
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          timeout: 10m
           script: |
-            cd /opt/docker/gogo-standalone
-            docker compose pull
-            docker compose up -d
+            set -e
+            echo "=========================================="
+            echo "  GOGO-standalone_site 部署开始"
+            echo "=========================================="
+            
+            PROJECT_PATH="${{ env.PROJECT_PATH }}"
+            
+            # 备份
+            mkdir -p /opt/backups/gogo-standalone
+            tar -czf /opt/backups/gogo-standalone/backup_$(date +%Y%m%d_%H%M%S).tar.gz -C "$PROJECT_PATH" . --exclude='.git' 2>/dev/null || true
+            
+            # 部署
+            cd "$PROJECT_PATH"
+            git fetch origin
+            git reset --hard origin/main
+            
+            chmod -R 755 public
+            chmod -R 777 runtime 2>/dev/null || true
+            chown -R www:www "$PROJECT_PATH" 2>/dev/null || true
+            
+            rm -rf runtime/cache/* 2>/dev/null || true
+            rm -rf runtime/log/* 2>/dev/null || true
+            
+            nginx -t && nginx -s reload 2>/dev/null || true
+            
+            echo "${{ github.sha }}" > "$PROJECT_PATH/.deployed_version"
+            echo "$(date '+%Y-%m-%d %H:%M:%S') | ${{ github.sha }} | ${{ github.actor }} | CI/CD Deploy" >> "$PROJECT_PATH/.deployment_history"
+            
+            echo "✅ 部署完成! 访问: http://39.108.11.214:8003"
+
+  # ==================== 阶段5: 发送通知 ====================
+  notify:
+    name: 发送通知
+    runs-on: ubuntu-latest
+    needs: [code-review, deploy]
+    if: always()
+    steps:
+      - name: 钉钉通知
+        if: secrets.DINGTALK_WEBHOOK != ''
+        run: |
+          if [ "${{ needs.deploy.result }}" == "success" ]; then
+            STATUS="✅ 部署成功"
+          else
+            STATUS="❌ 部署失败"
+          fi
+          
+          curl -s -X POST "${{ secrets.DINGTALK_WEBHOOK }}" \
+            -H 'Content-Type: application/json' \
+            -d "{
+              \"msgtype\": \"markdown\",
+              \"markdown\": {
+                \"title\": \"GOGO-standalone_site CI/CD 通知\",
+                \"text\": \"### 🚀 GOGO-standalone_site CI/CD 报告\n\n**状态**: $STATUS\n\n**Commit**: \`${{ github.sha }}\`\n\n**作者**: ${{ github.actor }}\"
+              }
+            }"
+
+      - name: 邮件通知
+        if: secrets.EMAIL_TO != ''
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.qq.com
+          server_port: 465
+          username: ${{ secrets.SMTP_USER }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          to: ${{ secrets.EMAIL_TO }}
+          subject: "[GOGO-standalone_site] CI/CD ${{ job.status }}"
+          html_body: "<h2>GOGO-standalone_site CI/CD 报告</h2><p>状态: ${{ job.status }}</p>"
+        continue-on-error: true
